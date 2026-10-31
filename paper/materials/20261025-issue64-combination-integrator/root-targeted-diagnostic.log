@@ -1,0 +1,35 @@
+
+ RUN  v4.1.11 /home/dw/Projects/agent-sts2/.worktrees/integrator64-combination-20261025/agent
+
+(node:460515) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+ ✓ tests/brain-codex-session.test.ts (33 tests) 11742ms
+     ✓ config.toml with anything but model / effort / [tui] (or an instruction source) turns session mode off: exec mode answers  304ms
+     ✓ a stalled turn (silent after its first token) is interrupted, reverted and asked once more  1114ms
+     ✓ a cut naming an option that needs a field it lacks (a :discard option without slots, a card option without cards) is asked again; the trace says why  391ms
+     ✓ a cut is asked again as before when its prefix lacks a required field, names no option, or BRAIN_CODEX_ACCEPT_CUT is off  367ms
+     ✓ a server that dies is restarted once; when it dies again, exec mode answers for the rest of the process  2171ms
+     ✓ sweeps a dead process's threads (ours only), and deletes its own thread's files at exit  406ms
+     ✓ the server does not keep the process alive; at exit the process removes its thread's files  402ms
+   ✓ #64 strict session through persistence and restored route consumer: change  1130ms
+   ✓ #64 strict session through persistence and restored route consumer: construction-only  545ms
+   ✓ #64 strict session through persistence and restored route consumer: both  536ms
+   ✓ #64 strict session through persistence and restored route consumer: omit  530ms
+   ✓ #64 strict session through persistence and restored route consumer: keep  531ms
+   ✓ #64 strict session through persistence and restored route consumer: repeat  540ms
+   ✓ #64 strict session through persistence and restored route consumer: missing-reason  531ms
+   ✓ #64 strict session through persistence and restored route consumer: invalid-route  541ms
+ ✓ tests/check-imports.test.ts (1 test) 151ms
+(node:461785) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+ ✓ tests/paths.test.ts (11 tests) 56ms
+(node:461796) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+ ✓ tests/route-reason-schema.test.ts (8 tests) 17ms
+
+ Test Files  4 passed (4)
+      Tests  53 passed (53)
+   Start at  14:43:37
+   Duration  16.62s (transform 2.71s, setup 544ms, import 3.62s, tests 11.97s, environment 0ms)
+
+JSON report written to /home/dw/Projects/agent-sts2/paper/materials/20261025-issue64-combination-integrator/root-targeted-diagnostic.json

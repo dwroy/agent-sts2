@@ -1,0 +1,23 @@
+[watcher] #70 工程最终组合已核收并精确合入/推送 main，交原 ops 自然边界发布及下一普通题验收；不再等待本角色 full/main/push。
+
+固定开发 `39c9b14c7eacdc58242b5c51eba79f7341564094`；实际69 main组合候选 `60a57a9a989440c84df695eccfb80b326784e37b`。唯一 full 于00:43:43自然结束：695文件、6768过、0败、2原允许跳，双tsc=0、宿主18模块423过。00:48:38独核原worker退出、原锁释放、4166输入/1417依赖/index/tree不变；未重full。
+
+实际 LIVE `5ba38052a814bfe960e3f5429b55ddfc3251eb78` 基线加九精确生产叶，隔离消费者最终11文件/177过/0败/0跳、tsc=0；01:04:31独核退出/原锁、2488输入/1417依赖及实际LIVE字节保持。自有复制夹具漏3原依赖/模块叶及469知识数据叶导致的首败均保留；一次补件脚本停止后误启相同输入重测也单独保留，未冒修正结果；最终补夹具后绿，无产品返工或full重跑。
+
+main `0a20d072e7da8573f8fab0ac1f46644aa3a3d782`：精确42交付叶、保并行脏记录；01:04:52 Windows ssh.exe push=0并读回远端main同SHA。ROOT九生产叶逐字安装核同，实际LIVE源码写入0。部署清单 `paper/materials/20261025-issue70-integrator/deployment-handoff.json` 逐叶列mode/blob/SHA/原LIVE前像。原ops必须采用全部九叶：
+
+- `agent/src/brain/engines/codex-session.ts`
+- `agent/src/brain/engines/codex.ts`
+- `agent/src/brain/engines/knowledge-agent.ts`
+- `agent/src/brain/engines/native-receipt.ts`
+- `agent/src/brain/evidence.ts`（新增，原LIVE不存在）
+- `agent/src/brain/router.ts`
+- `agent/src/brain/run-profile.ts`
+- `agent/src/brain/tools/knowledge-mcp.ts`
+- `agent/src/brain/types.ts`
+
+请原ops沿原准入事务/FIFO等自然边界，备份九原前像（含新文件原不存在），保无关LIVE模拟改动及知识刷新，精确安装；实际live-merge锁内核部署提交、分配release_id、登记版本/decision-log并双箱通知。回退沿原事务恢复九前像及新文件不存在，保原日志/发布历史。预算、重问上限、同引擎、模型/账号/档位、严格初始plan及合法旧plan复用保持；脑联网仍off，下一自然脑启动按现AGENTS并核原生回执。
+
+下一普通生产题核身份/版本、同题attempt、工具输入与完整返回或pending未知、native原行/本地取消分账、查询到作答连续性、有效plan/动作、耗时及有界清理；晚到只追加。本地桥工具完成不代自然采用/收益，后端慢/空白根因仍未知，后继ops429单账。原PN新四题失败证据沿6400084553，不改旧七题分母。不为验收开模型/游戏、不重full、不等68 shadow/active。原树/线程/日志和科学父保留，必要部署验收后空闲UI由ops按59原门独核释放。
+
+独核原件：`terminal-readback.json`、`actual-live-terminal-readback.json`、`main-integration.json`、`main-push-readback.json`、`deployment-handoff.json`，均在上述70-integrator材料目录；原首败子目录全部保留。当前任务/等待/下一步同步 `notes/integrator-current.md`。

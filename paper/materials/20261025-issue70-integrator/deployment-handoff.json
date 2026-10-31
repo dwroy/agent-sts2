@@ -1,0 +1,229 @@
+{
+  "at": "2026-10-26T01:04:55+08:00",
+  "issue": 70,
+  "state": "engineering accepted; exact main pushed; ROOT9 verified; LIVE deployment and next ordinary question pending",
+  "developer": "39c9b14c7eacdc58242b5c51eba79f7341564094",
+  "main": "0a20d072e7da8573f8fab0ac1f46644aa3a3d782",
+  "candidate": "60a57a9a989440c84df695eccfb80b326784e37b",
+  "checked_live_baseline": "5ba38052a814bfe960e3f5429b55ddfc3251eb78",
+  "root_runtime_files": [
+    {
+      "path": "agent/src/brain/engines/codex-session.ts",
+      "mode": "100644",
+      "blob": "9437284e7ad725c0eff783ae67f97dff4327ff6e",
+      "sha256": "68719e9685687cfbc61a36d18484fbb97c17beb1538e6b487c1c7e97da2af560",
+      "bytes": 44551,
+      "actual_root_verified": true,
+      "live_before_sha256": "f2f5df4d682baddfd3c17ba083f94812c1b1dcf7d052fcef17f542fefc61b05c",
+      "new_file_in_live": false
+    },
+    {
+      "path": "agent/src/brain/engines/codex.ts",
+      "mode": "100644",
+      "blob": "6dc3e1a5e17e4272406d301905eaf56934f9d10c",
+      "sha256": "030ae62a77aface8f596c770a81d7a6c751c9bb3120d1d3f947c72906ed3943b",
+      "bytes": 72532,
+      "actual_root_verified": true,
+      "live_before_sha256": "701a770f57fec206c0d67a5eec3a5a8a54ecfe65a43010b5294800404b0815e9",
+      "new_file_in_live": false
+    },
+    {
+      "path": "agent/src/brain/engines/knowledge-agent.ts",
+      "mode": "100644",
+      "blob": "542dd91a6fccf3940f7927dc5de1637ee6f60398",
+      "sha256": "cd772180efde7eb68b2e4f6f8431e06e4eb1045d5396c1e209cb25cc47a053ca",
+      "bytes": 7705,
+      "actual_root_verified": true,
+      "live_before_sha256": "d6dc2bc2854017232d8560dba4a7b7ce307ca1dcc3955e782a0fb39bb94ea483",
+      "new_file_in_live": false
+    },
+    {
+      "path": "agent/src/brain/engines/native-receipt.ts",
+      "mode": "100644",
+      "blob": "220210565214c5e673fada28358a6bb09a63e828",
+      "sha256": "7416c413c9510b5a0ba2e78e34329b34c2bd64c5042578e1bb246914ceb270c5",
+      "bytes": 1510,
+      "actual_root_verified": true,
+      "live_before_sha256": "5802b378c3c41c8ef6d7aef8936739a4f02a9cf48c7d2161e15c79036246b4d7",
+      "new_file_in_live": false
+    },
+    {
+      "path": "agent/src/brain/evidence.ts",
+      "mode": "100644",
+      "blob": "8a1fa29f06418cc328c4f83466c632175a7bfd81",
+      "sha256": "97ef2fc6272be583594a37ae677dc884e65073339187a5aabbd9033183c778e5",
+      "bytes": 3926,
+      "actual_root_verified": true,
+      "live_before_sha256": null,
+      "new_file_in_live": true
+    },
+    {
+      "path": "agent/src/brain/router.ts",
+      "mode": "100644",
+      "blob": "f8a54be81ebe99330cec09cc9dd5b8f178faa5be",
+      "sha256": "973c92a3b13bc149df3c9100b4c32671cbfa328d24c46f781c800943c981c1f6",
+      "bytes": 44894,
+      "actual_root_verified": true,
+      "live_before_sha256": "2b1964096b8f08944eeef38785c7213632c9aa74e364c42b6975bfa99cda85d9",
+      "new_file_in_live": false
+    },
+    {
+      "path": "agent/src/brain/run-profile.ts",
+      "mode": "100644",
+      "blob": "6958bae4dfc3c5cc099ec606d09dfd1cb9bd8f9a",
+      "sha256": "f7e6c6daa830459d9d4be4e513988fd73f5f6c0dcdeedbd29e393322ac155c41",
+      "bytes": 1529,
+      "actual_root_verified": true,
+      "live_before_sha256": "130473571aa90d9e2b3f30842c2dc4c3e3ba4979f642ef08a23db3a8bf43757e",
+      "new_file_in_live": false
+    },
+    {
+      "path": "agent/src/brain/tools/knowledge-mcp.ts",
+      "mode": "100644",
+      "blob": "c5c54a828b3faf1e5d96e375af1d94c3bcae5598",
+      "sha256": "adb111734b59309b9ddf925e6c189bbff02d07cfdf862ee6d8ea751a021c0a76",
+      "bytes": 3469,
+      "actual_root_verified": true,
+      "live_before_sha256": "498bfb08eda3de0ebe39ffe016b56d5ad8371e7a836d7b8cc2f79120b373b776",
+      "new_file_in_live": false
+    },
+    {
+      "path": "agent/src/brain/types.ts",
+      "mode": "100644",
+      "blob": "f9c1785913acdc7cfb556151ed078b94d39bf7c5",
+      "sha256": "48c5dec8cb85937c7608fd15664f0918d1b73c9c7e719584b12c8eff77a5e926",
+      "bytes": 8667,
+      "actual_root_verified": true,
+      "live_before_sha256": "ced97df523e7dd6c225044eb37c3640dfa6a51fd333fe1aae17e8786f814bd5b",
+      "new_file_in_live": false
+    }
+  ],
+  "live_source_files": [
+    {
+      "path": "agent/src/brain/engines/codex-session.ts",
+      "mode": "100644",
+      "blob": "9437284e7ad725c0eff783ae67f97dff4327ff6e",
+      "sha256": "68719e9685687cfbc61a36d18484fbb97c17beb1538e6b487c1c7e97da2af560",
+      "bytes": 44551,
+      "actual_root_verified": true,
+      "live_before_sha256": "f2f5df4d682baddfd3c17ba083f94812c1b1dcf7d052fcef17f542fefc61b05c",
+      "new_file_in_live": false
+    },
+    {
+      "path": "agent/src/brain/engines/codex.ts",
+      "mode": "100644",
+      "blob": "6dc3e1a5e17e4272406d301905eaf56934f9d10c",
+      "sha256": "030ae62a77aface8f596c770a81d7a6c751c9bb3120d1d3f947c72906ed3943b",
+      "bytes": 72532,
+      "actual_root_verified": true,
+      "live_before_sha256": "701a770f57fec206c0d67a5eec3a5a8a54ecfe65a43010b5294800404b0815e9",
+      "new_file_in_live": false
+    },
+    {
+      "path": "agent/src/brain/engines/knowledge-agent.ts",
+      "mode": "100644",
+      "blob": "542dd91a6fccf3940f7927dc5de1637ee6f60398",
+      "sha256": "cd772180efde7eb68b2e4f6f8431e06e4eb1045d5396c1e209cb25cc47a053ca",
+      "bytes": 7705,
+      "actual_root_verified": true,
+      "live_before_sha256": "d6dc2bc2854017232d8560dba4a7b7ce307ca1dcc3955e782a0fb39bb94ea483",
+      "new_file_in_live": false
+    },
+    {
+      "path": "agent/src/brain/engines/native-receipt.ts",
+      "mode": "100644",
+      "blob": "220210565214c5e673fada28358a6bb09a63e828",
+      "sha256": "7416c413c9510b5a0ba2e78e34329b34c2bd64c5042578e1bb246914ceb270c5",
+      "bytes": 1510,
+      "actual_root_verified": true,
+      "live_before_sha256": "5802b378c3c41c8ef6d7aef8936739a4f02a9cf48c7d2161e15c79036246b4d7",
+      "new_file_in_live": false
+    },
+    {
+      "path": "agent/src/brain/evidence.ts",
+      "mode": "100644",
+      "blob": "8a1fa29f06418cc328c4f83466c632175a7bfd81",
+      "sha256": "97ef2fc6272be583594a37ae677dc884e65073339187a5aabbd9033183c778e5",
+      "bytes": 3926,
+      "actual_root_verified": true,
+      "live_before_sha256": null,
+      "new_file_in_live": true
+    },
+    {
+      "path": "agent/src/brain/router.ts",
+      "mode": "100644",
+      "blob": "f8a54be81ebe99330cec09cc9dd5b8f178faa5be",
+      "sha256": "973c92a3b13bc149df3c9100b4c32671cbfa328d24c46f781c800943c981c1f6",
+      "bytes": 44894,
+      "actual_root_verified": true,
+      "live_before_sha256": "2b1964096b8f08944eeef38785c7213632c9aa74e364c42b6975bfa99cda85d9",
+      "new_file_in_live": false
+    },
+    {
+      "path": "agent/src/brain/run-profile.ts",
+      "mode": "100644",
+      "blob": "6958bae4dfc3c5cc099ec606d09dfd1cb9bd8f9a",
+      "sha256": "f7e6c6daa830459d9d4be4e513988fd73f5f6c0dcdeedbd29e393322ac155c41",
+      "bytes": 1529,
+      "actual_root_verified": true,
+      "live_before_sha256": "130473571aa90d9e2b3f30842c2dc4c3e3ba4979f642ef08a23db3a8bf43757e",
+      "new_file_in_live": false
+    },
+    {
+      "path": "agent/src/brain/tools/knowledge-mcp.ts",
+      "mode": "100644",
+      "blob": "c5c54a828b3faf1e5d96e375af1d94c3bcae5598",
+      "sha256": "adb111734b59309b9ddf925e6c189bbff02d07cfdf862ee6d8ea751a021c0a76",
+      "bytes": 3469,
+      "actual_root_verified": true,
+      "live_before_sha256": "498bfb08eda3de0ebe39ffe016b56d5ad8371e7a836d7b8cc2f79120b373b776",
+      "new_file_in_live": false
+    },
+    {
+      "path": "agent/src/brain/types.ts",
+      "mode": "100644",
+      "blob": "f9c1785913acdc7cfb556151ed078b94d39bf7c5",
+      "sha256": "48c5dec8cb85937c7608fd15664f0918d1b73c9c7e719584b12c8eff77a5e926",
+      "bytes": 8667,
+      "actual_root_verified": true,
+      "live_before_sha256": "ced97df523e7dd6c225044eb37c3640dfa6a51fd333fe1aae17e8786f814bd5b",
+      "new_file_in_live": false
+    }
+  ],
+  "actual_live_writes": 0,
+  "runtime_owner": "original ops",
+  "release_id": null,
+  "full": {
+    "files": 695,
+    "passed": 6768,
+    "failed": 0,
+    "skipped": 2,
+    "result_sha256": "fdee7704ac75860c1349b2119b7bab6c83274bc3673d998fc89298b9a9b878f4",
+    "worker_absent": true,
+    "lock_available": true,
+    "new_full_runs": 1
+  },
+  "live_consumer": {
+    "files": 11,
+    "passed": 177,
+    "failed": 0,
+    "skipped": 0,
+    "tsc_rc": 0,
+    "targeted_rc": 0,
+    "check_lock_released": true,
+    "actual_live_source_unchanged": true
+  },
+  "fixture_history": "live-preflight-attempt1/2 preserve omitted LIVE imports and ESM-boundary failures; live-targeted-attempt1 preserves 144 pass/33 fail caused by omitted knowledge data; live-targeted-attempt2 preserves an unintended unchanged-input repeat after the copy script stopped. Added three actual LIVE import/module files and 469 actual LIVE knowledge data files to the isolated frozen fixture; final 11 files/177 pass/0 fail/0 skip; no product changes or full reruns",
+  "deployment_contract": [
+    "Use the original admitted publication transaction and natural boundary; preserve the running game, learner, original FIFO and unknown global gates.",
+    "Back up the actual LIVE nine preimages, including absence of new agent/src/brain/evidence.ts; verify modes, blobs and SHA. Install all nine exact production leaves from main; keep unrelated LIVE simulation changes and live knowledge refresh.",
+    "Under original live-merge lock verify the actual installed commit and assign the release_id in eval/versions.json; append decision-log and dual-box old/new rule, evidence, expected impact and rollback notification after actual deployment.",
+    "Keep total budget, retry cap, same engine, model/account/effort, strict initial plan, valid plan reuse, game knowledge and decision values unchanged. Brain web remains disabled. New natural brain start effort follows current AGENTS with actual native receipt.",
+    "Verify the next ordinary production question: identity/version, attempts and actual native receipt or explicit unknown, tool input/output or pending, query-to-answer continuity, plan/action and time, cancellation stages and bounded cleanup. Late evidence stays append-only.",
+    "Native tool completion proves local bridge return only; actual retrieval IDs, plan adoption and performance are separate. Backend latency/blank generation root cause remains unknown; later ops 429 is separate.",
+    "No new model/game probe, full rerun, 68 shadow/active gate, learner dispatch, forced tick, authority or account switch.",
+    "Rollback through the original publication transaction using the saved nine actual LIVE preimages and preserved new-file absence; retain release/decision/evidence history."
+  ],
+  "science_parent_close": false,
+  "dev_tree_and_native_logs_retained": true
+}

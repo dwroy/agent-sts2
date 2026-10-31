@@ -1,0 +1,2355 @@
+{
+  "passed": true,
+  "content_root": "/home/dw/Projects/agent-sts2/.worktrees/live",
+  "consumer_root": "/home/dw/Projects/agent-sts2/.worktrees/live",
+  "strategy_count": 116,
+  "reflex_count": 165,
+  "fixed_strategy_queries": 7,
+  "fixed_rk_construction_queries": 7,
+  "fixed_rk_construction_negative_queries": 0,
+  "fixed_rk_full_queries": 7,
+  "non_question_negatives": 7,
+  "wrong_ascension_cases": 7,
+  "other_role_cases": 4,
+  "old_unmodified_entries_and_vocab_exact": true,
+  "updated_baselines_preserved": true,
+  "new_executable_comparisons": 0,
+  "natural_queries": 0,
+  "model_or_jev_calls": 0,
+  "custom_knowledge_consumers": "pending1-playbook-parent",
+  "original_card_pick_capture_result_replay": "pending7",
+  "rows": [
+    {
+      "strategy_id": "silent-brain-haze-external-prefix-context",
+      "rk_id": "silent-rk-c5-c5-1",
+      "lane": "A",
+      "strategy": {
+        "id": "silent-brain-haze-external-prefix-context",
+        "trigger": {
+          "question_types": [
+            "card_reward"
+          ],
+          "acts": [
+            1
+          ]
+        },
+        "strategy": "HAZE的拿牌观察关联偏负：v0.107拿48/205、不拿140/523最终胜，差-3.35个百分点；样本单位为选择记录（重复局；合并独立局数未知）。\n范围：仅Silent A10/v0.107奖励出现此卡，幕1前缀张数∈{0–7}（奖励获取前缀代理）。观察非因果，不能视为完整牌组、固定拿牌命令或外推到其他版本；反向/小样本见证据附件。\n仅有初始牌组时，迷雾与蛇咬/猎杀者按群体控制、单体施毒和直接攻击分别比较。原牌文均2费：迷雾全体4毒1虚弱，蛇咬保留7毒，猎杀者15伤及下回合抽2；不能只按毒层数排先后。ATP5MCMJDMQY F2一次机会拿迷雾、后继入组；F3战52→49，F17仍终败。\n范围：Silent A10、幕1、现场有该备选且牌文同；自有版本unknown，1局1机会，无选择因果收益。",
+        "source": "mixed",
+        "confidence": 0.25,
+        "evidence_status": "conflict",
+        "version": "2.0.0-c5-r1",
+        "evidence": [
+          {
+            "type": "external_aggregate",
+            "source": "external:sts2fun",
+            "url": "https://sts2.fun/static/sts2_public.db.zst",
+            "version": "v0.107",
+            "dataset_sha256": "1f7c0c3d441aedb5c85f04bcd4d8d6a1039b438a8b6fda2d96cfa5c27580cbf5",
+            "downloaded_at": "2026-10-21",
+            "license": "许可未核；仅署名聚合候选，不分发原始数据库。",
+            "filters": {
+              "character": "silent",
+              "ascension": 10,
+              "criteria": "singleplayer;valid;not abandoned;no modifiers;card=CARD.HAZE;arm=picked;代理=幕1前缀张数∈{0–7};双方共有保留cell;n10删失;upgrades unknown"
+            },
+            "statistic": {
+              "name": "eventual_win_rate",
+              "value": 0.23414634146341465,
+              "unit": "fraction"
+            },
+            "denominator": {
+              "unit": "offers",
+              "n": 205
+            },
+            "design": "observational",
+            "limitations": [
+              "自选上传、技能/SL/重复上传/玩家分母未知；独立上传局不等于独立玩家，未作玩家聚类调整。",
+              "观察关联非因果；备选牌、奖励来源、既有实力、幕存活筛选与前缀构成混杂；不写拿牌收益或固定命令。",
+              "奖励获取前缀是代理；缺初始牌组、删除/变形、事件/商店牌与升级；不能当完整决策时牌组。",
+              "前缀张数cell按选择记录互斥可加；同局跨cell/跨选择臂，局数不可相加，不构造合并独立局胜率。",
+              "n<10独立局cell已被导出删除；缺cell非0。宽代理仅双方共有的保留cell，受截尾/支持集选择影响。",
+              "胜利是未来整局标签，仅用于结果统计；后续Boss访问是机会级同幕或更晚幕到达，非打赢/准备度。",
+              "机制版本对照未知；各版本拆分、保留原分母，其他版本不外推到当前v0.111。无有效聚类区间。",
+              "当前schema无奖励前缀/奖励候选卡的机器触发字段；条目正文限定条件，未知前缀不可套用，正式消费待验收。"
+            ],
+            "ref": "paper/materials/20261024-090927-strategy-result-ops/source-statistics.json#/cards/HAZE/0/selected/picked/win",
+            "role": "support"
+          },
+          {
+            "type": "external_aggregate",
+            "source": "external:sts2fun",
+            "url": "https://sts2.fun/static/sts2_public.db.zst",
+            "version": "v0.107",
+            "dataset_sha256": "1f7c0c3d441aedb5c85f04bcd4d8d6a1039b438a8b6fda2d96cfa5c27580cbf5",
+            "downloaded_at": "2026-10-21",
+            "license": "许可未核；仅署名聚合候选，不分发原始数据库。",
+            "filters": {
+              "character": "silent",
+              "ascension": 10,
+              "criteria": "singleplayer;valid;not abandoned;no modifiers;card=CARD.HAZE;arm=not_picked;代理=幕1前缀张数∈{0–7};双方共有保留cell;n10删失;upgrades unknown"
+            },
+            "statistic": {
+              "name": "eventual_win_rate",
+              "value": 0.2676864244741874,
+              "unit": "fraction"
+            },
+            "denominator": {
+              "unit": "offers",
+              "n": 523
+            },
+            "design": "observational",
+            "limitations": [
+              "自选上传、技能/SL/重复上传/玩家分母未知；独立上传局不等于独立玩家，未作玩家聚类调整。",
+              "观察关联非因果；备选牌、奖励来源、既有实力、幕存活筛选与前缀构成混杂；不写拿牌收益或固定命令。",
+              "奖励获取前缀是代理；缺初始牌组、删除/变形、事件/商店牌与升级；不能当完整决策时牌组。",
+              "前缀张数cell按选择记录互斥可加；同局跨cell/跨选择臂，局数不可相加，不构造合并独立局胜率。",
+              "n<10独立局cell已被导出删除；缺cell非0。宽代理仅双方共有的保留cell，受截尾/支持集选择影响。",
+              "胜利是未来整局标签，仅用于结果统计；后续Boss访问是机会级同幕或更晚幕到达，非打赢/准备度。",
+              "机制版本对照未知；各版本拆分、保留原分母，其他版本不外推到当前v0.111。无有效聚类区间。",
+              "当前schema无奖励前缀/奖励候选卡的机器触发字段；条目正文限定条件，未知前缀不可套用，正式消费待验收。"
+            ],
+            "ref": "paper/materials/20261024-090927-strategy-result-ops/source-statistics.json#/cards/HAZE/0/selected/not_picked/win",
+            "role": "support"
+          },
+          {
+            "type": "own",
+            "run": "ATP5MCMJDMQY",
+            "floor": 2,
+            "ref": ".worktrees/codex-strategy-silent-20261024-233359/learner/runs/20261024-233510-75269924-3572-4eac-bd79-21290edd1c9a-strategy-proposal/scratch/raw/ATP5MCMJDMQY-F2-reward-card.json#questions.pick.criteria;completed action; SHA256=7e6db28de2c1bc0d615e73c9e578f24aa0fb8681aadd3a9e4ebab7c2ef27a254",
+            "role": "support"
+          },
+          {
+            "type": "external_aggregate",
+            "source": "external:sts2fun",
+            "url": "https://sts2.fun/static/sts2_public.db.zst",
+            "version": "v0.111",
+            "dataset_sha256": "1f7c0c3d441aedb5c85f04bcd4d8d6a1039b438a8b6fda2d96cfa5c27580cbf5",
+            "downloaded_at": "2026-10-21",
+            "license": "No explicit dataset redistribution license found on public FAQ; aggregate statistics with attribution only; no raw redistribution.",
+            "filters": {
+              "character": "silent",
+              "ascension": 10,
+              "criteria": "valid, singleplayer, non-abandoned, no modifiers; frozen final-deck cluster=5; pairs 0,3,5,7,9; outcome=1; terminal card=HAZE; selected representative subset, not current state"
+            },
+            "statistic": {
+              "name": "selected_representative_terminal_card_presence_context_only",
+              "value": 0.2,
+              "unit": "proportion"
+            },
+            "denominator": {
+              "unit": "runs",
+              "n": 5
+            },
+            "design": "observational",
+            "limitations": [
+              "外部为自选上传的观察数据，玩家标识未读，独立玩家数与玩家间依赖未知；不声称因果收益。",
+              "五对代表按早期相近代理选择，不是随机样本或同起点反事实；终局持牌仅事后关联，不能触发当前策略。",
+              "自有A10/no_retry_evidence与重试或预判必死、其他进阶分别统计；自有版本unknown不补为v0.111。"
+            ],
+            "ref": "knowledge/external/sts2fun/builds-v1/representative-timelines.json#cluster=5,pairs=0,3,5,7,9,outcome=1;input_sha256=dfde8d6ec66f58fca63ca30d45d86d47c2d822e807e9f77f65cb3c4c65268eda",
+            "role": "support"
+          },
+          {
+            "type": "external_aggregate",
+            "source": "external:sts2fun",
+            "url": "https://sts2.fun/static/sts2_public.db.zst",
+            "version": "v0.111",
+            "dataset_sha256": "1f7c0c3d441aedb5c85f04bcd4d8d6a1039b438a8b6fda2d96cfa5c27580cbf5",
+            "downloaded_at": "2026-10-21",
+            "license": "No explicit dataset redistribution license found on public FAQ; aggregate statistics with attribution only; no raw redistribution.",
+            "filters": {
+              "character": "silent",
+              "ascension": 10,
+              "criteria": "valid, singleplayer, non-abandoned, no modifiers; frozen final-deck cluster=5; pairs 0,3,5,7,9; outcome=0; terminal card=HAZE; selected representative subset, not current state"
+            },
+            "statistic": {
+              "name": "selected_representative_terminal_card_presence_context_only",
+              "value": 0,
+              "unit": "proportion"
+            },
+            "denominator": {
+              "unit": "runs",
+              "n": 5
+            },
+            "design": "observational",
+            "limitations": [
+              "外部为自选上传的观察数据，玩家标识未读，独立玩家数与玩家间依赖未知；不声称因果收益。",
+              "五对代表按早期相近代理选择，不是随机样本或同起点反事实；终局持牌仅事后关联，不能触发当前策略。",
+              "自有A10/no_retry_evidence与重试或预判必死、其他进阶分别统计；自有版本unknown不补为v0.111。"
+            ],
+            "ref": "knowledge/external/sts2fun/builds-v1/representative-timelines.json#cluster=5,pairs=0,3,5,7,9,outcome=0;input_sha256=dfde8d6ec66f58fca63ca30d45d86d47c2d822e807e9f77f65cb3c4c65268eda",
+            "role": "contradict"
+          }
+        ],
+        "evidence_detail_ref": {
+          "path": "paper/materials/20261024-090927-strategy-result-ops/source-candidates.json",
+          "sha256": "dd11d373454510b1737be65002fed9115f1d2d3033d2d4f18717f7e3304e0174",
+          "entry_id": "silent-brain-haze-external-prefix-context",
+          "statistics": {
+            "path": "paper/materials/20261024-090927-strategy-result-ops/source-statistics.json",
+            "bytes": 14899978,
+            "sha256": "8b52fd3149833b2964851ca0b832f778d9a0ca256080cd29f014bdb001086c3c"
+          },
+          "original_version": "2.0.0-pending",
+          "prior_evidence_preserved": true,
+          "primary_sample_gate": {
+            "threshold": 100,
+            "unit": "offers",
+            "passed": true,
+            "exact_independent_run_gate_passed": false
+          },
+          "independent_uploaded_runs": {
+            "picked": {
+              "n": null,
+              "unit": "distinct_uploaded_runs_union",
+              "lower_bound": 42,
+              "upper_bound": 205,
+              "bounds_not_estimates": true
+            },
+            "not_picked": {
+              "n": null,
+              "unit": "distinct_uploaded_runs_union",
+              "lower_bound": 92,
+              "upper_bound": 519,
+              "bounds_not_estimates": true
+            }
+          },
+          "evidence_status": "conflict"
+        },
+        "formal_publication": "pending",
+        "consumer_readback": "pending",
+        "evidence_summary": {
+          "own_runs": 1,
+          "own_support_runs": 1,
+          "external": [
+            {
+              "source": "external:sts2fun",
+              "version": "v0.107",
+              "dataset_sha256": "1f7c0c3d441aedb5c85f04bcd4d8d6a1039b438a8b6fda2d96cfa5c27580cbf5",
+              "statistic": "eventual_win_rate",
+              "denominator": {
+                "unit": "offers",
+                "n": 205
+              }
+            },
+            {
+              "source": "external:sts2fun",
+              "version": "v0.107",
+              "dataset_sha256": "1f7c0c3d441aedb5c85f04bcd4d8d6a1039b438a8b6fda2d96cfa5c27580cbf5",
+              "statistic": "eventual_win_rate",
+              "denominator": {
+                "unit": "offers",
+                "n": 523
+              }
+            },
+            {
+              "source": "external:sts2fun",
+              "version": "v0.111",
+              "dataset_sha256": "1f7c0c3d441aedb5c85f04bcd4d8d6a1039b438a8b6fda2d96cfa5c27580cbf5",
+              "statistic": "selected_representative_terminal_card_presence_context_only",
+              "denominator": {
+                "unit": "runs",
+                "n": 5
+              }
+            },
+            {
+              "source": "external:sts2fun",
+              "version": "v0.111",
+              "dataset_sha256": "1f7c0c3d441aedb5c85f04bcd4d8d6a1039b438a8b6fda2d96cfa5c27580cbf5",
+              "statistic": "selected_representative_terminal_card_presence_context_only",
+              "denominator": {
+                "unit": "runs",
+                "n": 5
+              }
+            }
+          ]
+        },
+        "limitation_notice": "外部聚合为观察性统计、非因果，外部分母不计本系统验证；样本选择、版本与口径局限见 evidence.limitations。"
+      },
+      "rk": {
+        "schema": "reflex-entry-v1",
+        "id": "silent-rk-c5-c5-1",
+        "version": 1,
+        "applies_to": "card_pick",
+        "predicate": {
+          "op": "and",
+          "args": [
+            {
+              "op": "eq",
+              "field": "card.id",
+              "value": "HAZE"
+            },
+            {
+              "op": "eq",
+              "field": "act",
+              "value": 1
+            }
+          ]
+        },
+        "signal": {
+          "kind": "tag",
+          "value": "silent-rk-c5-c5-1-review",
+          "unit": "label"
+        },
+        "label_en": "Compare group poison and Weak with retained single target poison",
+        "evidence": {
+          "observations": [
+            {
+              "run_id": "ATP5MCMJDMQY",
+              "floor": 2
+            }
+          ],
+          "n_support": 1,
+          "n_contradict": 0
+        },
+        "confidence": 0.25,
+        "scope": {
+          "character": "silent",
+          "ascensions": [
+            10
+          ]
+        },
+        "directions": [],
+        "cores": [],
+        "combos": [],
+        "source_experience": [
+          "silent-brain-haze-external-prefix-context"
+        ],
+        "sources": [
+          {
+            "source": "own",
+            "path": ".worktrees/codex-strategy-silent-20261024-233359/learner/runs/20261024-233510-75269924-3572-4eac-bd79-21290edd1c9a-strategy-proposal/scratch/raw/ATP5MCMJDMQY-F2-reward-card.json",
+            "sha256": "7e6db28de2c1bc0d615e73c9e578f24aa0fb8681aadd3a9e4ebab7c2ef27a254",
+            "game_version": "unknown",
+            "retrieved_at": "2026-10-24",
+            "sample": {
+              "runs": 1,
+              "players": null,
+              "selection": "A10/no_retry_evidence; ATP5MCMJDMQY F2; 1 choice opportunity, card text and completed choice only; no estimated advantage"
+            }
+          },
+          {
+            "source": "external:sts2fun",
+            "path": "knowledge/external/sts2fun/builds-v1/representative-timelines.json",
+            "sha256": "dfde8d6ec66f58fca63ca30d45d86d47c2d822e807e9f77f65cb3c4c65268eda",
+            "game_version": "v0.111",
+            "retrieved_at": "2026-10-21",
+            "url": "https://sts2.fun/static/sts2_public.db.zst",
+            "license": "No explicit dataset redistribution license found on public FAQ; aggregate statistics with attribution only; no raw redistribution.",
+            "sample": {
+              "runs": 10,
+              "players": null,
+              "selection": "five selected representative pairs 0,3,5,7,9; terminal HAZE: winners 1/5, failures 0/5; descriptive, not an effect or trigger"
+            }
+          }
+        ]
+      },
+      "summary": {
+        "id": "silent-rk-c5-c5-1",
+        "version": 1,
+        "applies_to": "card_pick",
+        "summary": "Compare group poison and Weak with retained single target poison",
+        "confidence": 0.25,
+        "evidence": {
+          "observations": [
+            {
+              "run_id": "ATP5MCMJDMQY",
+              "floor": 2
+            }
+          ],
+          "n_support": 1,
+          "n_contradict": 0
+        },
+        "source_experience": [
+          "silent-brain-haze-external-prefix-context"
+        ]
+      },
+      "construction_representation": "construction_summary",
+      "current_coarse_predicate_result": null,
+      "original_card_pick_capture_result_replay": "pending",
+      "preceding_snapshot_only": true,
+      "original_case": {
+        "state": {
+          "path": "/home/dw/Projects/agent-sts2/paper/materials/20261025-issue51-mixed-c5-ops/fixed-cases/c5-1.json",
+          "sha256": "af2dad7b7074f7bc82542e85983e7f90906a250225ece7093f5996fe7a5521ae"
+        }
+      },
+      "preceding_snapshot_proxy": true,
+      "actual_fixed_production_tools": true,
+      "active_numeric_advice": false,
+      "natural_query": false,
+      "causal_benefit": false
+    },
+    {
+      "strategy_id": "silent-brain-c5-mirage-needs-established-poison",
+      "rk_id": "silent-rk-c5-c5-2",
+      "lane": "A",
+      "strategy": {
+        "id": "silent-brain-c5-mirage-needs-established-poison",
+        "version": "2026-10-24-c5-r1",
+        "trigger": {
+          "question_types": [
+            "card_reward"
+          ],
+          "acts": [
+            1
+          ]
+        },
+        "strategy": "当前只记录到迷雾这一施毒来源时，蜃景应与切割、独门技术的即时用途比较，先核能否在需要挡的回合建立毒。原文蜃景1费、按全体毒层总和给挡并消耗；切割0费6伤。ATP5MCMJDMQY F3一次机会选切割，蜃景未拿；不能把牌组有迷雾算成战中已有毒。F5两敌战49→46，终局仍败，不证明切割优于蜃景。\n范围：Silent A10、幕1奖励且牌文同；此前快照为牌组代理，版本unknown、1局1机会，无战中起手或伤害反事实。",
+        "evidence": [
+          {
+            "type": "own",
+            "run": "ATP5MCMJDMQY",
+            "floor": 3,
+            "ref": ".worktrees/codex-strategy-silent-20261024-233359/learner/runs/20261024-233510-75269924-3572-4eac-bd79-21290edd1c9a-strategy-proposal/scratch/raw/ATP5MCMJDMQY-F3-reward-card.json#questions.pick.criteria;completed action; SHA256=98059f8115a894632acafd12e399f437f8165c78b3f458c806fb97a35f66a40b",
+            "role": "support"
+          },
+          {
+            "type": "external_aggregate",
+            "source": "external:sts2fun",
+            "url": "https://sts2.fun/static/sts2_public.db.zst",
+            "version": "v0.111",
+            "dataset_sha256": "1f7c0c3d441aedb5c85f04bcd4d8d6a1039b438a8b6fda2d96cfa5c27580cbf5",
+            "downloaded_at": "2026-10-21",
+            "license": "No explicit dataset redistribution license found on public FAQ; aggregate statistics with attribution only; no raw redistribution.",
+            "filters": {
+              "character": "silent",
+              "ascension": 10,
+              "criteria": "valid, singleplayer, non-abandoned, no modifiers; frozen final-deck cluster=5; pairs 0,3,5,7,9; outcome=1; terminal card=MIRAGE; selected representative subset, not current state"
+            },
+            "statistic": {
+              "name": "selected_representative_terminal_card_presence_context_only",
+              "value": 0.6,
+              "unit": "proportion"
+            },
+            "denominator": {
+              "unit": "runs",
+              "n": 5
+            },
+            "design": "observational",
+            "limitations": [
+              "外部为自选上传的观察数据，玩家标识未读，独立玩家数与玩家间依赖未知；不声称因果收益。",
+              "五对代表按早期相近代理选择，不是随机样本或同起点反事实；终局持牌仅事后关联，不能触发当前策略。",
+              "自有A10/no_retry_evidence与重试或预判必死、其他进阶分别统计；自有版本unknown不补为v0.111。"
+            ],
+            "ref": "knowledge/external/sts2fun/builds-v1/representative-timelines.json#cluster=5,pairs=0,3,5,7,9,outcome=1;input_sha256=dfde8d6ec66f58fca63ca30d45d86d47c2d822e807e9f77f65cb3c4c65268eda",
+            "role": "support"
+          },
+          {
+            "type": "external_aggregate",
+            "source": "external:sts2fun",
+            "url": "https://sts2.fun/static/sts2_public.db.zst",
+            "version": "v0.111",
+            "dataset_sha256": "1f7c0c3d441aedb5c85f04bcd4d8d6a1039b438a8b6fda2d96cfa5c27580cbf5",
+            "downloaded_at": "2026-10-21",
+            "license": "No explicit dataset redistribution license found on public FAQ; aggregate statistics with attribution only; no raw redistribution.",
+            "filters": {
+              "character": "silent",
+              "ascension": 10,
+              "criteria": "valid, singleplayer, non-abandoned, no modifiers; frozen final-deck cluster=5; pairs 0,3,5,7,9; outcome=0; terminal card=MIRAGE; selected representative subset, not current state"
+            },
+            "statistic": {
+              "name": "selected_representative_terminal_card_presence_context_only",
+              "value": 0.6,
+              "unit": "proportion"
+            },
+            "denominator": {
+              "unit": "runs",
+              "n": 5
+            },
+            "design": "observational",
+            "limitations": [
+              "外部为自选上传的观察数据，玩家标识未读，独立玩家数与玩家间依赖未知；不声称因果收益。",
+              "五对代表按早期相近代理选择，不是随机样本或同起点反事实；终局持牌仅事后关联，不能触发当前策略。",
+              "自有A10/no_retry_evidence与重试或预判必死、其他进阶分别统计；自有版本unknown不补为v0.111。"
+            ],
+            "ref": "knowledge/external/sts2fun/builds-v1/representative-timelines.json#cluster=5,pairs=0,3,5,7,9,outcome=0;input_sha256=dfde8d6ec66f58fca63ca30d45d86d47c2d822e807e9f77f65cb3c4c65268eda",
+            "role": "contradict"
+          }
+        ],
+        "source": "mixed",
+        "confidence": 0.25,
+        "evidence_status": "conflict",
+        "formal_publication": "pending",
+        "consumer_readback": "pending",
+        "evidence_summary": {
+          "own_runs": 1,
+          "own_support_runs": 1,
+          "external": [
+            {
+              "source": "external:sts2fun",
+              "version": "v0.111",
+              "dataset_sha256": "1f7c0c3d441aedb5c85f04bcd4d8d6a1039b438a8b6fda2d96cfa5c27580cbf5",
+              "statistic": "selected_representative_terminal_card_presence_context_only",
+              "denominator": {
+                "unit": "runs",
+                "n": 5
+              }
+            },
+            {
+              "source": "external:sts2fun",
+              "version": "v0.111",
+              "dataset_sha256": "1f7c0c3d441aedb5c85f04bcd4d8d6a1039b438a8b6fda2d96cfa5c27580cbf5",
+              "statistic": "selected_representative_terminal_card_presence_context_only",
+              "denominator": {
+                "unit": "runs",
+                "n": 5
+              }
+            }
+          ]
+        },
+        "limitation_notice": "外部聚合为观察性统计、非因果，外部分母不计本系统验证；样本选择、版本与口径局限见 evidence.limitations。"
+      },
+      "rk": {
+        "schema": "reflex-entry-v1",
+        "id": "silent-rk-c5-c5-2",
+        "version": 1,
+        "applies_to": "card_pick",
+        "predicate": {
+          "op": "and",
+          "args": [
+            {
+              "op": "eq",
+              "field": "card.id",
+              "value": "MIRAGE"
+            },
+            {
+              "op": "eq",
+              "field": "act",
+              "value": 1
+            }
+          ]
+        },
+        "signal": {
+          "kind": "tag",
+          "value": "silent-rk-c5-c5-2-review",
+          "unit": "label"
+        },
+        "label_en": "Check established poison before valuing Mirage block",
+        "evidence": {
+          "observations": [
+            {
+              "run_id": "ATP5MCMJDMQY",
+              "floor": 3
+            }
+          ],
+          "n_support": 1,
+          "n_contradict": 0
+        },
+        "confidence": 0.25,
+        "scope": {
+          "character": "silent",
+          "ascensions": [
+            10
+          ]
+        },
+        "directions": [],
+        "cores": [],
+        "combos": [],
+        "source_experience": [
+          "silent-brain-c5-mirage-needs-established-poison"
+        ],
+        "sources": [
+          {
+            "source": "own",
+            "path": ".worktrees/codex-strategy-silent-20261024-233359/learner/runs/20261024-233510-75269924-3572-4eac-bd79-21290edd1c9a-strategy-proposal/scratch/raw/ATP5MCMJDMQY-F3-reward-card.json",
+            "sha256": "98059f8115a894632acafd12e399f437f8165c78b3f458c806fb97a35f66a40b",
+            "game_version": "unknown",
+            "retrieved_at": "2026-10-24",
+            "sample": {
+              "runs": 1,
+              "players": null,
+              "selection": "A10/no_retry_evidence; ATP5MCMJDMQY F3; 1 choice opportunity, card text and completed choice only; no estimated advantage"
+            }
+          },
+          {
+            "source": "external:sts2fun",
+            "path": "knowledge/external/sts2fun/builds-v1/representative-timelines.json",
+            "sha256": "dfde8d6ec66f58fca63ca30d45d86d47c2d822e807e9f77f65cb3c4c65268eda",
+            "game_version": "v0.111",
+            "retrieved_at": "2026-10-21",
+            "url": "https://sts2.fun/static/sts2_public.db.zst",
+            "license": "No explicit dataset redistribution license found on public FAQ; aggregate statistics with attribution only; no raw redistribution.",
+            "sample": {
+              "runs": 10,
+              "players": null,
+              "selection": "five selected representative pairs 0,3,5,7,9; terminal MIRAGE: winners 3/5, failures 3/5; descriptive, not an effect or trigger"
+            }
+          }
+        ]
+      },
+      "summary": {
+        "id": "silent-rk-c5-c5-2",
+        "version": 1,
+        "applies_to": "card_pick",
+        "summary": "Check established poison before valuing Mirage block",
+        "confidence": 0.25,
+        "evidence": {
+          "observations": [
+            {
+              "run_id": "ATP5MCMJDMQY",
+              "floor": 3
+            }
+          ],
+          "n_support": 1,
+          "n_contradict": 0
+        },
+        "source_experience": [
+          "silent-brain-c5-mirage-needs-established-poison"
+        ]
+      },
+      "construction_representation": "construction_summary",
+      "current_coarse_predicate_result": null,
+      "original_card_pick_capture_result_replay": "pending",
+      "preceding_snapshot_only": true,
+      "original_case": {
+        "state": {
+          "path": "/home/dw/Projects/agent-sts2/paper/materials/20261025-issue51-mixed-c5-ops/fixed-cases/c5-2.json",
+          "sha256": "2e251b15ab32a9a8527c838fed0bb53e53ffdc030729ef9a00c124d7b5b9fc8e"
+        }
+      },
+      "preceding_snapshot_proxy": true,
+      "actual_fixed_production_tools": true,
+      "active_numeric_advice": false,
+      "natural_query": false,
+      "causal_benefit": false
+    },
+    {
+      "strategy_id": "silent-brain-bubble-bubble-external-prefix-context",
+      "rk_id": "silent-rk-c5-c5-3",
+      "lane": "A",
+      "strategy": {
+        "id": "silent-brain-bubble-bubble-external-prefix-context",
+        "trigger": {
+          "question_types": [
+            "card_reward"
+          ],
+          "acts": [
+            1
+          ]
+        },
+        "strategy": "BUBBLE_BUBBLE的拿牌观察关联偏正：v0.107拿43/133、不拿135/537最终胜，差+7.19个百分点；样本单位为选择记录（重复局；合并独立局数未知）。\n范围：仅Silent A10/v0.107奖励出现此卡，幕1前缀张数∈{0–6}（奖励获取前缀代理）。观察非因果，不能视为完整牌组、固定拿牌命令或外推到其他版本；反向/小样本见证据附件。\n补充当下条件：已有迷雾+与弹跳药瓶+时，咕嘟冒泡与本题直接防护/过牌比较；原文1费、仅敌方已有中毒才再给9毒，不把它当无条件起毒。ATP5MCMJDMQY F15一次五选一选咕嘟冒泡，后继入组；F17带该牌53血进场仍实际败。\n本补充范围：Silent A10、幕1实际提供该牌的奖励/事件选牌；自有版本unknown，1局1机会；不把旧v0.107关联移作v0.111效果。",
+        "source": "mixed",
+        "confidence": 0.25,
+        "evidence_status": "conflict",
+        "version": "2.0.0-c5-r1",
+        "evidence": [
+          {
+            "type": "external_aggregate",
+            "source": "external:sts2fun",
+            "url": "https://sts2.fun/static/sts2_public.db.zst",
+            "version": "v0.107",
+            "dataset_sha256": "1f7c0c3d441aedb5c85f04bcd4d8d6a1039b438a8b6fda2d96cfa5c27580cbf5",
+            "downloaded_at": "2026-10-21",
+            "license": "许可未核；仅署名聚合候选，不分发原始数据库。",
+            "filters": {
+              "character": "silent",
+              "ascension": 10,
+              "criteria": "singleplayer;valid;not abandoned;no modifiers;card=CARD.BUBBLE_BUBBLE;arm=picked;代理=幕1前缀张数∈{0–6};双方共有保留cell;n10删失;upgrades unknown"
+            },
+            "statistic": {
+              "name": "eventual_win_rate",
+              "value": 0.3233082706766917,
+              "unit": "fraction"
+            },
+            "denominator": {
+              "unit": "offers",
+              "n": 133
+            },
+            "design": "observational",
+            "limitations": [
+              "自选上传、技能/SL/重复上传/玩家分母未知；独立上传局不等于独立玩家，未作玩家聚类调整。",
+              "观察关联非因果；备选牌、奖励来源、既有实力、幕存活筛选与前缀构成混杂；不写拿牌收益或固定命令。",
+              "奖励获取前缀是代理；缺初始牌组、删除/变形、事件/商店牌与升级；不能当完整决策时牌组。",
+              "前缀张数cell按选择记录互斥可加；同局跨cell/跨选择臂，局数不可相加，不构造合并独立局胜率。",
+              "n<10独立局cell已被导出删除；缺cell非0。宽代理仅双方共有的保留cell，受截尾/支持集选择影响。",
+              "胜利是未来整局标签，仅用于结果统计；后续Boss访问是机会级同幕或更晚幕到达，非打赢/准备度。",
+              "机制版本对照未知；各版本拆分、保留原分母，其他版本不外推到当前v0.111。无有效聚类区间。",
+              "当前schema无奖励前缀/奖励候选卡的机器触发字段；条目正文限定条件，未知前缀不可套用，正式消费待验收。"
+            ],
+            "ref": "paper/materials/20261024-090927-strategy-result-ops/source-statistics.json#/cards/BUBBLE_BUBBLE/0/selected/picked/win",
+            "role": "support"
+          },
+          {
+            "type": "external_aggregate",
+            "source": "external:sts2fun",
+            "url": "https://sts2.fun/static/sts2_public.db.zst",
+            "version": "v0.107",
+            "dataset_sha256": "1f7c0c3d441aedb5c85f04bcd4d8d6a1039b438a8b6fda2d96cfa5c27580cbf5",
+            "downloaded_at": "2026-10-21",
+            "license": "许可未核；仅署名聚合候选，不分发原始数据库。",
+            "filters": {
+              "character": "silent",
+              "ascension": 10,
+              "criteria": "singleplayer;valid;not abandoned;no modifiers;card=CARD.BUBBLE_BUBBLE;arm=not_picked;代理=幕1前缀张数∈{0–6};双方共有保留cell;n10删失;upgrades unknown"
+            },
+            "statistic": {
+              "name": "eventual_win_rate",
+              "value": 0.25139664804469275,
+              "unit": "fraction"
+            },
+            "denominator": {
+              "unit": "offers",
+              "n": 537
+            },
+            "design": "observational",
+            "limitations": [
+              "自选上传、技能/SL/重复上传/玩家分母未知；独立上传局不等于独立玩家，未作玩家聚类调整。",
+              "观察关联非因果；备选牌、奖励来源、既有实力、幕存活筛选与前缀构成混杂；不写拿牌收益或固定命令。",
+              "奖励获取前缀是代理；缺初始牌组、删除/变形、事件/商店牌与升级；不能当完整决策时牌组。",
+              "前缀张数cell按选择记录互斥可加；同局跨cell/跨选择臂，局数不可相加，不构造合并独立局胜率。",
+              "n<10独立局cell已被导出删除；缺cell非0。宽代理仅双方共有的保留cell，受截尾/支持集选择影响。",
+              "胜利是未来整局标签，仅用于结果统计；后续Boss访问是机会级同幕或更晚幕到达，非打赢/准备度。",
+              "机制版本对照未知；各版本拆分、保留原分母，其他版本不外推到当前v0.111。无有效聚类区间。",
+              "当前schema无奖励前缀/奖励候选卡的机器触发字段；条目正文限定条件，未知前缀不可套用，正式消费待验收。"
+            ],
+            "ref": "paper/materials/20261024-090927-strategy-result-ops/source-statistics.json#/cards/BUBBLE_BUBBLE/0/selected/not_picked/win",
+            "role": "support"
+          },
+          {
+            "type": "own",
+            "run": "ATP5MCMJDMQY",
+            "floor": 15,
+            "ref": ".worktrees/codex-strategy-silent-20261024-233359/learner/runs/20261024-233510-75269924-3572-4eac-bd79-21290edd1c9a-strategy-proposal/scratch/raw/ATP5MCMJDMQY-F15-selection-add.json#questions.pick.criteria;completed action; SHA256=b3894e8d0d1e58854e5505e04dd7de6f8da24d5e0308e3d87047321eafd6dc69",
+            "role": "support"
+          },
+          {
+            "type": "external_aggregate",
+            "source": "external:sts2fun",
+            "url": "https://sts2.fun/static/sts2_public.db.zst",
+            "version": "v0.111",
+            "dataset_sha256": "1f7c0c3d441aedb5c85f04bcd4d8d6a1039b438a8b6fda2d96cfa5c27580cbf5",
+            "downloaded_at": "2026-10-21",
+            "license": "No explicit dataset redistribution license found on public FAQ; aggregate statistics with attribution only; no raw redistribution.",
+            "filters": {
+              "character": "silent",
+              "ascension": 10,
+              "criteria": "valid, singleplayer, non-abandoned, no modifiers; frozen final-deck cluster=5; pairs 0,3,5,7,9; outcome=1; terminal card=BUBBLE_BUBBLE; selected representative subset, not current state"
+            },
+            "statistic": {
+              "name": "selected_representative_terminal_card_presence_context_only",
+              "value": 0.8,
+              "unit": "proportion"
+            },
+            "denominator": {
+              "unit": "runs",
+              "n": 5
+            },
+            "design": "observational",
+            "limitations": [
+              "外部为自选上传的观察数据，玩家标识未读，独立玩家数与玩家间依赖未知；不声称因果收益。",
+              "五对代表按早期相近代理选择，不是随机样本或同起点反事实；终局持牌仅事后关联，不能触发当前策略。",
+              "自有A10/no_retry_evidence与重试或预判必死、其他进阶分别统计；自有版本unknown不补为v0.111。"
+            ],
+            "ref": "knowledge/external/sts2fun/builds-v1/representative-timelines.json#cluster=5,pairs=0,3,5,7,9,outcome=1;input_sha256=dfde8d6ec66f58fca63ca30d45d86d47c2d822e807e9f77f65cb3c4c65268eda",
+            "role": "support"
+          },
+          {
+            "type": "external_aggregate",
+            "source": "external:sts2fun",
+            "url": "https://sts2.fun/static/sts2_public.db.zst",
+            "version": "v0.111",
+            "dataset_sha256": "1f7c0c3d441aedb5c85f04bcd4d8d6a1039b438a8b6fda2d96cfa5c27580cbf5",
+            "downloaded_at": "2026-10-21",
+            "license": "No explicit dataset redistribution license found on public FAQ; aggregate statistics with attribution only; no raw redistribution.",
+            "filters": {
+              "character": "silent",
+              "ascension": 10,
+              "criteria": "valid, singleplayer, non-abandoned, no modifiers; frozen final-deck cluster=5; pairs 0,3,5,7,9; outcome=0; terminal card=BUBBLE_BUBBLE; selected representative subset, not current state"
+            },
+            "statistic": {
+              "name": "selected_representative_terminal_card_presence_context_only",
+              "value": 1,
+              "unit": "proportion"
+            },
+            "denominator": {
+              "unit": "runs",
+              "n": 5
+            },
+            "design": "observational",
+            "limitations": [
+              "外部为自选上传的观察数据，玩家标识未读，独立玩家数与玩家间依赖未知；不声称因果收益。",
+              "五对代表按早期相近代理选择，不是随机样本或同起点反事实；终局持牌仅事后关联，不能触发当前策略。",
+              "自有A10/no_retry_evidence与重试或预判必死、其他进阶分别统计；自有版本unknown不补为v0.111。"
+            ],
+            "ref": "knowledge/external/sts2fun/builds-v1/representative-timelines.json#cluster=5,pairs=0,3,5,7,9,outcome=0;input_sha256=dfde8d6ec66f58fca63ca30d45d86d47c2d822e807e9f77f65cb3c4c65268eda",
+            "role": "contradict"
+          }
+        ],
+        "evidence_detail_ref": {
+          "path": "paper/materials/20261024-090927-strategy-result-ops/source-candidates.json",
+          "sha256": "dd11d373454510b1737be65002fed9115f1d2d3033d2d4f18717f7e3304e0174",
+          "entry_id": "silent-brain-bubble-bubble-external-prefix-context",
+          "statistics": {
+            "path": "paper/materials/20261024-090927-strategy-result-ops/source-statistics.json",
+            "bytes": 14899978,
+            "sha256": "8b52fd3149833b2964851ca0b832f778d9a0ca256080cd29f014bdb001086c3c"
+          },
+          "original_version": "2.0.0-pending",
+          "prior_evidence_preserved": true,
+          "primary_sample_gate": {
+            "threshold": 100,
+            "unit": "offers",
+            "passed": true,
+            "exact_independent_run_gate_passed": false
+          },
+          "independent_uploaded_runs": {
+            "picked": {
+              "n": null,
+              "unit": "distinct_uploaded_runs_union",
+              "lower_bound": 26,
+              "upper_bound": 133,
+              "bounds_not_estimates": true
+            },
+            "not_picked": {
+              "n": null,
+              "unit": "distinct_uploaded_runs_union",
+              "lower_bound": 102,
+              "upper_bound": 530,
+              "bounds_not_estimates": true
+            }
+          },
+          "evidence_status": "conflict"
+        },
+        "formal_publication": "pending",
+        "consumer_readback": "pending",
+        "evidence_summary": {
+          "own_runs": 1,
+          "own_support_runs": 1,
+          "external": [
+            {
+              "source": "external:sts2fun",
+              "version": "v0.107",
+              "dataset_sha256": "1f7c0c3d441aedb5c85f04bcd4d8d6a1039b438a8b6fda2d96cfa5c27580cbf5",
+              "statistic": "eventual_win_rate",
+              "denominator": {
+                "unit": "offers",
+                "n": 133
+              }
+            },
+            {
+              "source": "external:sts2fun",
+              "version": "v0.107",
+              "dataset_sha256": "1f7c0c3d441aedb5c85f04bcd4d8d6a1039b438a8b6fda2d96cfa5c27580cbf5",
+              "statistic": "eventual_win_rate",
+              "denominator": {
+                "unit": "offers",
+                "n": 537
+              }
+            },
+            {
+              "source": "external:sts2fun",
+              "version": "v0.111",
+              "dataset_sha256": "1f7c0c3d441aedb5c85f04bcd4d8d6a1039b438a8b6fda2d96cfa5c27580cbf5",
+              "statistic": "selected_representative_terminal_card_presence_context_only",
+              "denominator": {
+                "unit": "runs",
+                "n": 5
+              }
+            },
+            {
+              "source": "external:sts2fun",
+              "version": "v0.111",
+              "dataset_sha256": "1f7c0c3d441aedb5c85f04bcd4d8d6a1039b438a8b6fda2d96cfa5c27580cbf5",
+              "statistic": "selected_representative_terminal_card_presence_context_only",
+              "denominator": {
+                "unit": "runs",
+                "n": 5
+              }
+            }
+          ]
+        },
+        "limitation_notice": "外部聚合为观察性统计、非因果，外部分母不计本系统验证；样本选择、版本与口径局限见 evidence.limitations。"
+      },
+      "rk": {
+        "schema": "reflex-entry-v1",
+        "id": "silent-rk-c5-c5-3",
+        "version": 1,
+        "applies_to": "card_pick",
+        "predicate": {
+          "op": "and",
+          "args": [
+            {
+              "op": "eq",
+              "field": "card.id",
+              "value": "BUBBLE_BUBBLE"
+            },
+            {
+              "op": "eq",
+              "field": "act",
+              "value": 1
+            }
+          ]
+        },
+        "signal": {
+          "kind": "tag",
+          "value": "silent-rk-c5-c5-3-review",
+          "unit": "label"
+        },
+        "label_en": "Require an existing poison source before conditional poison growth",
+        "evidence": {
+          "observations": [
+            {
+              "run_id": "ATP5MCMJDMQY",
+              "floor": 15
+            }
+          ],
+          "n_support": 1,
+          "n_contradict": 0
+        },
+        "confidence": 0.25,
+        "scope": {
+          "character": "silent",
+          "ascensions": [
+            10
+          ]
+        },
+        "directions": [],
+        "cores": [],
+        "combos": [],
+        "source_experience": [
+          "silent-brain-bubble-bubble-external-prefix-context"
+        ],
+        "sources": [
+          {
+            "source": "own",
+            "path": ".worktrees/codex-strategy-silent-20261024-233359/learner/runs/20261024-233510-75269924-3572-4eac-bd79-21290edd1c9a-strategy-proposal/scratch/raw/ATP5MCMJDMQY-F15-selection-add.json",
+            "sha256": "b3894e8d0d1e58854e5505e04dd7de6f8da24d5e0308e3d87047321eafd6dc69",
+            "game_version": "unknown",
+            "retrieved_at": "2026-10-24",
+            "sample": {
+              "runs": 1,
+              "players": null,
+              "selection": "A10/no_retry_evidence; ATP5MCMJDMQY F15; 1 choice opportunity, card text and completed choice only; no estimated advantage"
+            }
+          },
+          {
+            "source": "external:sts2fun",
+            "path": "knowledge/external/sts2fun/builds-v1/representative-timelines.json",
+            "sha256": "dfde8d6ec66f58fca63ca30d45d86d47c2d822e807e9f77f65cb3c4c65268eda",
+            "game_version": "v0.111",
+            "retrieved_at": "2026-10-21",
+            "url": "https://sts2.fun/static/sts2_public.db.zst",
+            "license": "No explicit dataset redistribution license found on public FAQ; aggregate statistics with attribution only; no raw redistribution.",
+            "sample": {
+              "runs": 10,
+              "players": null,
+              "selection": "five selected representative pairs 0,3,5,7,9; terminal BUBBLE_BUBBLE: winners 4/5, failures 5/5; descriptive, not an effect or trigger"
+            }
+          }
+        ]
+      },
+      "summary": {
+        "id": "silent-rk-c5-c5-3",
+        "version": 1,
+        "applies_to": "card_pick",
+        "summary": "Require an existing poison source before conditional poison growth",
+        "confidence": 0.25,
+        "evidence": {
+          "observations": [
+            {
+              "run_id": "ATP5MCMJDMQY",
+              "floor": 15
+            }
+          ],
+          "n_support": 1,
+          "n_contradict": 0
+        },
+        "source_experience": [
+          "silent-brain-bubble-bubble-external-prefix-context"
+        ]
+      },
+      "construction_representation": "construction_summary",
+      "current_coarse_predicate_result": null,
+      "original_card_pick_capture_result_replay": "pending",
+      "preceding_snapshot_only": true,
+      "original_case": {
+        "state": {
+          "path": "/home/dw/Projects/agent-sts2/paper/materials/20261025-issue51-mixed-c5-ops/fixed-cases/c5-3.json",
+          "sha256": "28231775b81451b896fdb4bbd38a00cf069e05f1b4d04d617575cd2ede93a000"
+        }
+      },
+      "preceding_snapshot_proxy": true,
+      "actual_fixed_production_tools": true,
+      "active_numeric_advice": false,
+      "natural_query": false,
+      "causal_benefit": false
+    },
+    {
+      "strategy_id": "silent-brain-c5-outbreak-immediate-trigger-budget",
+      "rk_id": "silent-rk-c5-c5-4",
+      "lane": "A",
+      "strategy": {
+        "id": "silent-brain-c5-outbreak-immediate-trigger-budget",
+        "version": "2026-10-24-c5-r1",
+        "trigger": {
+          "question_types": [
+            "card_reward"
+          ],
+          "acts": [
+            1,
+            2
+          ]
+        },
+        "strategy": "已有触媒、致命毒药+、带毒刺击+及偏折+时，毒性爆发+可与涂毒、钢铁风暴+比较直接群体施毒/立即触发与另一种启动代价。原文3费全体12毒并立即触发；涂毒2费须攻击造成未格挡伤害才施1毒。FZT053H9PSC5 F17一次奖励选择前者，F19两敌战60→60、2回合；后续F23仍51→31，不能从赢家或一次零损证明固定优先级。\n范围：Silent A10、幕1末奖励/幕2构筑且现场牌文同；此前牌组为代理、版本unknown、1局1机会；实际出牌次序和单牌贡献未核。",
+        "evidence": [
+          {
+            "type": "own",
+            "run": "FZT053H9PSC5",
+            "floor": 17,
+            "ref": ".worktrees/codex-strategy-silent-20261024-233359/learner/runs/20261024-233510-75269924-3572-4eac-bd79-21290edd1c9a-strategy-proposal/scratch/raw/FZT053H9PSC5-F17-reward-card.json#questions.pick.criteria;completed action; SHA256=d4cd04d951a56c1ce55687a63aba6b6c8f030fa7b78e9154da1f9821a3490a10",
+            "role": "support"
+          },
+          {
+            "type": "external_aggregate",
+            "source": "external:sts2fun",
+            "url": "https://sts2.fun/static/sts2_public.db.zst",
+            "version": "v0.111",
+            "dataset_sha256": "1f7c0c3d441aedb5c85f04bcd4d8d6a1039b438a8b6fda2d96cfa5c27580cbf5",
+            "downloaded_at": "2026-10-21",
+            "license": "No explicit dataset redistribution license found on public FAQ; aggregate statistics with attribution only; no raw redistribution.",
+            "filters": {
+              "character": "silent",
+              "ascension": 10,
+              "criteria": "valid, singleplayer, non-abandoned, no modifiers; frozen final-deck cluster=5; pairs 0,3,5,7,9; outcome=1; terminal card=OUTBREAK; selected representative subset, not current state"
+            },
+            "statistic": {
+              "name": "selected_representative_terminal_card_presence_context_only",
+              "value": 0.2,
+              "unit": "proportion"
+            },
+            "denominator": {
+              "unit": "runs",
+              "n": 5
+            },
+            "design": "observational",
+            "limitations": [
+              "外部为自选上传的观察数据，玩家标识未读，独立玩家数与玩家间依赖未知；不声称因果收益。",
+              "五对代表按早期相近代理选择，不是随机样本或同起点反事实；终局持牌仅事后关联，不能触发当前策略。",
+              "自有A10/no_retry_evidence与重试或预判必死、其他进阶分别统计；自有版本unknown不补为v0.111。"
+            ],
+            "ref": "knowledge/external/sts2fun/builds-v1/representative-timelines.json#cluster=5,pairs=0,3,5,7,9,outcome=1;input_sha256=dfde8d6ec66f58fca63ca30d45d86d47c2d822e807e9f77f65cb3c4c65268eda",
+            "role": "support"
+          },
+          {
+            "type": "external_aggregate",
+            "source": "external:sts2fun",
+            "url": "https://sts2.fun/static/sts2_public.db.zst",
+            "version": "v0.111",
+            "dataset_sha256": "1f7c0c3d441aedb5c85f04bcd4d8d6a1039b438a8b6fda2d96cfa5c27580cbf5",
+            "downloaded_at": "2026-10-21",
+            "license": "No explicit dataset redistribution license found on public FAQ; aggregate statistics with attribution only; no raw redistribution.",
+            "filters": {
+              "character": "silent",
+              "ascension": 10,
+              "criteria": "valid, singleplayer, non-abandoned, no modifiers; frozen final-deck cluster=5; pairs 0,3,5,7,9; outcome=0; terminal card=OUTBREAK; selected representative subset, not current state"
+            },
+            "statistic": {
+              "name": "selected_representative_terminal_card_presence_context_only",
+              "value": 0.4,
+              "unit": "proportion"
+            },
+            "denominator": {
+              "unit": "runs",
+              "n": 5
+            },
+            "design": "observational",
+            "limitations": [
+              "外部为自选上传的观察数据，玩家标识未读，独立玩家数与玩家间依赖未知；不声称因果收益。",
+              "五对代表按早期相近代理选择，不是随机样本或同起点反事实；终局持牌仅事后关联，不能触发当前策略。",
+              "自有A10/no_retry_evidence与重试或预判必死、其他进阶分别统计；自有版本unknown不补为v0.111。"
+            ],
+            "ref": "knowledge/external/sts2fun/builds-v1/representative-timelines.json#cluster=5,pairs=0,3,5,7,9,outcome=0;input_sha256=dfde8d6ec66f58fca63ca30d45d86d47c2d822e807e9f77f65cb3c4c65268eda",
+            "role": "contradict"
+          }
+        ],
+        "source": "mixed",
+        "confidence": 0.25,
+        "evidence_status": "conflict",
+        "formal_publication": "pending",
+        "consumer_readback": "pending",
+        "evidence_summary": {
+          "own_runs": 1,
+          "own_support_runs": 1,
+          "external": [
+            {
+              "source": "external:sts2fun",
+              "version": "v0.111",
+              "dataset_sha256": "1f7c0c3d441aedb5c85f04bcd4d8d6a1039b438a8b6fda2d96cfa5c27580cbf5",
+              "statistic": "selected_representative_terminal_card_presence_context_only",
+              "denominator": {
+                "unit": "runs",
+                "n": 5
+              }
+            },
+            {
+              "source": "external:sts2fun",
+              "version": "v0.111",
+              "dataset_sha256": "1f7c0c3d441aedb5c85f04bcd4d8d6a1039b438a8b6fda2d96cfa5c27580cbf5",
+              "statistic": "selected_representative_terminal_card_presence_context_only",
+              "denominator": {
+                "unit": "runs",
+                "n": 5
+              }
+            }
+          ]
+        },
+        "limitation_notice": "外部聚合为观察性统计、非因果，外部分母不计本系统验证；样本选择、版本与口径局限见 evidence.limitations。"
+      },
+      "rk": {
+        "schema": "reflex-entry-v1",
+        "id": "silent-rk-c5-c5-4",
+        "version": 1,
+        "applies_to": "card_pick",
+        "predicate": {
+          "op": "and",
+          "args": [
+            {
+              "op": "eq",
+              "field": "card.id",
+              "value": "OUTBREAK"
+            },
+            {
+              "op": "or",
+              "args": [
+                {
+                  "op": "eq",
+                  "field": "act",
+                  "value": 1
+                },
+                {
+                  "op": "eq",
+                  "field": "act",
+                  "value": 2
+                }
+              ]
+            }
+          ]
+        },
+        "signal": {
+          "kind": "tag",
+          "value": "silent-rk-c5-c5-4-review",
+          "unit": "label"
+        },
+        "label_en": "Compare immediate group poison with setup cost and available defense",
+        "evidence": {
+          "observations": [
+            {
+              "run_id": "FZT053H9PSC5",
+              "floor": 17
+            }
+          ],
+          "n_support": 1,
+          "n_contradict": 0
+        },
+        "confidence": 0.25,
+        "scope": {
+          "character": "silent",
+          "ascensions": [
+            10
+          ]
+        },
+        "directions": [],
+        "cores": [],
+        "combos": [],
+        "source_experience": [
+          "silent-brain-c5-outbreak-immediate-trigger-budget"
+        ],
+        "sources": [
+          {
+            "source": "own",
+            "path": ".worktrees/codex-strategy-silent-20261024-233359/learner/runs/20261024-233510-75269924-3572-4eac-bd79-21290edd1c9a-strategy-proposal/scratch/raw/FZT053H9PSC5-F17-reward-card.json",
+            "sha256": "d4cd04d951a56c1ce55687a63aba6b6c8f030fa7b78e9154da1f9821a3490a10",
+            "game_version": "unknown",
+            "retrieved_at": "2026-10-24",
+            "sample": {
+              "runs": 1,
+              "players": null,
+              "selection": "A10/no_retry_evidence; FZT053H9PSC5 F17; 1 choice opportunity, card text and completed choice only; no estimated advantage"
+            }
+          },
+          {
+            "source": "external:sts2fun",
+            "path": "knowledge/external/sts2fun/builds-v1/representative-timelines.json",
+            "sha256": "dfde8d6ec66f58fca63ca30d45d86d47c2d822e807e9f77f65cb3c4c65268eda",
+            "game_version": "v0.111",
+            "retrieved_at": "2026-10-21",
+            "url": "https://sts2.fun/static/sts2_public.db.zst",
+            "license": "No explicit dataset redistribution license found on public FAQ; aggregate statistics with attribution only; no raw redistribution.",
+            "sample": {
+              "runs": 10,
+              "players": null,
+              "selection": "five selected representative pairs 0,3,5,7,9; terminal OUTBREAK: winners 1/5, failures 2/5; descriptive, not an effect or trigger"
+            }
+          }
+        ]
+      },
+      "summary": {
+        "id": "silent-rk-c5-c5-4",
+        "version": 1,
+        "applies_to": "card_pick",
+        "summary": "Compare immediate group poison with setup cost and available defense",
+        "confidence": 0.25,
+        "evidence": {
+          "observations": [
+            {
+              "run_id": "FZT053H9PSC5",
+              "floor": 17
+            }
+          ],
+          "n_support": 1,
+          "n_contradict": 0
+        },
+        "source_experience": [
+          "silent-brain-c5-outbreak-immediate-trigger-budget"
+        ]
+      },
+      "construction_representation": "construction_summary",
+      "current_coarse_predicate_result": null,
+      "original_card_pick_capture_result_replay": "pending",
+      "preceding_snapshot_only": true,
+      "original_case": {
+        "state": {
+          "path": "/home/dw/Projects/agent-sts2/paper/materials/20261025-issue51-mixed-c5-ops/fixed-cases/c5-4.json",
+          "sha256": "d4a19853f153f0022759e1c77483f78d186ee7d2c595276dbdbdbb933c1caa71"
+        }
+      },
+      "preceding_snapshot_proxy": true,
+      "actual_fixed_production_tools": true,
+      "active_numeric_advice": false,
+      "natural_query": false,
+      "causal_benefit": false
+    },
+    {
+      "strategy_id": "silent-brain-blur-external-prefix-context",
+      "rk_id": "silent-rk-c5-c5-5",
+      "lane": "A",
+      "strategy": {
+        "id": "silent-brain-blur-external-prefix-context",
+        "trigger": {
+          "question_types": [
+            "card_reward"
+          ],
+          "acts": [
+            1,
+            2
+          ]
+        },
+        "strategy": "BLUR的拿牌观察关联偏负：v0.111拿36/139、不拿67/255最终胜，差-0.38个百分点；样本单位为选择记录（重复局；合并独立局数未知）。\n范围：仅Silent A10/v0.111奖励出现此卡，幕1前缀张数∈{0–6}（奖励获取前缀代理）。观察非因果，不能视为完整牌组、固定拿牌命令或外推到其他版本；反向/小样本见证据附件。\n补充幕2：已有灵动步法+、偏折+及施毒牌时，残影+与再添带毒刺击/铭记死亡+比较跨回合防护用途；原文1费8挡、下一回合开始挡不消失，不等于以后每回合都会保挡。FZT053H9PSC5 F28一次机会拿残影+，F30战70→70、F31战70→63；只有1局，不能把零损归这张牌。\n本补充范围：Silent A10、幕2奖励且现场牌文同；自有版本unknown，此前牌组代理；旧幕1负关联保留，无新收益估计。",
+        "source": "mixed",
+        "confidence": 0.25,
+        "evidence_status": "conflict",
+        "version": "2.0.0-c5-r1",
+        "evidence": [
+          {
+            "type": "external_aggregate",
+            "source": "external:sts2fun",
+            "url": "https://sts2.fun/static/sts2_public.db.zst",
+            "version": "v0.111",
+            "dataset_sha256": "1f7c0c3d441aedb5c85f04bcd4d8d6a1039b438a8b6fda2d96cfa5c27580cbf5",
+            "downloaded_at": "2026-10-21",
+            "license": "许可未核；仅署名聚合候选，不分发原始数据库。",
+            "filters": {
+              "character": "silent",
+              "ascension": 10,
+              "criteria": "singleplayer;valid;not abandoned;no modifiers;card=CARD.BLUR;arm=picked;代理=幕1前缀张数∈{0–6};双方共有保留cell;n10删失;upgrades unknown"
+            },
+            "statistic": {
+              "name": "eventual_win_rate",
+              "value": 0.2589928057553957,
+              "unit": "fraction"
+            },
+            "denominator": {
+              "unit": "offers",
+              "n": 139
+            },
+            "design": "observational",
+            "limitations": [
+              "自选上传、技能/SL/重复上传/玩家分母未知；独立上传局不等于独立玩家，未作玩家聚类调整。",
+              "观察关联非因果；备选牌、奖励来源、既有实力、幕存活筛选与前缀构成混杂；不写拿牌收益或固定命令。",
+              "奖励获取前缀是代理；缺初始牌组、删除/变形、事件/商店牌与升级；不能当完整决策时牌组。",
+              "前缀张数cell按选择记录互斥可加；同局跨cell/跨选择臂，局数不可相加，不构造合并独立局胜率。",
+              "n<10独立局cell已被导出删除；缺cell非0。宽代理仅双方共有的保留cell，受截尾/支持集选择影响。",
+              "胜利是未来整局标签，仅用于结果统计；后续Boss访问是机会级同幕或更晚幕到达，非打赢/准备度。",
+              "机制版本对照未知；各版本拆分、保留原分母，其他版本不外推到当前v0.111。无有效聚类区间。",
+              "当前schema无奖励前缀/奖励候选卡的机器触发字段；条目正文限定条件，未知前缀不可套用，正式消费待验收。"
+            ],
+            "ref": "paper/materials/20261024-090927-strategy-result-ops/source-statistics.json#/cards/BLUR/4/selected/picked/win",
+            "role": "support"
+          },
+          {
+            "type": "external_aggregate",
+            "source": "external:sts2fun",
+            "url": "https://sts2.fun/static/sts2_public.db.zst",
+            "version": "v0.111",
+            "dataset_sha256": "1f7c0c3d441aedb5c85f04bcd4d8d6a1039b438a8b6fda2d96cfa5c27580cbf5",
+            "downloaded_at": "2026-10-21",
+            "license": "许可未核；仅署名聚合候选，不分发原始数据库。",
+            "filters": {
+              "character": "silent",
+              "ascension": 10,
+              "criteria": "singleplayer;valid;not abandoned;no modifiers;card=CARD.BLUR;arm=not_picked;代理=幕1前缀张数∈{0–6};双方共有保留cell;n10删失;upgrades unknown"
+            },
+            "statistic": {
+              "name": "eventual_win_rate",
+              "value": 0.2627450980392157,
+              "unit": "fraction"
+            },
+            "denominator": {
+              "unit": "offers",
+              "n": 255
+            },
+            "design": "observational",
+            "limitations": [
+              "自选上传、技能/SL/重复上传/玩家分母未知；独立上传局不等于独立玩家，未作玩家聚类调整。",
+              "观察关联非因果；备选牌、奖励来源、既有实力、幕存活筛选与前缀构成混杂；不写拿牌收益或固定命令。",
+              "奖励获取前缀是代理；缺初始牌组、删除/变形、事件/商店牌与升级；不能当完整决策时牌组。",
+              "前缀张数cell按选择记录互斥可加；同局跨cell/跨选择臂，局数不可相加，不构造合并独立局胜率。",
+              "n<10独立局cell已被导出删除；缺cell非0。宽代理仅双方共有的保留cell，受截尾/支持集选择影响。",
+              "胜利是未来整局标签，仅用于结果统计；后续Boss访问是机会级同幕或更晚幕到达，非打赢/准备度。",
+              "机制版本对照未知；各版本拆分、保留原分母，其他版本不外推到当前v0.111。无有效聚类区间。",
+              "当前schema无奖励前缀/奖励候选卡的机器触发字段；条目正文限定条件，未知前缀不可套用，正式消费待验收。"
+            ],
+            "ref": "paper/materials/20261024-090927-strategy-result-ops/source-statistics.json#/cards/BLUR/4/selected/not_picked/win",
+            "role": "support"
+          },
+          {
+            "type": "own",
+            "run": "FZT053H9PSC5",
+            "floor": 28,
+            "ref": ".worktrees/codex-strategy-silent-20261024-233359/learner/runs/20261024-233510-75269924-3572-4eac-bd79-21290edd1c9a-strategy-proposal/scratch/raw/FZT053H9PSC5-F28-reward-card.json#questions.pick.criteria;completed action; SHA256=8646c12c5a00a74432961dab1efb82f79b0dde86dc3430903b581c6211e24b32",
+            "role": "support"
+          },
+          {
+            "type": "external_aggregate",
+            "source": "external:sts2fun",
+            "url": "https://sts2.fun/static/sts2_public.db.zst",
+            "version": "v0.111",
+            "dataset_sha256": "1f7c0c3d441aedb5c85f04bcd4d8d6a1039b438a8b6fda2d96cfa5c27580cbf5",
+            "downloaded_at": "2026-10-21",
+            "license": "No explicit dataset redistribution license found on public FAQ; aggregate statistics with attribution only; no raw redistribution.",
+            "filters": {
+              "character": "silent",
+              "ascension": 10,
+              "criteria": "valid, singleplayer, non-abandoned, no modifiers; frozen final-deck cluster=5; pairs 0,3,5,7,9; outcome=1; terminal card=BLUR; selected representative subset, not current state"
+            },
+            "statistic": {
+              "name": "selected_representative_terminal_card_presence_context_only",
+              "value": 0.2,
+              "unit": "proportion"
+            },
+            "denominator": {
+              "unit": "runs",
+              "n": 5
+            },
+            "design": "observational",
+            "limitations": [
+              "外部为自选上传的观察数据，玩家标识未读，独立玩家数与玩家间依赖未知；不声称因果收益。",
+              "五对代表按早期相近代理选择，不是随机样本或同起点反事实；终局持牌仅事后关联，不能触发当前策略。",
+              "自有A10/no_retry_evidence与重试或预判必死、其他进阶分别统计；自有版本unknown不补为v0.111。"
+            ],
+            "ref": "knowledge/external/sts2fun/builds-v1/representative-timelines.json#cluster=5,pairs=0,3,5,7,9,outcome=1;input_sha256=dfde8d6ec66f58fca63ca30d45d86d47c2d822e807e9f77f65cb3c4c65268eda",
+            "role": "support"
+          },
+          {
+            "type": "external_aggregate",
+            "source": "external:sts2fun",
+            "url": "https://sts2.fun/static/sts2_public.db.zst",
+            "version": "v0.111",
+            "dataset_sha256": "1f7c0c3d441aedb5c85f04bcd4d8d6a1039b438a8b6fda2d96cfa5c27580cbf5",
+            "downloaded_at": "2026-10-21",
+            "license": "No explicit dataset redistribution license found on public FAQ; aggregate statistics with attribution only; no raw redistribution.",
+            "filters": {
+              "character": "silent",
+              "ascension": 10,
+              "criteria": "valid, singleplayer, non-abandoned, no modifiers; frozen final-deck cluster=5; pairs 0,3,5,7,9; outcome=0; terminal card=BLUR; selected representative subset, not current state"
+            },
+            "statistic": {
+              "name": "selected_representative_terminal_card_presence_context_only",
+              "value": 0.4,
+              "unit": "proportion"
+            },
+            "denominator": {
+              "unit": "runs",
+              "n": 5
+            },
+            "design": "observational",
+            "limitations": [
+              "外部为自选上传的观察数据，玩家标识未读，独立玩家数与玩家间依赖未知；不声称因果收益。",
+              "五对代表按早期相近代理选择，不是随机样本或同起点反事实；终局持牌仅事后关联，不能触发当前策略。",
+              "自有A10/no_retry_evidence与重试或预判必死、其他进阶分别统计；自有版本unknown不补为v0.111。"
+            ],
+            "ref": "knowledge/external/sts2fun/builds-v1/representative-timelines.json#cluster=5,pairs=0,3,5,7,9,outcome=0;input_sha256=dfde8d6ec66f58fca63ca30d45d86d47c2d822e807e9f77f65cb3c4c65268eda",
+            "role": "contradict"
+          }
+        ],
+        "evidence_detail_ref": {
+          "path": "paper/materials/20261024-090927-strategy-result-ops/source-candidates.json",
+          "sha256": "dd11d373454510b1737be65002fed9115f1d2d3033d2d4f18717f7e3304e0174",
+          "entry_id": "silent-brain-blur-external-prefix-context",
+          "statistics": {
+            "path": "paper/materials/20261024-090927-strategy-result-ops/source-statistics.json",
+            "bytes": 14899978,
+            "sha256": "8b52fd3149833b2964851ca0b832f778d9a0ca256080cd29f014bdb001086c3c"
+          },
+          "original_version": "2.0.0-pending",
+          "prior_evidence_preserved": true,
+          "primary_sample_gate": {
+            "threshold": 100,
+            "unit": "offers",
+            "passed": true,
+            "exact_independent_run_gate_passed": false
+          },
+          "independent_uploaded_runs": {
+            "picked": {
+              "n": null,
+              "unit": "distinct_uploaded_runs_union",
+              "lower_bound": 25,
+              "upper_bound": 139,
+              "bounds_not_estimates": true
+            },
+            "not_picked": {
+              "n": null,
+              "unit": "distinct_uploaded_runs_union",
+              "lower_bound": 46,
+              "upper_bound": 254,
+              "bounds_not_estimates": true
+            }
+          },
+          "evidence_status": "conflict"
+        },
+        "formal_publication": "pending",
+        "consumer_readback": "pending",
+        "evidence_summary": {
+          "own_runs": 1,
+          "own_support_runs": 1,
+          "external": [
+            {
+              "source": "external:sts2fun",
+              "version": "v0.111",
+              "dataset_sha256": "1f7c0c3d441aedb5c85f04bcd4d8d6a1039b438a8b6fda2d96cfa5c27580cbf5",
+              "statistic": "eventual_win_rate",
+              "denominator": {
+                "unit": "offers",
+                "n": 139
+              }
+            },
+            {
+              "source": "external:sts2fun",
+              "version": "v0.111",
+              "dataset_sha256": "1f7c0c3d441aedb5c85f04bcd4d8d6a1039b438a8b6fda2d96cfa5c27580cbf5",
+              "statistic": "eventual_win_rate",
+              "denominator": {
+                "unit": "offers",
+                "n": 255
+              }
+            },
+            {
+              "source": "external:sts2fun",
+              "version": "v0.111",
+              "dataset_sha256": "1f7c0c3d441aedb5c85f04bcd4d8d6a1039b438a8b6fda2d96cfa5c27580cbf5",
+              "statistic": "selected_representative_terminal_card_presence_context_only",
+              "denominator": {
+                "unit": "runs",
+                "n": 5
+              }
+            },
+            {
+              "source": "external:sts2fun",
+              "version": "v0.111",
+              "dataset_sha256": "1f7c0c3d441aedb5c85f04bcd4d8d6a1039b438a8b6fda2d96cfa5c27580cbf5",
+              "statistic": "selected_representative_terminal_card_presence_context_only",
+              "denominator": {
+                "unit": "runs",
+                "n": 5
+              }
+            }
+          ]
+        },
+        "limitation_notice": "外部聚合为观察性统计、非因果，外部分母不计本系统验证；样本选择、版本与口径局限见 evidence.limitations。"
+      },
+      "rk": {
+        "schema": "reflex-entry-v1",
+        "id": "silent-rk-c5-c5-5",
+        "version": 1,
+        "applies_to": "card_pick",
+        "predicate": {
+          "op": "and",
+          "args": [
+            {
+              "op": "eq",
+              "field": "card.id",
+              "value": "BLUR"
+            },
+            {
+              "op": "eq",
+              "field": "act",
+              "value": 2
+            }
+          ]
+        },
+        "signal": {
+          "kind": "tag",
+          "value": "silent-rk-c5-c5-5-review",
+          "unit": "label"
+        },
+        "label_en": "Compare retaining block with adding another damage card",
+        "evidence": {
+          "observations": [
+            {
+              "run_id": "FZT053H9PSC5",
+              "floor": 28
+            }
+          ],
+          "n_support": 1,
+          "n_contradict": 0
+        },
+        "confidence": 0.25,
+        "scope": {
+          "character": "silent",
+          "ascensions": [
+            10
+          ]
+        },
+        "directions": [],
+        "cores": [],
+        "combos": [],
+        "source_experience": [
+          "silent-brain-blur-external-prefix-context"
+        ],
+        "sources": [
+          {
+            "source": "own",
+            "path": ".worktrees/codex-strategy-silent-20261024-233359/learner/runs/20261024-233510-75269924-3572-4eac-bd79-21290edd1c9a-strategy-proposal/scratch/raw/FZT053H9PSC5-F28-reward-card.json",
+            "sha256": "8646c12c5a00a74432961dab1efb82f79b0dde86dc3430903b581c6211e24b32",
+            "game_version": "unknown",
+            "retrieved_at": "2026-10-24",
+            "sample": {
+              "runs": 1,
+              "players": null,
+              "selection": "A10/no_retry_evidence; FZT053H9PSC5 F28; 1 choice opportunity, card text and completed choice only; no estimated advantage"
+            }
+          },
+          {
+            "source": "external:sts2fun",
+            "path": "knowledge/external/sts2fun/builds-v1/representative-timelines.json",
+            "sha256": "dfde8d6ec66f58fca63ca30d45d86d47c2d822e807e9f77f65cb3c4c65268eda",
+            "game_version": "v0.111",
+            "retrieved_at": "2026-10-21",
+            "url": "https://sts2.fun/static/sts2_public.db.zst",
+            "license": "No explicit dataset redistribution license found on public FAQ; aggregate statistics with attribution only; no raw redistribution.",
+            "sample": {
+              "runs": 10,
+              "players": null,
+              "selection": "five selected representative pairs 0,3,5,7,9; terminal BLUR: winners 1/5, failures 2/5; descriptive, not an effect or trigger"
+            }
+          }
+        ]
+      },
+      "summary": {
+        "id": "silent-rk-c5-c5-5",
+        "version": 1,
+        "applies_to": "card_pick",
+        "summary": "Compare retaining block with adding another damage card",
+        "confidence": 0.25,
+        "evidence": {
+          "observations": [
+            {
+              "run_id": "FZT053H9PSC5",
+              "floor": 28
+            }
+          ],
+          "n_support": 1,
+          "n_contradict": 0
+        },
+        "source_experience": [
+          "silent-brain-blur-external-prefix-context"
+        ]
+      },
+      "construction_representation": "construction_summary",
+      "current_coarse_predicate_result": null,
+      "original_card_pick_capture_result_replay": "pending",
+      "preceding_snapshot_only": true,
+      "original_case": {
+        "state": {
+          "path": "/home/dw/Projects/agent-sts2/paper/materials/20261025-issue51-mixed-c5-ops/fixed-cases/c5-5.json",
+          "sha256": "09aaaf48a0223e5b466a8bfb104d7120e08898398b0cd6ba40c846bfd3bacf5c"
+        }
+      },
+      "preceding_snapshot_proxy": true,
+      "actual_fixed_production_tools": true,
+      "active_numeric_advice": false,
+      "natural_query": false,
+      "causal_benefit": false
+    },
+    {
+      "strategy_id": "silent-brain-lane-b-block-time-and-shiv",
+      "rk_id": "silent-rk-lane-b-block-time-and-shiv",
+      "lane": "A",
+      "strategy": {
+        "id": "silent-brain-lane-b-block-time-and-shiv",
+        "version": "2026-10-24-b001-c5-r1",
+        "trigger": {
+          "question_types": [
+            "card_reward"
+          ],
+          "acts": [
+            1,
+            2,
+            3
+          ]
+        },
+        "strategy": "奖励比较斗篷与匕首、偏折、闪躲翻滚时，按当前牌文分别记1费6挡加1刀、0费4挡、1费本回合4挡及下回合4挡；后者不能全算即时挡，生成刀也仍需实际打出。CRK2HNYKSCZC在39/70血拿斗篷；U8K28UUGYP3U已持1张、52/70血时同屏选偏折。\n自有A10/版本unknown首次同牌奖励，重试/判死组拿0/64、不拿2/160终胜，差-1.25pp；样本稀疏，未达双方100局。\n范围：仅Silent A10奖励且现场牌文吻合；牌组为此前快照代理，SL与无重试、版本及外部取得统计分账，无固定拿牌命令。\n补充已有触媒/毒性爆发+的幕2情境：闪躲翻滚+1费本回合6挡、下回合6挡，与同屏2费冲刺10挡10伤/猎杀者+20伤抽2分别核费用和时间。FZT053H9PSC5 F19一次机会选翻滚，后继入组；下一战60→51，不能将两次6挡全记即时或认为已覆盖高费启动。\n本补充范围：Silent A10、幕2且现场牌文同；自有版本unknown、1局1机会；旧比较及稀疏限制原样保留。",
+        "evidence": [
+          {
+            "type": "own",
+            "run": "CRK2HNYKSCZC",
+            "floor": 6,
+            "ref": "paper/materials/20261024-issue51-two-card-batches-ops/original/20261024-211311-strategy-proposal/scratch/scenario-examples.json#CLOAK_AND_DAGGER/chosen_example",
+            "role": "support"
+          },
+          {
+            "type": "own",
+            "run": "U8K28UUGYP3U",
+            "floor": 5,
+            "ref": "paper/materials/20261024-issue51-two-card-batches-ops/original/20261024-211311-strategy-proposal/scratch/scenario-examples.json#CLOAK_AND_DAGGER/alternative_example",
+            "role": "support"
+          },
+          {
+            "type": "external_aggregate",
+            "source": "external:sts2fun",
+            "url": "https://sts2.fun/static/sts2_public.db.zst",
+            "version": "v0.111",
+            "dataset_sha256": "1f7c0c3d441aedb5c85f04bcd4d8d6a1039b438a8b6fda2d96cfa5c27580cbf5",
+            "downloaded_at": "2026-10-21",
+            "license": "No explicit dataset redistribution license found on public FAQ; aggregate statistics with attribution only; no raw redistribution.",
+            "filters": {
+              "character": "silent",
+              "ascension": 10,
+              "criteria": "单人有效上传；CLOAK_AND_DAGGER cards_gained；幕2 vs 幕1的earlier组；所有来源房间、按牌次；input_sha256=4cf36c85eee760ed8e74495c1758e0228bbe1214789d3d0bd97052d5ca6a1f9d"
+            },
+            "statistic": {
+              "name": "whole_run_winning_acquisition_occurrences_rate",
+              "value": 0.30337078651685395,
+              "unit": "proportion"
+            },
+            "denominator": {
+              "unit": "cards",
+              "n": 534
+            },
+            "design": "observational",
+            "limitations": [
+              "观察性、自选上传且无法核独立玩家；非因果，不代表拿牌收益。",
+              "分母为取得牌次，可含同局多次；不累加distinct_uploaded_runs；组间局重叠未知。",
+              "cards_gained含奖励、商店、事件等来源；不是奖励备选拿/不拿对照。",
+              "按幕比较受生存、到达深度与资源混杂；未来终局胜负仅作结果，不作触发。",
+              "版本机制对照未知；每个版本分账，未合池；自有版本unknown，单独计数。"
+            ],
+            "ref": "paper/materials/20261024-issue51-two-card-batches-ops/original/20261024-211311-strategy-proposal/scratch/external-directional-comparisons.json#/CLOAK_AND_DAGGER/earlier",
+            "role": "support"
+          },
+          {
+            "type": "external_aggregate",
+            "source": "external:sts2fun",
+            "url": "https://sts2.fun/static/sts2_public.db.zst",
+            "version": "v0.111",
+            "dataset_sha256": "1f7c0c3d441aedb5c85f04bcd4d8d6a1039b438a8b6fda2d96cfa5c27580cbf5",
+            "downloaded_at": "2026-10-21",
+            "license": "No explicit dataset redistribution license found on public FAQ; aggregate statistics with attribution only; no raw redistribution.",
+            "filters": {
+              "character": "silent",
+              "ascension": 10,
+              "criteria": "单人有效上传；CLOAK_AND_DAGGER cards_gained；幕2 vs 幕1的later组；所有来源房间、按牌次；input_sha256=4cf36c85eee760ed8e74495c1758e0228bbe1214789d3d0bd97052d5ca6a1f9d"
+            },
+            "statistic": {
+              "name": "whole_run_winning_acquisition_occurrences_rate",
+              "value": 0.39285714285714285,
+              "unit": "proportion"
+            },
+            "denominator": {
+              "unit": "cards",
+              "n": 224
+            },
+            "design": "observational",
+            "limitations": [
+              "观察性、自选上传且无法核独立玩家；非因果，不代表拿牌收益。",
+              "分母为取得牌次，可含同局多次；不累加distinct_uploaded_runs；组间局重叠未知。",
+              "cards_gained含奖励、商店、事件等来源；不是奖励备选拿/不拿对照。",
+              "按幕比较受生存、到达深度与资源混杂；未来终局胜负仅作结果，不作触发。",
+              "版本机制对照未知；每个版本分账，未合池；自有版本unknown，单独计数。"
+            ],
+            "ref": "paper/materials/20261024-issue51-two-card-batches-ops/original/20261024-211311-strategy-proposal/scratch/external-directional-comparisons.json#/CLOAK_AND_DAGGER/later",
+            "role": "support"
+          },
+          {
+            "type": "own",
+            "run": "FZT053H9PSC5",
+            "floor": 19,
+            "ref": ".worktrees/codex-strategy-silent-20261024-233359/learner/runs/20261024-233510-75269924-3572-4eac-bd79-21290edd1c9a-strategy-proposal/scratch/raw/FZT053H9PSC5-F19-reward-card.json#questions.pick.criteria;completed action; SHA256=6a9ea112c6d3e1ff9534bfd3d67b009a0f88bf6f92f83c3dc74a694b4c6788fe",
+            "role": "support"
+          },
+          {
+            "type": "external_aggregate",
+            "source": "external:sts2fun",
+            "url": "https://sts2.fun/static/sts2_public.db.zst",
+            "version": "v0.111",
+            "dataset_sha256": "1f7c0c3d441aedb5c85f04bcd4d8d6a1039b438a8b6fda2d96cfa5c27580cbf5",
+            "downloaded_at": "2026-10-21",
+            "license": "No explicit dataset redistribution license found on public FAQ; aggregate statistics with attribution only; no raw redistribution.",
+            "filters": {
+              "character": "silent",
+              "ascension": 10,
+              "criteria": "valid, singleplayer, non-abandoned, no modifiers; frozen final-deck cluster=5; pairs 0,3,5,7,9; outcome=1; terminal card=DODGE_AND_ROLL; selected representative subset, not current state"
+            },
+            "statistic": {
+              "name": "selected_representative_terminal_card_presence_context_only",
+              "value": 0.2,
+              "unit": "proportion"
+            },
+            "denominator": {
+              "unit": "runs",
+              "n": 5
+            },
+            "design": "observational",
+            "limitations": [
+              "外部为自选上传的观察数据，玩家标识未读，独立玩家数与玩家间依赖未知；不声称因果收益。",
+              "五对代表按早期相近代理选择，不是随机样本或同起点反事实；终局持牌仅事后关联，不能触发当前策略。",
+              "自有A10/no_retry_evidence与重试或预判必死、其他进阶分别统计；自有版本unknown不补为v0.111。"
+            ],
+            "ref": "knowledge/external/sts2fun/builds-v1/representative-timelines.json#cluster=5,pairs=0,3,5,7,9,outcome=1;input_sha256=dfde8d6ec66f58fca63ca30d45d86d47c2d822e807e9f77f65cb3c4c65268eda",
+            "role": "support"
+          },
+          {
+            "type": "external_aggregate",
+            "source": "external:sts2fun",
+            "url": "https://sts2.fun/static/sts2_public.db.zst",
+            "version": "v0.111",
+            "dataset_sha256": "1f7c0c3d441aedb5c85f04bcd4d8d6a1039b438a8b6fda2d96cfa5c27580cbf5",
+            "downloaded_at": "2026-10-21",
+            "license": "No explicit dataset redistribution license found on public FAQ; aggregate statistics with attribution only; no raw redistribution.",
+            "filters": {
+              "character": "silent",
+              "ascension": 10,
+              "criteria": "valid, singleplayer, non-abandoned, no modifiers; frozen final-deck cluster=5; pairs 0,3,5,7,9; outcome=0; terminal card=DODGE_AND_ROLL; selected representative subset, not current state"
+            },
+            "statistic": {
+              "name": "selected_representative_terminal_card_presence_context_only",
+              "value": 0.8,
+              "unit": "proportion"
+            },
+            "denominator": {
+              "unit": "runs",
+              "n": 5
+            },
+            "design": "observational",
+            "limitations": [
+              "外部为自选上传的观察数据，玩家标识未读，独立玩家数与玩家间依赖未知；不声称因果收益。",
+              "五对代表按早期相近代理选择，不是随机样本或同起点反事实；终局持牌仅事后关联，不能触发当前策略。",
+              "自有A10/no_retry_evidence与重试或预判必死、其他进阶分别统计；自有版本unknown不补为v0.111。"
+            ],
+            "ref": "knowledge/external/sts2fun/builds-v1/representative-timelines.json#cluster=5,pairs=0,3,5,7,9,outcome=0;input_sha256=dfde8d6ec66f58fca63ca30d45d86d47c2d822e807e9f77f65cb3c4c65268eda",
+            "role": "contradict"
+          }
+        ],
+        "source": "mixed",
+        "evidence_status": "conflict",
+        "confidence": 0.25,
+        "formal_publication": "pending",
+        "consumer_readback": "pending",
+        "candidate_role": "descriptive comparison; not numeric pick effect",
+        "external_direction": "外部v0.111 幕2 vs 幕1取得牌次的终胜关联+8.95pp（88/224 vs 162/534牌次）；不是拿/不拿收益。",
+        "own_sample_gate": false,
+        "knowledge_candidate_id": "silent-lane-b-block-time-and-shiv",
+        "evidence_summary": {
+          "own_runs": 3,
+          "own_support_runs": 3,
+          "external": [
+            {
+              "source": "external:sts2fun",
+              "version": "v0.111",
+              "dataset_sha256": "1f7c0c3d441aedb5c85f04bcd4d8d6a1039b438a8b6fda2d96cfa5c27580cbf5",
+              "statistic": "whole_run_winning_acquisition_occurrences_rate",
+              "denominator": {
+                "unit": "cards",
+                "n": 534
+              }
+            },
+            {
+              "source": "external:sts2fun",
+              "version": "v0.111",
+              "dataset_sha256": "1f7c0c3d441aedb5c85f04bcd4d8d6a1039b438a8b6fda2d96cfa5c27580cbf5",
+              "statistic": "whole_run_winning_acquisition_occurrences_rate",
+              "denominator": {
+                "unit": "cards",
+                "n": 224
+              }
+            },
+            {
+              "source": "external:sts2fun",
+              "version": "v0.111",
+              "dataset_sha256": "1f7c0c3d441aedb5c85f04bcd4d8d6a1039b438a8b6fda2d96cfa5c27580cbf5",
+              "statistic": "selected_representative_terminal_card_presence_context_only",
+              "denominator": {
+                "unit": "runs",
+                "n": 5
+              }
+            },
+            {
+              "source": "external:sts2fun",
+              "version": "v0.111",
+              "dataset_sha256": "1f7c0c3d441aedb5c85f04bcd4d8d6a1039b438a8b6fda2d96cfa5c27580cbf5",
+              "statistic": "selected_representative_terminal_card_presence_context_only",
+              "denominator": {
+                "unit": "runs",
+                "n": 5
+              }
+            }
+          ]
+        },
+        "limitation_notice": "外部聚合为观察性统计、非因果，外部分母不计本系统验证；样本选择、版本与口径局限见 evidence.limitations。"
+      },
+      "rk": {
+        "schema": "reflex-entry-v1",
+        "id": "silent-rk-lane-b-block-time-and-shiv",
+        "version": 2,
+        "applies_to": "card_pick",
+        "predicate": {
+          "op": "or",
+          "args": [
+            {
+              "op": "eq",
+              "field": "card.id",
+              "value": "CLOAK_AND_DAGGER"
+            },
+            {
+              "op": "eq",
+              "field": "card.id",
+              "value": "DEFLECT"
+            },
+            {
+              "op": "eq",
+              "field": "card.id",
+              "value": "DODGE_AND_ROLL"
+            }
+          ]
+        },
+        "signal": {
+          "kind": "tag",
+          "value": "silent-rk-lane-b-block-time-and-shiv-tag",
+          "unit": "label"
+        },
+        "label_en": "Compare current block with delayed block and generated cards",
+        "evidence": {
+          "observations": [
+            {
+              "run_id": "CRK2HNYKSCZC",
+              "floor": 6
+            },
+            {
+              "run_id": "U8K28UUGYP3U",
+              "floor": 5
+            },
+            {
+              "run_id": "FZT053H9PSC5",
+              "floor": 19
+            }
+          ],
+          "n_support": 3,
+          "n_contradict": 0
+        },
+        "confidence": 0.25,
+        "scope": {
+          "character": "silent",
+          "ascensions": [
+            10
+          ]
+        },
+        "directions": [],
+        "cores": [],
+        "combos": [],
+        "source_experience": [
+          "silent-brain-lane-b-block-time-and-shiv"
+        ],
+        "sources": [
+          {
+            "source": "own",
+            "path": "paper/materials/20261024-issue51-two-card-batches-ops/original/20261024-211311-strategy-proposal/scratch/scenario-examples.json",
+            "sha256": "07440c23469517db57a7b47749855f2e1a3c984ea11000a056e01da215b7e52a",
+            "game_version": "unknown",
+            "retrieved_at": "2026-10-24",
+            "sample": {
+              "runs": 2,
+              "players": null,
+              "selection": "实际A10无重试证据奖励题：一拿一不拿；仅牌文/条件事实，非效果估计"
+            }
+          },
+          {
+            "source": "external:sts2fun",
+            "path": "knowledge/external/sts2fun/decision-fields-v1/statistics.json",
+            "sha256": "4cf36c85eee760ed8e74495c1758e0228bbe1214789d3d0bd97052d5ca6a1f9d",
+            "game_version": "v0.111",
+            "retrieved_at": "2026-10-21",
+            "url": "https://sts2.fun/static/sts2_public.db.zst",
+            "license": "No explicit dataset redistribution license found on public FAQ; aggregate statistics with attribution only; no raw redistribution.",
+            "sample": {
+              "runs": 0,
+              "players": null,
+              "selection": "cards_gained取得牌次代理534/224；独立上传局合并分母未知，runs=0不代表没有数据；原版本全队列分母另账"
+            }
+          },
+          {
+            "source": "own",
+            "path": ".worktrees/codex-strategy-silent-20261024-233359/learner/runs/20261024-233510-75269924-3572-4eac-bd79-21290edd1c9a-strategy-proposal/scratch/raw/FZT053H9PSC5-F19-reward-card.json",
+            "sha256": "6a9ea112c6d3e1ff9534bfd3d67b009a0f88bf6f92f83c3dc74a694b4c6788fe",
+            "game_version": "unknown",
+            "retrieved_at": "2026-10-24",
+            "sample": {
+              "runs": 1,
+              "players": null,
+              "selection": "A10/no_retry_evidence; FZT053H9PSC5 F19; 1 choice opportunity, card text and completed choice only; no estimated advantage"
+            }
+          },
+          {
+            "source": "external:sts2fun",
+            "path": "knowledge/external/sts2fun/builds-v1/representative-timelines.json",
+            "sha256": "dfde8d6ec66f58fca63ca30d45d86d47c2d822e807e9f77f65cb3c4c65268eda",
+            "game_version": "v0.111",
+            "retrieved_at": "2026-10-21",
+            "url": "https://sts2.fun/static/sts2_public.db.zst",
+            "license": "No explicit dataset redistribution license found on public FAQ; aggregate statistics with attribution only; no raw redistribution.",
+            "sample": {
+              "runs": 10,
+              "players": null,
+              "selection": "five selected representative pairs 0,3,5,7,9; terminal DODGE_AND_ROLL: winners 1/5, failures 4/5; descriptive, not an effect or trigger"
+            }
+          }
+        ]
+      },
+      "summary": {
+        "id": "silent-rk-lane-b-block-time-and-shiv",
+        "version": 2,
+        "applies_to": "card_pick",
+        "summary": "Compare current block with delayed block and generated cards",
+        "confidence": 0.25,
+        "evidence": {
+          "observations": [
+            {
+              "run_id": "CRK2HNYKSCZC",
+              "floor": 6
+            },
+            {
+              "run_id": "U8K28UUGYP3U",
+              "floor": 5
+            },
+            {
+              "run_id": "FZT053H9PSC5",
+              "floor": 19
+            }
+          ],
+          "n_support": 3,
+          "n_contradict": 0
+        },
+        "source_experience": [
+          "silent-brain-lane-b-block-time-and-shiv"
+        ]
+      },
+      "construction_representation": "construction_summary",
+      "current_coarse_predicate_result": null,
+      "original_card_pick_capture_result_replay": "pending",
+      "preceding_snapshot_only": true,
+      "original_case": {
+        "state": {
+          "path": "/home/dw/Projects/agent-sts2/paper/materials/20261025-issue51-mixed-c5-ops/fixed-cases/c5-6.json",
+          "sha256": "b35ff97a615431c29e68f9dcb81d81389b91d4afea602574691625f305a52d4c"
+        }
+      },
+      "preceding_snapshot_proxy": true,
+      "actual_fixed_production_tools": true,
+      "active_numeric_advice": false,
+      "natural_query": false,
+      "causal_benefit": false
+    },
+    {
+      "strategy_id": "silent-brain-lane-b-burst-versus-setup",
+      "rk_id": "silent-rk-lane-b-burst-versus-setup",
+      "lane": "A",
+      "strategy": {
+        "id": "silent-brain-lane-b-burst-versus-setup",
+        "version": "2026-10-24-b001-c5-r1",
+        "trigger": {
+          "question_types": [
+            "card_reward"
+          ],
+          "acts": [
+            1,
+            2,
+            3
+          ]
+        },
+        "strategy": "奖励出现肾上腺素或余像时，按现场牌文分开核0费加1能量抽2且消耗的单次资源，与1费建立每次出牌加1挡的后续回报；结合当前牌组，不预支未来连打。P5HT1272P5SB在34/77血、已有冲刺时拿肾上腺素；VPW8YH7A4QFM在二幕23/80血同屏选毒性爆发而非肾上腺素。\n自有A10/版本unknown首次同牌奖励，重试/判死组拿0/41、不拿0/6终胜，差+0.00pp；样本稀疏，未达双方100局。\n范围：仅Silent A10奖励且现场牌文吻合；牌组为此前快照代理，SL与无重试、版本及外部取得统计分账，无固定拿牌命令。\n补充已有早有准备+/杂技+及施毒牌时，余像+与刀扇+/涂毒+比较启动和触发来源。原文余像+1费固有、每打牌得1挡；另两项各2费、分别改小刀并添5刀/未格挡攻击施2毒。FZT053H9PSC5 F39一次选余像+，F42战70→64；不能把未来连打当当前已得挡，固有也不等于已建立。\n本补充范围：Silent A10、幕3奖励且牌文同；此前牌组代理、自有版本unknown、1局1机会；无单牌收益或固定拿牌排序。",
+        "evidence": [
+          {
+            "type": "own",
+            "run": "P5HT1272P5SB",
+            "floor": 8,
+            "ref": "paper/materials/20261024-issue51-two-card-batches-ops/original/20261024-211311-strategy-proposal/scratch/scenario-examples.json#ADRENALINE/chosen_example",
+            "role": "support"
+          },
+          {
+            "type": "own",
+            "run": "VPW8YH7A4QFM",
+            "floor": 33,
+            "ref": "paper/materials/20261024-issue51-two-card-batches-ops/original/20261024-211311-strategy-proposal/scratch/scenario-examples.json#ADRENALINE/alternative_example",
+            "role": "support"
+          },
+          {
+            "type": "external_aggregate",
+            "source": "external:sts2fun",
+            "url": "https://sts2.fun/static/sts2_public.db.zst",
+            "version": "v0.111",
+            "dataset_sha256": "1f7c0c3d441aedb5c85f04bcd4d8d6a1039b438a8b6fda2d96cfa5c27580cbf5",
+            "downloaded_at": "2026-10-21",
+            "license": "No explicit dataset redistribution license found on public FAQ; aggregate statistics with attribution only; no raw redistribution.",
+            "filters": {
+              "character": "silent",
+              "ascension": 10,
+              "criteria": "单人有效上传；ADRENALINE cards_gained；幕2 vs 幕1的earlier组；所有来源房间、按牌次；input_sha256=4cf36c85eee760ed8e74495c1758e0228bbe1214789d3d0bd97052d5ca6a1f9d"
+            },
+            "statistic": {
+              "name": "whole_run_winning_acquisition_occurrences_rate",
+              "value": 0.4011627906976744,
+              "unit": "proportion"
+            },
+            "denominator": {
+              "unit": "cards",
+              "n": 172
+            },
+            "design": "observational",
+            "limitations": [
+              "观察性、自选上传且无法核独立玩家；非因果，不代表拿牌收益。",
+              "分母为取得牌次，可含同局多次；不累加distinct_uploaded_runs；组间局重叠未知。",
+              "cards_gained含奖励、商店、事件等来源；不是奖励备选拿/不拿对照。",
+              "按幕比较受生存、到达深度与资源混杂；未来终局胜负仅作结果，不作触发。",
+              "版本机制对照未知；每个版本分账，未合池；自有版本unknown，单独计数。"
+            ],
+            "ref": "paper/materials/20261024-issue51-two-card-batches-ops/original/20261024-211311-strategy-proposal/scratch/external-directional-comparisons.json#/ADRENALINE/earlier",
+            "role": "support"
+          },
+          {
+            "type": "external_aggregate",
+            "source": "external:sts2fun",
+            "url": "https://sts2.fun/static/sts2_public.db.zst",
+            "version": "v0.111",
+            "dataset_sha256": "1f7c0c3d441aedb5c85f04bcd4d8d6a1039b438a8b6fda2d96cfa5c27580cbf5",
+            "downloaded_at": "2026-10-21",
+            "license": "No explicit dataset redistribution license found on public FAQ; aggregate statistics with attribution only; no raw redistribution.",
+            "filters": {
+              "character": "silent",
+              "ascension": 10,
+              "criteria": "单人有效上传；ADRENALINE cards_gained；幕2 vs 幕1的later组；所有来源房间、按牌次；input_sha256=4cf36c85eee760ed8e74495c1758e0228bbe1214789d3d0bd97052d5ca6a1f9d"
+            },
+            "statistic": {
+              "name": "whole_run_winning_acquisition_occurrences_rate",
+              "value": 0.70625,
+              "unit": "proportion"
+            },
+            "denominator": {
+              "unit": "cards",
+              "n": 160
+            },
+            "design": "observational",
+            "limitations": [
+              "观察性、自选上传且无法核独立玩家；非因果，不代表拿牌收益。",
+              "分母为取得牌次，可含同局多次；不累加distinct_uploaded_runs；组间局重叠未知。",
+              "cards_gained含奖励、商店、事件等来源；不是奖励备选拿/不拿对照。",
+              "按幕比较受生存、到达深度与资源混杂；未来终局胜负仅作结果，不作触发。",
+              "版本机制对照未知；每个版本分账，未合池；自有版本unknown，单独计数。"
+            ],
+            "ref": "paper/materials/20261024-issue51-two-card-batches-ops/original/20261024-211311-strategy-proposal/scratch/external-directional-comparisons.json#/ADRENALINE/later",
+            "role": "support"
+          },
+          {
+            "type": "own",
+            "run": "FZT053H9PSC5",
+            "floor": 39,
+            "ref": ".worktrees/codex-strategy-silent-20261024-233359/learner/runs/20261024-233510-75269924-3572-4eac-bd79-21290edd1c9a-strategy-proposal/scratch/raw/FZT053H9PSC5-F39-reward-card.json#questions.pick.criteria;completed action; SHA256=824e8fc5269b04df4acad0640b0cafa782b96931275917d43a746e5b976d9b21",
+            "role": "support"
+          },
+          {
+            "type": "external_aggregate",
+            "source": "external:sts2fun",
+            "url": "https://sts2.fun/static/sts2_public.db.zst",
+            "version": "v0.111",
+            "dataset_sha256": "1f7c0c3d441aedb5c85f04bcd4d8d6a1039b438a8b6fda2d96cfa5c27580cbf5",
+            "downloaded_at": "2026-10-21",
+            "license": "No explicit dataset redistribution license found on public FAQ; aggregate statistics with attribution only; no raw redistribution.",
+            "filters": {
+              "character": "silent",
+              "ascension": 10,
+              "criteria": "valid, singleplayer, non-abandoned, no modifiers; frozen final-deck cluster=5; pairs 0,3,5,7,9; outcome=1; terminal card=AFTERIMAGE; selected representative subset, not current state"
+            },
+            "statistic": {
+              "name": "selected_representative_terminal_card_presence_context_only",
+              "value": 0.2,
+              "unit": "proportion"
+            },
+            "denominator": {
+              "unit": "runs",
+              "n": 5
+            },
+            "design": "observational",
+            "limitations": [
+              "外部为自选上传的观察数据，玩家标识未读，独立玩家数与玩家间依赖未知；不声称因果收益。",
+              "五对代表按早期相近代理选择，不是随机样本或同起点反事实；终局持牌仅事后关联，不能触发当前策略。",
+              "自有A10/no_retry_evidence与重试或预判必死、其他进阶分别统计；自有版本unknown不补为v0.111。"
+            ],
+            "ref": "knowledge/external/sts2fun/builds-v1/representative-timelines.json#cluster=5,pairs=0,3,5,7,9,outcome=1;input_sha256=dfde8d6ec66f58fca63ca30d45d86d47c2d822e807e9f77f65cb3c4c65268eda",
+            "role": "support"
+          },
+          {
+            "type": "external_aggregate",
+            "source": "external:sts2fun",
+            "url": "https://sts2.fun/static/sts2_public.db.zst",
+            "version": "v0.111",
+            "dataset_sha256": "1f7c0c3d441aedb5c85f04bcd4d8d6a1039b438a8b6fda2d96cfa5c27580cbf5",
+            "downloaded_at": "2026-10-21",
+            "license": "No explicit dataset redistribution license found on public FAQ; aggregate statistics with attribution only; no raw redistribution.",
+            "filters": {
+              "character": "silent",
+              "ascension": 10,
+              "criteria": "valid, singleplayer, non-abandoned, no modifiers; frozen final-deck cluster=5; pairs 0,3,5,7,9; outcome=0; terminal card=AFTERIMAGE; selected representative subset, not current state"
+            },
+            "statistic": {
+              "name": "selected_representative_terminal_card_presence_context_only",
+              "value": 0.4,
+              "unit": "proportion"
+            },
+            "denominator": {
+              "unit": "runs",
+              "n": 5
+            },
+            "design": "observational",
+            "limitations": [
+              "外部为自选上传的观察数据，玩家标识未读，独立玩家数与玩家间依赖未知；不声称因果收益。",
+              "五对代表按早期相近代理选择，不是随机样本或同起点反事实；终局持牌仅事后关联，不能触发当前策略。",
+              "自有A10/no_retry_evidence与重试或预判必死、其他进阶分别统计；自有版本unknown不补为v0.111。"
+            ],
+            "ref": "knowledge/external/sts2fun/builds-v1/representative-timelines.json#cluster=5,pairs=0,3,5,7,9,outcome=0;input_sha256=dfde8d6ec66f58fca63ca30d45d86d47c2d822e807e9f77f65cb3c4c65268eda",
+            "role": "contradict"
+          }
+        ],
+        "source": "mixed",
+        "evidence_status": "conflict",
+        "confidence": 0.25,
+        "formal_publication": "pending",
+        "consumer_readback": "pending",
+        "candidate_role": "descriptive comparison; not numeric pick effect",
+        "external_direction": "外部v0.111 幕2 vs 幕1取得牌次的终胜关联+30.51pp（113/160 vs 69/172牌次）；不是拿/不拿收益。",
+        "own_sample_gate": false,
+        "knowledge_candidate_id": "silent-lane-b-burst-versus-setup",
+        "evidence_summary": {
+          "own_runs": 3,
+          "own_support_runs": 3,
+          "external": [
+            {
+              "source": "external:sts2fun",
+              "version": "v0.111",
+              "dataset_sha256": "1f7c0c3d441aedb5c85f04bcd4d8d6a1039b438a8b6fda2d96cfa5c27580cbf5",
+              "statistic": "whole_run_winning_acquisition_occurrences_rate",
+              "denominator": {
+                "unit": "cards",
+                "n": 172
+              }
+            },
+            {
+              "source": "external:sts2fun",
+              "version": "v0.111",
+              "dataset_sha256": "1f7c0c3d441aedb5c85f04bcd4d8d6a1039b438a8b6fda2d96cfa5c27580cbf5",
+              "statistic": "whole_run_winning_acquisition_occurrences_rate",
+              "denominator": {
+                "unit": "cards",
+                "n": 160
+              }
+            },
+            {
+              "source": "external:sts2fun",
+              "version": "v0.111",
+              "dataset_sha256": "1f7c0c3d441aedb5c85f04bcd4d8d6a1039b438a8b6fda2d96cfa5c27580cbf5",
+              "statistic": "selected_representative_terminal_card_presence_context_only",
+              "denominator": {
+                "unit": "runs",
+                "n": 5
+              }
+            },
+            {
+              "source": "external:sts2fun",
+              "version": "v0.111",
+              "dataset_sha256": "1f7c0c3d441aedb5c85f04bcd4d8d6a1039b438a8b6fda2d96cfa5c27580cbf5",
+              "statistic": "selected_representative_terminal_card_presence_context_only",
+              "denominator": {
+                "unit": "runs",
+                "n": 5
+              }
+            }
+          ]
+        },
+        "limitation_notice": "外部聚合为观察性统计、非因果，外部分母不计本系统验证；样本选择、版本与口径局限见 evidence.limitations。"
+      },
+      "rk": {
+        "schema": "reflex-entry-v1",
+        "id": "silent-rk-lane-b-burst-versus-setup",
+        "version": 2,
+        "applies_to": "card_pick",
+        "predicate": {
+          "op": "or",
+          "args": [
+            {
+              "op": "eq",
+              "field": "card.id",
+              "value": "ADRENALINE"
+            },
+            {
+              "op": "eq",
+              "field": "card.id",
+              "value": "AFTERIMAGE"
+            }
+          ]
+        },
+        "signal": {
+          "kind": "tag",
+          "value": "silent-rk-lane-b-burst-versus-setup-tag",
+          "unit": "label"
+        },
+        "label_en": "Compare one use resources with recurring setup",
+        "evidence": {
+          "observations": [
+            {
+              "run_id": "P5HT1272P5SB",
+              "floor": 8
+            },
+            {
+              "run_id": "VPW8YH7A4QFM",
+              "floor": 33
+            },
+            {
+              "run_id": "FZT053H9PSC5",
+              "floor": 39
+            }
+          ],
+          "n_support": 3,
+          "n_contradict": 0
+        },
+        "confidence": 0.25,
+        "scope": {
+          "character": "silent",
+          "ascensions": [
+            10
+          ]
+        },
+        "directions": [],
+        "cores": [],
+        "combos": [],
+        "source_experience": [
+          "silent-brain-lane-b-burst-versus-setup"
+        ],
+        "sources": [
+          {
+            "source": "own",
+            "path": "paper/materials/20261024-issue51-two-card-batches-ops/original/20261024-211311-strategy-proposal/scratch/scenario-examples.json",
+            "sha256": "07440c23469517db57a7b47749855f2e1a3c984ea11000a056e01da215b7e52a",
+            "game_version": "unknown",
+            "retrieved_at": "2026-10-24",
+            "sample": {
+              "runs": 2,
+              "players": null,
+              "selection": "实际A10无重试证据奖励题：一拿一不拿；仅牌文/条件事实，非效果估计"
+            }
+          },
+          {
+            "source": "external:sts2fun",
+            "path": "knowledge/external/sts2fun/decision-fields-v1/statistics.json",
+            "sha256": "4cf36c85eee760ed8e74495c1758e0228bbe1214789d3d0bd97052d5ca6a1f9d",
+            "game_version": "v0.111",
+            "retrieved_at": "2026-10-21",
+            "url": "https://sts2.fun/static/sts2_public.db.zst",
+            "license": "No explicit dataset redistribution license found on public FAQ; aggregate statistics with attribution only; no raw redistribution.",
+            "sample": {
+              "runs": 0,
+              "players": null,
+              "selection": "cards_gained取得牌次代理172/160；独立上传局合并分母未知，runs=0不代表没有数据；原版本全队列分母另账"
+            }
+          },
+          {
+            "source": "own",
+            "path": ".worktrees/codex-strategy-silent-20261024-233359/learner/runs/20261024-233510-75269924-3572-4eac-bd79-21290edd1c9a-strategy-proposal/scratch/raw/FZT053H9PSC5-F39-reward-card.json",
+            "sha256": "824e8fc5269b04df4acad0640b0cafa782b96931275917d43a746e5b976d9b21",
+            "game_version": "unknown",
+            "retrieved_at": "2026-10-24",
+            "sample": {
+              "runs": 1,
+              "players": null,
+              "selection": "A10/no_retry_evidence; FZT053H9PSC5 F39; 1 choice opportunity, card text and completed choice only; no estimated advantage"
+            }
+          },
+          {
+            "source": "external:sts2fun",
+            "path": "knowledge/external/sts2fun/builds-v1/representative-timelines.json",
+            "sha256": "dfde8d6ec66f58fca63ca30d45d86d47c2d822e807e9f77f65cb3c4c65268eda",
+            "game_version": "v0.111",
+            "retrieved_at": "2026-10-21",
+            "url": "https://sts2.fun/static/sts2_public.db.zst",
+            "license": "No explicit dataset redistribution license found on public FAQ; aggregate statistics with attribution only; no raw redistribution.",
+            "sample": {
+              "runs": 10,
+              "players": null,
+              "selection": "five selected representative pairs 0,3,5,7,9; terminal AFTERIMAGE: winners 1/5, failures 2/5; descriptive, not an effect or trigger"
+            }
+          }
+        ]
+      },
+      "summary": {
+        "id": "silent-rk-lane-b-burst-versus-setup",
+        "version": 2,
+        "applies_to": "card_pick",
+        "summary": "Compare one use resources with recurring setup",
+        "confidence": 0.25,
+        "evidence": {
+          "observations": [
+            {
+              "run_id": "P5HT1272P5SB",
+              "floor": 8
+            },
+            {
+              "run_id": "VPW8YH7A4QFM",
+              "floor": 33
+            },
+            {
+              "run_id": "FZT053H9PSC5",
+              "floor": 39
+            }
+          ],
+          "n_support": 3,
+          "n_contradict": 0
+        },
+        "source_experience": [
+          "silent-brain-lane-b-burst-versus-setup"
+        ]
+      },
+      "construction_representation": "construction_summary",
+      "current_coarse_predicate_result": null,
+      "original_card_pick_capture_result_replay": "pending",
+      "preceding_snapshot_only": true,
+      "original_case": {
+        "state": {
+          "path": "/home/dw/Projects/agent-sts2/paper/materials/20261025-issue51-mixed-c5-ops/fixed-cases/c5-7.json",
+          "sha256": "7bff6f9e17d2d8f30bd53906cb85bd1296bef023fa163db2071633a5abd64414"
+        }
+      },
+      "preceding_snapshot_proxy": true,
+      "actual_fixed_production_tools": true,
+      "active_numeric_advice": false,
+      "natural_query": false,
+      "causal_benefit": false
+    }
+  ]
+}

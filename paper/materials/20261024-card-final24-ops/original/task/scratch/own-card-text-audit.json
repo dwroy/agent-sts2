@@ -1,0 +1,1383 @@
+{
+  "purpose": "coverage-only; mechanics snapshots do not establish card selection value",
+  "cards": [
+    {
+      "card": "TAUNT",
+      "source": "own",
+      "version": "unknown",
+      "ascension": 10,
+      "attempt_scope": "retry_or_predicted_death",
+      "row": {
+        "path": "logs/states.jsonl",
+        "offset": 9607952111,
+        "bytes": 23765,
+        "sha256": "ea6cc164c6f3d932b37a4f135433b91f8ef6f0dbea537cc50b5bb932c0b36ec7",
+        "run_id": "P2M3DFJ4DEZ3",
+        "floor": 29,
+        "cutoff": 17026867203
+      },
+      "observed_card_objects": [
+        {
+          "index": 25,
+          "card_id": "TAUNT",
+          "name": "挑衅",
+          "upgraded": false,
+          "card_type": "Skill",
+          "rarity": "Common",
+          "costs_x": false,
+          "star_costs_x": false,
+          "energy_cost": 1,
+          "star_cost": 0,
+          "rules_text": "获得{Block:diff()}点格挡。 给予{VulnerablePower:diff()}层易伤。",
+          "resolved_rules_text": "获得6点格挡。 给予1层易伤。",
+          "dynamic_values": [
+            {
+              "name": "Block",
+              "base_value": 6,
+              "current_value": 6,
+              "enchanted_value": 6,
+              "is_modified": false,
+              "was_just_upgraded": false
+            },
+            {
+              "name": "VulnerablePower",
+              "base_value": 1,
+              "current_value": 1,
+              "enchanted_value": 1,
+              "is_modified": false,
+              "was_just_upgraded": false
+            }
+          ]
+        }
+      ],
+      "observation": "already-held deck snapshot; not reward option or acquisition evidence"
+    },
+    {
+      "card": "TREMBLE",
+      "source": "own",
+      "version": "unknown",
+      "ascension": 10,
+      "attempt_scope": "retry_or_predicted_death",
+      "row": {
+        "path": "logs/states.jsonl",
+        "offset": 14881117343,
+        "bytes": 21054,
+        "sha256": "c9b68f05505d020da2156a8165bd082ee35e29bdb49a5505ef3446113f323c11",
+        "run_id": "3YUVLHCYAQ8L",
+        "floor": 23,
+        "cutoff": 17026867203
+      },
+      "observed_card_objects": [
+        {
+          "index": 22,
+          "card_id": "TREMBLE",
+          "name": "战栗",
+          "upgraded": false,
+          "card_type": "Skill",
+          "rarity": "Common",
+          "costs_x": false,
+          "star_costs_x": false,
+          "energy_cost": 1,
+          "star_cost": 0,
+          "rules_text": "给予{VulnerablePower:diff()}层易伤。",
+          "resolved_rules_text": "给予3层易伤。 消耗。",
+          "dynamic_values": [
+            {
+              "name": "VulnerablePower",
+              "base_value": 3,
+              "current_value": 3,
+              "enchanted_value": 3,
+              "is_modified": false,
+              "was_just_upgraded": false
+            }
+          ]
+        }
+      ],
+      "observation": "already-held deck snapshot; not reward option or acquisition evidence"
+    },
+    {
+      "card": "STONE_ARMOR",
+      "source": "own",
+      "version": "unknown",
+      "ascension": 10,
+      "attempt_scope": "retry_or_predicted_death",
+      "row": {
+        "path": "logs/states.jsonl",
+        "offset": 11796228513,
+        "bytes": 24990,
+        "sha256": "807f84c67b4a93920ec1d6480282a49df10a8fb99a64ed421a7d182de4d36a6d",
+        "run_id": "0C3AR6J0Z8LD",
+        "floor": 30,
+        "cutoff": 17026867203
+      },
+      "observed_card_objects": [
+        {
+          "index": 28,
+          "card_id": "STONE_ARMOR",
+          "name": "岩石铠甲+",
+          "upgraded": true,
+          "card_type": "Power",
+          "rarity": "Uncommon",
+          "costs_x": false,
+          "star_costs_x": false,
+          "energy_cost": 1,
+          "star_cost": 0,
+          "rules_text": "获得{PlatingPower:diff()}层覆甲。",
+          "resolved_rules_text": "获得6层覆甲。",
+          "dynamic_values": [
+            {
+              "name": "PlatingPower",
+              "base_value": 6,
+              "current_value": 6,
+              "enchanted_value": 6,
+              "is_modified": false,
+              "was_just_upgraded": false
+            }
+          ]
+        }
+      ],
+      "observation": "already-held deck snapshot; not reward option or acquisition evidence"
+    },
+    {
+      "card": "BODY_SLAM",
+      "source": "own",
+      "version": "unknown",
+      "ascension": 10,
+      "attempt_scope": "retry_or_predicted_death",
+      "row": {
+        "path": "logs/states.jsonl",
+        "offset": 9121857232,
+        "bytes": 22529,
+        "sha256": "f36a853925e100ce809f2e7809e3ff4cca9059ac5c05d57f6f633eb8087cbcd1",
+        "run_id": "9R916WW0V65N",
+        "floor": 25,
+        "cutoff": 17026867203
+      },
+      "observed_card_objects": [
+        {
+          "index": 24,
+          "card_id": "BODY_SLAM",
+          "name": "全身撞击",
+          "upgraded": false,
+          "card_type": "Attack",
+          "rarity": "Common",
+          "costs_x": false,
+          "star_costs_x": false,
+          "energy_cost": 1,
+          "star_cost": 0,
+          "rules_text": "造成你当前格挡值的伤害。{InCombat: （造成{CalculatedDamage:diff()}点伤害）|}",
+          "resolved_rules_text": "造成你当前格挡值的伤害。",
+          "dynamic_values": [
+            {
+              "name": "CalculatedDamage",
+              "base_value": 0,
+              "current_value": 0,
+              "enchanted_value": 0,
+              "is_modified": false,
+              "was_just_upgraded": false
+            },
+            {
+              "name": "CalculationBase",
+              "base_value": 0,
+              "current_value": 0,
+              "enchanted_value": 0,
+              "is_modified": false,
+              "was_just_upgraded": false
+            },
+            {
+              "name": "ExtraDamage",
+              "base_value": 1,
+              "current_value": 1,
+              "enchanted_value": 1,
+              "is_modified": false,
+              "was_just_upgraded": false
+            }
+          ]
+        }
+      ],
+      "observation": "already-held deck snapshot; not reward option or acquisition evidence"
+    },
+    {
+      "card": "TRUE_GRIT",
+      "source": "own",
+      "version": "unknown",
+      "ascension": 10,
+      "attempt_scope": "retry_or_predicted_death",
+      "row": {
+        "path": "logs/states.jsonl",
+        "offset": 13343211388,
+        "bytes": 23798,
+        "sha256": "2a2e1151a895542429d0792c0d3c982a728c8c74ad9185239ef0bfa1c6a20e29",
+        "run_id": "DHYFWEN40SJ7",
+        "floor": 21,
+        "cutoff": 17026867203
+      },
+      "observed_card_objects": [
+        {
+          "index": 24,
+          "card_id": "TRUE_GRIT",
+          "name": "坚毅",
+          "upgraded": false,
+          "card_type": "Skill",
+          "rarity": "Common",
+          "costs_x": false,
+          "star_costs_x": false,
+          "energy_cost": 1,
+          "star_cost": 0,
+          "rules_text": "获得{Block:diff()}点格挡。 {IfUpgraded:show:| 随机}消耗1张牌。",
+          "resolved_rules_text": "获得7点格挡。 随机消耗1张牌。",
+          "dynamic_values": [
+            {
+              "name": "Block",
+              "base_value": 7,
+              "current_value": 7,
+              "enchanted_value": 7,
+              "is_modified": false,
+              "was_just_upgraded": false
+            }
+          ]
+        }
+      ],
+      "observation": "already-held deck snapshot; not reward option or acquisition evidence"
+    },
+    {
+      "card": "PACTS_END",
+      "source": "own",
+      "version": "unknown",
+      "ascension": 10,
+      "attempt_scope": "retry_or_predicted_death",
+      "row": {
+        "path": "logs/states.jsonl",
+        "offset": 9121952125,
+        "bytes": 24048,
+        "sha256": "f61504114a70e535d16fee329fdc114f2b5508875fe2ea42ab95be38b1657fdc",
+        "run_id": "9R916WW0V65N",
+        "floor": 25,
+        "cutoff": 17026867203
+      },
+      "observed_card_objects": [
+        {
+          "index": 26,
+          "card_id": "PACTS_END",
+          "name": "契约终结",
+          "upgraded": false,
+          "card_type": "Attack",
+          "rarity": "Rare",
+          "costs_x": false,
+          "star_costs_x": false,
+          "energy_cost": 0,
+          "star_cost": 0,
+          "rules_text": "如果你的消耗牌堆拥有大于等于{Cards:diff()}张{Cards:plural:牌|牌}， 则对所有敌人造成{Damage:diff()}点伤害。",
+          "resolved_rules_text": "如果你的消耗牌堆拥有大于等于3张牌， 则对所有敌人造成18点伤害。",
+          "dynamic_values": [
+            {
+              "name": "Cards",
+              "base_value": 3,
+              "current_value": 3,
+              "enchanted_value": 3,
+              "is_modified": false,
+              "was_just_upgraded": false
+            },
+            {
+              "name": "Damage",
+              "base_value": 18,
+              "current_value": 18,
+              "enchanted_value": 18,
+              "is_modified": false,
+              "was_just_upgraded": false
+            }
+          ]
+        }
+      ],
+      "observation": "already-held deck snapshot; not reward option or acquisition evidence"
+    },
+    {
+      "card": "POMMEL_STRIKE",
+      "source": "own",
+      "version": "unknown",
+      "ascension": 10,
+      "attempt_scope": "retry_or_predicted_death",
+      "row": {
+        "path": "logs/states.jsonl",
+        "offset": 9358847079,
+        "bytes": 25068,
+        "sha256": "f428389791c19dbfa5789e4556b634ae06650b91178697666ae9a40ad43b18f2",
+        "run_id": "SY0WMJNNVRLM",
+        "floor": 22,
+        "cutoff": 17026867203
+      },
+      "observed_card_objects": [
+        {
+          "index": 27,
+          "card_id": "POMMEL_STRIKE",
+          "name": "剑柄打击",
+          "upgraded": false,
+          "card_type": "Attack",
+          "rarity": "Common",
+          "costs_x": false,
+          "star_costs_x": false,
+          "energy_cost": 1,
+          "star_cost": 0,
+          "rules_text": "造成{Damage:diff()}点伤害。 抽{Cards:diff()}张牌。",
+          "resolved_rules_text": "造成9点伤害。 抽1张牌。",
+          "dynamic_values": [
+            {
+              "name": "Cards",
+              "base_value": 1,
+              "current_value": 1,
+              "enchanted_value": 1,
+              "is_modified": false,
+              "was_just_upgraded": false
+            },
+            {
+              "name": "Damage",
+              "base_value": 9,
+              "current_value": 9,
+              "enchanted_value": 9,
+              "is_modified": false,
+              "was_just_upgraded": false
+            }
+          ]
+        }
+      ],
+      "observation": "already-held deck snapshot; not reward option or acquisition evidence"
+    },
+    {
+      "card": "SETUP_STRIKE",
+      "source": "own",
+      "version": "unknown",
+      "ascension": 0,
+      "attempt_scope": "retry_or_predicted_death",
+      "row": {
+        "path": "logs/states.jsonl",
+        "offset": 6320624694,
+        "bytes": 23498,
+        "sha256": "55bfda60ecb93ccca898bda872e10174f25e4c702bc3d51785e2c66c20c51c7f",
+        "run_id": "LRN0HPZ0FZS1",
+        "floor": 30,
+        "cutoff": 17026867203
+      },
+      "observed_card_objects": [
+        {
+          "index": 27,
+          "card_id": "SETUP_STRIKE",
+          "name": "预备打击",
+          "upgraded": false,
+          "card_type": "Attack",
+          "rarity": "Common",
+          "costs_x": false,
+          "star_costs_x": false,
+          "energy_cost": 1,
+          "star_cost": 0,
+          "rules_text": "造成{Damage:diff()}点伤害。 在本回合内获得{StrengthPower:diff()}点力量。",
+          "resolved_rules_text": "造成7点伤害。 在本回合内获得3点力量。",
+          "dynamic_values": [
+            {
+              "name": "Damage",
+              "base_value": 7,
+              "current_value": 7,
+              "enchanted_value": 7,
+              "is_modified": false,
+              "was_just_upgraded": false
+            },
+            {
+              "name": "StrengthPower",
+              "base_value": 3,
+              "current_value": 3,
+              "enchanted_value": 3,
+              "is_modified": false,
+              "was_just_upgraded": false
+            }
+          ]
+        }
+      ],
+      "observation": "already-held deck snapshot; not reward option or acquisition evidence"
+    },
+    {
+      "card": "DEMON_FORM",
+      "source": "own",
+      "version": "unknown",
+      "ascension": 10,
+      "attempt_scope": "retry_or_predicted_death",
+      "row": {
+        "path": "logs/states.jsonl",
+        "offset": 12759237808,
+        "bytes": 24457,
+        "sha256": "793f6163f5134789990b83ea1b04f2819324e90765ca5c9f7176c91f9c1bff7f",
+        "run_id": "W1YY8PEWGUF9",
+        "floor": 23,
+        "cutoff": 17026867203
+      },
+      "observed_card_objects": [
+        {
+          "index": 26,
+          "card_id": "DEMON_FORM",
+          "name": "恶魔形态",
+          "upgraded": false,
+          "card_type": "Power",
+          "rarity": "Rare",
+          "costs_x": false,
+          "star_costs_x": false,
+          "energy_cost": 3,
+          "star_cost": 0,
+          "rules_text": "在你的回合开始时，获得{StrengthPower:diff()}点力量。",
+          "resolved_rules_text": "在你的回合开始时，获得3点力量。",
+          "dynamic_values": [
+            {
+              "name": "StrengthPower",
+              "base_value": 3,
+              "current_value": 3,
+              "enchanted_value": 3,
+              "is_modified": false,
+              "was_just_upgraded": false
+            }
+          ]
+        }
+      ],
+      "observation": "already-held deck snapshot; not reward option or acquisition evidence"
+    },
+    {
+      "card": "JUGGERNAUT",
+      "source": "own",
+      "version": "unknown",
+      "ascension": 10,
+      "attempt_scope": "retry_or_predicted_death",
+      "row": {
+        "path": "logs/states.jsonl",
+        "offset": 7421815539,
+        "bytes": 23721,
+        "sha256": "36c191a40a5d271f9f271c48a04a1d80245f49f0fe86bd56e9f7614167480e89",
+        "run_id": "JMH5C51RLN4E",
+        "floor": 22,
+        "cutoff": 17026867203
+      },
+      "observed_card_objects": [
+        {
+          "index": 26,
+          "card_id": "JUGGERNAUT",
+          "name": "势不可当",
+          "upgraded": false,
+          "card_type": "Power",
+          "rarity": "Rare",
+          "costs_x": false,
+          "star_costs_x": false,
+          "energy_cost": 2,
+          "star_cost": 0,
+          "rules_text": "每当你获得格挡时，对随机敌人造成{JuggernautPower:diff()}点伤害。",
+          "resolved_rules_text": "每当你获得格挡时，对随机敌人造成6点伤害。",
+          "dynamic_values": [
+            {
+              "name": "JuggernautPower",
+              "base_value": 6,
+              "current_value": 6,
+              "enchanted_value": 6,
+              "is_modified": false,
+              "was_just_upgraded": false
+            }
+          ]
+        }
+      ],
+      "observation": "already-held deck snapshot; not reward option or acquisition evidence"
+    },
+    {
+      "card": "DOMINATE",
+      "source": "own",
+      "version": "unknown",
+      "ascension": 10,
+      "attempt_scope": "retry_or_predicted_death",
+      "row": {
+        "path": "logs/states.jsonl",
+        "offset": 15959773793,
+        "bytes": 26839,
+        "sha256": "fcb0d816dd0bbace16da19ec537cafd5026b12ed89efca81f3a7d8dbe659e414",
+        "run_id": "30GVY0WH7BYP",
+        "floor": 31,
+        "cutoff": 17026867203
+      },
+      "observed_card_objects": [
+        {
+          "index": 30,
+          "card_id": "DOMINATE",
+          "name": "主宰",
+          "upgraded": false,
+          "card_type": "Skill",
+          "rarity": "Rare",
+          "costs_x": false,
+          "star_costs_x": false,
+          "energy_cost": 1,
+          "star_cost": 0,
+          "rules_text": "给予{VulnerablePower:diff()}层易伤。 敌人身上每有一层易伤，就获得{StrengthPerVulnerable:diff()}点力量。",
+          "resolved_rules_text": "给予1层易伤。 敌人身上每有一层易伤，就获得1点力量。 消耗。",
+          "dynamic_values": [
+            {
+              "name": "StrengthPerVulnerable",
+              "base_value": 1,
+              "current_value": 1,
+              "enchanted_value": 1,
+              "is_modified": false,
+              "was_just_upgraded": false
+            },
+            {
+              "name": "VulnerablePower",
+              "base_value": 1,
+              "current_value": 1,
+              "enchanted_value": 1,
+              "is_modified": false,
+              "was_just_upgraded": false
+            }
+          ]
+        }
+      ],
+      "observation": "already-held deck snapshot; not reward option or acquisition evidence"
+    },
+    {
+      "card": "FORGOTTEN_RITUAL",
+      "source": "own",
+      "version": "unknown",
+      "ascension": 10,
+      "attempt_scope": "retry_or_predicted_death",
+      "row": {
+        "path": "logs/states.jsonl",
+        "offset": 13577248802,
+        "bytes": 24081,
+        "sha256": "0d31634871df5801d3634874a5cf539bf50810a12b6d6d2e61739eacc3a2766b",
+        "run_id": "7X58G3LSHZ3U",
+        "floor": 23,
+        "cutoff": 17026867203
+      },
+      "observed_card_objects": [
+        {
+          "index": 27,
+          "card_id": "FORGOTTEN_RITUAL",
+          "name": "被遗忘的仪式",
+          "upgraded": false,
+          "card_type": "Skill",
+          "rarity": "Uncommon",
+          "costs_x": false,
+          "star_costs_x": false,
+          "energy_cost": 1,
+          "star_cost": 0,
+          "rules_text": "获得{Energy:energyIcons()}。",
+          "resolved_rules_text": "获得res://images/packed/sprite_fonts/silent_energy_icon.pngres://images/packed/sprite_fonts/silent_energy_icon.pngres://images/packed/sprite_fonts/silent_energy_icon.png。 消耗。",
+          "dynamic_values": [
+            {
+              "name": "Energy",
+              "base_value": 3,
+              "current_value": 3,
+              "enchanted_value": 3,
+              "is_modified": false,
+              "was_just_upgraded": false
+            }
+          ]
+        }
+      ],
+      "observation": "already-held deck snapshot; not reward option or acquisition evidence"
+    },
+    {
+      "card": "IMPERVIOUS",
+      "source": "own",
+      "version": "unknown",
+      "ascension": 10,
+      "attempt_scope": "retry_or_predicted_death",
+      "row": {
+        "path": "logs/states.jsonl",
+        "offset": 13907996625,
+        "bytes": 25642,
+        "sha256": "d869c3f15ff031ffb4a7039b83cb907ce0d9fd903a569e8bc371f3941df6ff3b",
+        "run_id": "2PQK67ULZY90",
+        "floor": 24,
+        "cutoff": 17026867203
+      },
+      "observed_card_objects": [
+        {
+          "index": 27,
+          "card_id": "IMPERVIOUS",
+          "name": "岿然不动",
+          "upgraded": false,
+          "card_type": "Skill",
+          "rarity": "Rare",
+          "costs_x": false,
+          "star_costs_x": false,
+          "energy_cost": 2,
+          "star_cost": 0,
+          "rules_text": "获得{Block:diff()}点格挡。",
+          "resolved_rules_text": "获得30点格挡。 消耗。",
+          "dynamic_values": [
+            {
+              "name": "Block",
+              "base_value": 30,
+              "current_value": 30,
+              "enchanted_value": 30,
+              "is_modified": false,
+              "was_just_upgraded": false
+            }
+          ]
+        }
+      ],
+      "observation": "already-held deck snapshot; not reward option or acquisition evidence"
+    },
+    {
+      "card": "IRON_WAVE",
+      "source": "own",
+      "version": "unknown",
+      "ascension": 10,
+      "attempt_scope": "retry_or_predicted_death",
+      "row": {
+        "path": "logs/states.jsonl",
+        "offset": 11417196366,
+        "bytes": 23169,
+        "sha256": "10b5345aa94444891b194d14a3ca7dd4b4b05b7fbd2f8d35f9fbec75dd1429a8",
+        "run_id": "E6DSUVTNVBMH",
+        "floor": 20,
+        "cutoff": 17026867203
+      },
+      "observed_card_objects": [
+        {
+          "index": 25,
+          "card_id": "IRON_WAVE",
+          "name": "铁斩波+",
+          "upgraded": true,
+          "card_type": "Attack",
+          "rarity": "Common",
+          "costs_x": false,
+          "star_costs_x": false,
+          "energy_cost": 1,
+          "star_cost": 0,
+          "rules_text": "获得{Block:diff()}点格挡。 造成{Damage:diff()}点伤害。",
+          "resolved_rules_text": "获得7点格挡。 造成7点伤害。",
+          "dynamic_values": [
+            {
+              "name": "Block",
+              "base_value": 7,
+              "current_value": 7,
+              "enchanted_value": 7,
+              "is_modified": false,
+              "was_just_upgraded": false
+            },
+            {
+              "name": "Damage",
+              "base_value": 7,
+              "current_value": 7,
+              "enchanted_value": 7,
+              "is_modified": false,
+              "was_just_upgraded": false
+            }
+          ]
+        }
+      ],
+      "observation": "already-held deck snapshot; not reward option or acquisition evidence"
+    },
+    {
+      "card": "PYRE",
+      "source": "own",
+      "version": "unknown",
+      "ascension": 10,
+      "attempt_scope": "retry_or_predicted_death",
+      "row": {
+        "path": "logs/states.jsonl",
+        "offset": 14333796078,
+        "bytes": 24652,
+        "sha256": "af2cf32c869d70ce33db42902355bb9d8669b3b14890e60c49f741241e8602b2",
+        "run_id": "0QDRNCRMC8BU",
+        "floor": 22,
+        "cutoff": 17026867203
+      },
+      "observed_card_objects": [
+        {
+          "index": 26,
+          "card_id": "PYRE",
+          "name": "薪火之源",
+          "upgraded": false,
+          "card_type": "Power",
+          "rarity": "Rare",
+          "costs_x": false,
+          "star_costs_x": false,
+          "energy_cost": 2,
+          "star_cost": 0,
+          "rules_text": "在回合开始时，获得{Energy:energyIcons()}。",
+          "resolved_rules_text": "在回合开始时，获得res://images/packed/sprite_fonts/silent_energy_icon.png。",
+          "dynamic_values": [
+            {
+              "name": "Energy",
+              "base_value": 1,
+              "current_value": 1,
+              "enchanted_value": 1,
+              "is_modified": false,
+              "was_just_upgraded": false
+            }
+          ]
+        }
+      ],
+      "observation": "already-held deck snapshot; not reward option or acquisition evidence"
+    },
+    {
+      "card": "EVIL_EYE",
+      "source": "own",
+      "version": "unknown",
+      "ascension": 10,
+      "attempt_scope": "retry_or_predicted_death",
+      "row": {
+        "path": "logs/states.jsonl",
+        "offset": 14881161557,
+        "bytes": 21610,
+        "sha256": "6196afd0271a4911a596361e91d7a1bb505e0b8dbba940b50533510953fc876a",
+        "run_id": "3YUVLHCYAQ8L",
+        "floor": 23,
+        "cutoff": 17026867203
+      },
+      "observed_card_objects": [
+        {
+          "index": 23,
+          "card_id": "EVIL_EYE",
+          "name": "邪眼+",
+          "upgraded": true,
+          "card_type": "Skill",
+          "rarity": "Uncommon",
+          "costs_x": false,
+          "star_costs_x": false,
+          "energy_cost": 1,
+          "star_cost": 0,
+          "rules_text": "获得{Block:diff()}点格挡。 如果你在本回合消耗过卡牌，则额外获得{Block:diff()}点格挡。",
+          "resolved_rules_text": "获得11点格挡。 如果你在本回合消耗过卡牌，则额外获得11点格挡。",
+          "dynamic_values": [
+            {
+              "name": "Block",
+              "base_value": 11,
+              "current_value": 11,
+              "enchanted_value": 11,
+              "is_modified": false,
+              "was_just_upgraded": false
+            }
+          ]
+        }
+      ],
+      "observation": "already-held deck snapshot; not reward option or acquisition evidence"
+    },
+    {
+      "card": "INFLAME",
+      "source": "own",
+      "version": "unknown",
+      "ascension": 10,
+      "attempt_scope": "retry_or_predicted_death",
+      "row": {
+        "path": "logs/states.jsonl",
+        "offset": 8029700857,
+        "bytes": 23645,
+        "sha256": "13aed64160203038d714ae5dc542658fcfd1df3bc05f34d5fac8628485e2cde9",
+        "run_id": "UMVLWER4CD98",
+        "floor": 24,
+        "cutoff": 17026867203
+      },
+      "observed_card_objects": [
+        {
+          "index": 26,
+          "card_id": "INFLAME",
+          "name": "燃烧",
+          "upgraded": false,
+          "card_type": "Power",
+          "rarity": "Uncommon",
+          "costs_x": false,
+          "star_costs_x": false,
+          "energy_cost": 1,
+          "star_cost": 0,
+          "rules_text": "获得{StrengthPower:diff()}点力量。",
+          "resolved_rules_text": "获得2点力量。",
+          "dynamic_values": [
+            {
+              "name": "StrengthPower",
+              "base_value": 2,
+              "current_value": 2,
+              "enchanted_value": 2,
+              "is_modified": false,
+              "was_just_upgraded": false
+            }
+          ]
+        }
+      ],
+      "observation": "already-held deck snapshot; not reward option or acquisition evidence"
+    },
+    {
+      "card": "OFFERING",
+      "source": "own",
+      "version": "unknown",
+      "ascension": 10,
+      "attempt_scope": "retry_or_predicted_death",
+      "row": {
+        "path": "logs/states.jsonl",
+        "offset": 8029750466,
+        "bytes": 24820,
+        "sha256": "050555ee54a4f6236f7d95bca191996783100d0963fc7e5d908469a3834d5ac3",
+        "run_id": "UMVLWER4CD98",
+        "floor": 24,
+        "cutoff": 17026867203
+      },
+      "observed_card_objects": [
+        {
+          "index": 27,
+          "card_id": "OFFERING",
+          "name": "祭品",
+          "upgraded": false,
+          "card_type": "Skill",
+          "rarity": "Rare",
+          "costs_x": false,
+          "star_costs_x": false,
+          "energy_cost": 0,
+          "star_cost": 0,
+          "rules_text": "失去{HpLoss:diff()}点生命。 获得{Energy:energyIcons()}。 抽{Cards:diff()}张牌。",
+          "resolved_rules_text": "失去6点生命。 获得res://images/packed/sprite_fonts/silent_energy_icon.pngres://images/packed/sprite_fonts/silent_energy_icon.png。 抽3张牌。 消耗。",
+          "dynamic_values": [
+            {
+              "name": "Cards",
+              "base_value": 3,
+              "current_value": 3,
+              "enchanted_value": 3,
+              "is_modified": false,
+              "was_just_upgraded": false
+            },
+            {
+              "name": "Energy",
+              "base_value": 2,
+              "current_value": 2,
+              "enchanted_value": 2,
+              "is_modified": false,
+              "was_just_upgraded": false
+            },
+            {
+              "name": "HpLoss",
+              "base_value": 6,
+              "current_value": 6,
+              "enchanted_value": 6,
+              "is_modified": false,
+              "was_just_upgraded": false
+            }
+          ]
+        }
+      ],
+      "observation": "already-held deck snapshot; not reward option or acquisition evidence"
+    },
+    {
+      "card": "BLUDGEON",
+      "source": "own",
+      "version": "unknown",
+      "ascension": 10,
+      "attempt_scope": "retry_or_predicted_death",
+      "row": {
+        "path": "logs/states.jsonl",
+        "offset": 12759188648,
+        "bytes": 23643,
+        "sha256": "118507a9756ece565c058411a62222f409a16d0df7f8ad70d8bad03c02a10640",
+        "run_id": "W1YY8PEWGUF9",
+        "floor": 23,
+        "cutoff": 17026867203
+      },
+      "observed_card_objects": [
+        {
+          "index": 25,
+          "card_id": "BLUDGEON",
+          "name": "重锤+",
+          "upgraded": true,
+          "card_type": "Attack",
+          "rarity": "Uncommon",
+          "costs_x": false,
+          "star_costs_x": false,
+          "energy_cost": 3,
+          "star_cost": 0,
+          "rules_text": "造成{Damage:diff()}点伤害。",
+          "resolved_rules_text": "造成42点伤害。",
+          "dynamic_values": [
+            {
+              "name": "Damage",
+              "base_value": 42,
+              "current_value": 42,
+              "enchanted_value": 42,
+              "is_modified": false,
+              "was_just_upgraded": false
+            }
+          ]
+        }
+      ],
+      "observation": "already-held deck snapshot; not reward option or acquisition evidence"
+    },
+    {
+      "card": "COLOSSUS",
+      "source": "own",
+      "version": "unknown",
+      "ascension": 10,
+      "attempt_scope": "retry_or_predicted_death",
+      "row": {
+        "path": "logs/states.jsonl",
+        "offset": 13088466790,
+        "bytes": 23383,
+        "sha256": "ee2b964a8c619e872b74d95cdbff85ec97db982a03f93f9d1d2d7a493daafa91",
+        "run_id": "RQCHNN0W72KF",
+        "floor": 21,
+        "cutoff": 17026867203
+      },
+      "observed_card_objects": [
+        {
+          "index": 25,
+          "card_id": "COLOSSUS",
+          "name": "巨像+",
+          "upgraded": true,
+          "card_type": "Skill",
+          "rarity": "Uncommon",
+          "costs_x": false,
+          "star_costs_x": false,
+          "energy_cost": 1,
+          "star_cost": 0,
+          "rules_text": "获得{Block:diff()}点格挡。 在本回合中，有易伤状态的敌人对你造成的伤害降低50%。",
+          "resolved_rules_text": "获得7点格挡。 在本回合中，有易伤状态的敌人对你造成的伤害降低50%。",
+          "dynamic_values": [
+            {
+              "name": "Block",
+              "base_value": 7,
+              "current_value": 7,
+              "enchanted_value": 7,
+              "is_modified": false,
+              "was_just_upgraded": false
+            },
+            {
+              "name": "Colossus",
+              "base_value": 1,
+              "current_value": 1,
+              "enchanted_value": 1,
+              "is_modified": false,
+              "was_just_upgraded": false
+            }
+          ]
+        }
+      ],
+      "observation": "already-held deck snapshot; not reward option or acquisition evidence"
+    },
+    {
+      "card": "FIGHT_ME",
+      "source": "own",
+      "version": "unknown",
+      "ascension": 10,
+      "attempt_scope": "retry_or_predicted_death",
+      "row": {
+        "path": "logs/states.jsonl",
+        "offset": 9358899569,
+        "bytes": 26050,
+        "sha256": "60ce266334bd556deb8e1663c51c9fb9bb707bfe27121b1f9e99a690b0885cc4",
+        "run_id": "SY0WMJNNVRLM",
+        "floor": 22,
+        "cutoff": 17026867203
+      },
+      "observed_card_objects": [
+        {
+          "index": 28,
+          "card_id": "FIGHT_ME",
+          "name": "与我一战！+",
+          "upgraded": true,
+          "card_type": "Attack",
+          "rarity": "Uncommon",
+          "costs_x": false,
+          "star_costs_x": false,
+          "energy_cost": 2,
+          "star_cost": 0,
+          "rules_text": "造成{Damage:diff()}点伤害两次。 获得{StrengthPower:diff()}点力量。 该敌人获得{EnemyStrength:diff()}点力量。",
+          "resolved_rules_text": "造成6点伤害两次。 获得4点力量。 该敌人获得1点力量。",
+          "dynamic_values": [
+            {
+              "name": "Damage",
+              "base_value": 6,
+              "current_value": 6,
+              "enchanted_value": 6,
+              "is_modified": false,
+              "was_just_upgraded": false
+            },
+            {
+              "name": "EnemyStrength",
+              "base_value": 1,
+              "current_value": 1,
+              "enchanted_value": 1,
+              "is_modified": false,
+              "was_just_upgraded": false
+            },
+            {
+              "name": "Repeat",
+              "base_value": 2,
+              "current_value": 2,
+              "enchanted_value": 2,
+              "is_modified": false,
+              "was_just_upgraded": false
+            },
+            {
+              "name": "StrengthPower",
+              "base_value": 4,
+              "current_value": 4,
+              "enchanted_value": 4,
+              "is_modified": false,
+              "was_just_upgraded": false
+            }
+          ]
+        }
+      ],
+      "observation": "already-held deck snapshot; not reward option or acquisition evidence"
+    },
+    {
+      "card": "UPPERCUT",
+      "source": "own",
+      "version": "unknown",
+      "ascension": 10,
+      "attempt_scope": "retry_or_predicted_death",
+      "row": {
+        "path": "logs/states.jsonl",
+        "offset": 13907945013,
+        "bytes": 24894,
+        "sha256": "c993d666f223b31a9a42556a251fbc2d45b0237d1100c471e0ddb03400b094fe",
+        "run_id": "2PQK67ULZY90",
+        "floor": 24,
+        "cutoff": 17026867203
+      },
+      "observed_card_objects": [
+        {
+          "index": 26,
+          "card_id": "UPPERCUT",
+          "name": "上勾拳",
+          "upgraded": false,
+          "card_type": "Attack",
+          "rarity": "Uncommon",
+          "costs_x": false,
+          "star_costs_x": false,
+          "energy_cost": 2,
+          "star_cost": 0,
+          "rules_text": "造成{Damage:diff()}点伤害。 给予{Power:diff()}层虚弱。 给予{Power:diff()}层易伤。",
+          "resolved_rules_text": "造成13点伤害。 给予1层虚弱。 给予1层易伤。",
+          "dynamic_values": [
+            {
+              "name": "Damage",
+              "base_value": 13,
+              "current_value": 13,
+              "enchanted_value": 13,
+              "is_modified": false,
+              "was_just_upgraded": false
+            },
+            {
+              "name": "Power",
+              "base_value": 1,
+              "current_value": 1,
+              "enchanted_value": 1,
+              "is_modified": false,
+              "was_just_upgraded": false
+            }
+          ]
+        }
+      ],
+      "observation": "already-held deck snapshot; not reward option or acquisition evidence"
+    },
+    {
+      "card": "BLOODLETTING",
+      "source": "own",
+      "version": "unknown",
+      "ascension": 10,
+      "attempt_scope": "retry_or_predicted_death",
+      "row": {
+        "path": "logs/states.jsonl",
+        "offset": 9608001991,
+        "bytes": 24478,
+        "sha256": "dbd6aeae28bc029449d300b9949964417af9f3a0b041f2a6d654b641f39588aa",
+        "run_id": "P2M3DFJ4DEZ3",
+        "floor": 29,
+        "cutoff": 17026867203
+      },
+      "observed_card_objects": [
+        {
+          "index": 26,
+          "card_id": "BLOODLETTING",
+          "name": "放血",
+          "upgraded": false,
+          "card_type": "Skill",
+          "rarity": "Uncommon",
+          "costs_x": false,
+          "star_costs_x": false,
+          "energy_cost": 0,
+          "star_cost": 0,
+          "rules_text": "失去{HpLoss:diff()}点生命。 获得{Energy:energyIcons()}。",
+          "resolved_rules_text": "失去3点生命。 获得res://images/packed/sprite_fonts/silent_energy_icon.pngres://images/packed/sprite_fonts/silent_energy_icon.png。",
+          "dynamic_values": [
+            {
+              "name": "Energy",
+              "base_value": 2,
+              "current_value": 2,
+              "enchanted_value": 2,
+              "is_modified": false,
+              "was_just_upgraded": false
+            },
+            {
+              "name": "HpLoss",
+              "base_value": 3,
+              "current_value": 3,
+              "enchanted_value": 3,
+              "is_modified": false,
+              "was_just_upgraded": false
+            }
+          ]
+        }
+      ],
+      "observation": "already-held deck snapshot; not reward option or acquisition evidence"
+    },
+    {
+      "card": "INFERNO",
+      "source": "own",
+      "version": "unknown",
+      "ascension": 10,
+      "attempt_scope": "retry_or_predicted_death",
+      "row": {
+        "path": "logs/states.jsonl",
+        "offset": 13456506202,
+        "bytes": 25377,
+        "sha256": "4bcf9e68825e436042693f011666d0d67c6024f423a09368e0b0e77d5cca274c",
+        "run_id": "TCDUBRWMEMNA",
+        "floor": 22,
+        "cutoff": 17026867203
+      },
+      "observed_card_objects": [
+        {
+          "index": 26,
+          "card_id": "INFERNO",
+          "name": "狱火+",
+          "upgraded": true,
+          "card_type": "Power",
+          "rarity": "Uncommon",
+          "costs_x": false,
+          "star_costs_x": false,
+          "energy_cost": 1,
+          "star_cost": 0,
+          "rules_text": "在你的回合开始时，失去1点生命。 每当你在你的回合内失去生命时，对所有敌人造成{InfernoPower:diff()}点伤害。",
+          "resolved_rules_text": "在你的回合开始时，失去1点生命。 每当你在你的回合内失去生命时，对所有敌人造成9点伤害。",
+          "dynamic_values": [
+            {
+              "name": "InfernoPower",
+              "base_value": 9,
+              "current_value": 9,
+              "enchanted_value": 9,
+              "is_modified": false,
+              "was_just_upgraded": false
+            }
+          ]
+        }
+      ],
+      "observation": "already-held deck snapshot; not reward option or acquisition evidence"
+    }
+  ],
+  "raw_reads": [
+    {
+      "path": "logs/states.jsonl",
+      "offset": 9607952111,
+      "bytes": 23765,
+      "sha256": "ea6cc164c6f3d932b37a4f135433b91f8ef6f0dbea537cc50b5bb932c0b36ec7",
+      "run_id": "P2M3DFJ4DEZ3",
+      "floor": 29,
+      "cutoff": 17026867203
+    },
+    {
+      "path": "logs/states.jsonl",
+      "offset": 14881117343,
+      "bytes": 21054,
+      "sha256": "c9b68f05505d020da2156a8165bd082ee35e29bdb49a5505ef3446113f323c11",
+      "run_id": "3YUVLHCYAQ8L",
+      "floor": 23,
+      "cutoff": 17026867203
+    },
+    {
+      "path": "logs/states.jsonl",
+      "offset": 11796228513,
+      "bytes": 24990,
+      "sha256": "807f84c67b4a93920ec1d6480282a49df10a8fb99a64ed421a7d182de4d36a6d",
+      "run_id": "0C3AR6J0Z8LD",
+      "floor": 30,
+      "cutoff": 17026867203
+    },
+    {
+      "path": "logs/states.jsonl",
+      "offset": 9121857232,
+      "bytes": 22529,
+      "sha256": "f36a853925e100ce809f2e7809e3ff4cca9059ac5c05d57f6f633eb8087cbcd1",
+      "run_id": "9R916WW0V65N",
+      "floor": 25,
+      "cutoff": 17026867203
+    },
+    {
+      "path": "logs/states.jsonl",
+      "offset": 13343211388,
+      "bytes": 23798,
+      "sha256": "2a2e1151a895542429d0792c0d3c982a728c8c74ad9185239ef0bfa1c6a20e29",
+      "run_id": "DHYFWEN40SJ7",
+      "floor": 21,
+      "cutoff": 17026867203
+    },
+    {
+      "path": "logs/states.jsonl",
+      "offset": 9121952125,
+      "bytes": 24048,
+      "sha256": "f61504114a70e535d16fee329fdc114f2b5508875fe2ea42ab95be38b1657fdc",
+      "run_id": "9R916WW0V65N",
+      "floor": 25,
+      "cutoff": 17026867203
+    },
+    {
+      "path": "logs/states.jsonl",
+      "offset": 9358847079,
+      "bytes": 25068,
+      "sha256": "f428389791c19dbfa5789e4556b634ae06650b91178697666ae9a40ad43b18f2",
+      "run_id": "SY0WMJNNVRLM",
+      "floor": 22,
+      "cutoff": 17026867203
+    },
+    {
+      "path": "logs/states.jsonl",
+      "offset": 6320624694,
+      "bytes": 23498,
+      "sha256": "55bfda60ecb93ccca898bda872e10174f25e4c702bc3d51785e2c66c20c51c7f",
+      "run_id": "LRN0HPZ0FZS1",
+      "floor": 30,
+      "cutoff": 17026867203
+    },
+    {
+      "path": "logs/states.jsonl",
+      "offset": 12759237808,
+      "bytes": 24457,
+      "sha256": "793f6163f5134789990b83ea1b04f2819324e90765ca5c9f7176c91f9c1bff7f",
+      "run_id": "W1YY8PEWGUF9",
+      "floor": 23,
+      "cutoff": 17026867203
+    },
+    {
+      "path": "logs/states.jsonl",
+      "offset": 7421815539,
+      "bytes": 23721,
+      "sha256": "36c191a40a5d271f9f271c48a04a1d80245f49f0fe86bd56e9f7614167480e89",
+      "run_id": "JMH5C51RLN4E",
+      "floor": 22,
+      "cutoff": 17026867203
+    },
+    {
+      "path": "logs/states.jsonl",
+      "offset": 15959773793,
+      "bytes": 26839,
+      "sha256": "fcb0d816dd0bbace16da19ec537cafd5026b12ed89efca81f3a7d8dbe659e414",
+      "run_id": "30GVY0WH7BYP",
+      "floor": 31,
+      "cutoff": 17026867203
+    },
+    {
+      "path": "logs/states.jsonl",
+      "offset": 13577248802,
+      "bytes": 24081,
+      "sha256": "0d31634871df5801d3634874a5cf539bf50810a12b6d6d2e61739eacc3a2766b",
+      "run_id": "7X58G3LSHZ3U",
+      "floor": 23,
+      "cutoff": 17026867203
+    },
+    {
+      "path": "logs/states.jsonl",
+      "offset": 13907996625,
+      "bytes": 25642,
+      "sha256": "d869c3f15ff031ffb4a7039b83cb907ce0d9fd903a569e8bc371f3941df6ff3b",
+      "run_id": "2PQK67ULZY90",
+      "floor": 24,
+      "cutoff": 17026867203
+    },
+    {
+      "path": "logs/states.jsonl",
+      "offset": 11417196366,
+      "bytes": 23169,
+      "sha256": "10b5345aa94444891b194d14a3ca7dd4b4b05b7fbd2f8d35f9fbec75dd1429a8",
+      "run_id": "E6DSUVTNVBMH",
+      "floor": 20,
+      "cutoff": 17026867203
+    },
+    {
+      "path": "logs/states.jsonl",
+      "offset": 14333796078,
+      "bytes": 24652,
+      "sha256": "af2cf32c869d70ce33db42902355bb9d8669b3b14890e60c49f741241e8602b2",
+      "run_id": "0QDRNCRMC8BU",
+      "floor": 22,
+      "cutoff": 17026867203
+    },
+    {
+      "path": "logs/states.jsonl",
+      "offset": 14881161557,
+      "bytes": 21610,
+      "sha256": "6196afd0271a4911a596361e91d7a1bb505e0b8dbba940b50533510953fc876a",
+      "run_id": "3YUVLHCYAQ8L",
+      "floor": 23,
+      "cutoff": 17026867203
+    },
+    {
+      "path": "logs/states.jsonl",
+      "offset": 8029700857,
+      "bytes": 23645,
+      "sha256": "13aed64160203038d714ae5dc542658fcfd1df3bc05f34d5fac8628485e2cde9",
+      "run_id": "UMVLWER4CD98",
+      "floor": 24,
+      "cutoff": 17026867203
+    },
+    {
+      "path": "logs/states.jsonl",
+      "offset": 8029750466,
+      "bytes": 24820,
+      "sha256": "050555ee54a4f6236f7d95bca191996783100d0963fc7e5d908469a3834d5ac3",
+      "run_id": "UMVLWER4CD98",
+      "floor": 24,
+      "cutoff": 17026867203
+    },
+    {
+      "path": "logs/states.jsonl",
+      "offset": 12759188648,
+      "bytes": 23643,
+      "sha256": "118507a9756ece565c058411a62222f409a16d0df7f8ad70d8bad03c02a10640",
+      "run_id": "W1YY8PEWGUF9",
+      "floor": 23,
+      "cutoff": 17026867203
+    },
+    {
+      "path": "logs/states.jsonl",
+      "offset": 13088466790,
+      "bytes": 23383,
+      "sha256": "ee2b964a8c619e872b74d95cdbff85ec97db982a03f93f9d1d2d7a493daafa91",
+      "run_id": "RQCHNN0W72KF",
+      "floor": 21,
+      "cutoff": 17026867203
+    },
+    {
+      "path": "logs/states.jsonl",
+      "offset": 9358899569,
+      "bytes": 26050,
+      "sha256": "60ce266334bd556deb8e1663c51c9fb9bb707bfe27121b1f9e99a690b0885cc4",
+      "run_id": "SY0WMJNNVRLM",
+      "floor": 22,
+      "cutoff": 17026867203
+    },
+    {
+      "path": "logs/states.jsonl",
+      "offset": 13907945013,
+      "bytes": 24894,
+      "sha256": "c993d666f223b31a9a42556a251fbc2d45b0237d1100c471e0ddb03400b094fe",
+      "run_id": "2PQK67ULZY90",
+      "floor": 24,
+      "cutoff": 17026867203
+    },
+    {
+      "path": "logs/states.jsonl",
+      "offset": 9608001991,
+      "bytes": 24478,
+      "sha256": "dbd6aeae28bc029449d300b9949964417af9f3a0b041f2a6d654b641f39588aa",
+      "run_id": "P2M3DFJ4DEZ3",
+      "floor": 29,
+      "cutoff": 17026867203
+    },
+    {
+      "path": "logs/states.jsonl",
+      "offset": 13456506202,
+      "bytes": 25377,
+      "sha256": "4bcf9e68825e436042693f011666d0d67c6024f423a09368e0b0e77d5cca274c",
+      "run_id": "TCDUBRWMEMNA",
+      "floor": 22,
+      "cutoff": 17026867203
+    }
+  ]
+}

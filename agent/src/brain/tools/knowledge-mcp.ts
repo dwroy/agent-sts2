@@ -10,31 +10,29 @@ export class KnowledgeMcp {
   private server: Server | null = null;
   private host: ToolHost | null = null;
   private path = `/mcp/${randomBytes(24).toString("hex")}`;
-  private cutoff = Infinity;
-  private maximum = 0;
-  private used = 0;
-  private limited: ((reason: "calls" | "time") => void) | null = null;
+  private revoke: (() => void) | null = null;
   url = "";
 
   begin(tools: ToolDef[], context: ToolContext, maximum: number, cutoff: number, limited: (reason: "calls" | "time") => void, observe?: BrainObserver): ToolHost {
-    this.maximum = maximum; this.cutoff = cutoff; this.used = 0; this.limited = limited;
+    this.end();
+    let used = 0, active = true;
+    this.revoke = () => { active = false; };
     const wrapped = tools.map((tool): ToolDef => ({ ...tool, run: async (input, ctx) => {
-      if (this.used >= this.maximum || Date.now() >= this.cutoff) {
-        const reason = this.used >= this.maximum ? "calls" : "time";
+      if (!active || used >= maximum || Date.now() >= cutoff) {
+        const reason = used >= maximum ? "calls" : "time";
         // Let the MCP response reach the harness before its tool phase is interrupted.
-        const limited = this.limited;
-        setTimeout(() => limited?.(reason), 20).unref();
+        if (active) setTimeout(() => { if (active) limited(reason); }, 20).unref();
         return { text: "知识查询预算已用完。请根据已有状态与工具结果立即输出答案 JSON。", isError: true };
       }
-      this.used += 1;
+      used += 1;
       const problems = validateInput(tool.inputSchema, input);
       if (problems.length) return { text: problems.join("; "), isError: true };
       try { return await tool.run(input, ctx); }
-      finally { if (this.used >= this.maximum) { const limited = this.limited; setTimeout(() => limited?.("calls"), 20).unref(); } }
+      finally { if (used >= maximum && active) setTimeout(() => { if (active) limited("calls"); }, 20).unref(); }
     } }));
     return this.host = new ToolHost(wrapped, context, undefined, true, observe);
   }
-  end(): void { this.host = null; this.limited = null; }
+  end(): void { this.revoke?.(); this.revoke = null; this.host = null; }
 
   async start(): Promise<string> {
     if (this.server) return this.url;

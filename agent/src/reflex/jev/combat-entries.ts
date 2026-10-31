@@ -7,6 +7,7 @@ import { asRecord, toJsonValue, type JsonValue } from "../../core/util/json.js";
 import type { GameState } from "../../hand/mod/schema.js";
 import { loadV6Knowledge } from "../../v6/knowledge.js";
 import type { ReflexEntry, ReflexVocab } from "../../v6/formats.js";
+import { combatEntrySelectionConfig, selectedCombatEntries, type CombatEntrySelection } from "../../v6/combat-entry-selection.js";
 import { evaluatePredicate } from "../../v6/predicate.js";
 import type { Plan } from "../turn-solver.js";
 import { combatPredicateFacts, combatOptionFacts, type CombatPredicateRuntime, type PredicateFacts } from "./predicate-context.js";
@@ -75,6 +76,7 @@ export interface CombatEntries {
   entries: ReflexEntry[];
   vocab: ReflexVocab;
   provenance: Row;
+  selection?: CombatEntrySelection;
 }
 
 /** No implicit character, pending draft, common knowledge, inferred tags or missing-value defaults. */
@@ -87,8 +89,12 @@ export function loadCombatEntries(state: GameState, directory = KNOWLEDGE_DIR, e
     cachedKnowledge(directory, String(state.run?.raw["character_id"] ?? "")));
   if (!loaded.character || loaded.reflex.status !== "loaded" || loaded.vocab.status !== "loaded") return null;
   const predicateFacts = combatPredicateFacts(state, runtime), context = predicateFacts.context;
+  const selected = selectedCombatEntries(loaded.reflex.value, loaded.character, context,
+    combatEntrySelectionConfig(env["V6_COMBAT_ENTRY_SELECTION"]));
+  if (!selected || selected.selection && selected.entries.some(entry => entry.applies_to !== "combat_line"
+    || !entry.scope.ascensions.includes(ascension))) return null;
   return { character: loaded.character, ascension, act: finite(context["act"]), context, predicateFacts,
-    entries: loaded.reflex.value, vocab: loaded.vocab.value,
+    ...selected, vocab: loaded.vocab.value,
     provenance: provenance!,
   };
 }
@@ -190,6 +196,7 @@ export function combatMemory(session: Pick<CombatEntries, "entries" | "ascension
 
 export function combatEntriesState(session: CombatEntries, hasRunPlan: boolean): JsonValue {
   return toJsonValue({ schema: "v6-combat-entries-audit-v1", character: session.character, ascension: session.ascension,
+    ...(session.selection ? { selection: session.selection } : {}),
     context: session.context, predicate_facts: { sources: session.predicateFacts.sources, unavailable: session.predicateFacts.unavailable }, knowledge: session.provenance,
     run_plan_source: { kind: hasRunPlan ? "run_memory" : "run_brief", author: "unknown" } });
 }

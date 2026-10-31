@@ -1,0 +1,260 @@
+{
+  "id": "silent-special-events-rk-candidates",
+  "entries": [
+    {
+      "id": "silent-rk-event-cheese-visible-hp-versus-card-pool",
+      "strategy_id": "silent-brain-event-cheese-visible-hp-versus-card-pool",
+      "knowledge_id": "silent-event-cheese-visible-hp-versus-card-pool",
+      "disposition": "waiting",
+      "source": "mixed",
+      "formal_publication": "pending",
+      "consumer_readback": "pending",
+      "candidate_kind": "descriptive_rk_note_not_reflex_entry_v1",
+      "event_id": "ROOM_FULL_OF_CHEESE",
+      "direction": "满屋芝士把当下14血代价与八选二的真实牌池比较，不预支遗物未来回本。",
+      "magnitude_and_sample": "A10自有111局111次：71次大快朵颐完成后牌组各+2、HP不变；40次翻找均净失14HP且新增CHOSEN_CHEESE。",
+      "applicability": "仅当前原ID为ROOM_FULL_OF_CHEESE且选项仍明确为8选2/14HP换遗物；Silent A10、已观察幕1/2，自有版本unknown。",
+      "executable_entry": null,
+      "signal": null,
+      "predicate": null,
+      "evidence": {
+        "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261024-204311/learner/runs/20261024-204408-714c1baf-edc3-4b3c-9a28-de5bdd2c945f-strategy-proposal/scratch/cheese-visible-hp-versus-card-pool-evidence.json",
+        "sha256": "842f87ed1945e713dfcb38b1b14678a3126885132dfdc0905ecb17adc6fce091"
+      },
+      "missing_contract": [
+        "applies_to has combat_line/card_pick/potion/rest/shop, no event",
+        "predicate whitelist has no event.id or event.options identity/price/lock fields",
+        "No original event RK consumer capture or matched outcome matrix"
+      ],
+      "reason": "现行合同不能表达该事件选择；不伪装成shop/card_pick、不扩schema。保留逐情境描述与原证据，待原owner处理消费者合同和离线输入。",
+      "counterexamples_and_gaps": [
+        "v0.111.0幕2 GORGE为31/81、SEARCH为13/28整局胜，GORGE低8.16点；幕1相反。v0.107.0幕1也反向。未追踪芝士后续回本，不能从节点奖励推整局价值。",
+        "自有版本unknown，不能视为与v0.111.0机制相同；没有机制改动对照，各build/幕独立保留，不跨版本合并。",
+        "自有retry_or_predicted_death是整局分层，不能当该事件发生SL；no_retry_evidence也不证明从未重试。",
+        "外部自选上传，玩家标识未读取，玩家独立数未知；distinct_uploaded_runs是上传记录局数，非已核实独立玩家。",
+        "外部已选title键没有完整备选、variables或即时支付前资源；前节点末HP及两节点差是代理，不是选择原子费用。",
+        "选项自选、牌组/路线/持有物、上传与生存选择、节点内其他动作混杂；终局胜率只作描述，不证明因果或固定选择。",
+        "真实事件身份、当前选项文本和支付资源只能从当题读取；未来随机牌/遗物及终局簇不作为当前触发。",
+        "自有所列n为冻结选择日志机会，重复决策/重掷不增加独立局；机会间并非配对反事实。",
+        "展示某备选不证明当时可支付；is_locked=false且will_kill_player=false只作可选性代理，不把致死备选当同台可选对照。"
+      ],
+      "capture": null,
+      "replay": null,
+      "model_calls": 0,
+      "formal_effect": null
+    },
+    {
+      "id": "silent-rk-event-bridge-reprice-each-reroll",
+      "strategy_id": "silent-brain-event-bridge-reprice-each-reroll",
+      "knowledge_id": "silent-event-bridge-reprice-each-reroll",
+      "disposition": "waiting",
+      "source": "mixed",
+      "formal_publication": "pending",
+      "consumer_readback": "pending",
+      "candidate_kind": "descriptive_rk_note_not_reflex_entry_v1",
+      "event_id": "SLIPPERY_BRIDGE",
+      "direction": "滑脚木桥每次重掷后重新比较具名移除牌和新的血价，累计已付成本，不能当恒定3血。",
+      "magnitude_and_sample": "A10自有74局178次选择：63局共104次重掷，文本价3至7HP，后继实测净减2至7HP、累计368HP；74次跨越各移除1牌且即时HP不变。",
+      "applicability": "仅当前原ID为SLIPPERY_BRIDGE、具名移除牌及重掷价已展示；Silent A10、幕1/2/3，自有版本unknown。",
+      "executable_entry": null,
+      "signal": null,
+      "predicate": null,
+      "evidence": {
+        "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261024-204311/learner/runs/20261024-204408-714c1baf-edc3-4b3c-9a28-de5bdd2c945f-strategy-proposal/scratch/bridge-reprice-each-reroll-evidence.json",
+        "sha256": "ede884500857c8920a4504f904bdec9af5ed8536a4f6aa2e5927e6c36dab3a10"
+      },
+      "missing_contract": [
+        "applies_to has combat_line/card_pick/potion/rest/shop, no event",
+        "predicate whitelist has no event.id or event.options identity/price/lock fields",
+        "No original event RK consumer capture or matched outcome matrix"
+      ],
+      "reason": "现行合同不能表达该事件选择；不伪装成shop/card_pick、不扩schema。保留逐情境描述与原证据，待原owner处理消费者合同和离线输入。",
+      "counterexamples_and_gaps": [
+        "同局先重掷后跨越，两个标题组明显重叠；不是独立治疗/对照。A10有6次文本HP价与下一帧净减不一致，保留原价和原帧，原因未知；事件完成帧包含后续重掷，不能归给某一次动作。",
+        "自有版本unknown，不能视为与v0.111.0机制相同；没有机制改动对照，各build/幕独立保留，不跨版本合并。",
+        "自有retry_or_predicted_death是整局分层，不能当该事件发生SL；no_retry_evidence也不证明从未重试。",
+        "外部自选上传，玩家标识未读取，玩家独立数未知；distinct_uploaded_runs是上传记录局数，非已核实独立玩家。",
+        "外部已选title键没有完整备选、variables或即时支付前资源；前节点末HP及两节点差是代理，不是选择原子费用。",
+        "选项自选、牌组/路线/持有物、上传与生存选择、节点内其他动作混杂；终局胜率只作描述，不证明因果或固定选择。",
+        "真实事件身份、当前选项文本和支付资源只能从当题读取；未来随机牌/遗物及终局簇不作为当前触发。",
+        "自有所列n为冻结选择日志机会，重复决策/重掷不增加独立局；机会间并非配对反事实。",
+        "展示某备选不证明当时可支付；is_locked=false且will_kill_player=false只作可选性代理，不把致死备选当同台可选对照。"
+      ],
+      "capture": null,
+      "replay": null,
+      "model_calls": 0,
+      "formal_effect": null
+    },
+    {
+      "id": "silent-rk-event-brain-leech-priced-reward-type",
+      "strategy_id": "silent-brain-event-brain-leech-priced-reward-type",
+      "knowledge_id": "silent-event-brain-leech-priced-reward-type",
+      "disposition": "waiting",
+      "source": "mixed",
+      "formal_publication": "pending",
+      "consumer_readback": "pending",
+      "candidate_kind": "descriptive_rk_note_not_reflex_entry_v1",
+      "event_id": "BRAIN_LEECH",
+      "direction": "脑蛭把五选一与付血无色奖励按当前需求比较，不能因无色标签直接付费。",
+      "magnitude_and_sample": "A10自有88局88次分享知识，HP/金币均不变，完成后各+1牌；付血分支实际选择0次，只有明确5HP价的备选文本。",
+      "applicability": "仅当前原ID为BRAIN_LEECH、文本确为5选1与5HP换无色奖励；Silent A10、幕1/2，自有版本unknown。",
+      "executable_entry": null,
+      "signal": null,
+      "predicate": null,
+      "evidence": {
+        "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261024-204311/learner/runs/20261024-204408-714c1baf-edc3-4b3c-9a28-de5bdd2c945f-strategy-proposal/scratch/brain-leech-priced-reward-type-evidence.json",
+        "sha256": "7f7f4a30e7f31b7d19cc28f2c29fbcec6c04fcc61708d3d73ae6f612a065a6a1"
+      },
+      "missing_contract": [
+        "applies_to has combat_line/card_pick/potion/rest/shop, no event",
+        "predicate whitelist has no event.id or event.options identity/price/lock fields",
+        "No original event RK consumer capture or matched outcome matrix"
+      ],
+      "reason": "现行合同不能表达该事件选择；不伪装成shop/card_pick、不扩schema。保留逐情境描述与原证据，待原owner处理消费者合同和离线输入。",
+      "counterexamples_and_gaps": [
+        "自有付血RIP执行数为0，不能估计本系统两分支收益差。v0.111.0幕2分享17/41对扯下20/46，方向相反；v0.108.0幕1也反向。奖励实际牌在选择事件分支时尚未知。",
+        "自有版本unknown，不能视为与v0.111.0机制相同；没有机制改动对照，各build/幕独立保留，不跨版本合并。",
+        "自有retry_or_predicted_death是整局分层，不能当该事件发生SL；no_retry_evidence也不证明从未重试。",
+        "外部自选上传，玩家标识未读取，玩家独立数未知；distinct_uploaded_runs是上传记录局数，非已核实独立玩家。",
+        "外部已选title键没有完整备选、variables或即时支付前资源；前节点末HP及两节点差是代理，不是选择原子费用。",
+        "选项自选、牌组/路线/持有物、上传与生存选择、节点内其他动作混杂；终局胜率只作描述，不证明因果或固定选择。",
+        "真实事件身份、当前选项文本和支付资源只能从当题读取；未来随机牌/遗物及终局簇不作为当前触发。",
+        "自有所列n为冻结选择日志机会，重复决策/重掷不增加独立局；机会间并非配对反事实。",
+        "展示某备选不证明当时可支付；is_locked=false且will_kill_player=false只作可选性代理，不把致死备选当同台可选对照。"
+      ],
+      "capture": null,
+      "replay": null,
+      "model_calls": 0,
+      "formal_effect": null
+    },
+    {
+      "id": "silent-rk-event-statue-current-gold-quote",
+      "strategy_id": "silent-brain-event-statue-current-gold-quote",
+      "knowledge_id": "silent-event-statue-current-gold-quote",
+      "disposition": "waiting",
+      "source": "mixed",
+      "formal_publication": "pending",
+      "consumer_readback": "pending",
+      "candidate_kind": "descriptive_rk_note_not_reflex_entry_v1",
+      "event_id": "SUNKEN_STATUE",
+      "direction": "沉没雕像按本次金币报价和即时掉血比较石剑，不把一局115金币写成固定收益。",
+      "magnitude_and_sample": "A10自有56局56次：50次潜水均净失7HP、金币净增101至121且逐次等于当前报价；6次拿剑HP/金币不变并新增SWORD_OF_STONE。",
+      "applicability": "仅当前原ID为SUNKEN_STATUE且显示具体金币/HP代价与石剑选项；Silent A10、幕1，自有版本unknown。",
+      "executable_entry": null,
+      "signal": null,
+      "predicate": null,
+      "evidence": {
+        "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261024-204311/learner/runs/20261024-204408-714c1baf-edc3-4b3c-9a28-de5bdd2c945f-strategy-proposal/scratch/statue-current-gold-quote-evidence.json",
+        "sha256": "5c2804cc2ebc8a8a7920d96dfe0c1b2885769ea80632c564432b220de3473ed0"
+      },
+      "missing_contract": [
+        "applies_to has combat_line/card_pick/potion/rest/shop, no event",
+        "predicate whitelist has no event.id or event.options identity/price/lock fields",
+        "No original event RK consumer capture or matched outcome matrix"
+      ],
+      "reason": "现行合同不能表达该事件选择；不伪装成shop/card_pick、不扩schema。保留逐情境描述与原证据，待原owner处理消费者合同和离线输入。",
+      "counterexamples_and_gaps": [
+        "CA5KE8GFJ9X2 F12当前3HP，潜水7HP的will_kill_player=true；拿剑不是与可支付潜水的同起点对照。v0.108.0幕1潜水高4.79点，反于v0.111.0；剑后续兑现未知。",
+        "自有版本unknown，不能视为与v0.111.0机制相同；没有机制改动对照，各build/幕独立保留，不跨版本合并。",
+        "自有retry_or_predicted_death是整局分层，不能当该事件发生SL；no_retry_evidence也不证明从未重试。",
+        "外部自选上传，玩家标识未读取，玩家独立数未知；distinct_uploaded_runs是上传记录局数，非已核实独立玩家。",
+        "外部已选title键没有完整备选、variables或即时支付前资源；前节点末HP及两节点差是代理，不是选择原子费用。",
+        "选项自选、牌组/路线/持有物、上传与生存选择、节点内其他动作混杂；终局胜率只作描述，不证明因果或固定选择。",
+        "真实事件身份、当前选项文本和支付资源只能从当题读取；未来随机牌/遗物及终局簇不作为当前触发。",
+        "自有所列n为冻结选择日志机会，重复决策/重掷不增加独立局；机会间并非配对反事实。",
+        "展示某备选不证明当时可支付；is_locked=false且will_kill_player=false只作可选性代理，不把致死备选当同台可选对照。"
+      ],
+      "capture": null,
+      "replay": null,
+      "model_calls": 0,
+      "formal_effect": null
+    },
+    {
+      "id": "silent-rk-event-this-or-that-curse-versus-hp-gold",
+      "strategy_id": "silent-brain-event-this-or-that-curse-versus-hp-gold",
+      "knowledge_id": "silent-event-this-or-that-curse-versus-hp-gold",
+      "disposition": "waiting",
+      "source": "mixed",
+      "formal_publication": "pending",
+      "consumer_readback": "pending",
+      "candidate_kind": "descriptive_rk_note_not_reflex_entry_v1",
+      "event_id": "THIS_OR_THAT",
+      "direction": "这个还是那个按当前代价区分加笨拙换随机遗物和付血换金币，不把随机所得提前当已知收益。",
+      "magnitude_and_sample": "A10自有94局94次：89次ORNATE各加1张CLUMSY和1件遗物；5次PLAIN各失6HP并得58至65金币；ORNATE有8次HP/金币同步变化，不能视作永远零资源变化。",
+      "applicability": "仅当前原ID为THIS_OR_THAT、实际展示诅咒/遗物与HP/金币两选；Silent A10、幕1/2/3，自有版本unknown。",
+      "executable_entry": null,
+      "signal": null,
+      "predicate": null,
+      "evidence": {
+        "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261024-204311/learner/runs/20261024-204408-714c1baf-edc3-4b3c-9a28-de5bdd2c945f-strategy-proposal/scratch/this-or-that-curse-versus-hp-gold-evidence.json",
+        "sha256": "e0932af5dff23795853592b630e0e2181659555e7e8bbcb3e65a2e56f6260add"
+      },
+      "missing_contract": [
+        "applies_to has combat_line/card_pick/potion/rest/shop, no event",
+        "predicate whitelist has no event.id or event.options identity/price/lock fields",
+        "No original event RK consumer capture or matched outcome matrix"
+      ],
+      "reason": "现行合同不能表达该事件选择；不伪装成shop/card_pick、不扩schema。保留逐情境描述与原证据，待原owner处理消费者合同和离线输入。",
+      "counterexamples_and_gaps": [
+        "ORNATE的89个A10窗口中，6次HP净增、2次金币净增，伴随所得遗物，不能定义为永远HP/金币零变。v0.111.0幕2与3中ORNATE整局胜率均低于PLAIN，且PLAIN仅11/12局。随机结果在原选择时不可用。",
+        "自有版本unknown，不能视为与v0.111.0机制相同；没有机制改动对照，各build/幕独立保留，不跨版本合并。",
+        "自有retry_or_predicted_death是整局分层，不能当该事件发生SL；no_retry_evidence也不证明从未重试。",
+        "外部自选上传，玩家标识未读取，玩家独立数未知；distinct_uploaded_runs是上传记录局数，非已核实独立玩家。",
+        "外部已选title键没有完整备选、variables或即时支付前资源；前节点末HP及两节点差是代理，不是选择原子费用。",
+        "选项自选、牌组/路线/持有物、上传与生存选择、节点内其他动作混杂；终局胜率只作描述，不证明因果或固定选择。",
+        "真实事件身份、当前选项文本和支付资源只能从当题读取；未来随机牌/遗物及终局簇不作为当前触发。",
+        "自有所列n为冻结选择日志机会，重复决策/重掷不增加独立局；机会间并非配对反事实。",
+        "展示某备选不证明当时可支付；is_locked=false且will_kill_player=false只作可选性代理，不把致死备选当同台可选对照。"
+      ],
+      "capture": null,
+      "replay": null,
+      "model_calls": 0,
+      "formal_effect": null
+    },
+    {
+      "id": "silent-rk-event-lantern-visible-gold-versus-fight",
+      "strategy_id": "silent-brain-event-lantern-visible-gold-versus-fight",
+      "knowledge_id": "silent-event-lantern-visible-gold-versus-fight",
+      "disposition": "waiting",
+      "source": "mixed",
+      "formal_publication": "pending",
+      "consumer_readback": "pending",
+      "candidate_kind": "descriptive_rk_note_not_reflex_entry_v1",
+      "event_id": "THE_LANTERN_KEY",
+      "direction": "灯火钥匙区分眼前金币与明确额外战斗，未核敌人与奖励时不把留下钥匙当免费收益。",
+      "magnitude_and_sample": "A10自有43局43次交还，HP不变，40次金币+100、3次+125；留钥匙实选0次，备选仅明确需要战斗。",
+      "applicability": "仅当前原ID为THE_LANTERN_KEY且文本仍为100金币/战斗留钥匙；Silent A10、幕2，自有版本unknown。",
+      "executable_entry": null,
+      "signal": null,
+      "predicate": null,
+      "evidence": {
+        "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261024-204311/learner/runs/20261024-204408-714c1baf-edc3-4b3c-9a28-de5bdd2c945f-strategy-proposal/scratch/lantern-visible-gold-versus-fight-evidence.json",
+        "sha256": "19da459090f33df195b3909e51a47fed0648b2d63fa6470a0432ca7d197910ce"
+      },
+      "missing_contract": [
+        "applies_to has combat_line/card_pick/potion/rest/shop, no event",
+        "predicate whitelist has no event.id or event.options identity/price/lock fields",
+        "No original event RK consumer capture or matched outcome matrix"
+      ],
+      "reason": "现行合同不能表达该事件选择；不伪装成shop/card_pick、不扩schema。保留逐情境描述与原证据，待原owner处理消费者合同和离线输入。",
+      "counterexamples_and_gaps": [
+        "自有KEEP_THE_KEY执行数为0，不知道自有战斗损耗或钥匙兑现；3次文本100但后继金币+125，同持BOWLER_HAT只属共现，不据此补机制。外部KEEP与FIGHT两标题同30局，不可相加为60。",
+        "自有版本unknown，不能视为与v0.111.0机制相同；没有机制改动对照，各build/幕独立保留，不跨版本合并。",
+        "自有retry_or_predicted_death是整局分层，不能当该事件发生SL；no_retry_evidence也不证明从未重试。",
+        "外部自选上传，玩家标识未读取，玩家独立数未知；distinct_uploaded_runs是上传记录局数，非已核实独立玩家。",
+        "外部已选title键没有完整备选、variables或即时支付前资源；前节点末HP及两节点差是代理，不是选择原子费用。",
+        "选项自选、牌组/路线/持有物、上传与生存选择、节点内其他动作混杂；终局胜率只作描述，不证明因果或固定选择。",
+        "真实事件身份、当前选项文本和支付资源只能从当题读取；未来随机牌/遗物及终局簇不作为当前触发。",
+        "自有所列n为冻结选择日志机会，重复决策/重掷不增加独立局；机会间并非配对反事实。",
+        "展示某备选不证明当时可支付；is_locked=false且will_kill_player=false只作可选性代理，不把致死备选当同台可选对照。"
+      ],
+      "capture": null,
+      "replay": null,
+      "model_calls": 0,
+      "formal_effect": null
+    }
+  ],
+  "valid_reflex_entries": 0,
+  "formal_publication": "pending",
+  "consumer_readback": "pending"
+}

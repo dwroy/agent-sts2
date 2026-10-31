@@ -53,7 +53,7 @@ V5 增加独立[构筑模块](docs/v5-construction.md)：未来成型概率先�
 
 ## 运行
 
-需要 Node ≥ 20（本机装在 `~/.local/node/bin`）和 Python 3。
+当前组合使用 Node 22.23.3（本机装在 `~/.local/node/bin`）和 Python 3。#62 知识工具使用内置 `node:sqlite`，历史 Node 20 不适用；SQLite 必须包含 WAL-reset 修复，启动检查见 [知识 runtime](docs/knowledge-runtime.md)。不需要安装新的数据库包。
 
 ```bash
 export PATH=$HOME/.local/node/bin:$PATH
@@ -81,6 +81,8 @@ agent/node_modules/.bin/tsx learner/run.ts --engine codex --task postmortem \
 ```
 
 示例先展示任务而不启动学习者；正常任务由运维调度器派发。用法、权限和安全见 [learner/README.md](learner/README.md)。
+
+纯复盘/审计与固定方法数据刷新的独立入库、逐入口切换和版本恢复见 [运营学习 runtime](docs/learning-runtime.md)；正式知识仍走原知识候选，源码改动仍走研发检查。
 
 ## 谁在这个仓库里工作
 

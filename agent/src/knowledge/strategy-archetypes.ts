@@ -1,7 +1,7 @@
 /** Nearest geometry from #54; semantic playbook labels remain learner-owned. */
 import { createHash } from "node:crypto";
 import { readFileSync, statSync } from "node:fs";
-import { join } from "node:path";
+import { runtimeKnowledgeFile } from "./runtime-paths.js";
 import { knowledgeCharacter } from "./files.js";
 import type { ToolContext } from "../brain/tools/types.js";
 
@@ -48,7 +48,7 @@ export function strategyDeckIds(ctx: ToolContext): string[] {
 export function matchStrategyArchetype(ctx: ToolContext) {
   if (knowledgeCharacter() !== "silent" || ctx.ascension !== 10) return { status: "out_of_scope", match: null };
   try {
-    const path = join(ctx.knowledgeDir, ARCHETYPES_FILE);
+    const path = runtimeKnowledgeFile(ctx.knowledgeDir, ARCHETYPES_FILE);
     if (statSync(path).size > 200_000) throw new Error("oversize");
     const bytes = readFileSync(path);
     if (createHash("sha256").update(bytes).digest("hex") !== ARCHETYPES_SHA256) throw new Error("checksum");

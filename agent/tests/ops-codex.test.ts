@@ -52,7 +52,7 @@ describe("command lines", () => {
     expect(cmd.args.slice(0, 2)).toEqual(["exec", "--json"]);
     expect(cmd.args).toContain(`default_permissions="${OPS_PROFILE}"`);
     expect(cmd.args).toContain('model_reasoning_effort="high"');
-    expect(cmd.args).toContain('service_tier="fast"');
+    expect(cmd.args).toContain('service_tier="default"');
     expect(cmd.args).toContain("gpt-6.1-sol");
     expect(cmd.args).toContain("model_auto_compact_token_limit=460800");
     expect(cmd.args.at(-1)).toBe("-");
@@ -75,7 +75,7 @@ describe("command lines", () => {
     expect(cmd.args).toContain(`default_permissions="${OPS_PROFILE}"`);
     expect(cmd.args).toContain("model_auto_compact_token_limit=460800");
     expect(cmd.stdin).toBe("EVENTS");
-    expect(cmd.args).toContain('service_tier="fast"');
+    expect(cmd.args).toContain('service_tier="default"');
     expect(() => resumeCommand(request(root), "../../etc", "x", "codex")).toThrow();
   });
 

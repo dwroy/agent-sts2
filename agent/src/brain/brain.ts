@@ -40,6 +40,7 @@ import { KNOWLEDGE_DIR } from "../core/paths.js";
 import { StrategyEntries } from "../knowledge/strategy-entries.js";
 import { KnowledgeAgent } from "./engines/knowledge-agent.js";
 import { DshEngine } from "./engines/dsh.js";
+import { toolCapabilities } from "./tools/capabilities.js";
 import { buildKnowledgeTools } from "./tools/agent-knowledge.js";
 import { systemRules } from "./llm/deepseek.js";
 import { memoryWithoutLessons } from "./knowledge.js";
@@ -47,13 +48,14 @@ import { isConstructionQuestion } from "../memory/construction-log.js";
 import { attachOpenBook } from "../knowledge/open-book.js";
 import { knowledgeCharacter } from "../knowledge/files.js";
 import { attachQueryGuidance } from "./tools/query-guidance.js";
-import { ENDGAME_OBJECTIVE, ENDGAME_PLAN_NOTE, endgameRawScope } from "../memory/endgame-plan.js";
+import { ENDGAME_OBJECTIVE, ENDGAME_PLAN_NOTE, endgameRawScope, endgameReuse } from "../memory/endgame-plan.js";
+import { decisionContextTool } from "./decision-knowledge.js";
 
 /** Rules are stable; all knowledge content is obtained through the process-owned MCP. */
-export function agentSystemPrompt(state?: unknown): string {
+export function agentSystemPrompt(state?: unknown, tools: readonly ToolDef[] = buildKnowledgeTools({ ascension: 0, knowledgeDir: KNOWLEDGE_DIR, logsDir: "" })): string {
   const guidance = knowledgeCharacter() === "silent" ? "\n经验用kb_experience按题面非空线索与需要查询；匹配数为0、缺失或错误时跳过，不为查工具而查。拿牌/商店的外部统计线索由你自行决定是否调用。线索不代表条件成立或Jev采用；调用/耗时预算用完即用已有信息作答。" : "";
   const endgame = endgameRawScope(state) ? `\n${ENDGAME_OBJECTIVE} ${ENDGAME_PLAN_NOTE}` : "";
-  return `${systemRules()}\n\n知识只从所给知识工具按需查询。工具返回标明自有/外部来源与版本；外部资料不计本角色实盘验证。当前 mod 状态和题内代码投影优先。工具出错或预算用完后使用已有信息，未知保持未知，直接输出规定 JSON。${guidance}${endgame}`;
+  return `${systemRules()}\n\n知识只从所给知识工具按需查询。工具返回标明自有/外部来源与版本；外部资料不计本角色实盘验证。当前 mod 状态和题内代码投影优先。工具出错或预算用完后使用已有信息，未知保持未知，直接输出规定 JSON。${guidance}${toolCapabilities(tools)}${endgame}`;
 }
 
 /** The project's knowledge directory (core/paths.ts): the data files the knowledge tools read (knowledge/files.ts). */
@@ -335,9 +337,14 @@ export class Brain {
         if (!isObject(v)) return v;
         return Object.fromEntries(Object.entries(v).filter(([k]) => !["open_book", "strategy_entries"].includes(k)).map(([k, value]) => [k, strip(value)]));
       };
-      return { ...base, system: agentSystemPrompt(this.context?.state),
+      const decisionContextEnabled = this.router.config.decisionKnowledge?.enabled && knowledgeCharacter() === "silent";
+      const toolContext = base.toolContext ?? (decisionContextEnabled ? this.context : null);
+      const tools = decisionContextEnabled && toolContext ? [...(base.tools ?? []), decisionContextTool()] : base.tools;
+      const system = agentSystemPrompt(this.context?.state, tools ?? []);
+      return { ...base, ...(tools ? { tools } : {}), system: decisionContextEnabled
+        ? `${system.replace("知识只从所给知识工具按需查询。", "知识来自题面默认摘要与所给知识工具。\n")}\n题面decision_knowledge为本局绑定K1的已发布背景摘要；保留其条件、分母与限制，不完整摘录不能当完整规则。知识也可继续按需查询。` : system,
         memory: memoryWithoutLessons(base.memory), payload: strip(base.payload),
-        ...(base.toolContext ? { toolContext: { ...base.toolContext, label, payload: strip(base.payload), ...(options ? { options } : {}) } } : {}),
+        ...(toolContext ? { toolContext: { ...toolContext, label, payload: strip(base.payload), ...(options ? { options } : {}) } } : {}),
         knowledge: { mode: "tools", ...(this.context ? { ascension: this.context.ascension } : {}) } };
     }
     const req = this.strategyEntries.apply(base, this.context?.knowledgeDir ?? KNOWLEDGE_DIR);
@@ -413,9 +420,9 @@ export class Brain {
   }
 
   /** An answer that stayed unusable: the loop's "answered but unusable" error, with what the model did say. */
-  private static unusable(result: BrainAnswer, brain: BrainMeta | undefined): DeepSeekAnswerError {
+  private static unusable(result: BrainAnswer, brain: BrainMeta | undefined, state?: unknown): DeepSeekAnswerError {
     const first = isObject(result.answer) ? result.answer : {};
-    const runPlan = Brain.runPlanOf(result);
+    const runPlan = Brain.runPlanOf(result, state);
     return new DeepSeekAnswerError(
       `${result.engine} answer unusable: ${result.problems.join("; ").slice(0, 300)}`,
       { choice: typeof first["choice"] === "string" ? first["choice"] : "", reason: typeof first["reason"] === "string" ? first["reason"] : "", reasoning: result.reasoning ?? "", content: result.raw ?? "", ...(runPlan ? { runPlan } : {}) },
@@ -427,9 +434,10 @@ export class Brain {
    * The run plan riding on a question (RUN_PLAN_MERGE): the answer's run_plan, else the first answer's when the router
    * re-asked (a route problem) and the re-asked answer left it out; it does not depend on the rest of the answer.
    */
-  private static runPlanOf(result: BrainAnswer): Record<string, unknown> | null {
+  private static runPlanOf(result: BrainAnswer, state?: unknown): Record<string, unknown> | null {
     const answer = isObject(result.answer) ? result.answer : {};
     if (isObject(answer["run_plan"])) return answer["run_plan"];
+    if (endgameReuse(state)) return null;
     const first = (result as BrainAnswer & { first?: { answer: unknown } }).first?.answer;
     return isObject(first) && isObject(first["run_plan"]) ? first["run_plan"] : null;
   }
@@ -442,14 +450,14 @@ export class Brain {
     const v3 = Brain.v3<DeepSeekAnswer>(result);
     if (v3) return brain ? { ...v3, brain } : v3;
     const answer = result.answer;
-    if (!isObject(answer) || typeof answer["choice"] !== "string") throw Brain.unusable(result, brain);
+    if (!isObject(answer) || typeof answer["choice"] !== "string") throw Brain.unusable(result, brain, state);
     const strings = (value: unknown): string[] => (Array.isArray(value) ? value.filter((item): item is string => typeof item === "string") : []);
     const cards = strings(answer["cards"]);
     const discard = Array.isArray(answer["discard"]) ? answer["discard"].filter((slot): slot is number => typeof slot === "number" && Number.isInteger(slot)) : [];
     // A route is "keep" or node ids; a list of ids is read as the same ids in one string.
     const route = routeAnswerText(answer["route"]);
     const routeReason = typeof answer["route_reason"] === "string" && answer["route_reason"].trim() ? answer["route_reason"].trim() : "";
-    const runPlan = Brain.runPlanOf(result);
+    const runPlan = Brain.runPlanOf(result, state);
     return {
       ...Brain.usage(result, brain),
       choice: answer["choice"],
@@ -484,8 +492,8 @@ export class Brain {
     const brain = Brain.meta(result);
     const v3 = Brain.v3<{ json: Record<string, unknown>; meta: BrainMetaUsage; recovered?: true; note?: string }>(result);
     if (v3) return brain ? { ...v3, meta: { ...v3.meta, brain } } : v3;
-    if (!isObject(result.answer)) throw Brain.unusable(result, brain);
-    const runPlan = Brain.runPlanOf(result);
+    if (!isObject(result.answer)) throw Brain.unusable(result, brain, state);
+    const runPlan = Brain.runPlanOf(result, state);
     const json = runPlan && !isObject(result.answer["run_plan"]) ? { ...result.answer, run_plan: runPlan } : result.answer;
     return { json, meta: Brain.usage(result, brain) };
   }
@@ -498,7 +506,7 @@ export class Brain {
     const brain = Brain.meta(result);
     const v3 = Brain.v3<{ json: Record<string, unknown>; meta: BrainMetaUsage; recovered?: true; note?: string }>(result);
     if (v3) return brain ? { ...v3, meta: { ...v3.meta, brain } } : v3;
-    if (!isObject(result.answer)) throw Brain.unusable(result, brain);
+    if (!isObject(result.answer)) throw Brain.unusable(result, brain, input);
     const json = label === "fight-plan" ? fightPlanFromSchema(result.answer) : result.answer;
     return { json, meta: Brain.usage(result, brain) };
   }

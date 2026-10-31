@@ -1,0 +1,484 @@
+{
+  "schema": "reflex-file-v1",
+  "character": "silent",
+  "entries": [
+    {
+      "schema": "reflex-entry-v1",
+      "id": "silent-rk-c3-no-confirmed-shiv-source",
+      "version": 1,
+      "applies_to": "card_pick",
+      "predicate": {
+        "op": "and",
+        "args": [
+          {
+            "op": "or",
+            "args": [
+              {
+                "op": "eq",
+                "field": "card.id",
+                "value": "PHANTOM_BLADES"
+              },
+              {
+                "op": "eq",
+                "field": "card.id",
+                "value": "ACCURACY"
+              },
+              {
+                "op": "eq",
+                "field": "card.id",
+                "value": "BACKSTAB"
+              }
+            ]
+          },
+          {
+            "op": "any",
+            "field": "player.deck",
+            "arg": {
+              "op": "eq",
+              "field": "card.id",
+              "value": "ECHOING_SLASH"
+            }
+          },
+          {
+            "op": "eq",
+            "field": "act",
+            "value": 1
+          }
+        ]
+      },
+      "signal": {
+        "kind": "tag",
+        "value": "silent-rk-c3-no-confirmed-shiv-source-review",
+        "unit": "label"
+      },
+      "label_en": "Compare knife scaling with immediate opening damage",
+      "evidence": {
+        "observations": [
+          {
+            "run_id": "1913SE84AXQF",
+            "floor": 4
+          }
+        ],
+        "n_support": 1,
+        "n_contradict": 0
+      },
+      "confidence": 0.25,
+      "scope": {
+        "character": "silent",
+        "ascensions": [
+          10
+        ]
+      },
+      "directions": [],
+      "cores": [],
+      "combos": [],
+      "source_experience": [],
+      "sources": [
+        {
+          "source": "own",
+          "path": "learner/runs/20261025-004846-81d42fb3-8560-4b93-9a36-eee613e26039-strategy-proposal/scratch/1913-F4-reward.raw.json",
+          "sha256": "26c638216dafbbaf663f78fbfb50507047f4814f1fb304c0fa9247ac992e3610",
+          "game_version": "unknown",
+          "retrieved_at": "2026-10-25",
+          "sample": {
+            "runs": 1,
+            "players": null,
+            "selection": "仅本批核实局的当前牌文/已发生选择；非HP收益。上下文与机会分母见source-ledger.json。"
+          }
+        },
+        {
+          "source": "external:sts2fun",
+          "path": "knowledge/external/sts2fun/builds-v1/representative-timelines.json",
+          "sha256": "dfde8d6ec66f58fca63ca30d45d86d47c2d822e807e9f77f65cb3c4c65268eda",
+          "game_version": "v0.111",
+          "retrieved_at": "2026-10-21",
+          "url": "https://sts2.fun/static/sts2_public.db.zst",
+          "license": "许可未明确，仅匿名派生摘录与署名统计，不分发原库。",
+          "sample": {
+            "runs": 10,
+            "players": null,
+            "selection": "簇3固定顺序前5对/10完整轨迹，非随机留出；仅方向对照，不证明本条机制或收益。"
+          }
+        }
+      ]
+    },
+    {
+      "schema": "reflex-entry-v1",
+      "id": "silent-rk-lane-b-block-time-and-shiv",
+      "version": 2,
+      "applies_to": "card_pick",
+      "predicate": {
+        "op": "or",
+        "args": [
+          {
+            "op": "eq",
+            "field": "card.id",
+            "value": "CLOAK_AND_DAGGER"
+          },
+          {
+            "op": "eq",
+            "field": "card.id",
+            "value": "DEFLECT"
+          },
+          {
+            "op": "eq",
+            "field": "card.id",
+            "value": "DODGE_AND_ROLL"
+          }
+        ]
+      },
+      "signal": {
+        "kind": "tag",
+        "value": "silent-rk-lane-b-block-time-and-shiv-tag",
+        "unit": "label"
+      },
+      "label_en": "Compare current block with delayed block and generated cards",
+      "evidence": {
+        "observations": [
+          {
+            "run_id": "CRK2HNYKSCZC",
+            "floor": 6
+          },
+          {
+            "run_id": "U8K28UUGYP3U",
+            "floor": 5
+          },
+          {
+            "run_id": "1913SE84AXQF",
+            "floor": 11
+          }
+        ],
+        "n_support": 3,
+        "n_contradict": 0
+      },
+      "confidence": 0.25,
+      "scope": {
+        "character": "silent",
+        "ascensions": [
+          10
+        ]
+      },
+      "directions": [],
+      "cores": [],
+      "combos": [],
+      "source_experience": [],
+      "sources": [
+        {
+          "source": "own",
+          "path": "paper/materials/20261024-issue51-two-card-batches-ops/original/20261024-211311-strategy-proposal/scratch/scenario-examples.json",
+          "sha256": "07440c23469517db57a7b47749855f2e1a3c984ea11000a056e01da215b7e52a",
+          "game_version": "unknown",
+          "retrieved_at": "2026-10-24",
+          "sample": {
+            "runs": 2,
+            "players": null,
+            "selection": "实际A10无重试证据奖励题：一拿一不拿；仅牌文/条件事实，非效果估计"
+          }
+        },
+        {
+          "source": "external:sts2fun",
+          "path": "knowledge/external/sts2fun/decision-fields-v1/statistics.json",
+          "sha256": "4cf36c85eee760ed8e74495c1758e0228bbe1214789d3d0bd97052d5ca6a1f9d",
+          "game_version": "v0.111",
+          "retrieved_at": "2026-10-21",
+          "url": "https://sts2.fun/static/sts2_public.db.zst",
+          "license": "No explicit dataset redistribution license found on public FAQ; aggregate statistics with attribution only; no raw redistribution.",
+          "sample": {
+            "runs": 0,
+            "players": null,
+            "selection": "cards_gained取得牌次代理534/224；独立上传局合并分母未知，runs=0不代表没有数据；原版本全队列分母另账"
+          }
+        },
+        {
+          "source": "own",
+          "path": "learner/runs/20261025-004846-81d42fb3-8560-4b93-9a36-eee613e26039-strategy-proposal/scratch/1913-F11-reward.raw.json",
+          "sha256": "4d56048a679e652dce0794eade46c04c0f05432c165e51f121342bd37f946210",
+          "game_version": "unknown",
+          "retrieved_at": "2026-10-25",
+          "sample": {
+            "runs": 1,
+            "players": null,
+            "selection": "仅本批核实局的当前牌文/已发生选择；非HP收益。上下文与机会分母见source-ledger.json。"
+          }
+        }
+      ]
+    },
+    {
+      "schema": "reflex-entry-v1",
+      "id": "silent-rk-c3-random-power-realized-rest",
+      "version": 1,
+      "applies_to": "rest",
+      "predicate": {
+        "op": "and",
+        "args": [
+          {
+            "op": "any",
+            "field": "rest.options",
+            "arg": {
+              "op": "eq",
+              "field": "rest_option.enabled",
+              "value": true
+            }
+          },
+          {
+            "op": "any",
+            "field": "player.deck",
+            "arg": {
+              "op": "eq",
+              "field": "card.id",
+              "value": "INFINITE_BLADES"
+            }
+          },
+          {
+            "op": "any",
+            "field": "player.deck",
+            "arg": {
+              "op": "eq",
+              "field": "card.id",
+              "value": "CLOAK_AND_DAGGER"
+            }
+          },
+          {
+            "op": "eq",
+            "field": "act",
+            "value": 2
+          }
+        ]
+      },
+      "signal": {
+        "kind": "tag",
+        "value": "silent-rk-c3-random-power-realized-rest-review",
+        "unit": "label"
+      },
+      "label_en": "Review realized knife source and current rest resources",
+      "evidence": {
+        "observations": [
+          {
+            "run_id": "1913SE84AXQF",
+            "floor": 28
+          }
+        ],
+        "n_support": 1,
+        "n_contradict": 0
+      },
+      "confidence": 0.25,
+      "scope": {
+        "character": "silent",
+        "ascensions": [
+          10
+        ]
+      },
+      "directions": [],
+      "cores": [],
+      "combos": [],
+      "source_experience": [],
+      "sources": [
+        {
+          "source": "own",
+          "path": "learner/runs/20261025-004846-81d42fb3-8560-4b93-9a36-eee613e26039-strategy-proposal/scratch/1913-F31-entry.raw.json",
+          "sha256": "2d2d84aa6f3b26820d8b770bbe9ef04de3cc857e387aae2894fbe20dd06083bb",
+          "game_version": "unknown",
+          "retrieved_at": "2026-10-25",
+          "sample": {
+            "runs": 1,
+            "players": null,
+            "selection": "仅本批核实局的当前牌文/已发生选择；非HP收益。上下文与机会分母见source-ledger.json。"
+          }
+        },
+        {
+          "source": "external:sts2fun",
+          "path": "knowledge/external/sts2fun/builds-v1/representative-timelines.json",
+          "sha256": "dfde8d6ec66f58fca63ca30d45d86d47c2d822e807e9f77f65cb3c4c65268eda",
+          "game_version": "v0.111",
+          "retrieved_at": "2026-10-21",
+          "url": "https://sts2.fun/static/sts2_public.db.zst",
+          "license": "许可未明确，仅匿名派生摘录与署名统计，不分发原库。",
+          "sample": {
+            "runs": 10,
+            "players": null,
+            "selection": "簇3固定顺序前5对/10完整轨迹，非随机留出；仅方向对照，不证明本条机制或收益。"
+          }
+        }
+      ]
+    },
+    {
+      "schema": "reflex-entry-v1",
+      "id": "silent-rk-c3-corrupted-echo-resource-cost",
+      "version": 1,
+      "applies_to": "combat_line",
+      "predicate": {
+        "op": "and",
+        "args": [
+          {
+            "op": "any",
+            "field": "player.hand",
+            "arg": {
+              "op": "eq",
+              "field": "card.id",
+              "value": "ECHOING_SLASH"
+            }
+          },
+          {
+            "op": "any",
+            "field": "option.actions",
+            "arg": {
+              "op": "and",
+              "args": [
+                {
+                  "op": "eq",
+                  "field": "action.kind",
+                  "value": "card"
+                },
+                {
+                  "op": "eq",
+                  "field": "card.id",
+                  "value": "ECHOING_SLASH"
+                }
+              ]
+            }
+          },
+          {
+            "op": "eq",
+            "field": "act",
+            "value": 2
+          }
+        ]
+      },
+      "signal": {
+        "kind": "tag",
+        "value": "silent-rk-c3-corrupted-echo-resource-cost-review",
+        "unit": "label"
+      },
+      "label_en": "Review printed life cost alongside modified area damage",
+      "evidence": {
+        "observations": [
+          {
+            "run_id": "1913SE84AXQF",
+            "floor": 31
+          }
+        ],
+        "n_support": 1,
+        "n_contradict": 0
+      },
+      "confidence": 0.25,
+      "scope": {
+        "character": "silent",
+        "ascensions": [
+          10
+        ]
+      },
+      "directions": [],
+      "cores": [],
+      "combos": [],
+      "source_experience": [],
+      "sources": [
+        {
+          "source": "own",
+          "path": "learner/runs/20261025-004846-81d42fb3-8560-4b93-9a36-eee613e26039-strategy-proposal/scratch/1913-F31-entry.raw.json",
+          "sha256": "2d2d84aa6f3b26820d8b770bbe9ef04de3cc857e387aae2894fbe20dd06083bb",
+          "game_version": "unknown",
+          "retrieved_at": "2026-10-25",
+          "sample": {
+            "runs": 1,
+            "players": null,
+            "selection": "仅本批核实局的当前牌文/已发生选择；非HP收益。上下文与机会分母见source-ledger.json。"
+          }
+        },
+        {
+          "source": "external:sts2fun",
+          "path": "knowledge/external/sts2fun/builds-v1/representative-timelines.json",
+          "sha256": "dfde8d6ec66f58fca63ca30d45d86d47c2d822e807e9f77f65cb3c4c65268eda",
+          "game_version": "v0.111",
+          "retrieved_at": "2026-10-21",
+          "url": "https://sts2.fun/static/sts2_public.db.zst",
+          "license": "许可未明确，仅匿名派生摘录与署名统计，不分发原库。",
+          "sample": {
+            "runs": 10,
+            "players": null,
+            "selection": "簇3固定顺序前5对/10完整轨迹，非随机留出；仅方向对照，不证明本条机制或收益。"
+          }
+        }
+      ]
+    },
+    {
+      "schema": "reflex-entry-v1",
+      "id": "silent-rk-c3-rest-followup-hp-budget",
+      "version": 1,
+      "applies_to": "rest",
+      "predicate": {
+        "op": "and",
+        "args": [
+          {
+            "op": "any",
+            "field": "rest.options",
+            "arg": {
+              "op": "eq",
+              "field": "rest_option.enabled",
+              "value": true
+            }
+          },
+          {
+            "op": "eq",
+            "field": "act",
+            "value": 1
+          }
+        ]
+      },
+      "signal": {
+        "kind": "tag",
+        "value": "silent-rk-c3-rest-followup-hp-budget-review",
+        "unit": "label"
+      },
+      "label_en": "Budget subsequent event and winning fight health costs",
+      "evidence": {
+        "observations": [
+          {
+            "run_id": "02HB4L0C3C67",
+            "floor": 7
+          }
+        ],
+        "n_support": 1,
+        "n_contradict": 0
+      },
+      "confidence": 0.25,
+      "scope": {
+        "character": "silent",
+        "ascensions": [
+          10
+        ]
+      },
+      "directions": [],
+      "cores": [],
+      "combos": [],
+      "source_experience": [],
+      "sources": [
+        {
+          "source": "own",
+          "path": "learner/runs/20261025-004846-81d42fb3-8560-4b93-9a36-eee613e26039-strategy-proposal/scratch/own-pages/02HB4L0C3C67/snapshots-018.json",
+          "sha256": "cf00ff477257dbc371a717eb44dd19fae5f75048e56075d11b7e67134a11ee1b",
+          "game_version": "unknown",
+          "retrieved_at": "2026-10-25",
+          "sample": {
+            "runs": 1,
+            "players": null,
+            "selection": "仅本批核实局的当前牌文/已发生选择；非HP收益。上下文与机会分母见source-ledger.json。"
+          }
+        },
+        {
+          "source": "external:sts2fun",
+          "path": "knowledge/external/sts2fun/builds-v1/representative-timelines.json",
+          "sha256": "dfde8d6ec66f58fca63ca30d45d86d47c2d822e807e9f77f65cb3c4c65268eda",
+          "game_version": "v0.111",
+          "retrieved_at": "2026-10-21",
+          "url": "https://sts2.fun/static/sts2_public.db.zst",
+          "license": "许可未明确，仅匿名派生摘录与署名统计，不分发原库。",
+          "sample": {
+            "runs": 10,
+            "players": null,
+            "selection": "簇3固定顺序前5对/10完整轨迹，非随机留出；仅方向对照，不证明本条机制或收益。"
+          }
+        }
+      ]
+    }
+  ]
+}

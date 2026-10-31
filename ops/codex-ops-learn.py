@@ -23,9 +23,11 @@ import argparse
 from contextlib import contextmanager
 import datetime as dt
 import fcntl
+import hashlib
 import json
 import os
 import re
+import sqlite3
 import subprocess
 import sys
 import time
@@ -44,6 +46,8 @@ import learner_registration  # noqa: E402
 import ops_current  # noqa: E402
 import external_learning_policy
 import disk_admission  # noqa: E402
+import publication_gate  # noqa: E402
+import knowledge_runtime_env  # noqa: E402
 from learner_tui import apply_deferrals  # noqa: E402
 from learner_checks import read_report  # noqa: E402
 
@@ -67,7 +71,33 @@ SILENT_BATCH_WAIT_S = 2 * 3600
 RETRY_AFTER_S = 3600
 MAX_ATTEMPTS = 3
 RUN_ID = re.compile(r"^[0-9A-Z]{12}$")
-EXIT_MEANING = {0: "完成", 1: "学习者失败（结果是 error，或额度 / 登录错误）", 2: "参数或任务说明有错", 3: "codex 不可用，或 key 隔离自检没过", 124: "超时"}
+EXIT_MEANING = {0: "完成", 1: "学习者失败（结果是 error，或额度 / 登录错误）", 2: "参数或任务说明有错", 3: "启动前检查或准入失败，具体原因待核", 124: "超时"}
+
+
+def postmortem_exit_meaning(batch_id, batch, rc):
+    """Describe a known refusal only when the original no-model receipt is bound to this batch."""
+    if rc != 3:
+        return EXIT_MEANING.get(rc, "其他")
+    label = f"learner-{batch_id}-postmortem"
+    output = os.path.join(DIR, "learner", batch_id + ".out")
+    try:
+        with open(os.path.join(DIR, "learner", label + ".tui.json"), encoding="utf8") as handle:
+            receipt = json.loads(handle.read(65537))
+        result = receipt.get("result", {})
+        if (receipt.get("schema") == "learner-tui-v1" and receipt.get("label") == label
+                and receipt.get("cwd") == batch.get("worktree", ROOT)
+                and receipt.get("state") == "not-started" and receipt.get("models_started") == 0
+                and receipt.get("retirement_authorized") is True and result.get("stopped") is True
+                and result.get("code") == rc and receipt.get("submitted") is False
+                and not any(receipt.get(key) for key in ("pid", "bindings", "submissions", "session", "turn", "rollout"))
+                and not any(result.get(key) for key in ("session", "turn", "rollout"))
+                and receipt.get("output") == {"path": output, "sha256": hashlib.sha256(b"").hexdigest()}
+                and os.stat(output).st_size == 0
+                and result.get("reason") == "ops-authorized-registration-timeout-before-model"):
+            return "登记锁等待超时；已核未启动模型（not-started）"
+    except (OSError, ValueError, TypeError, AttributeError):
+        pass
+    return EXIT_MEANING[rc]
 
 
 def now_local():
@@ -104,16 +134,19 @@ def save_state(state):
 
 
 @contextmanager
-def state_lock():
+def state_lock(*, nonblocking=False):
     with open(os.path.join(DIR, "learn.lock"), "a") as lock:
-        fcntl.flock(lock, fcntl.LOCK_EX)
+        fcntl.flock(lock, fcntl.LOCK_EX | (fcntl.LOCK_NB if nonblocking else 0))
         import strategy_external_jobs
         with learner_registration.transaction(DIR, save_state), strategy_external_jobs.validation_window():
             yield
 
 
-def enqueue(kind, text):
+def enqueue(kind, text, request=None):
     """An event for the ops session (ops/codex/lib.ts readQueue: <epoch ns>-<kind>.md)."""
+    if request is not None:
+        from knowledge_completion_events import enqueue_once
+        return enqueue_once(DIR, kind, text, request)
     os.makedirs(QUEUE, exist_ok=True)
     name = f"{time.time_ns()}-{kind}.md"
     tmp = os.path.join(QUEUE, "." + name)
@@ -147,10 +180,12 @@ def finished_runs(character):
 
 
 def postmortem_ids():
+    from learning_runtime import recorded_runs
+    recorded = set().union(*(recorded_runs(ROOT, DIR, c) for c in ("ironclad", "silent", "regent")))
     if not os.path.exists(LESSONS):
-        return set()
+        return recorded
     text = re.sub(r"<!--.*?-->", "", open(LESSONS, encoding="utf8").read(), flags=re.S)
-    return set(re.findall(r"^## ([0-9A-Z]{12})", text, re.M))
+    return recorded | set(re.findall(r"^## ([0-9A-Z]{12})", text, re.M))
 
 
 def alive(pid):
@@ -181,10 +216,14 @@ def dispatch(state, runs, character, reason):
     batch_id = dt.datetime.now().strftime("%Y%m%d-%H%M%S")
     out_dir = os.path.join(DIR, "learner")
     os.makedirs(out_dir, exist_ok=True)
+    knowledge_runtime = knowledge_runtime_env.capture(ROOT, DIR)
+    from learning_runtime import capture as capture_operational
+    operational_runtime = capture_operational(ROOT, DIR, "postmortem")
     pid, pane = start_learner(["bash", os.path.join(SCRIPTS, "codex-ops-learner.sh"), batch_id, ",".join(runs), character],
                               ROOT, SCRIPTS, DIR, f"learner-{batch_id}-postmortem")
     state["batches"][batch_id] = {"runs": runs, "pid": pid, "started": now_local(), "state": "running", "reason": reason, "character": character,
-                                 "proposal_policy": "Roy-2026-10-07-learning", "ordinary_baseline": ordinary_close.baseline(ROOT, DIR)}
+                                 "proposal_policy": "Roy-2026-10-07-learning", "ordinary_baseline": ordinary_close.baseline(ROOT, DIR),
+                                 "knowledge_runtime": knowledge_runtime, "operational_runtime": operational_runtime}
     if pane:
         state["batches"][batch_id]["pane"] = pane
     for run in runs:
@@ -335,6 +374,12 @@ def cmd_tick(args):
 def _cmd_tick(args):
     state = load_state()
     character = args.character
+    if publication_gate.candidates_only(ROOT, DIR):
+        # Completion accounting remains independent; only frozen candidates may start.
+        report = check_jobs(state, ROOT, SCRIPTS, character, alive, dt.datetime.now().strftime("%Y%m%d-%H%M%S"))
+        save_state(state)
+        print(json.dumps({"candidate_only": True, "write_jobs": report}, ensure_ascii=False))
+        return 0
     report = {"victory": check_victories(character), "ascension": check_ascension(state, character)}
     capacity = disk_admission.snapshot(ROOT, DIR, record=True)
     report["disk_capacity"] = capacity
@@ -352,6 +397,8 @@ def _cmd_tick(args):
     report["pending_notified"] = check_pending(state, character)
     report["write_jobs"] = check_jobs(state, ROOT, SCRIPTS, character, alive, dt.datetime.now().strftime("%Y%m%d-%H%M%S"))
     report["ascension_audit"] = check_ascension_audits(state, character)
+    if character == "silent":
+        report["own_learning"] = external_learning_policy.own_status(state, alive, DIR)
     import strategy_backfill_jobs
     normal = dict(report["write_jobs"], postmortem=batch, ascension_audit=report["ascension_audit"])
     report["write_jobs"]["strategy_backfill"] = strategy_backfill_jobs.dispatch(
@@ -373,6 +420,11 @@ def cmd_dispatch(args):
     if set(runs) & held:
         print("原复盘批次待核，不能重复派发其已消费输入；请先对账原回执。")
         return 1
+    if args.character == "silent" and external_learning_policy.four_lane_mode(state, ROOT, alive):
+        own = external_learning_policy.own_status(state, alive, DIR)
+        if own["busy"]:
+            print(json.dumps({"dispatched": None, "own_learning": own}, ensure_ascii=False))
+            return 1
     busy = running_batch(state)
     if busy:
         save_state(state)
@@ -414,7 +466,7 @@ def ledger_lines(runs):
 
 def account_draining():
     """A manual account handoff blocks new work, never completion records or checks."""
-    return any(os.path.isfile(os.path.join(DIR, name)) for name in ("LLM_DRAIN", "ACCOUNT_DRAIN"))
+    return publication_gate.learners_held(ROOT, DIR)
 
 
 def cmd_finish(args):
@@ -423,6 +475,17 @@ def cmd_finish(args):
     if batch is None:
         print(f"unknown batch {args.batch}")
         return 1
+    # A supervisor void never becomes success/retry via a late wrapper finish.
+    if "supervisor_close" in batch:
+        print(json.dumps({"batch": args.batch, "state": "held", "reason": "supervisor_close_requires_original_receipt"}))
+        return 75
+    if batch.get("task", "postmortem") == "postmortem":
+        report = read_report(os.path.join(DIR, "learner", args.batch + ".out"))
+        from learning_runtime import complete as complete_operational
+        if complete_operational(args.batch, batch, report, args.rc, ROOT, enqueue, inbox):
+            batch["finished"] = now_local()
+            save_state(state)
+            return 0
     if batch.get("learner_task") == core_build_jobs.TASK:
         if batch.get("state") in ("done", "failed") and "rc" in batch:
             return 0
@@ -433,7 +496,7 @@ def cmd_finish(args):
     if batch.get("task") == "ascension-audit":
         ascension_audit.finish(state, args.batch, args.rc, ROOT, os.path.join(DIR,"learner"), enqueue, inbox,
                               proposal_check=lambda report, current: proposal_dispatch.links(report, current, ROOT, SCRIPTS))
-        if not account_draining():
+        if not account_draining() and not publication_gate.candidates_only(ROOT, DIR):
             check_jobs(state, ROOT, SCRIPTS, batch["character"], alive, dt.datetime.now().strftime("%Y%m%d-%H%M%S"))
         save_state(state)
         return 0
@@ -453,13 +516,17 @@ def cmd_finish(args):
             import strategy_external_jobs
             batch["external_finished_at"] = time.time()
             strategy_external_jobs.reconcile(state, DIR)
+            import external_stock
+            external_stock.maintain(state, ROOT, alive,
+                admission_reason="account_draining" if account_draining() else
+                    "publication_hold" if publication_gate.learners_held(ROOT, DIR) else None)
         if batch.get("backfill_source"):
             import strategy_backfill_jobs
             batch["backfill_finished_at"] = time.time()
             strategy_backfill_jobs.reconcile(state, DIR)
         if batch["state"] == "failed":
             batch["retry_at"] = time.time() + RETRY_AFTER_S
-        if (not account_draining() and disk_admission.jobs_allowed(ROOT, DIR)
+        if (not account_draining() and not publication_gate.candidates_only(ROOT, DIR) and disk_admission.jobs_allowed(ROOT, DIR)
                 and batch.get("learner_task") in ("silent-boss-calibration", "boss-sim-batch")):
             boss_sim_jobs.check(state, ROOT, SCRIPTS, args.character, alive,
                                 dt.datetime.now().strftime("%Y%m%d-%H%M%S"), start_learner)
@@ -497,10 +564,11 @@ def cmd_finish(args):
         log_path = match.group(1) if match else ""
     except OSError:
         pass
+    exit_meaning = postmortem_exit_meaning(args.batch, batch, args.rc)
     lines = [
-        f"复盘批次 {args.batch}（{','.join(batch['runs'])}）结束：exit {args.rc}（{EXIT_MEANING.get(args.rc, '其他')}）。",
+        f"复盘批次 {args.batch}（{','.join(batch['runs'])}）结束：exit {args.rc}（{exit_meaning}）。",
         f"已有复盘：{','.join(done) or '无'}；还没有：{','.join(missing) or '无'}"
-        + (f"（{','.join(retry_note)} 调度器 1 小时后重派，每局最多 {MAX_ATTEMPTS} 次）" if retry_note else "")
+        + (f"（{','.join(retry_note)} 本次完成时的重试快照：1 小时后重派，每局最多 {MAX_ATTEMPTS} 次；后续以当前 learn.json 的授权处置为准）" if retry_note else "")
         + "。",
         f"学习者的回报（最后有 json 块）：{out}；stderr：{err}" + (f"；完整事件流：{log_path}" if log_path else "") + "。",
         *ledger_lines(done),
@@ -510,14 +578,16 @@ def cmd_finish(args):
         "然后 python3 ops/paper_dataset.py --no-raw，decision-log 记一行，提交主目录仓库（只 add 自己改的文件，加上 notes/lessons.md 和 paper/materials/learning/ledger.jsonl）。",
     ]
     if args.rc == 3:
-        lines.append("exit 3：引擎检查或 key 隔离自检没过。写进 ops/inbox-dev.md 报给开发会话，不要绕过。")
+        lines.append("exit 3：" + exit_meaning
+                     + "。核对本批原始 stderr 与回执后报给开发会话，不凭退出码认定 key 或引擎故障，不要绕过预检或准入。")
     elif args.rc != 0:
         lines.append("如果 stderr 或回报里是额度或登录错误：decision-log 记一行，复盘往后顺延，对局照常。")
     if not ordinary_close.offer(ROOT, DIR, args.batch, batch, report, "learner-done", "\n".join(lines)):
         enqueue("learner-done", "\n".join(lines))
     if not account_draining():
         check_jobs(state, ROOT, SCRIPTS, batch.get("character", args.character), alive, dt.datetime.now().strftime("%Y%m%d-%H%M%S"))
-        check_ascension_audits(state, batch.get("character", args.character))
+        if not publication_gate.candidates_only(ROOT, DIR):
+            check_ascension_audits(state, batch.get("character", args.character))
     save_state(state)
     print("\n".join(lines))
     return 0
@@ -525,6 +595,14 @@ def cmd_finish(args):
 
 def cmd_write(args):
     state = load_state()
+    if getattr(args, "public_web", False):
+        if args.task != "strategy-proposal" or args.character != "silent" or args.runs or args.request:
+            return 2
+        result = dispatch_write(state, ROOT, SCRIPTS, args.task, args.character, [],
+                                "public-web:issue69", "ops", alive, dt.datetime.now().strftime("%Y%m%d-%H%M%S"), public_web=True)
+        save_state(state)
+        print(json.dumps({"dispatched": result, "own_learning": external_learning_policy.own_status(state, alive, DIR)}, ensure_ascii=False))
+        return 0 if result else 1
     if getattr(args, "request", ""):
         import strategy_implementation_jobs
         if args.task != "strategy-proposal" or args.runs:
@@ -536,7 +614,7 @@ def cmd_write(args):
             print(json.dumps({"dispatched": None, "status": "blocked", "error": str(error)}, ensure_ascii=False))
             return 1
         save_state(state)
-        print(json.dumps({"dispatched": result}, ensure_ascii=False))
+        print(json.dumps({"dispatched": result, "own_learning": external_learning_policy.own_status(state, alive, DIR)}, ensure_ascii=False))
         return 0 if result else 1
     runs = [run for run in args.runs.split(",") if run] if args.runs else pending(ROOT, SCRIPTS, args.character)
     if args.task in ("experience-update", "strategy-proposal"):
@@ -556,7 +634,7 @@ def cmd_write(args):
         result = dispatch_write(state, ROOT, SCRIPTS, args.task, args.character, runs if args.task != "fix-batch" else [],
                                 ",".join(runs), "ops", alive, stamp)
     save_state(state)
-    print(json.dumps({"dispatched": result}, ensure_ascii=False))
+    print(json.dumps({"dispatched": result, "own_learning": external_learning_policy.own_status(state, alive, DIR)}, ensure_ascii=False))
     return 0 if result else 1
 
 
@@ -585,7 +663,7 @@ def cmd_recheck(args):
     if separator and not re.fullmatch(r"[0-9a-f]{64}", continuation):
         return refused("invalid-continuation")
     args.batch = batch_id
-    if not re.fullmatch(r"[0-9]{8}-[0-9]{6}-(experience-update|fix-batch|strategy-proposal)|[0-9]{8}-[0-9]{6}-s2-strategy-proposal", args.batch):
+    if not re.fullmatch(r"[0-9]{8}-[0-9]{6}(?:-(experience-update|fix-batch|strategy-proposal|mechanics-audit|experience-asc-audit|ascension-audit))?|[0-9]{8}-[0-9]{6}-s2-strategy-proposal", args.batch):
         return refused("invalid-batch")
     # Per-batch checks serialize duplicate requests without blocking unrelated dispatch or completion.
     with open(os.path.join(DIR, args.batch + ".checks.lock"), "a") as checks_lock:
@@ -600,6 +678,15 @@ def cmd_recheck(args):
                 return refused("unknown-batch")
             if batch.get("state") == "running":
                 return refused("batch-running")
+            if batch.get("task") == "ascension-audit":
+                if separator:
+                    return refused("audit-has-no-code-continuation")
+                # Keep the original lease, six coverage checks and request
+                # bookkeeping on recheck; never use generic product completion.
+                ascension_audit.finish(state, args.batch, batch.get("rc", 1), ROOT, os.path.join(DIR, "learner"), enqueue, inbox,
+                                       proposal_check=lambda report, owner: proposal_dispatch.links(report, owner, ROOT, SCRIPTS))
+                save_state(state)
+                return 0 if batch.get("state") == "done" else 1
             owners = sorted(ident for ident, other in state["batches"].items()
                             if other.get("state") == "running" and other.get("worktree") == batch.get("worktree")) if separator else []
             if separator and owners:
@@ -622,6 +709,14 @@ def cmd_recheck(args):
                 return result
             if "fallback_checks" in batch:
                 current["fallback_checks"] = batch["fallback_checks"]
+            if report := batch.get("report"):
+                if report.get("operational_candidate") or report.get("knowledge_candidate"):
+                    for key in ("state", "rc", "report", "operational_publication", "operational_pending", "operational_attempts", "fixed_data_publication", "checks_pending", "done", "missing",
+                                "knowledge_publication", "knowledge_pending", "knowledge_attempts", "knowledge_independent_consumed", "external_result", "external_output_files", "backfill_result", "backfill_output_files"):
+                        if key in batch:
+                            current[key] = batch[key]
+                        else:
+                            current.pop(key, None)
             if batch.get("checks_pending") and result != 2:
                 current["checks_pending"] = False
                 if batch.get("fallback_checks"):
@@ -644,6 +739,7 @@ def cmd_status(args):
     print(f"running batch: {busy or 'none'}; finished {args.character} runs without a post-mortem: {','.join(waiting) or 'none'}")
     print(f"ascension seen: {state['ascension']}")
     print("ascension audits: " + json.dumps(state.get("ascension_audits",{}),ensure_ascii=False))
+    print("own learning admission: " + json.dumps(external_learning_policy.own_status(state, alive, DIR), ensure_ascii=False))
     return 0
 
 
@@ -665,28 +761,63 @@ def cmd_core_notify(args):
     return 0 if receipt.get("state") == "sent" else 1
 
 
+def cmd_close(args):
+    import learner_supervisor_close
+    try:
+        result = learner_supervisor_close.close(ROOT, DIR, load_state(), args.batch, args.verdict, save_state)
+    except (OSError, ValueError, KeyError, TypeError, IndexError, sqlite3.Error, subprocess.SubprocessError) as error:
+        print(json.dumps({"batch": args.batch, "state": "held", "reason": str(error)}, ensure_ascii=False))
+        return 75
+    print(json.dumps(result, ensure_ascii=False))
+    return 0
+
+
 def main():
     parser = argparse.ArgumentParser()
-    parser.add_argument("command", choices=["tick", "dispatch", "finish", "status", "write", "request-merge", "recheck", "boss-check", "core-notify"])
-    parser.add_argument("--task", choices=["experience-update", "fix-batch", "strategy-proposal"], default="fix-batch")
+    parser.add_argument("command", choices=["tick", "dispatch", "finish", "close", "status", "write", "request-merge", "recheck", "boss-check", "core-notify"])
+    parser.add_argument("--task", choices=["experience-update", "fix-batch", "strategy-proposal", "mechanics-audit", "experience-asc-audit"], default="fix-batch")
     parser.add_argument("--branch", default="")
     parser.add_argument("--character", default=character_key(os.environ.get("CHARACTER")) or "silent")
     parser.add_argument("--runs", default="")
     parser.add_argument("--request", default="")
+    parser.add_argument("--public-web", action="store_true", help="explicit Silent content research, original strategy slot/runtime")
     parser.add_argument("--batch", default="")
+    parser.add_argument("--verdict", default="", help="dwroy [Claude] #77 comment authorizing this batch's void closure")
     parser.add_argument("--rc", type=int, default=1)
     args = parser.parse_args()
+    if args.command == "close" and (not args.batch or not args.verdict):
+        parser.error("close requires --batch and --verdict")
+    if args.verdict and args.command != "close":
+        parser.error("--verdict requires close")
+    if args.public_web and args.command != "write":
+        parser.error("--public-web requires write")
     args.character = character_key(args.character) or "silent"
+    if args.command in ("tick", "dispatch", "write", "boss-check"):
+        try:
+            knowledge_runtime_env.apply(ROOT, DIR)
+        except (OSError, ValueError, TypeError, KeyError):
+            print(json.dumps({"state": "held", "reason": "invalid_knowledge_runtime_control"}))
+            return 78
     handler = {"tick": cmd_tick, "dispatch": cmd_dispatch, "finish": cmd_finish, "status": cmd_status,
                "write": cmd_write, "request-merge": cmd_request_merge, "recheck": cmd_recheck, "boss-check": cmd_boss_check,
-               "core-notify": cmd_core_notify}[args.command]
+               "core-notify": cmd_core_notify, "close": cmd_close}[args.command]
     os.makedirs(DIR, exist_ok=True)
     # A merge request only appends an event; full checks manage their own short state transactions.
     if args.command in ("request-merge", "recheck", "core-notify", "status"):
         return handler(args) or 0
+    if args.command == "close":
+        try:
+            with state_lock(nonblocking=True):
+                return handler(args) or 0
+        except BlockingIOError:
+            print(json.dumps({"batch": args.batch, "state": "held", "reason": "learn_state_transaction_active"}))
+            return 75
     with state_lock():
         if account_draining() and args.command in ("tick", "dispatch", "write", "boss-check"):
             print(json.dumps({"dispatched": None, "reason": "account_drain", "command": args.command}))
+            return 75
+        if publication_gate.candidates_only(ROOT, DIR) and args.command in ("dispatch", "write", "boss-check"):
+            print(json.dumps({"dispatched": None, "reason": "publication_candidate_only", "command": args.command}))
             return 75
         if args.command in ("dispatch", "write", "boss-check") and not disk_admission.jobs_allowed(ROOT, DIR):
             print(json.dumps({"dispatched": None, "reason": "disk_capacity_hold", "command": args.command}))
@@ -695,7 +826,7 @@ def main():
         checks_pending = args.command == "finish" and load_state()["batches"].get(args.batch, {}).get("checks_pending")
     if checks_pending:
         cmd_recheck(args)
-    if args.command in ("finish", "tick"):
+    if args.command in ("finish", "tick") and not publication_gate.candidates_only(ROOT, DIR):
         ordinary_close.close_pending(ROOT, DIR, enqueue)
         # Missing fixture roots cannot produce a checklist; never hide a real generation failure.
         if os.path.isdir(os.path.join(ROOT, ".git")) and os.path.isdir(os.path.join(ROOT, ".worktrees/live")):

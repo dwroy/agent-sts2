@@ -1,0 +1,45 @@
+
+ RUN  v4.1.11 /home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261023-151302-s2/agent
+
+ ❯ tests/silent-candle-rest.test.ts (11 tests | 2 failed) 164ms
+   × reports the observed A10 one-to-six refuelling without changing HP or choices (oneshot=true) 26ms
+   × reports the observed A10 one-to-six refuelling without changing HP or choices (oneshot=false) 5ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 2 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/silent-candle-rest.test.ts > reports the observed A10 one-to-six refuelling without changing HP or choices (oneshot=true)
+ FAIL  tests/silent-candle-rest.test.ts > reports the observed A10 one-to-six refuelling without changing HP or choices (oneshot=false)
+AssertionError: expected [ …(3) ] to deeply equal [ …(3) ]
+
+- Expected
++ Received
+
+@@ -8,10 +8,10 @@
+      "charges_after_action_reference": 1,
+      "key": "o1",
+      "kind": "SMITH",
+    },
+    {
+-     "charges_after_action_reference": 6,
++     "charges_after_action_reference": null,
+      "key": "o2",
+      "kind": "KINDLE",
+    },
+  ]
+
+ ❯ tests/silent-candle-rest.test.ts:89:38
+     87|   const { decision, rest, options } = question(raw, oneshot);
+     88|   expect(rest.candle_refuel.current_charges).toBe(1);
+     89|   expect(rest.candle_refuel.actions).toEqual([
+       |                                      ^
+     90|     { key: "o0", kind: "HEAL", charges_after_action_reference: 1 },
+     91|     { key: "o1", kind: "SMITH", charges_after_action_reference: 1 },
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/2]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  2 failed | 9 passed (11)
+   Start at  15:23:12
+   Duration  2.02s (transform 1.43s, setup 318ms, import 1.40s, tests 164ms, environment 0ms)
+

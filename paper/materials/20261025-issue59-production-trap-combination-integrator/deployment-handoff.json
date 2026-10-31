@@ -1,0 +1,163 @@
+{
+  "at": "2026-10-25T12:29:26+08:00",
+  "status": "green; exact seven leaves integrated into main; original ops owns next publication and runtime acceptance",
+  "candidate_commit": "062cd855366bd0a8d3f4f8b61286e98990db4058",
+  "candidate_parent": "32c6b922a07963227ff86fd0b27d85014cd5f769",
+  "live_base": "18f8980daabe0a520247fabd45ceca7ce70f466b",
+  "leaves": [
+    {
+      "path": "ops/codex-ops-learn.py",
+      "preimage_sha256": "7b761200dfaca7119f4ed9e4b21259c2e289ecc6d7201011a6c1fbd898ac9a41",
+      "source_sha256": "fcd3b5a0cad8a535c8061e3536f96e714238e62a334d2a9a36ed93de55ba4a76",
+      "integrated_sha256": "e557579ddfbbc42eaa6d0079ec1eab9217a09c0a68d96130c20e897a64d4ada4",
+      "bytes": 40188,
+      "source_equal": false,
+      "deployment_root": "ROOT"
+    },
+    {
+      "path": "ops/tests/test_postmortem_completion.py",
+      "preimage_sha256": "485849a4202ff652a1af7e516edcc829fe8ce82cb73f384736e0b27e45d5515b",
+      "source_sha256": "da19cf08a8b233e37dd42d5f05d797a6e2465c0533f2b80680ae0aa1ff515bc2",
+      "integrated_sha256": "da19cf08a8b233e37dd42d5f05d797a6e2465c0533f2b80680ae0aa1ff515bc2",
+      "bytes": 9549,
+      "source_equal": true,
+      "deployment_root": "ROOT"
+    },
+    {
+      "path": "agent/tests/postmortem-failure-audit.test.ts",
+      "preimage_sha256": "8add185603fe71574ef1aa785cb9e8e2c335d444e389d603332a69dbdcb60512",
+      "source_sha256": "7c6f6a12ea2f77ab105631a012fd5fdfd40a98dc408a8ef23523cee17e4b4bc1",
+      "integrated_sha256": "7c6f6a12ea2f77ab105631a012fd5fdfd40a98dc408a8ef23523cee17e4b4bc1",
+      "bytes": 540,
+      "source_equal": true,
+      "deployment_root": "ROOT"
+    },
+    {
+      "path": "agent/src/reflex/combat-plan.ts",
+      "preimage_sha256": "425b33c1f926719289baea9b1e80d488fcb9c93740c183e3d6efc2be519fac83",
+      "source_sha256": "45ca9e18dc449aa5e7e0a6f4fcf3f2918ca034a69e11694201ea3c9e60ea5411",
+      "integrated_sha256": "45ca9e18dc449aa5e7e0a6f4fcf3f2918ca034a69e11694201ea3c9e60ea5411",
+      "bytes": 370899,
+      "source_equal": true,
+      "deployment_root": "LIVE"
+    },
+    {
+      "path": "agent/tests/silent-paels-legion.test.ts",
+      "preimage_sha256": "acde1e9f386e2e2ffc0f9489e46d6b4b980f4aee2254be95febdc6606b5307ff",
+      "source_sha256": "699289a4da85dbf14e5c3bac01a69e27e6ad105a936303535a86d833808c5be0",
+      "integrated_sha256": "699289a4da85dbf14e5c3bac01a69e27e6ad105a936303535a86d833808c5be0",
+      "bytes": 7808,
+      "source_equal": true,
+      "deployment_root": "LIVE"
+    },
+    {
+      "path": "agent/tests/silent-paels-legion-evidence.json",
+      "preimage_sha256": "768d4ccc72d3e8c03ec27dcc4e390c366a313f0d99594f710f4a38d3e585fa8c",
+      "source_sha256": "2f4162e8b6e664a4b02c0eddea1479a1511118dab3ec4d522720190c1a8755d5",
+      "integrated_sha256": "2f4162e8b6e664a4b02c0eddea1479a1511118dab3ec4d522720190c1a8755d5",
+      "bytes": 177242,
+      "source_equal": true,
+      "deployment_root": "LIVE"
+    },
+    {
+      "path": "agent/tests/ops-autoplay-console.test.ts",
+      "preimage_sha256": "d115acd15296f03843d5990b2f6ec4977ce87fc8c07df04be86398e18079191c",
+      "integrated_sha256": "ebab3f147d75d864dccd99b172b06b06a75788547b4596f83469e82a3313fe5e",
+      "bytes": 6840,
+      "scope": "ROOT test only; bounded actual-output wait; original assertions retained",
+      "deployment_root": "ROOT"
+    }
+  ],
+  "game_exact_patch": "game-exact.patch",
+  "host_exact_patch": "host-exact.patch",
+  "production_behavior_leaves": [
+    "agent/src/reflex/combat-plan.ts"
+  ],
+  "existing_root_live_differences": "root-live-existing-differences.json; preserve 12 existing production leaves",
+  "checks": "fresh ROOT production/runtime tsc, LIVE production tsc; ROOT20/LIVE12 targeted; corrected full terminal required",
+  "publication_owner": "original ops; publication-admission #57 contract; allocate release_id only after actual LIVE commit under original lock",
+  "knowledge_boundary": "no knowledge data/DB mutation in the seven code/test leaves; preserve newly published current K1-fa912eafff5ba568bd3000f269fcd58438f377bf3a856d28908662b8af910ea0 and all already-bound old-version runs; no rollback/forced rebinding to frozen-check knowledge or replay old disabled-bound batches",
+  "rollback": "revert only corresponding exact leaves in ROOT/LIVE preserving later changes; fixture is ROOT test only",
+  "old_rule": "Silent A10 with two Dexterity declined the existing Pael Legion preview, like other nonzero Dexterity",
+  "new_rule": "accept only original learner evidence condition: Silent A10 + exactly two Dexterity + original plain DEFEND_SILENT / relic / state gates; keep A0/A7/A9/A11 and Ironclad equivalent",
+  "rule_evidence": "original learner silent-proposal-aafb1318550a5c2c; Q7HBKHZTSPJ8 A10 F33 a4 T5; fixed readback in prior candidates-integrator/fixed-evidence-readback.json",
+  "host_behavior": "EXIT3 cause display only: classify exact receipt-bound pre-model timeout; preserve failure/retry/authorization and runtime gates",
+  "deployment_notifications": "after actual behavior publication, ops records decision-log/eval release and notes/for-roy.md + ops/inbox-dev.md old/new/evidence/impact/rollback",
+  "do_not": [
+    "finish/retire/replay original awaiting_review/75 batches",
+    "replay #60 worker/FIFO/import",
+    "replace original source trees or delete logs",
+    "close scientific parent requirements"
+  ],
+  "fixture_exact_patch": "fixture-exact.patch",
+  "full_history": {
+    "original_failed": "/home/dw/Projects/agent-sts2/paper/materials/20261025-issue59-final-combination-integrator",
+    "intermediate_interrupted_130": "/home/dw/Projects/agent-sts2/paper/materials/20261025-issue59-fixture-corrected-combination-integrator",
+    "final": "/home/dw/Projects/agent-sts2/paper/materials/20261025-issue59-production-trap-combination-integrator"
+  },
+  "original_six_unchanged": true,
+  "production_exit_trap_unchanged": true,
+  "fixture_rollback": "ROOT test leaf only; no LIVE deployment",
+  "patch_sha256": {
+    "host-exact.patch": "9b58e692a0a1c179ff08bd82e470550010ce0333c2786fe1fc518fdb75816a46",
+    "game-exact.patch": "8192e8aed5b7cba4c16545c6a6cbe1e9a2f42411dfba904b07dc87b25be9dedf",
+    "fixture-exact.patch": "b08a1ee90b348809760f100d021d20009d01da0798e8c616343ed906e9484696"
+  },
+  "knowledge_new_publication_independent_readback": "knowledge114312-independent-readback.json; #60 comment6393294209",
+  "main_integration": {
+    "at": "2026-10-25T12:29:12+08:00",
+    "commit": "062cd855366bd0a8d3f4f8b61286e98990db4058",
+    "parent": "32c6b922a07963227ff86fd0b27d85014cd5f769",
+    "paths": [
+      "ops/codex-ops-learn.py",
+      "ops/tests/test_postmortem_completion.py",
+      "agent/tests/postmortem-failure-audit.test.ts",
+      "agent/src/reflex/combat-plan.ts",
+      "agent/tests/silent-paels-legion.test.ts",
+      "agent/tests/silent-paels-legion-evidence.json",
+      "agent/tests/ops-autoplay-console.test.ts"
+    ],
+    "exact_seven_only": true,
+    "tested_tree": "c30b4f641571a538d042ae2f47187d7633110c03",
+    "full_result_sha256": "68e3842192ca147375ca078d14f10df2cd85c2ed628ce16ff5023a2b59f5e445",
+    "live_unchanged": "18f8980daabe0a520247fabd45ceca7ce70f466b",
+    "original_pending_business_state_unchanged": true,
+    "release_id_allocated": false,
+    "publication_marker_created": false
+  },
+  "terminal": {
+    "at": "2026-10-25T12:29:01+08:00",
+    "original_worker_exited": true,
+    "worker_pid": 3922231,
+    "worker_birth": "32542208",
+    "original_check_lock_available": true,
+    "result_sha256": "68e3842192ca147375ca078d14f10df2cd85c2ed628ce16ff5023a2b59f5e445",
+    "full_result": {
+      "files": 687,
+      "passed": 6695,
+      "failed": 0,
+      "skipped": 2
+    },
+    "independent_comparisons": {
+      "inputs": {
+        "count": 2848,
+        "unchanged": true
+      },
+      "dependencies": {
+        "count": 1417,
+        "unchanged": true
+      },
+      "runtime_inputs": {
+        "count": 326,
+        "unchanged": true
+      }
+    },
+    "validation_tree": "c30b4f641571a538d042ae2f47187d7633110c03",
+    "runtime_tree": "6cdaea54ca5d2bbffb0f6ebb88782188a11b2087",
+    "index_entries_unchanged": true,
+    "index_flags_unchanged": true,
+    "actual_main": "32c6b922a07963227ff86fd0b27d85014cd5f769",
+    "actual_live": "18f8980daabe0a520247fabd45ceca7ce70f466b",
+    "publication_marker_present": false
+  }
+}

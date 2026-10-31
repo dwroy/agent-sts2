@@ -61,7 +61,7 @@ default.min_n: 20
 ## 回报
 用中文简短回报：看了哪些候选、各归哪一类、最值得做的三件事。最后附一个 json 代码块：
 ```json
-{"out": "{{out}}", "candidates": [{"mechanic": "…", "monster": "…", "power": "…", "class": "A|B|C|D", "n": 0, "bias": 0.0, "action": "…", "ledger": "<id 或 null>"}]}
+{"task":"mechanics-audit", "character":"{{character}}", "out": "{{out}}", "candidates": [{"mechanic": "…", "monster": "…", "power": "…", "class": "A|B|C|D", "n": 0, "bias": 0.0, "action": "…", "ledger": "<id 或 null>"}]}
 ```
 
 
@@ -71,3 +71,5 @@ default.min_n: 20
 Roy 已授权：学习者有足够理由和自己核实的数据，可直接修改人定的出牌、药水、SL、终局价值规则，自测上线后通知 Roy；不再一律送回待审批。此授权不提供任何游戏事实；证据不足保留原行为、写清限制。只读复盘/审计/经验任务仍通过独立 strategy-proposal 实现代码，不让运维添加游戏知识。修改实际上线后先 date，在根目录 notes/for-roy.md 与 ops/inbox-dev.md 同时追加旧规则、新规则、证据/账本/任务、预期影响、回退方法；这是明确授权的双通知例外。无关角色保持等价，不改运维 prompt。
 
 最终 JSON 必须带 `code_proposals`（CLI id 列表）与 `implementation_domains`（combat/potion/sl/terminal/structure；只填实际涉及的，纯工具可空）。报告保存 {{scratch}}/report.md。已经实现的提案只有实际 live 祖先源码 commit 才可登记 implemented；不要冒称 shipped。失败日志、工作树、初稿和缺数据均保留。
+
+若 launcher 追加运营 runtime 合同，原 residuals/summary 仍只读，out 与报告改在 scratch，按原 batch/角色保存 `operational_candidate`；不提交报告，不改代码或激活机制。原 min_n、独立样本、反例和提案义务不变；运营完成仅表示记录入库，实际实现仍走研发。旧批次沿原合同。

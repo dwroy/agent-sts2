@@ -17,7 +17,7 @@ class MissingFaultMarker(unittest.TestCase):
             ops.mkdir()
             logs = root / "logs"
             logs.mkdir()
-            for name in ("paths.sh", "autoplay.sh", "brain_wait.py"):
+            for name in ("paths.sh", "autoplay.sh", "brain_wait.py", "publication_gate.py"):
                 shutil.copy2(REPO / "ops" / name, ops / name)
             if marker is not None:
                 (logs / "brain-wait.json").write_text(json.dumps(marker))

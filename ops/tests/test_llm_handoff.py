@@ -124,6 +124,16 @@ class Protocol(unittest.TestCase):
             profile.update(engine="codex", model=old_model)
             with self.assertRaisesRegex(ValueError, "model policy"): validate_profile(profile)
 
+    def test_profile_effort_policy_allows_high_without_other_fallbacks(self):
+        profile = dict(engine="codex", account="fixture", model="gpt-6.1-sol", effort="high", service_tier="default",
+                       learner_home="/unavailable", brain_home="/unavailable", handoff="notes/test.md")
+        for effort in ("high", "xhigh"):
+            with self.subTest(effort=effort), self.assertRaisesRegex(ValueError, "auth|home|login"):
+                validate_profile({**profile, "effort": effort})
+        for changes in ({"effort": "medium"}, {"effort": "low"}, {"service_tier": "fast"}):
+            with self.subTest(changes=changes), self.assertRaisesRegex(ValueError, "model policy"):
+                validate_profile({**profile, **changes})
+
     def test_auxiliary_dispatch_stops_before_reconcile(self):
         self.tx.begin()
         manager = Assist(self.root, self.tx.runtime)
@@ -133,7 +143,7 @@ class Protocol(unittest.TestCase):
 
     def test_real_launchers_defer_before_any_game_or_broker_work(self):
         ops = self.root / "ops"
-        for name in ("paths.sh", "run.sh", "autoplay.sh", "codex-ops-actions.sh"):
+        for name in ("paths.sh", "run.sh", "autoplay.sh", "codex-ops-actions.sh", "publication_gate.py", "knowledge_runtime_env.py"):
             shutil.copy(ROOT / "ops" / name, ops / name)
         self.tx.begin()
         env = {"PATH": os.environ["PATH"], "HOME": str(self.root)}
@@ -146,7 +156,12 @@ class Protocol(unittest.TestCase):
 
     def test_brain_selector_is_passed_to_next_play(self):
         ops = self.root / "ops"
-        for name in ("paths.sh", "run.sh"): shutil.copy(ROOT / "ops" / name, ops / name)
+        for name in ("paths.sh", "run.sh", "publication_gate.py", "knowledge_runtime_env.py", "learning_runtime_launch.py",
+                     "learning_runtime.py", "learning_runtime_data.py", "learning_runtime_store.py",
+                     "board_heavy.py", "board_queue_pin.py", "issue_session_support.py"):
+            shutil.copy(ROOT / "ops" / name, ops / name)
+        (self.root / ".agents").mkdir()
+        shutil.copy(ROOT / ".agents/board.yaml", self.root / ".agents/board.yaml")
         live = self.root / "live/agent"
         live.mkdir(parents=True)
         home = self.root / "brain"
@@ -163,6 +178,7 @@ class Protocol(unittest.TestCase):
         result = subprocess.run(["bash", str(ops / "run.sh")], env=env, capture_output=True, text=True, timeout=5)
         self.assertEqual(result.returncode, 0, result.stderr)
         self.assertEqual((self.root / "observed").read_text(), str(home))
+        self.assertFalse((self.root / "data/learning-runtime/learning.sqlite").exists())
         (self.tx.runtime / "brain-home").write_text("relative\n")
         (self.root / "observed").unlink()
         refused = subprocess.run(["bash", str(ops / "run.sh")], env=env, capture_output=True, timeout=5)
@@ -171,7 +187,7 @@ class Protocol(unittest.TestCase):
 
     def test_drain_during_play_keeps_one_completion_report(self):
         ops = self.root / "ops"
-        for name in ("paths.sh", "autoplay.sh", "report_log_cache.py"):
+        for name in ("paths.sh", "autoplay.sh", "report_log_cache.py", "publication_gate.py"):
             shutil.copy(ROOT / "ops" / name, ops / name)
         (self.root / "eval").mkdir()
         shutil.copy(ROOT / "eval/jsonl_cache.py", self.root / "eval/jsonl_cache.py")

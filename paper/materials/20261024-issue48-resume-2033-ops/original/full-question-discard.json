@@ -1,0 +1,708 @@
+{
+  "source": "/home/dw/Projects/agent-sts2/logs/jev-prompts.jsonl",
+  "source_size": 3317411550,
+  "line": 85984,
+  "offset": 3189020469,
+  "bytes": 16747,
+  "sha256": "467b2d2f269e24b1d1c2b58054e609013fc575c180d16f171a5d2a5d463329a7",
+  "run_id": "QVDR4R3UWKXU",
+  "identity": {
+    "status": "explicit_run",
+    "fields": {
+      "run_id": "QVDR4R3UWKXU",
+      "fingerprint.run": "QVDR4R3UWKXU"
+    },
+    "decision_ref": {
+      "source": "/home/dw/Projects/agent-sts2/logs/decisions.jsonl",
+      "source_size": 4764426001,
+      "line": 511299,
+      "offset": 4578978015,
+      "bytes": 3646,
+      "sha256": "e201e05c035ae4ef8b483a6ca149a6be867ddec3a5e2290df0e326d3cc41994c"
+    }
+  },
+  "row": {
+    "ts": "2026-10-23T21:17:15.533Z",
+    "decision_id": "d07a54ab-01d4-4a24-9bf3-bb5bb4313fd4",
+    "run_id": "QVDR4R3UWKXU",
+    "floor": 12,
+    "turn": 4,
+    "fingerprint": "{\"actions\":[\"save_and_quit\",\"select_deck_card\"],\"combat\":true,\"enemies\":\"0:34:0:true\",\"event\":\"\",\"gold\":122,\"hand\":\"0:SURVIVOR:true|1:STRIKE_SILENT:true|2:SIDESTEP:true|3:ECHOING_SLASH:true\",\"hp\":16,\"maxHp\":78,\"nodes\":\"\",\"pendingCard\":false,\"player\":\"1:5:0\",\"potions\":\":false:false|:false:false\",\"powers\":\"NOXIOUS_FUMES_POWER:3\",\"rewards\":\"\",\"run\":\"QVDR4R3UWKXU\",\"screen\":\"CARD_SELECTION\",\"selection\":\"0:false\",\"shopOpen\":false,\"shopStock\":\"\",\"turn\":4}",
+    "observed_ts": "2026-10-23T21:17:15.501Z",
+    "label": "selection/choose",
+    "jev_context": null,
+    "call": "ask",
+    "request": {
+      "model": "typesafe/jev-1.14",
+      "state": {
+        "run_brief": {
+          "character": "静默猎手",
+          "act": "1",
+          "floor": 12,
+          "hp": "16/78 (21%)",
+          "gold": 122,
+          "ascension": 10,
+          "deck": "20 cards | 8 attacks / 8 skills / 2 powers | 1 upgraded | 1 curses/statuses | avg cost 0.75",
+          "relics": [
+            "蛇之戒指",
+            "卷轴箱",
+            "天选芝士",
+            "草莓",
+            "铲子"
+          ],
+          "relic_effects": [
+            "蛇之戒指: 在每场战斗开始时，额外抽?(数值未知)张牌。",
+            "卷轴箱: 拾起时，从2个卡牌包中选择1包加入你的牌组。",
+            "天选芝士: 在战斗结束时，获得?(数值未知)点最大生命值。",
+            "草莓: 拾起时，将你的最大生命值提升?(数值未知)。",
+            "铲子: 现在你可以在休息处挖掘遗物。"
+          ],
+          "potions": [],
+          "notes": [
+            "floor 7: moved to RestSite",
+            "used a rest site",
+            "card selection",
+            "floor 8: moved to Unknown",
+            "took a card reward",
+            "floor 9: moved to Treasure",
+            "floor 10: moved to RestSite",
+            "floor 11: moved to Elite"
+          ],
+          "relic_effects_note": "?(数值未知) marks a value the mod does not expose; the effect text around it is accurate"
+        },
+        "situation": {
+          "screen": "CARD_SELECTION",
+          "task": "choose",
+          "prompt": "[center]选择[blue]1[/blue]张牌来[gold]丢弃[/gold]。[/center]",
+          "selecting": "pick 1 of 1: one card per answer",
+          "discard_plan": {
+            "status": "available",
+            "remaining": [
+              {
+                "card_id": "SIDESTEP",
+                "name": "侧步",
+                "upgraded": false,
+                "target": null,
+                "text": "下回合，获得1点能量。"
+              },
+              {
+                "card_id": "SURVIVOR",
+                "name": "生存者",
+                "upgraded": false,
+                "target": null,
+                "text": "获得8点格挡。 丢弃1张牌。"
+              }
+            ],
+            "original_full_plan_prediction": {
+              "hp_lost": 8,
+              "damage_dealt": 23,
+              "block_gained": 13
+            },
+            "basis": "原整条方案的预测，只有完成后继才适用；这是已选方案的事实，不是固定保留规则。移除所需后继牌会使原预测失效，返回战斗后按真实手牌重算。"
+          }
+        },
+        "deck": "打击 (Attack, 1E): 造成6点伤害。\n打击 (Attack, 1E): 造成6点伤害。\n打击 (Attack, 1E): 造成6点伤害。\n打击 (Attack, 1E): 造成6点伤害。\n打击 (Attack, 1E): 造成6点伤害。\n防御 (Skill, 1E): 获得5点格挡。\n防御 (Skill, 1E): 获得5点格挡。\n防御 (Skill, 1E): 获得5点格挡。\n防御 (Skill, 1E): 获得5点格挡。\n防御 (Skill, 1E): 获得5点格挡。\n中和 (Attack, 0E): 造成3点伤害。 给予1层虚弱。\n生存者 (Skill, 1E): 获得8点格挡。 丢弃1张牌。\n进阶之灾 (Curse, -1E): 不能被打出。 虚无。 永恒。\n投掷匕首 (Attack, 1E): 造成9点伤害。 抽1张牌。 丢弃1张牌。\n蛇咬 (Skill, 2E): 保留。 给予7层中毒。\n侧步 (Skill, 0E): 下回合，获得1点能量。\n藏宝图 (Quest, -1E): 不能被打出。 在下一阶段的地图上，标记一个有600额外金币的地点。\n回响斩击 (Attack, 1E): 对所有敌人造成10点伤害。 每有一名敌人被击杀，就重复此效果。\n毒雾+ (Power, 1E): 在你的回合开始时，给予所有敌人3层中毒。\n毒雾 (Power, 1E): 在你的回合开始时，给予所有敌人2层中毒。",
+        "candidates": [
+          {
+            "card": "生存者",
+            "upgraded": false,
+            "type": "Skill",
+            "cost": 1,
+            "text": "获得8点格挡。 丢弃1张牌。",
+            "removes_planned_continuation": true
+          },
+          {
+            "card": "打击",
+            "upgraded": false,
+            "type": "Attack",
+            "cost": 1,
+            "text": "造成6点伤害。",
+            "removes_planned_continuation": false
+          },
+          {
+            "card": "侧步",
+            "upgraded": false,
+            "type": "Skill",
+            "cost": 0,
+            "text": "下回合，获得1点能量。",
+            "removes_planned_continuation": true
+          },
+          {
+            "card": "回响斩击",
+            "upgraded": false,
+            "type": "Attack",
+            "cost": 1,
+            "text": "对所有敌人造成10点伤害。 每有一名敌人被击杀，就重复此效果。",
+            "removes_planned_continuation": false
+          }
+        ],
+        "open_book": {
+          "schema": "open-book-context-v1",
+          "source": "external:spire-codex",
+          "game_version": "v0.111.0",
+          "limits": "外部机械资料，与实盘证据分账；当前 mod 优先。升级 facts.upgrade 是增量；进阶阈值未知。资料存在不证明模拟已支持。省略项可按 kind/id 查询本地库。",
+          "sources": [
+            {
+              "key": "cards:eng",
+              "url": "https://raw.githubusercontent.com/ptrlrd/spire-codex/4f52f5a53597e4fdc6cf130f7ebe2cdd35236101/data-beta/v0.111.0/eng/cards.json",
+              "sha256": "31383b5965746b3ad59da94ddd542e524fdc79c9147aced178639fff9d445938",
+              "license": "https://polyformproject.org/licenses/noncommercial/1.0.0",
+              "required_notice": "Copyright © 2025-present Peter Lord and Spire Codex contributors."
+            },
+            {
+              "key": "cards:zhs",
+              "url": "https://raw.githubusercontent.com/ptrlrd/spire-codex/4f52f5a53597e4fdc6cf130f7ebe2cdd35236101/data-beta/v0.111.0/zhs/cards.json",
+              "sha256": "50cb0b33a9c80131d46c9abd16bc983b96b3cd376abb1250265521915d68cebc",
+              "license": "https://polyformproject.org/licenses/noncommercial/1.0.0",
+              "required_notice": "Copyright © 2025-present Peter Lord and Spire Codex contributors."
+            },
+            {
+              "key": "relics:eng",
+              "url": "https://raw.githubusercontent.com/ptrlrd/spire-codex/4f52f5a53597e4fdc6cf130f7ebe2cdd35236101/data-beta/v0.111.0/eng/relics.json",
+              "sha256": "25a83cd102db871daaeb0c174d0f391d03f90f5eb0e4e4732e07f6d460b55bc7",
+              "license": "https://polyformproject.org/licenses/noncommercial/1.0.0",
+              "required_notice": "Copyright © 2025-present Peter Lord and Spire Codex contributors."
+            },
+            {
+              "key": "relics:zhs",
+              "url": "https://raw.githubusercontent.com/ptrlrd/spire-codex/4f52f5a53597e4fdc6cf130f7ebe2cdd35236101/data-beta/v0.111.0/zhs/relics.json",
+              "sha256": "d4601a1ebaf5d283cfaf8e492283da451e4778ab9fdc0e806f6f3c1d24821f17",
+              "license": "https://polyformproject.org/licenses/noncommercial/1.0.0",
+              "required_notice": "Copyright © 2025-present Peter Lord and Spire Codex contributors."
+            }
+          ],
+          "entries": [
+            {
+              "kind": "cards",
+              "id": "SURVIVOR",
+              "name": "生存者",
+              "aliases": [
+                "Survivor"
+              ],
+              "source": "external:spire-codex",
+              "game_version": "v0.111.0",
+              "provenance": [
+                "cards:eng",
+                "cards:zhs"
+              ],
+              "origin_pool": "silent",
+              "evidence_scope": "external-reference; not live validation",
+              "facts": {
+                "cost": 1,
+                "target": "Self",
+                "color": "silent",
+                "block": 8,
+                "vars": {
+                  "Block": 8
+                },
+                "upgrade": {
+                  "block": "+3"
+                },
+                "type": "Skill",
+                "rarity": "Basic",
+                "keywords": []
+              },
+              "description": "获得8点格挡。\n丢弃1张牌。",
+              "description_en": "Gain 8 Block.\nDiscard 1 card.",
+              "upgraded_description": "获得11点格挡。\n丢弃1张牌。",
+              "upgraded_description_en": "Gain 11 Block.\nDiscard 1 card."
+            },
+            {
+              "kind": "cards",
+              "id": "SIDESTEP",
+              "name": "侧步",
+              "aliases": [
+                "Sidestep"
+              ],
+              "source": "external:spire-codex",
+              "game_version": "v0.111.0",
+              "provenance": [
+                "cards:eng",
+                "cards:zhs"
+              ],
+              "origin_pool": "silent",
+              "evidence_scope": "external-reference; not live validation",
+              "facts": {
+                "cost": 0,
+                "target": "Self",
+                "color": "silent",
+                "vars": {
+                  "Energy": 1
+                },
+                "upgrade": {
+                  "energy": "+1"
+                },
+                "energy_gain": 1,
+                "type": "Skill",
+                "rarity": "Uncommon",
+                "keywords": []
+              },
+              "description": "下回合，获得[energy:1]。",
+              "description_en": "Next turn, gain [energy:1].",
+              "upgraded_description": "下回合，获得[energy:2]。",
+              "upgraded_description_en": "Next turn, gain [energy:2]."
+            },
+            {
+              "kind": "cards",
+              "id": "ECHOING_SLASH",
+              "name": "回响斩击",
+              "aliases": [
+                "Echoing Slash"
+              ],
+              "source": "external:spire-codex",
+              "game_version": "v0.111.0",
+              "provenance": [
+                "cards:eng",
+                "cards:zhs"
+              ],
+              "origin_pool": "silent",
+              "evidence_scope": "external-reference; not live validation",
+              "facts": {
+                "cost": 1,
+                "target": "AllEnemies",
+                "color": "silent",
+                "damage": 10,
+                "vars": {
+                  "Damage": 10
+                },
+                "upgrade": {
+                  "damage": "+3"
+                },
+                "type": "Attack",
+                "rarity": "Uncommon",
+                "keywords": []
+              },
+              "description": "对所有敌人造成10点伤害。\n每有一名敌人被击杀，就重复此效果。",
+              "description_en": "Deal 10 damage to ALL enemies.\nRepeat this effect for each enemy killed.",
+              "upgraded_description": "对所有敌人造成13点伤害。\n每有一名敌人被击杀，就重复此效果。",
+              "upgraded_description_en": "Deal 13 damage to ALL enemies.\nRepeat this effect for each enemy killed."
+            },
+            {
+              "kind": "relics",
+              "id": "RING_OF_THE_SNAKE",
+              "name": "蛇之戒指",
+              "aliases": [
+                "Ring of the Snake"
+              ],
+              "source": "external:spire-codex",
+              "game_version": "v0.111.0",
+              "provenance": [
+                "relics:eng",
+                "relics:zhs"
+              ],
+              "origin_pool": "silent",
+              "evidence_scope": "external-reference; not live validation",
+              "description": "在每场战斗开始时，额外抽2张牌。",
+              "description_en": "At the start of each combat, draw 2 additional cards.",
+              "facts": {
+                "rarity_key": "Starter",
+                "pool": "silent"
+              }
+            },
+            {
+              "kind": "relics",
+              "id": "SCROLL_BOXES",
+              "name": "卷轴箱",
+              "aliases": [
+                "Scroll Boxes"
+              ],
+              "source": "external:spire-codex",
+              "game_version": "v0.111.0",
+              "provenance": [
+                "relics:eng",
+                "relics:zhs"
+              ],
+              "origin_pool": "shared",
+              "evidence_scope": "external-reference; not live validation",
+              "description": "拾起时，从2个卡牌包中选择1包加入你的牌组。",
+              "description_en": "Upon pickup, choose 1 of 2 packs of cards to add to your Deck.",
+              "facts": {
+                "rarity_key": "Ancient",
+                "pool": "shared"
+              }
+            },
+            {
+              "kind": "relics",
+              "id": "CHOSEN_CHEESE",
+              "name": "天选芝士",
+              "aliases": [
+                "The Chosen Cheese"
+              ],
+              "source": "external:spire-codex",
+              "game_version": "v0.111.0",
+              "provenance": [
+                "relics:eng",
+                "relics:zhs"
+              ],
+              "origin_pool": "shared",
+              "evidence_scope": "external-reference; not live validation",
+              "description": "在战斗结束时，获得1点最大生命值。",
+              "description_en": "At the end of combat, gain 1 Max HP.",
+              "facts": {
+                "rarity_key": "Event",
+                "pool": "shared"
+              }
+            },
+            {
+              "kind": "relics",
+              "id": "STRAWBERRY",
+              "name": "草莓",
+              "aliases": [
+                "Strawberry"
+              ],
+              "source": "external:spire-codex",
+              "game_version": "v0.111.0",
+              "provenance": [
+                "relics:eng",
+                "relics:zhs"
+              ],
+              "origin_pool": "shared",
+              "evidence_scope": "external-reference; not live validation",
+              "description": "拾起时，将你的最大生命值提升7。",
+              "description_en": "Upon pickup, raise your Max HP by 7.",
+              "facts": {
+                "rarity_key": "Common",
+                "pool": "shared",
+                "merchant_price": {
+                  "base": 175,
+                  "min": 149,
+                  "max": 201
+                }
+              }
+            },
+            {
+              "kind": "relics",
+              "id": "SHOVEL",
+              "name": "铲子",
+              "aliases": [
+                "Shovel"
+              ],
+              "source": "external:spire-codex",
+              "game_version": "v0.111.0",
+              "provenance": [
+                "relics:eng",
+                "relics:zhs"
+              ],
+              "origin_pool": "shared",
+              "evidence_scope": "external-reference; not live validation",
+              "description": "现在你可以在休息处挖掘遗物。",
+              "description_en": "You can now dig at Rest Sites to obtain a random Relic.",
+              "facts": {
+                "rarity_key": "Rare",
+                "pool": "shared",
+                "merchant_price": {
+                  "base": 275,
+                  "min": 234,
+                  "max": 316
+                }
+              }
+            },
+            {
+              "kind": "cards",
+              "id": "ASCENDERS_BANE",
+              "name": "进阶之灾",
+              "aliases": [
+                "Ascender's Bane"
+              ],
+              "source": "external:spire-codex",
+              "game_version": "v0.111.0",
+              "provenance": [
+                "cards:eng",
+                "cards:zhs"
+              ],
+              "origin_pool": "curse",
+              "evidence_scope": "external-reference; not live validation",
+              "facts": {
+                "cost": -1,
+                "target": "None",
+                "color": "curse",
+                "type": "Curse",
+                "rarity": "Curse",
+                "keywords": [
+                  "Ethereal",
+                  "Unplayable",
+                  "Eternal"
+                ]
+              },
+              "description": "",
+              "description_en": "",
+              "upgraded_description": "",
+              "upgraded_description_en": ""
+            },
+            {
+              "kind": "cards",
+              "id": "SPOILS_MAP",
+              "name": "藏宝图",
+              "aliases": [
+                "Spoils Map"
+              ],
+              "source": "external:spire-codex",
+              "game_version": "v0.111.0",
+              "provenance": [
+                "cards:eng",
+                "cards:zhs"
+              ],
+              "origin_pool": "quest",
+              "evidence_scope": "external-reference; not live validation",
+              "facts": {
+                "cost": -1,
+                "target": "Self",
+                "color": "quest",
+                "vars": {
+                  "Gold": 600
+                },
+                "type": "Quest",
+                "rarity": "Quest",
+                "keywords": [
+                  "Unplayable"
+                ]
+              },
+              "description": "在下一阶段的地图上，标记一个有600额外金币的地点。",
+              "description_en": "Marks a site of 600 extra Gold in the next Act.",
+              "upgraded_description": "",
+              "upgraded_description_en": ""
+            },
+            {
+              "kind": "cards",
+              "id": "DAGGER_THROW",
+              "name": "投掷匕首",
+              "aliases": [
+                "Dagger Throw"
+              ],
+              "source": "external:spire-codex",
+              "game_version": "v0.111.0",
+              "provenance": [
+                "cards:eng",
+                "cards:zhs"
+              ],
+              "origin_pool": "silent",
+              "evidence_scope": "external-reference; not live validation",
+              "facts": {
+                "cost": 1,
+                "target": "AnyEnemy",
+                "color": "silent",
+                "damage": 9,
+                "vars": {
+                  "Damage": 9
+                },
+                "upgrade": {
+                  "damage": "+3"
+                },
+                "type": "Attack",
+                "rarity": "Common",
+                "keywords": []
+              },
+              "description": "造成9点伤害。\n抽1张牌。\n丢弃1张牌。",
+              "description_en": "Deal 9 damage.\nDraw 1 card.\nDiscard 1 card.",
+              "upgraded_description": "造成12点伤害。\n抽1张牌。\n丢弃1张牌。",
+              "upgraded_description_en": "Deal 12 damage.\nDraw 1 card.\nDiscard 1 card."
+            },
+            {
+              "kind": "cards",
+              "id": "NEUTRALIZE",
+              "name": "中和",
+              "aliases": [
+                "Neutralize"
+              ],
+              "source": "external:spire-codex",
+              "game_version": "v0.111.0",
+              "provenance": [
+                "cards:eng",
+                "cards:zhs"
+              ],
+              "origin_pool": "silent",
+              "evidence_scope": "external-reference; not live validation",
+              "facts": {
+                "cost": 0,
+                "target": "AnyEnemy",
+                "color": "silent",
+                "damage": 3,
+                "vars": {
+                  "Damage": 3,
+                  "WeakPower": 1,
+                  "Weak": 1
+                },
+                "upgrade": {
+                  "damage": "+1",
+                  "weak": "+1"
+                },
+                "powers_applied": [
+                  {
+                    "power": "Weak",
+                    "amount": 1,
+                    "power_key": "Weak"
+                  }
+                ],
+                "type": "Attack",
+                "rarity": "Basic",
+                "keywords": []
+              },
+              "description": "造成3点伤害。\n给予1层虚弱。",
+              "description_en": "Deal 3 damage.\nApply 1 Weak.",
+              "upgraded_description": "造成4点伤害。\n给予2层虚弱。",
+              "upgraded_description_en": "Deal 4 damage.\nApply 2 Weak."
+            },
+            {
+              "kind": "cards",
+              "id": "NOXIOUS_FUMES",
+              "name": "毒雾",
+              "aliases": [
+                "Noxious Fumes"
+              ],
+              "source": "external:spire-codex",
+              "game_version": "v0.111.0",
+              "provenance": [
+                "cards:eng",
+                "cards:zhs"
+              ],
+              "origin_pool": "silent",
+              "evidence_scope": "external-reference; not live validation",
+              "facts": {
+                "cost": 1,
+                "target": "Self",
+                "color": "silent",
+                "vars": {
+                  "PoisonPerTurn": 2
+                },
+                "upgrade": {
+                  "poisonperturn": "+1"
+                },
+                "type": "Power",
+                "rarity": "Uncommon",
+                "keywords": []
+              },
+              "description": "在你的回合开始时，给予所有敌人2层中毒。",
+              "description_en": "At the start of your turn, apply 2 Poison to ALL enemies.",
+              "upgraded_description": "在你的回合开始时，给予所有敌人3层中毒。",
+              "upgraded_description_en": "At the start of your turn, apply 3 Poison to ALL enemies."
+            },
+            {
+              "kind": "cards",
+              "id": "SNAKEBITE",
+              "name": "蛇咬",
+              "aliases": [
+                "Snakebite"
+              ],
+              "source": "external:spire-codex",
+              "game_version": "v0.111.0",
+              "provenance": [
+                "cards:eng",
+                "cards:zhs"
+              ],
+              "origin_pool": "silent",
+              "evidence_scope": "external-reference; not live validation",
+              "facts": {
+                "cost": 2,
+                "target": "AnyEnemy",
+                "color": "silent",
+                "vars": {
+                  "PoisonPower": 7,
+                  "Poison": 7
+                },
+                "upgrade": {
+                  "poison": "+3"
+                },
+                "powers_applied": [
+                  {
+                    "power": "Poison",
+                    "amount": 7,
+                    "power_key": "Poison"
+                  }
+                ],
+                "type": "Skill",
+                "rarity": "Common",
+                "keywords": [
+                  "Retain"
+                ]
+              },
+              "description": "给予7层中毒。",
+              "description_en": "Apply 7 Poison.",
+              "upgraded_description": "给予10层中毒。",
+              "upgraded_description_en": "Apply 10 Poison."
+            }
+          ],
+          "conflicts": [
+            {
+              "kind": "cards",
+              "id": "SIDESTEP",
+              "field": "text",
+              "upgraded": false,
+              "actual": "下回合，获得1点能量。",
+              "external": [
+                "下回合，获得[energy:1]。",
+                "Next turn, gain [energy:1]."
+              ],
+              "resolution": "当前 mod 优先；动态修正可能造成差异"
+            },
+            {
+              "kind": "cards",
+              "id": "SIDESTEP",
+              "field": "text",
+              "upgraded": false,
+              "actual": "下回合，获得1点能量。",
+              "external": [
+                "下回合，获得[energy:1]。",
+                "Next turn, gain [energy:1]."
+              ],
+              "resolution": "当前 mod 优先；动态修正可能造成差异"
+            },
+            {
+              "kind": "cards",
+              "id": "SIDESTEP",
+              "field": "text",
+              "upgraded": false,
+              "actual": "下回合，获得1点能量。",
+              "external": [
+                "下回合，获得[energy:1]。",
+                "Next turn, gain [energy:1]."
+              ],
+              "resolution": "当前 mod 优先；动态修正可能造成差异"
+            }
+          ],
+          "missing": [],
+          "omitted": 0
+        }
+      },
+      "questions": {
+        "pick": {
+          "type": "choice",
+          "instructions": "选择要弃掉的牌。参考 discard_plan 的剩余动作和候选对后继的影响；原整条预测以完成后继为条件，所有候选都可选。",
+          "criteria": {
+            "card0": "{\"card\":\"生存者\",\"upgraded\":false,\"type\":\"Skill\",\"cost\":1,\"text\":\"获得8点格挡。 丢弃1张牌。\",\"removes_planned_continuation\":true}",
+            "card1": "{\"card\":\"打击\",\"upgraded\":false,\"type\":\"Attack\",\"cost\":1,\"text\":\"造成6点伤害。\",\"removes_planned_continuation\":false}",
+            "card2": "{\"card\":\"侧步\",\"upgraded\":false,\"type\":\"Skill\",\"cost\":0,\"text\":\"下回合，获得1点能量。\",\"removes_planned_continuation\":true}",
+            "card3": "{\"card\":\"回响斩击\",\"upgraded\":false,\"type\":\"Attack\",\"cost\":1,\"text\":\"对所有敌人造成10点伤害。 每有一名敌人被击杀，就重复此效果。\",\"removes_planned_continuation\":false}"
+          }
+        }
+      }
+    },
+    "request_id": null,
+    "latency_ms": 5050,
+    "input_tokens": 7115,
+    "output_tokens": 50,
+    "answers": {
+      "pick": {
+        "type": "choice",
+        "choice": "card0",
+        "probabilities": {
+          "card0": 0.42,
+          "card1": 0.17,
+          "card2": 0.35,
+          "card3": 0.06
+        },
+        "confidence": 0.23,
+        "raw": {
+          "choice": "card0",
+          "confidence": 0.23,
+          "probabilities": {
+            "card0": 0.42,
+            "card1": 0.17,
+            "card2": 0.35,
+            "card3": 0.06
+          },
+          "type": "choice"
+        }
+      }
+    }
+  }
+}

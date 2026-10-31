@@ -1,0 +1,97 @@
+{
+  "schema": 1,
+  "base": "f11183c49b34595f220758ecad672d1f7514cacd",
+  "final_source": [
+    {
+      "path": "eval/spire_codex.py",
+      "bytes": 12493,
+      "sha256": "70838e23c1984872ea9063396499e6acc7097082c5cc4ab046d28c9ac684f429"
+    },
+    {
+      "path": "eval/spire_codex_download.py",
+      "bytes": 13863,
+      "sha256": "2ec887ee6b2eb8118b73c6687a4881c46c612ba87f052b58511cf95330785aed"
+    },
+    {
+      "path": "eval/spire_codex_projection.py",
+      "bytes": 17541,
+      "sha256": "0d167e7e211e42bb5d61c9800b7aeaeb9f4a21f2ab766eab9b632d66c4a00a5f"
+    },
+    {
+      "path": "eval/tests/test_spire_codex.py",
+      "bytes": 17584,
+      "sha256": "1d8af2a2db014a5688d45843a2b4f064f7cebc8fd99743efb11829c6aceec1e2"
+    },
+    {
+      "path": "agent/tests/spire-codex.test.ts",
+      "bytes": 636,
+      "sha256": "1a21bad3ebd0d12d1abc3cfe72ae60817dea0fc0615bd25c3e7276f98efb646b"
+    }
+  ],
+  "frozen_probe": [
+    {
+      "path": "data/external/spire-codex/dev-probe/openapi.json",
+      "bytes": 181673,
+      "sha256": "e7d3dcaaebcf12c53c2a04d5f7dffc12a36f3cf771273f6b69ada592da518d84"
+    },
+    {
+      "path": "data/external/spire-codex/dev-probe/manifest.json",
+      "bytes": 6350,
+      "sha256": "8e92d4f4052cfb662b92a3ebbca4379acb0f58f559a79c6fb91cd888873c2e8f"
+    },
+    {
+      "path": "data/external/spire-codex/dev-probe/list.json",
+      "bytes": 852,
+      "sha256": "c42ccfb2faea67500263f787c2a7cffa92bab5cac4820a9a9597d66e11dc3d03"
+    },
+    {
+      "path": "data/external/spire-codex/dev-probe/win-list.json",
+      "bytes": 801,
+      "sha256": "7571a42ee0121bc8d17e27dcafac763ccdfa785be7e6933a83b2290bf107abcc"
+    },
+    {
+      "path": "data/external/spire-codex/dev-probe/replay.raw",
+      "bytes": 983193,
+      "sha256": "97e57f021cd24cd45b245cfb92cc8595e03aa17a9e16f5120f8e1443ef88da99"
+    },
+    {
+      "path": "data/external/spire-codex/dev-probe/win-replay.raw",
+      "bytes": 1722565,
+      "sha256": "700421fdeb04539e1225df40414725272cc94e95bf33b9e09f50c2f7136f0706"
+    },
+    {
+      "path": "data/external/spire-codex/dev-probe/export.raw",
+      "bytes": 2878,
+      "sha256": "95bc4f3990960e5599847e3714f7aa627f86ba229db166cbf23d30a30bd07753"
+    }
+  ],
+  "limits": [
+    "private raw source paths: never learner inputs",
+    "early dev-validation cache predates corrected attempt classification",
+    "no bulk download or manifest file verification performed"
+  ],
+  "final_fixed_python": {
+    "tests": 25,
+    "failed": 0,
+    "log": "python-final.txt"
+  },
+  "final_tsc": {
+    "exit_code": 0,
+    "log": "tsc-final.txt"
+  },
+  "sandbox": {
+    "exit_code": 1,
+    "passed_files": 650,
+    "failed_files": 1,
+    "passed_tests": 6017,
+    "failed_tests": 1,
+    "seconds": 1422.79,
+    "log": "sandbox-terminal.txt",
+    "sha256": "e473b8fcea80e3643add85c658f4d18bdd3499ee703b5f450da0a380ea94cb5e",
+    "failure": "check-imports: historical sparse issue29-brain-speed/results.jsonl absent; HEAD blob 211076 bytes",
+    "paths_test": "not reached",
+    "fixed_source_full": false,
+    "raw_log_sha256": "87e60baef6855c617a392f64c54a2816cf87bebca09ef67de542066309d03c74",
+    "terminal_copy": "only trailing blank lines normalized; original sandbox.log retained"
+  }
+}

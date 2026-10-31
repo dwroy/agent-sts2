@@ -1,0 +1,1068 @@
+{
+  "source": "external:sts2fun",
+  "collected_at": "2026-10-21",
+  "input_sha256": "6a254692c7c66782a4d698003068bdc653277e6980f116f9683fe86e2ccd1a8c",
+  "rows": [
+    {
+      "version": "v0.107",
+      "n": 514,
+      "wins": 110,
+      "core_cards": [
+        {
+          "centroid_weight": 0.2018140896545386,
+          "id": "DAGGER_SPRAY",
+          "present": 253,
+          "prevalence": 0.49221789883268485
+        },
+        {
+          "centroid_weight": 0.18751532915378522,
+          "id": "LEG_SWEEP",
+          "present": 163,
+          "prevalence": 0.31712062256809337
+        },
+        {
+          "centroid_weight": 0.18550910618144154,
+          "id": "SNAKEBITE",
+          "present": 169,
+          "prevalence": 0.32879377431906615
+        },
+        {
+          "centroid_weight": 0.1818711403722265,
+          "id": "PREDATOR",
+          "present": 145,
+          "prevalence": 0.2821011673151751
+        },
+        {
+          "centroid_weight": 0.17581467493776803,
+          "id": "BACKFLIP",
+          "present": 220,
+          "prevalence": 0.4280155642023346
+        },
+        {
+          "centroid_weight": 0.17334373786662313,
+          "id": "STRIKE_SILENT",
+          "present": 486,
+          "prevalence": 0.9455252918287937
+        },
+        {
+          "centroid_weight": 0.1727981611011929,
+          "id": "PIERCING_WAIL",
+          "present": 211,
+          "prevalence": 0.41050583657587547
+        },
+        {
+          "centroid_weight": 0.17262273955650112,
+          "id": "ECHOING_SLASH",
+          "present": 39,
+          "prevalence": 0.07587548638132295
+        }
+      ],
+      "timeline": {
+        "act_end_checkpoints": [
+          {
+            "act": 1,
+            "checkpoint_definition": "该幕最后节点，且必须已记录下一幕；事后推定还原",
+            "core_card_copies": {
+              "mean": 6.093457943925234,
+              "median": 6.0,
+              "n": 107,
+              "p25": 5.0,
+              "p75": 7.0
+            },
+            "later_act_observed": 110,
+            "positive_recorded_block_card_copies_proxy": {
+              "mean": 7.740384615384615,
+              "median": 8.0,
+              "n": 104,
+              "p25": 7.0,
+              "p75": 9.0
+            },
+            "terminal_consistent_n": 107,
+            "unmapped_card_copies": {
+              "mean": 0.028037383177570093,
+              "median": 0.0,
+              "n": 107,
+              "p25": 0.0,
+              "p75": 0.0
+            },
+            "winners_reaching_act": 110
+          },
+          {
+            "act": 2,
+            "checkpoint_definition": "该幕最后节点，且必须已记录下一幕；事后推定还原",
+            "core_card_copies": {
+              "mean": 6.158878504672897,
+              "median": 6.0,
+              "n": 107,
+              "p25": 5.0,
+              "p75": 8.0
+            },
+            "later_act_observed": 110,
+            "positive_recorded_block_card_copies_proxy": {
+              "mean": 9.757894736842106,
+              "median": 10.0,
+              "n": 95,
+              "p25": 8.0,
+              "p75": 11.0
+            },
+            "terminal_consistent_n": 107,
+            "unmapped_card_copies": {
+              "mean": 0.12149532710280374,
+              "median": 0.0,
+              "n": 107,
+              "p25": 0.0,
+              "p75": 0.0
+            },
+            "winners_reaching_act": 110
+          }
+        ],
+        "cluster": 4,
+        "core_cards": [
+          "DAGGER_SPRAY",
+          "LEG_SWEEP",
+          "SNAKEBITE",
+          "PREDATOR",
+          "BACKFLIP",
+          "STRIKE_SILENT"
+        ],
+        "formation": [
+          {
+            "act_node_distribution": [
+              {
+                "act": 1,
+                "n": 1,
+                "node_in_act": 14
+              },
+              {
+                "act": 1,
+                "n": 2,
+                "node_in_act": 15
+              },
+              {
+                "act": 2,
+                "n": 3,
+                "node_in_act": 2
+              },
+              {
+                "act": 2,
+                "n": 1,
+                "node_in_act": 4
+              },
+              {
+                "act": 2,
+                "n": 1,
+                "node_in_act": 5
+              },
+              {
+                "act": 2,
+                "n": 1,
+                "node_in_act": 8
+              },
+              {
+                "act": 2,
+                "n": 1,
+                "node_in_act": 14
+              },
+              {
+                "act": 3,
+                "n": 2,
+                "node_in_act": 6
+              },
+              {
+                "act": 3,
+                "n": 1,
+                "node_in_act": 11
+              },
+              {
+                "act": 3,
+                "n": 1,
+                "node_in_act": 13
+              }
+            ],
+            "basis": "质心前三牌描述性组合；未声称显著关联",
+            "excluded_reconstruction": 3,
+            "formation_global_node": {
+              "mean": 26.285714285714285,
+              "median": 21.5,
+              "n": 14,
+              "p25": 19.0,
+              "p75": 37.0
+            },
+            "formed": 14,
+            "items": [
+              "card:DAGGER_SPRAY",
+              "card:LEG_SWEEP",
+              "card:SNAKEBITE"
+            ],
+            "not_observed_formed": 93,
+            "terminal_consistent_winners": 107,
+            "winners": 110
+          }
+        ],
+        "initial_baseline": {
+          "cards": {
+            "ASCENDERS_BANE": 1,
+            "DEFEND_SILENT": 5,
+            "NEUTRALIZE": 1,
+            "STRIKE_SILENT": 5,
+            "SURVIVOR": 1
+          },
+          "definition": "终局保留的最早floor_added牌组众数；推定初始值，非入场快照",
+          "modal_support": 408,
+          "n": 2932,
+          "start_node": 1
+        },
+        "n": 514,
+        "quality": {
+          "choice_date_matches": 5333,
+          "exact_terminal_counts": 510,
+          "final_added_cards": 7646,
+          "precision": {
+            "mean": 0.9987503824260678,
+            "median": 1.0,
+            "n": 514,
+            "p25": 1.0,
+            "p75": 1.0
+          },
+          "recall": {
+            "mean": 0.9998845305899949,
+            "median": 1.0,
+            "n": 514,
+            "p25": 1.0,
+            "p75": 1.0
+          },
+          "strict_terminal_consistent": 510
+        },
+        "version": "v0.107",
+        "winner_n": 110
+      }
+    },
+    {
+      "version": "v0.108",
+      "n": 122,
+      "wins": 33,
+      "core_cards": [
+        {
+          "centroid_weight": 0.2018140896545386,
+          "id": "DAGGER_SPRAY",
+          "present": 72,
+          "prevalence": 0.5901639344262295
+        },
+        {
+          "centroid_weight": 0.18751532915378522,
+          "id": "LEG_SWEEP",
+          "present": 46,
+          "prevalence": 0.3770491803278688
+        },
+        {
+          "centroid_weight": 0.18550910618144154,
+          "id": "SNAKEBITE",
+          "present": 41,
+          "prevalence": 0.3360655737704918
+        },
+        {
+          "centroid_weight": 0.1818711403722265,
+          "id": "PREDATOR",
+          "present": 40,
+          "prevalence": 0.32786885245901637
+        },
+        {
+          "centroid_weight": 0.17581467493776803,
+          "id": "BACKFLIP",
+          "present": 62,
+          "prevalence": 0.5081967213114754
+        },
+        {
+          "centroid_weight": 0.17334373786662313,
+          "id": "STRIKE_SILENT",
+          "present": 115,
+          "prevalence": 0.9426229508196722
+        },
+        {
+          "centroid_weight": 0.1727981611011929,
+          "id": "PIERCING_WAIL",
+          "present": 54,
+          "prevalence": 0.4426229508196721
+        },
+        {
+          "centroid_weight": 0.17262273955650112,
+          "id": "ECHOING_SLASH",
+          "present": 8,
+          "prevalence": 0.06557377049180328
+        }
+      ],
+      "timeline": {
+        "act_end_checkpoints": [
+          {
+            "act": 1,
+            "checkpoint_definition": "该幕最后节点，且必须已记录下一幕；事后推定还原",
+            "core_card_copies": {
+              "mean": 6.424242424242424,
+              "median": 6.0,
+              "n": 33,
+              "p25": 5.0,
+              "p75": 7.0
+            },
+            "later_act_observed": 33,
+            "positive_recorded_block_card_copies_proxy": {
+              "mean": 7.766666666666667,
+              "median": 7.5,
+              "n": 30,
+              "p25": 7.0,
+              "p75": 8.75
+            },
+            "terminal_consistent_n": 33,
+            "unmapped_card_copies": {
+              "mean": 0.09090909090909091,
+              "median": 0.0,
+              "n": 33,
+              "p25": 0.0,
+              "p75": 0.0
+            },
+            "winners_reaching_act": 33
+          },
+          {
+            "act": 2,
+            "checkpoint_definition": "该幕最后节点，且必须已记录下一幕；事后推定还原",
+            "core_card_copies": {
+              "mean": 6.454545454545454,
+              "median": 6.0,
+              "n": 33,
+              "p25": 5.0,
+              "p75": 8.0
+            },
+            "later_act_observed": 33,
+            "positive_recorded_block_card_copies_proxy": {
+              "mean": 9.133333333333333,
+              "median": 9.0,
+              "n": 30,
+              "p25": 8.0,
+              "p75": 10.0
+            },
+            "terminal_consistent_n": 33,
+            "unmapped_card_copies": {
+              "mean": 0.09090909090909091,
+              "median": 0.0,
+              "n": 33,
+              "p25": 0.0,
+              "p75": 0.0
+            },
+            "winners_reaching_act": 33
+          }
+        ],
+        "cluster": 4,
+        "core_cards": [
+          "DAGGER_SPRAY",
+          "LEG_SWEEP",
+          "SNAKEBITE",
+          "PREDATOR",
+          "BACKFLIP",
+          "STRIKE_SILENT"
+        ],
+        "formation": [
+          {
+            "act_node_distribution": [
+              {
+                "act": 2,
+                "n": 1,
+                "node_in_act": 2
+              },
+              {
+                "act": 2,
+                "n": 1,
+                "node_in_act": 5
+              },
+              {
+                "act": 2,
+                "n": 1,
+                "node_in_act": 11
+              },
+              {
+                "act": 3,
+                "n": 1,
+                "node_in_act": 3
+              },
+              {
+                "act": 3,
+                "n": 1,
+                "node_in_act": 12
+              }
+            ],
+            "basis": "质心前三牌描述性组合；未声称显著关联",
+            "excluded_reconstruction": 0,
+            "formation_global_node": {
+              "mean": 30,
+              "median": 28.0,
+              "n": 5,
+              "p25": 22.0,
+              "p75": 36.0
+            },
+            "formed": 5,
+            "items": [
+              "card:DAGGER_SPRAY",
+              "card:LEG_SWEEP",
+              "card:SNAKEBITE"
+            ],
+            "not_observed_formed": 28,
+            "terminal_consistent_winners": 33,
+            "winners": 33
+          }
+        ],
+        "initial_baseline": {
+          "cards": {
+            "ASCENDERS_BANE": 1,
+            "DEFEND_SILENT": 5,
+            "NEUTRALIZE": 1,
+            "STRIKE_SILENT": 5,
+            "SURVIVOR": 1
+          },
+          "definition": "终局保留的最早floor_added牌组众数；推定初始值，非入场快照",
+          "modal_support": 94,
+          "n": 683,
+          "start_node": 1
+        },
+        "n": 122,
+        "quality": {
+          "choice_date_matches": 1370,
+          "exact_terminal_counts": 120,
+          "final_added_cards": 2132,
+          "precision": {
+            "mean": 0.9994381756676839,
+            "median": 1.0,
+            "n": 122,
+            "p25": 1.0,
+            "p75": 1.0
+          },
+          "recall": {
+            "mean": 1.0,
+            "median": 1.0,
+            "n": 122,
+            "p25": 1.0,
+            "p75": 1.0
+          },
+          "strict_terminal_consistent": 120
+        },
+        "version": "v0.108",
+        "winner_n": 33
+      }
+    },
+    {
+      "version": "v0.109",
+      "n": 93,
+      "wins": 23,
+      "core_cards": [
+        {
+          "centroid_weight": 0.2018140896545386,
+          "id": "DAGGER_SPRAY",
+          "present": 59,
+          "prevalence": 0.6344086021505376
+        },
+        {
+          "centroid_weight": 0.18751532915378522,
+          "id": "LEG_SWEEP",
+          "present": 41,
+          "prevalence": 0.44086021505376344
+        },
+        {
+          "centroid_weight": 0.18550910618144154,
+          "id": "SNAKEBITE",
+          "present": 29,
+          "prevalence": 0.3118279569892473
+        },
+        {
+          "centroid_weight": 0.1818711403722265,
+          "id": "PREDATOR",
+          "present": 21,
+          "prevalence": 0.22580645161290322
+        },
+        {
+          "centroid_weight": 0.17581467493776803,
+          "id": "BACKFLIP",
+          "present": 50,
+          "prevalence": 0.5376344086021505
+        },
+        {
+          "centroid_weight": 0.17334373786662313,
+          "id": "STRIKE_SILENT",
+          "present": 89,
+          "prevalence": 0.956989247311828
+        },
+        {
+          "centroid_weight": 0.1727981611011929,
+          "id": "PIERCING_WAIL",
+          "present": 44,
+          "prevalence": 0.4731182795698925
+        },
+        {
+          "centroid_weight": 0.17262273955650112,
+          "id": "ECHOING_SLASH",
+          "present": 5,
+          "prevalence": 0.053763440860215055
+        }
+      ],
+      "timeline": {
+        "act_end_checkpoints": [
+          {
+            "act": 1,
+            "checkpoint_definition": "该幕最后节点，且必须已记录下一幕；事后推定还原",
+            "core_card_copies": {
+              "mean": 6.217391304347826,
+              "median": 6.0,
+              "n": 23,
+              "p25": 6.0,
+              "p75": 7.0
+            },
+            "later_act_observed": 23,
+            "positive_recorded_block_card_copies_proxy": {
+              "mean": 7.7727272727272725,
+              "median": 8.0,
+              "n": 22,
+              "p25": 7.0,
+              "p75": 9.0
+            },
+            "terminal_consistent_n": 23,
+            "unmapped_card_copies": {
+              "mean": 0.043478260869565216,
+              "median": 0.0,
+              "n": 23,
+              "p25": 0.0,
+              "p75": 0.0
+            },
+            "winners_reaching_act": 23
+          },
+          {
+            "act": 2,
+            "checkpoint_definition": "该幕最后节点，且必须已记录下一幕；事后推定还原",
+            "core_card_copies": {
+              "mean": 6.130434782608695,
+              "median": 6.0,
+              "n": 23,
+              "p25": 5.0,
+              "p75": 7.0
+            },
+            "later_act_observed": 23,
+            "positive_recorded_block_card_copies_proxy": {
+              "mean": 9.777777777777779,
+              "median": 9.5,
+              "n": 18,
+              "p25": 9.0,
+              "p75": 11.0
+            },
+            "terminal_consistent_n": 23,
+            "unmapped_card_copies": {
+              "mean": 0.21739130434782608,
+              "median": 0.0,
+              "n": 23,
+              "p25": 0.0,
+              "p75": 0.0
+            },
+            "winners_reaching_act": 23
+          }
+        ],
+        "cluster": 4,
+        "core_cards": [
+          "DAGGER_SPRAY",
+          "LEG_SWEEP",
+          "SNAKEBITE",
+          "PREDATOR",
+          "BACKFLIP",
+          "STRIKE_SILENT"
+        ],
+        "formation": [
+          {
+            "act_node_distribution": [
+              {
+                "act": 1,
+                "n": 1,
+                "node_in_act": 14
+              },
+              {
+                "act": 2,
+                "n": 1,
+                "node_in_act": 2
+              },
+              {
+                "act": 2,
+                "n": 1,
+                "node_in_act": 5
+              }
+            ],
+            "basis": "质心前三牌描述性组合；未声称显著关联",
+            "excluded_reconstruction": 0,
+            "formation_global_node": {
+              "mean": 18.333333333333332,
+              "median": 19.0,
+              "n": 3,
+              "p25": 16.5,
+              "p75": 20.5
+            },
+            "formed": 3,
+            "items": [
+              "card:DAGGER_SPRAY",
+              "card:LEG_SWEEP",
+              "card:SNAKEBITE"
+            ],
+            "not_observed_formed": 20,
+            "terminal_consistent_winners": 23,
+            "winners": 23
+          }
+        ],
+        "initial_baseline": {
+          "cards": {
+            "ASCENDERS_BANE": 1,
+            "DEFEND_SILENT": 5,
+            "NEUTRALIZE": 1,
+            "STRIKE_SILENT": 5,
+            "SURVIVOR": 1
+          },
+          "definition": "终局保留的最早floor_added牌组众数；推定初始值，非入场快照",
+          "modal_support": 73,
+          "n": 583,
+          "start_node": 1
+        },
+        "n": 93,
+        "quality": {
+          "choice_date_matches": 1078,
+          "exact_terminal_counts": 92,
+          "final_added_cards": 1538,
+          "precision": {
+            "mean": 0.9998113563478589,
+            "median": 1.0,
+            "n": 93,
+            "p25": 1.0,
+            "p75": 1.0
+          },
+          "recall": {
+            "mean": 1.0,
+            "median": 1.0,
+            "n": 93,
+            "p25": 1.0,
+            "p75": 1.0
+          },
+          "strict_terminal_consistent": 92
+        },
+        "version": "v0.109",
+        "winner_n": 23
+      }
+    },
+    {
+      "version": "v0.110",
+      "n": 52,
+      "wins": 10,
+      "core_cards": [
+        {
+          "centroid_weight": 0.2018140896545386,
+          "id": "DAGGER_SPRAY",
+          "present": 25,
+          "prevalence": 0.4807692307692308
+        },
+        {
+          "centroid_weight": 0.18751532915378522,
+          "id": "LEG_SWEEP",
+          "present": 15,
+          "prevalence": 0.28846153846153844
+        },
+        {
+          "centroid_weight": 0.18550910618144154,
+          "id": "SNAKEBITE",
+          "present": 22,
+          "prevalence": 0.4230769230769231
+        },
+        {
+          "centroid_weight": 0.1818711403722265,
+          "id": "PREDATOR",
+          "present": 13,
+          "prevalence": 0.25
+        },
+        {
+          "centroid_weight": 0.17581467493776803,
+          "id": "BACKFLIP",
+          "present": 27,
+          "prevalence": 0.5192307692307693
+        },
+        {
+          "centroid_weight": 0.17334373786662313,
+          "id": "STRIKE_SILENT",
+          "present": 49,
+          "prevalence": 0.9423076923076923
+        },
+        {
+          "centroid_weight": 0.1727981611011929,
+          "id": "PIERCING_WAIL",
+          "present": 26,
+          "prevalence": 0.5
+        },
+        {
+          "centroid_weight": 0.17262273955650112,
+          "id": "ECHOING_SLASH",
+          "present": 15,
+          "prevalence": 0.28846153846153844
+        }
+      ],
+      "timeline": {
+        "act_end_checkpoints": [
+          {
+            "act": 1,
+            "checkpoint_definition": "该幕最后节点，且必须已记录下一幕；事后推定还原",
+            "core_card_copies": {
+              "mean": 6,
+              "median": 6.0,
+              "n": 10,
+              "p25": 6.0,
+              "p75": 7.0
+            },
+            "later_act_observed": 10,
+            "positive_recorded_block_card_copies_proxy": {
+              "mean": 7.4,
+              "median": 7.0,
+              "n": 10,
+              "p25": 7.0,
+              "p75": 8.0
+            },
+            "terminal_consistent_n": 10,
+            "unmapped_card_copies": {
+              "mean": 0,
+              "median": 0.0,
+              "n": 10,
+              "p25": 0.0,
+              "p75": 0.0
+            },
+            "winners_reaching_act": 10
+          },
+          {
+            "act": 2,
+            "checkpoint_definition": "该幕最后节点，且必须已记录下一幕；事后推定还原",
+            "core_card_copies": {
+              "mean": 5.9,
+              "median": 6.0,
+              "n": 10,
+              "p25": 5.0,
+              "p75": 7.0
+            },
+            "later_act_observed": 10,
+            "positive_recorded_block_card_copies_proxy": {
+              "mean": 8.4,
+              "median": 8.0,
+              "n": 10,
+              "p25": 8.0,
+              "p75": 8.75
+            },
+            "terminal_consistent_n": 10,
+            "unmapped_card_copies": {
+              "mean": 0,
+              "median": 0.0,
+              "n": 10,
+              "p25": 0.0,
+              "p75": 0.0
+            },
+            "winners_reaching_act": 10
+          }
+        ],
+        "cluster": 4,
+        "core_cards": [
+          "DAGGER_SPRAY",
+          "LEG_SWEEP",
+          "SNAKEBITE",
+          "PREDATOR",
+          "BACKFLIP",
+          "STRIKE_SILENT"
+        ],
+        "formation": [
+          {
+            "act_node_distribution": [
+              {
+                "act": 3,
+                "n": 1,
+                "node_in_act": 2
+              }
+            ],
+            "basis": "质心前三牌描述性组合；未声称显著关联",
+            "excluded_reconstruction": 0,
+            "formation_global_node": {
+              "mean": 35,
+              "median": 35.0,
+              "n": 1,
+              "p25": 35.0,
+              "p75": 35.0
+            },
+            "formed": 1,
+            "items": [
+              "card:DAGGER_SPRAY",
+              "card:LEG_SWEEP",
+              "card:SNAKEBITE"
+            ],
+            "not_observed_formed": 9,
+            "terminal_consistent_winners": 10,
+            "winners": 10
+          }
+        ],
+        "initial_baseline": {
+          "cards": {
+            "ASCENDERS_BANE": 1,
+            "DEFEND_SILENT": 5,
+            "NEUTRALIZE": 1,
+            "STRIKE_SILENT": 5,
+            "SURVIVOR": 1
+          },
+          "definition": "终局保留的最早floor_added牌组众数；推定初始值，非入场快照",
+          "modal_support": 49,
+          "n": 411,
+          "start_node": 1
+        },
+        "n": 52,
+        "quality": {
+          "choice_date_matches": 543,
+          "exact_terminal_counts": 52,
+          "final_added_cards": 791,
+          "precision": {
+            "mean": 1.0,
+            "median": 1.0,
+            "n": 52,
+            "p25": 1.0,
+            "p75": 1.0
+          },
+          "recall": {
+            "mean": 1.0,
+            "median": 1.0,
+            "n": 52,
+            "p25": 1.0,
+            "p75": 1.0
+          },
+          "strict_terminal_consistent": 52
+        },
+        "version": "v0.110",
+        "winner_n": 10
+      }
+    },
+    {
+      "version": "v0.111",
+      "n": 350,
+      "wins": 69,
+      "core_cards": [
+        {
+          "centroid_weight": 0.2018140896545386,
+          "id": "DAGGER_SPRAY",
+          "present": 175,
+          "prevalence": 0.5
+        },
+        {
+          "centroid_weight": 0.18751532915378522,
+          "id": "LEG_SWEEP",
+          "present": 150,
+          "prevalence": 0.42857142857142855
+        },
+        {
+          "centroid_weight": 0.18550910618144154,
+          "id": "SNAKEBITE",
+          "present": 158,
+          "prevalence": 0.4514285714285714
+        },
+        {
+          "centroid_weight": 0.1818711403722265,
+          "id": "PREDATOR",
+          "present": 121,
+          "prevalence": 0.3457142857142857
+        },
+        {
+          "centroid_weight": 0.17581467493776803,
+          "id": "BACKFLIP",
+          "present": 178,
+          "prevalence": 0.5085714285714286
+        },
+        {
+          "centroid_weight": 0.17334373786662313,
+          "id": "STRIKE_SILENT",
+          "present": 330,
+          "prevalence": 0.9428571428571428
+        },
+        {
+          "centroid_weight": 0.1727981611011929,
+          "id": "PIERCING_WAIL",
+          "present": 172,
+          "prevalence": 0.49142857142857144
+        },
+        {
+          "centroid_weight": 0.17262273955650112,
+          "id": "ECHOING_SLASH",
+          "present": 113,
+          "prevalence": 0.32285714285714284
+        }
+      ],
+      "timeline": {
+        "act_end_checkpoints": [
+          {
+            "act": 1,
+            "checkpoint_definition": "该幕最后节点，且必须已记录下一幕；事后推定还原",
+            "core_card_copies": {
+              "mean": 6.132352941176471,
+              "median": 6.0,
+              "n": 68,
+              "p25": 5.0,
+              "p75": 7.0
+            },
+            "later_act_observed": 69,
+            "positive_recorded_block_card_copies_proxy": {
+              "mean": 7.794117647058823,
+              "median": 8.0,
+              "n": 68,
+              "p25": 7.0,
+              "p75": 8.25
+            },
+            "terminal_consistent_n": 68,
+            "unmapped_card_copies": {
+              "mean": 0,
+              "median": 0.0,
+              "n": 68,
+              "p25": 0.0,
+              "p75": 0.0
+            },
+            "winners_reaching_act": 69
+          },
+          {
+            "act": 2,
+            "checkpoint_definition": "该幕最后节点，且必须已记录下一幕；事后推定还原",
+            "core_card_copies": {
+              "mean": 6.147058823529412,
+              "median": 6.0,
+              "n": 68,
+              "p25": 5.0,
+              "p75": 7.0
+            },
+            "later_act_observed": 69,
+            "positive_recorded_block_card_copies_proxy": {
+              "mean": 9.838235294117647,
+              "median": 10.0,
+              "n": 68,
+              "p25": 8.0,
+              "p75": 11.0
+            },
+            "terminal_consistent_n": 68,
+            "unmapped_card_copies": {
+              "mean": 0,
+              "median": 0.0,
+              "n": 68,
+              "p25": 0.0,
+              "p75": 0.0
+            },
+            "winners_reaching_act": 69
+          }
+        ],
+        "cluster": 4,
+        "core_cards": [
+          "DAGGER_SPRAY",
+          "LEG_SWEEP",
+          "SNAKEBITE",
+          "PREDATOR",
+          "BACKFLIP",
+          "STRIKE_SILENT"
+        ],
+        "formation": [
+          {
+            "act_node_distribution": [
+              {
+                "act": 1,
+                "n": 2,
+                "node_in_act": 9
+              },
+              {
+                "act": 1,
+                "n": 1,
+                "node_in_act": 13
+              },
+              {
+                "act": 2,
+                "n": 1,
+                "node_in_act": 1
+              },
+              {
+                "act": 2,
+                "n": 2,
+                "node_in_act": 4
+              },
+              {
+                "act": 2,
+                "n": 1,
+                "node_in_act": 7
+              },
+              {
+                "act": 2,
+                "n": 1,
+                "node_in_act": 8
+              },
+              {
+                "act": 2,
+                "n": 1,
+                "node_in_act": 11
+              },
+              {
+                "act": 3,
+                "n": 1,
+                "node_in_act": 7
+              },
+              {
+                "act": 3,
+                "n": 1,
+                "node_in_act": 13
+              }
+            ],
+            "basis": "质心前三牌描述性组合；未声称显著关联",
+            "excluded_reconstruction": 1,
+            "formation_global_node": {
+              "mean": 23.09090909090909,
+              "median": 21.0,
+              "n": 11,
+              "p25": 15.5,
+              "p75": 26.5
+            },
+            "formed": 11,
+            "items": [
+              "card:DAGGER_SPRAY",
+              "card:LEG_SWEEP",
+              "card:SNAKEBITE"
+            ],
+            "not_observed_formed": 57,
+            "terminal_consistent_winners": 68,
+            "winners": 69
+          }
+        ],
+        "initial_baseline": {
+          "cards": {
+            "ASCENDERS_BANE": 1,
+            "DEFEND_SILENT": 5,
+            "NEUTRALIZE": 1,
+            "STRIKE_SILENT": 5,
+            "SURVIVOR": 1
+          },
+          "definition": "终局保留的最早floor_added牌组众数；推定初始值，非入场快照",
+          "modal_support": 238,
+          "n": 1739,
+          "start_node": 1
+        },
+        "n": 350,
+        "quality": {
+          "choice_date_matches": 4426,
+          "exact_terminal_counts": 349,
+          "final_added_cards": 6452,
+          "precision": {
+            "mean": 0.99996336996337,
+            "median": 1.0,
+            "n": 350,
+            "p25": 1.0,
+            "p75": 1.0
+          },
+          "recall": {
+            "mean": 1.0,
+            "median": 1.0,
+            "n": 350,
+            "p25": 1.0,
+            "p75": 1.0
+          },
+          "strict_terminal_consistent": 349
+        },
+        "version": "v0.111",
+        "winner_n": 69
+      }
+    }
+  ],
+  "mechanical_change_comparison": "unknown; versions not pooled"
+}

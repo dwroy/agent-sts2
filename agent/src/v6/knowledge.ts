@@ -2,6 +2,7 @@ import { readFileSync, realpathSync, statSync } from "node:fs";
 import { join, relative, isAbsolute } from "node:path";
 import { array, object, literal, refine, validate, type Result } from "./schema.js";
 import { characterKey } from "../knowledge/files.js";
+import { runtimeKnowledgeRoot } from "../knowledge/runtime-paths.js";
 import { characterSchema, directionCardSchema, reflexEntrySchema, reflexVocabSchema, type Character, type DirectionCard, type ReflexEntry, type ReflexVocab } from "./formats.js";
 import { validateBuildCoreFile, type BuildCore } from "./build-core.js";
 
@@ -26,6 +27,7 @@ export interface V6Knowledge {
 /** No global/default character, common fallback, directory creation, cache or knowledge synthesis. */
 export function loadV6Knowledge(knowledgeDir: string, rawCharacter: string | null | undefined,
   readText: (path: string) => string = path => readFileSync(path, "utf8")): V6Knowledge {
+  knowledgeDir = runtimeKnowledgeRoot(knowledgeDir);
   const parsed = validate(characterSchema, characterKey(rawCharacter));
   const character = parsed.ok ? parsed.value : null;
   function load<T>(name: string, parse: (v: unknown) => Result<T>): KnowledgeResult<T> {

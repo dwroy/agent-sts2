@@ -1,0 +1,85 @@
+{
+  "schema": "brain-strategies-v1",
+  "character": "silent",
+  "entries": [
+    {
+      "id": "silent-brain-outbreak-external-prefix-context",
+      "version": "1.0.0",
+      "trigger": {
+        "question_types": [
+          "card_reward"
+        ],
+        "acts": [
+          1
+        ]
+      },
+      "strategy": "仅Silent A10/v0.111，幕1出现OUTBREAK时，比较现场牌文、真实牌组、备选与跳过，不把历史频率当拿牌规则。幕1/奖励前缀含SNAKEBITE：拿8/31胜，Boss到达29/31机会；不拿7/22胜，Boss到达20/22机会。幕1/奖励前缀7张：拿8/17胜，Boss到达16/17机会；不拿12/29胜，Boss到达26/29机会，差值反向。前缀只是此前奖励获取记录，不是完整牌组；同局跨格，玩家未知。以上为观察关联，Boss到达非通过或双Boss准备度；其他幕/版本另账。",
+      "source": "external:sts2fun",
+      "confidence": 0.3,
+      "evidence": [
+        {
+          "type": "external_aggregate",
+          "source": "external:sts2fun",
+          "url": "https://sts2.fun/static/sts2_public.db.zst",
+          "version": "v0.111",
+          "dataset_sha256": "1f7c0c3d441aedb5c85f04bcd4d8d6a1039b438a8b6fda2d96cfa5c27580cbf5",
+          "downloaded_at": "2026-10-21",
+          "license": "许可未核；署名聚合，不分发原始数据。",
+          "filters": {
+            "character": "silent",
+            "ascension": 10,
+            "criteria": "singleplayer;valid;not abandoned;no modifiers;act=1;CARD.OUTBREAK;prior_reward_card_present=CARD.SNAKEBITE;pick win/offers=8/31;no=7/22;n=pick+no offers,not runs;cell runs>=10;upgrades unknown"
+          },
+          "statistic": {
+            "name": "offer_win_rate_difference",
+            "value": -0.060117302052785926,
+            "unit": "fraction_difference"
+          },
+          "denominator": {
+            "unit": "offers",
+            "n": 53
+          },
+          "design": "observational",
+          "limitations": [
+            "自选上传非因果；玩家未知，同局跨组；前缀非实牌组；Boss仅到达，无聚类区间。"
+          ],
+          "ref": "paper/materials/20261024-issue51-p0-0802-ops/aggregates/card-picks-v0.111.json#/prefix_card_presence_groups/2931;/prefix_card_presence_groups/2911",
+          "role": "support"
+        },
+        {
+          "type": "external_aggregate",
+          "source": "external:sts2fun",
+          "url": "https://sts2.fun/static/sts2_public.db.zst",
+          "version": "v0.111",
+          "dataset_sha256": "1f7c0c3d441aedb5c85f04bcd4d8d6a1039b438a8b6fda2d96cfa5c27580cbf5",
+          "downloaded_at": "2026-10-21",
+          "license": "许可未核；署名聚合，不分发原始数据。",
+          "filters": {
+            "character": "silent",
+            "ascension": 10,
+            "criteria": "singleplayer;valid;not abandoned;no modifiers;act=1;CARD.OUTBREAK;prior_reward_cards_n=7;pick win/offers=8/17;no=12/29;n=pick+no offers,not runs;cell runs>=10;upgrades unknown"
+          },
+          "statistic": {
+            "name": "offer_win_rate_difference",
+            "value": 0.056795131845841784,
+            "unit": "fraction_difference"
+          },
+          "denominator": {
+            "unit": "offers",
+            "n": 46
+          },
+          "design": "observational",
+          "limitations": [
+            "自选上传非因果；玩家未知，同局跨组；前缀非实牌组；Boss仅到达，无聚类区间。"
+          ],
+          "ref": "paper/materials/20261024-issue51-p0-0802-ops/aggregates/card-picks-v0.111.json#/prefix_size_groups/709;/prefix_size_groups/705",
+          "role": "contradict"
+        }
+      ],
+      "input_sha256": "3dd8a02855744c04304c24a0c59095723ab3432fe759cc8ac527c2320dd10bdd",
+      "evidence_status": "conflict",
+      "formal_publication": "pending",
+      "consumer_readback": "pending"
+    }
+  ]
+}

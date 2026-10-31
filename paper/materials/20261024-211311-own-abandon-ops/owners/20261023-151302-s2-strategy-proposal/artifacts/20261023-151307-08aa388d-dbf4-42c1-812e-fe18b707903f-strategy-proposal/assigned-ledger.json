@@ -1,0 +1,996 @@
+{
+  "silent-0005": {
+    "op": "update",
+    "id": "silent-0005",
+    "ts": "2026-10-23T15:15:21+08:00",
+    "character": "silent",
+    "kind": "mechanic",
+    "claim": "灵动步法+建立3敏捷后，本局防御由5变8、偏折+由7变10。沙虫第6次T11两张防御加偏折+共26格挡，比无敏捷的17多9，仍不能使2血顶住32伤害；能力牌的增益在多张格挡牌上重复体现。",
+    "evidence": [
+      {
+        "run": "HD6BM39PYL21",
+        "floor": 27,
+        "note": "本局实际敏捷3、防御5→8，与污染新增6攻击分账。",
+        "role": "support"
+      }
+    ],
+    "first_run": "C48LLXBGKXQ9",
+    "prior": "unknown",
+    "prior_runs": [],
+    "prior_note": "首局机制观察，没有更早的静默对局证据。",
+    "status": "proposed",
+    "by": "learner:postmortem",
+    "where": {
+      "proposal": [
+        "/home/dw/Projects/agent-sts2/learner/runs/20261023-144308-227bd714-ac7f-4389-b47a-61df31719f98-postmortem/HD6BM39PYL21-proposal.md"
+      ]
+    },
+    "asc": 0,
+    "note": "代码提案 silent-proposal-08f9b6f1658b5d7b → task=strategy-proposal；Roy-2026-10-07-learning",
+    "version": "S1.exp203"
+  },
+  "silent-0012": {
+    "op": "update",
+    "id": "silent-0012",
+    "ts": "2026-10-23T12:39:16+08:00",
+    "by": "learner:postmortem",
+    "character": "silent",
+    "kind": "mechanic",
+    "claim": "本局同族力量在多击中逐击体现：同族信徒#1单击在力量2/4/6时为7/9/11，双击力量2时4×2、力量6时8×2，总差8。同族神官三连击从力量0的3×3变为力量2的5×3；随后中和给虚弱，显示回到3×3。本条只扩展本局同族证据，不把此前沙虫数值移植到同族。",
+    "evidence": [
+      {
+        "run": "K94WZS8B2MQ6",
+        "floor": 17,
+        "turn": 6,
+        "role": "support",
+        "note": "本批原字节复核；末T6同族信徒 KIN_FOLLOWER有6力量的双击为8×2，神官 KIN_PRIEST有3力量再出12攻；玩家虽已建2敏捷和触媒 ACCELERANT_POWER1，脆弱 FRAIL_POWER1下最后只有9挡与3血。神官4毒在触媒下实际扣7至109，仍未结束战斗，不能预支为免去28攻击。（之前学过：silent-0012，S1.exp201）"
+      }
+    ],
+    "first_run": "Y6GM2CHWJBEY",
+    "prior": "unknown",
+    "prior_runs": [
+      "C48LLXBGKXQ9"
+    ],
+    "prior_note": "更早静默局没有同族战；silent-0006只写沙虫力量实测，不能当作同族已学规则。",
+    "status": "shipped",
+    "where": {
+      "proposal": [
+        "/home/dw/Projects/agent-sts2/learner/runs/20261023-121312-dbf5e541-352a-4bc0-96a0-7c39a511157d-postmortem/strategy-proposal.md"
+      ]
+    },
+    "asc": 0,
+    "note": "代码提案 silent-proposal-237fa3d5a90675b8 → task=strategy-proposal；Roy-2026-10-07-learning",
+    "version": "S1.exp201"
+  },
+  "silent-0019": {
+    "op": "update",
+    "id": "silent-0019",
+    "ts": "2026-10-23T15:15:18+08:00",
+    "by": "learner:postmortem",
+    "character": "silent",
+    "kind": "route",
+    "claim": "观察：高血量不能保证下一场少掉血，问号也可能开出战斗。A0共1局：一幕走廊≥60%六场损血中位0、40–60%一场损3；精英≥60%一场损24；二幕走廊≥60%三场损38/7/3，40–60%一场损0；问号战≥60%两场损3/26，以上死亡均0。典型案例：C48LLXBGKXQ9 F19满血地道虫70→32后改无精英路线，经F21事件回血32→57，到F25为44；未走旧线，没有改线的因果对照。<40%进战及A1+均无样本，不据此定安全血线。",
+    "evidence": [
+      {
+        "run": "Q3R929GHT14R",
+        "floor": 37,
+        "turn": 8,
+        "note": "F32回血至73，F33无厌沙虫 THE_INSATIABLE胜73→36、F34到66；F35咬人卷轴 SCROLL_OF_BITING胜66→44，F36虔诚雕刻师 DEVOTED_SCULPTOR胜44→30，奖励画面30→50后才进F37。不能跳过两场胜战，或把奖励阶段的20血增加记成战斗无损／SL恢复；最终50血仍未保证过关。",
+        "role": "support"
+      }
+    ],
+    "first_run": "C48LLXBGKXQ9",
+    "prior": "unknown",
+    "prior_note": "静默猎手首个已结束的局，没有更早同角色的可比局面；不借其他角色判断先验。",
+    "status": "proposed",
+    "where": {
+      "proposal": [
+        "/home/dw/Projects/agent-sts2/learner/runs/20261023-144308-227bd714-ac7f-4389-b47a-61df31719f98-postmortem/Q3R929GHT14R-proposal.md"
+      ]
+    },
+    "asc": 0,
+    "note": "代码提案 silent-proposal-f12f1d9548b6dff7 → task=strategy-proposal；Roy-2026-10-07-learning",
+    "version": "S1.exp203"
+  },
+  "silent-0020": {
+    "op": "update",
+    "id": "silent-0020",
+    "ts": "2026-10-23T15:15:21+08:00",
+    "by": "learner:postmortem",
+    "character": "silent",
+    "kind": "route",
+    "claim": "观察：本局回血确实增加进战缓冲，仍不能保证boss过关，也没有回血与锻造的受控比较。A0共1局6次休息，3回血各+21，3锻造不回血；回血后下一战分别损0、26、60，实际死亡1/3（这三次来自同一局）。典型案例：C48LLXBGKXQ9 F13为32→53；F25为44→65、下一场F30问号战65→39；F32为39→60，沙虫6次仍未过。一幕F16锻造后53血进巨兽，SL第2次剩7过关。商店与事件夹在中间时需分别记效果，不把下一场结果全归给休息。",
+    "evidence": [
+      {
+        "run": "HD6BM39PYL21",
+        "floor": 27,
+        "turn": 6,
+        "note": "F23外骨骼虫 EXOSKELETON胜70→51，F24休息51→75，F25商店／F26宝箱未再掉血，F27以75/81及槽0毒药水 POISON_POTION进场。大脑取毒雾+ NOXIOUS_FUMES、蛇咬+ SNAKEBITE及触媒 ACCELERANT的持续输出组件，但T2只建毒雾3／触媒1、灵动步法+ FOOTWORK到T5才建3敏；不能把持牌当成已经建好防线。",
+        "role": "support"
+      }
+    ],
+    "first_run": "C48LLXBGKXQ9",
+    "prior": "unknown",
+    "prior_note": "静默猎手首个已结束的局，没有更早同角色的可比局面；不借其他角色判断先验。",
+    "status": "proposed",
+    "where": {
+      "proposal": [
+        "/home/dw/Projects/agent-sts2/learner/runs/20261023-144308-227bd714-ac7f-4389-b47a-61df31719f98-postmortem/HD6BM39PYL21-proposal.md"
+      ]
+    },
+    "asc": 0,
+    "note": "代码提案 silent-proposal-08f9b6f1658b5d7b → task=strategy-proposal；Roy-2026-10-07-learning",
+    "version": "S1.exp203"
+  },
+  "silent-0021": {
+    "op": "update",
+    "id": "silent-0021",
+    "ts": "2026-10-23T14:46:43+08:00",
+    "by": "learner:strategy-proposal",
+    "character": "silent",
+    "kind": "other",
+    "claim": "观察：开场爆发与长战实际输出要分开统计，单局不能按失败认定构筑必输。A0共1局，沙虫第6次前三回合直伤22+63+61=146，11回合合计287、均26.1，末态尚缺34；初始血量A0为{@0:HP:THE_INSATIABLE}。早段同时有易伤、覆甲等不同条件，尚无各组件胜率。典型案例：C48LLXBGKXQ9 F33第5次T13敌15血、已知打击6与冲刺10可结束；因此同构筑存在可核实的击杀窗口。不能以一套固定每回合伤害代替实际状态。",
+    "evidence": [
+      {
+        "run": "T1XWKCUQW4T3",
+        "floor": 9,
+        "turn": 1,
+        "role": "support",
+        "note": "T1背刺11/中和3/三小刀13/4/4/打击6合41；T2/3各12，宿主死后四虫再战，T10死。不以开场爆发代持续输出，也不证明固定构筑必输。"
+      }
+    ],
+    "first_run": "C48LLXBGKXQ9",
+    "prior": "unknown",
+    "prior_note": "静默猎手首个已结束的局，没有更早同角色的可比局面；不借其他角色判断先验。",
+    "status": "proposed",
+    "where": {
+      "proposal": [
+        "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261023-110001-s2/learner/runs/20261023-142725-fcdb51d3-0bda-47fa-ab5d-74fe752eeff6-strategy-proposal/proposal.md",
+        "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261023-110001-s2/learner/runs/20261023-142725-fcdb51d3-0bda-47fa-ab5d-74fe752eeff6-strategy-proposal/report.md"
+      ]
+    },
+    "asc": 0,
+    "note": "20261023-110001-s2-strategy-proposal：无生产源码/知识修改、无测试或合入；相关原提案继续waiting。silent-proposal-578e415a259e6835：补核F17三题完整链：护栏后抽弃/重规划，实际损7扣敌42；补核末T11为5HP/22挡对37，实际只扣剩余5HP。仍缺所有窗口的固定消费者联合验收、原历史资源链及覆盖重放归因；保留原探索和HP护栏规则。 silent-proposal-a46bdb7fe711d79a：完整题面选plan9，SL改线后重抽，实际只建触媒2、未建毒雾、次轮敌零毒；HP18不变、敌212→197。live已有当前阶段快照；逐候选分源伤害、阶段切换及后得敏捷不倒补挡的联合消费者验收仍缺。 silent-proposal-7cbc6005db712ba9：完整题面及实际57→38→28、两步法4敏、偏折6挡、33→11HP已核。原A1船夹板/A6镣铐来源及全部条件消费者未在本轮重核，不以A10单窗关闭跨条件提案，不新增出牌权重。 silent-proposal-c59f592f1427a67e：原提案要求101局资源链、22次镣铐和50帧船夹板等独立分母的联合验收；本轮仅复核本批局部血价、阶段、朝向与成功SL反例，未重核完整历史及全部资源消费者。各分母不能互换，父要求保持开放。",
+    "version": "S1.exp203"
+  },
+  "silent-0027": {
+    "op": "update",
+    "id": "silent-0027",
+    "ts": "2026-10-23T15:15:11+08:00",
+    "by": "learner:postmortem",
+    "character": "silent",
+    "kind": "mechanic",
+    "claim": "触媒+在本局建立ACCELERANT_POWER 2，使中毒共触发三次、每次减1；与毒雾每回合补2搭配，18毒结算18+17+16=51、23毒结算23+22+21=66。实验体换阶段不保留旧毒，下一阶段开场只见毒雾补的2；第三阶段无实体时9毒三次总扣3，无该增益时14毒三次扣39。仅记录本局观察，不外推其他毒牌或敌人。",
+    "evidence": [
+      {
+        "run": "KUHYZBFFLALU",
+        "floor": 49,
+        "turn": 8,
+        "note": "女王战T2两张毒雾+ NOXIOUS_FUMES建立6层，T3再加普通毒雾至8及触媒+ ACCELERANT至2；T3两敌各7毒实各扣18，T5各19毒实各扣54。T6两敌各25毒，后空翻 BACKFLIP、蜃景+ MIRAGE及防御 DEFEND_SILENT把已有7挡合到50，挡住聚合体16×3＝48攻而维持19血。这里只确认毒、格挡与存活的实际组合，不能把某一张能力认定独立胜因。",
+        "role": "support"
+      }
+    ],
+    "first_run": "T082DRCUHRRD",
+    "prior": "unknown",
+    "prior_runs": [],
+    "prior_note": "较早三局静默复盘、账本及抽取决策没有触媒ACCELERANT或实验体三阶段的可比观察。",
+    "status": "proposed",
+    "where": {
+      "proposal": [
+        "/home/dw/Projects/agent-sts2/learner/runs/20261023-144308-227bd714-ac7f-4389-b47a-61df31719f98-postmortem/KUHYZBFFLALU-proposal.md"
+      ]
+    },
+    "asc": 0,
+    "note": "代码提案 silent-proposal-7aaeb67b5de3b83e → task=strategy-proposal；Roy-2026-10-07-learning",
+    "version": "S1.exp203"
+  },
+  "silent-0045": {
+    "op": "update",
+    "id": "silent-0045",
+    "ts": "2026-10-20T21:59:04+08:00",
+    "by": "learner:strategy-proposal",
+    "character": "silent",
+    "kind": "mechanic",
+    "claim": "本局速行者建立SPEEDSTER_POWER 2，回合中每抽一牌对敌造成2伤；敌有无实体时每次只扣1。实验体获胜线T12投掷匕首文本21，攻击并抽一牌合使93→70，额外2；T13后空翻抽两牌，敌无实体时29→27，额外合2，格挡仍按3敏捷得到8。这里只确认本局层数和两种敌状态。",
+    "evidence": [
+      {
+        "run": "75DAD6GBWEU1",
+        "floor": 33,
+        "turn": 2,
+        "note": "能力药水T1选择速行者并建立SPEEDSTER_POWER2；T2后空翻抽两牌敌328→324、加7挡，随后小刀324→320分账。d426110—114/s440691—694。",
+        "role": "support"
+      }
+    ],
+    "first_run": "KAY522KT5NXR",
+    "prior": "unknown",
+    "prior_note": "此前静默复盘及学习账本没有速行者的可比证据。",
+    "status": "proposed",
+    "where": {
+      "proposal": [
+        "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261020-214302/learner/runs/20261020-214312-af142247-fdba-4e02-883a-492a5c27d647-strategy-proposal/proposal.md",
+        "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261020-214302/learner/runs/20261020-214312-af142247-fdba-4e02-883a-492a5c27d647-strategy-proposal/report.md"
+      ]
+    },
+    "asc": 0,
+    "note": "20261020-214302-strategy-proposal：七旧Silent完局原证据有界复核；6条完整Jev请求、27次炼制动作及前后状态、10项提案逐项waiting见report.md/proposal-results.json。无新源码、知识、支持局或测试/live发布；仅补审计链接，不改变原claim/evidence/status/version，不标本批shipped。7ZUC4VPMDS41原提案A7与runs/run-config实际A10冲突保留；不据摘要或源码注释扩证。",
+    "version": "S1.exp135"
+  },
+  "silent-0046": {
+    "op": "update",
+    "id": "silent-0046",
+    "ts": "2026-10-23T14:46:43+08:00",
+    "by": "learner:strategy-proposal",
+    "character": "silent",
+    "kind": "mechanic",
+    "claim": "本局实验体第二阶段三连击受到尖啸临时减力影响：打出后敌力量0→−6，意图10×3=30变4×3=12；玩家没有牌面格挡时仍需计算奥利哈钢提供的6挡，实际仅损6，敌方回合后三连击恢复10×4=40、敌负力量消失。临时减力不能当成后续回合恒定防御。",
+    "evidence": [
+      {
+        "run": "TR224PCKENSM",
+        "floor": 20,
+        "turn": 2,
+        "role": "support",
+        "note": "F20T2尖啸使石力量-6、已有弱时意图12→7；防御5挡实损2，T3临时负力消失、石攻16。原题预计损1的1HP误差保留，尚未定位源码根因。"
+      }
+    ],
+    "first_run": "KAY522KT5NXR",
+    "prior": "unknown",
+    "prior_runs": [
+      "C48LLXBGKXQ9"
+    ],
+    "prior_note": "C48沙虫曾打尖啸，已核对其SL出牌记录，但未核得同一实验体多段招式的减力与恢复局面；本条限定本局实验体第二阶段。",
+    "status": "proposed",
+    "where": {
+      "proposal": [
+        "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261023-110001-s2/learner/runs/20261023-142725-fcdb51d3-0bda-47fa-ab5d-74fe752eeff6-strategy-proposal/proposal.md",
+        "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261023-110001-s2/learner/runs/20261023-142725-fcdb51d3-0bda-47fa-ab5d-74fe752eeff6-strategy-proposal/report.md"
+      ]
+    },
+    "asc": 0,
+    "note": "20261023-110001-s2-strategy-proposal：无生产源码/知识修改、无测试或合入；相关原提案继续waiting。silent-proposal-578e415a259e6835：补核F17三题完整链：护栏后抽弃/重规划，实际损7扣敌42；补核末T11为5HP/22挡对37，实际只扣剩余5HP。仍缺所有窗口的固定消费者联合验收、原历史资源链及覆盖重放归因；保留原探索和HP护栏规则。 silent-proposal-c59f592f1427a67e：原提案要求101局资源链、22次镣铐和50帧船夹板等独立分母的联合验收；本轮仅复核本批局部血价、阶段、朝向与成功SL反例，未重核完整历史及全部资源消费者。各分母不能互换，父要求保持开放。",
+    "version": "S1.exp201"
+  },
+  "silent-0053": {
+    "op": "update",
+    "id": "silent-0053",
+    "ts": "2026-10-23T01:00:35+08:00",
+    "by": "learner:strategy-proposal",
+    "character": "silent",
+    "kind": "mechanic",
+    "claim": "萎靡普通按X、升级按X+1分别减力并加虚弱；A8 LLYSRQQ35AVW实测升级X0/2/3各1/3/4，零X还由旧A0/A6支持。永久减力不关闭聚合体后续每轮增力，音叉7挡独立，不将局胜或全部推演差额归该牌；升级非零X仍只有一A8支持局。",
+    "evidence": [
+      {
+        "run": "DQSH393WPZW0",
+        "floor": 33,
+        "turn": 5,
+        "role": "support",
+        "note": "末试萎靡+X0仍使力量3→2、虚弱2→3；同轮中和+使12×2→9×2，再萎靡至8×2，5挡仍损11。下一轮2力量/2虚弱时8×2、0挡实损16；不把永久减力当关闭后续攻击或格挡，不作整战单项因果。"
+      }
+    ],
+    "first_run": "KAY522KT5NXR",
+    "prior": "partly",
+    "prior_runs": [
+      "KAY522KT5NXR"
+    ],
+    "prior_note": "更早KAY同局既有F12保留1能量的有效施放，也有F9/F14等零X施放；此前未学习该机制。",
+    "status": "shipped",
+    "where": {
+      "proposal": [
+        "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261023-004302/learner/runs/20261023-004321-e508fd76-7fed-4619-bedc-a8e236ac0f0e-strategy-proposal/proposal.md",
+        "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261023-004302/learner/runs/20261023-004321-e508fd76-7fed-4619-bedc-a8e236ac0f0e-strategy-proposal/report.md"
+      ]
+    },
+    "asc": 0,
+    "note": "20261023-004302批十项原提案继续waiting；六局原始身份与两份manifest已核，579 Jev行中8题完整精读、571题未语义精读；37原帧核验和当前离线消费者读回不代完整策略实现。保留原状态/证据/版本，不冒本批上线。",
+    "version": "S1.exp191"
+  },
+  "silent-0063": {
+    "op": "update",
+    "id": "silent-0063",
+    "ts": "2026-10-23T14:46:43+08:00",
+    "by": "learner:strategy-proposal",
+    "character": "silent",
+    "kind": "mechanic",
+    "claim": "本局风的女儿每打出一张攻击补1挡，与手里剑及小刀共同兑现攻防触发，但每段伤害不等于一张牌的触发次数。F33第6次T1四张小刀使18→22格挡，第三、第六次攻击后手里剑各加1永久力，第三次后的小刀由4伤变5。T2三张攻击使0→3挡、2→3力。火焰药水经爬行动物饰品暂加3力，T1尾总5、T2回2；T4脆弱2下中和仍补1挡，两张防御各补3，总7。只确认本局次数与数值。",
+    "evidence": [
+      {
+        "run": "MEQ6ETDCEEE9",
+        "floor": 33,
+        "turn": 1,
+        "role": "support",
+        "note": "末试风的女儿实际逐攻击补1挡；s457084→457085末张小刀敌370→366、挡14→15。本局末战没有玩家力量／精准增益，不外推手里剑或爬行动物饰品；仅支持该遗物逐攻击触发，未将每段伤害重复计次数。"
+      }
+    ],
+    "first_run": "CSBR5CRDWQNB",
+    "prior": "unknown",
+    "prior_runs": [],
+    "prior_note": "同角色此前复盘和账本没有风的女儿与手里剑组合的实测场景，检索中文名及SHURIKEN、DAUGHTER无记录。",
+    "status": "proposed",
+    "where": {
+      "proposal": [
+        "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261023-110001-s2/learner/runs/20261023-142725-fcdb51d3-0bda-47fa-ab5d-74fe752eeff6-strategy-proposal/proposal.md",
+        "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261023-110001-s2/learner/runs/20261023-142725-fcdb51d3-0bda-47fa-ab5d-74fe752eeff6-strategy-proposal/report.md"
+      ]
+    },
+    "asc": 2,
+    "note": "20261023-110001-s2-strategy-proposal：无生产源码/知识修改、无测试或合入；相关原提案继续waiting。silent-proposal-7cbc6005db712ba9：完整题面及实际57→38→28、两步法4敏、偏折6挡、33→11HP已核。原A1船夹板/A6镣铐来源及全部条件消费者未在本轮重核，不以A10单窗关闭跨条件提案，不新增出牌权重。 silent-proposal-c59f592f1427a67e：原提案要求101局资源链、22次镣铐和50帧船夹板等独立分母的联合验收；本轮仅复核本批局部血价、阶段、朝向与成功SL反例，未重核完整历史及全部资源消费者。各分母不能互换，父要求保持开放。",
+    "version": "S1.exp179"
+  },
+  "silent-0079": {
+    "op": "update",
+    "id": "silent-0079",
+    "ts": "2026-10-23T14:46:43+08:00",
+    "by": "learner:strategy-proposal",
+    "character": "silent",
+    "kind": "fight",
+    "claim": "观察：死亡模拟饱和时，少挡换输出仍有实际血价。A4千足虫T1用触媒换防御多损8只多3当回合伤；女王第4/6次T7同盘面换线多损8、多打9，下一轮女王多剩6血。均无胜利对照，不能凭未更常死亡认定更安全，也不否定组件的一般价值。",
+    "evidence": [
+      {
+        "run": "UW7X088RVVLR",
+        "floor": 17,
+        "turn": 7,
+        "role": "support",
+        "note": "末试F17T5完整两线题6dfcf16d：防御 DEFEND_SILENT、打击+ STRIKE_SILENT、呼唤 BECKON、中和 NEUTRALIZE预测损6／伤3；蛇咬 SNAKEBITE、呼唤、中和预测损11／伤2、末毒9。Jev0.60选后者，实15→4、敌161→159（含结毒仅2），相比未执行防御线的候选账为多付5血换多7末毒且少1当轮伤。两线五轮24/24死、整场50/200样本0胜，不从并列或更好S断言这5血已回本，也不称防御线必能赢。"
+      }
+    ],
+    "first_run": "1NZ8FE5F34R9",
+    "prior": "unknown",
+    "prior_runs": [
+      "CSBR5CRDWQNB",
+      "10GPK5XGHCK3"
+    ],
+    "prior_note": "本角色此前两场千足虫复盘有毒结算与接续事实，但无同一T1盘面以触媒替换防御的对照；账本及更早静默复盘也没有这组即时血价比较，不能判定学习前一直做对或一直做错。",
+    "status": "proposed",
+    "where": {
+      "proposal": [
+        "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261023-110001-s2/learner/runs/20261023-142725-fcdb51d3-0bda-47fa-ab5d-74fe752eeff6-strategy-proposal/proposal.md",
+        "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261023-110001-s2/learner/runs/20261023-142725-fcdb51d3-0bda-47fa-ab5d-74fe752eeff6-strategy-proposal/report.md"
+      ]
+    },
+    "asc": 4,
+    "note": "20261023-110001-s2-strategy-proposal：无生产源码/知识修改、无测试或合入；相关原提案继续waiting。silent-proposal-578e415a259e6835：补核F17三题完整链：护栏后抽弃/重规划，实际损7扣敌42；补核末T11为5HP/22挡对37，实际只扣剩余5HP。仍缺所有窗口的固定消费者联合验收、原历史资源链及覆盖重放归因；保留原探索和HP护栏规则。 silent-proposal-c0767768bf6a7ab1：同指纹T1实际损0/9、扣敌45/38及结束回合已核；F33第二试胜、余20HP有原SL行及REWARD状态佐证。已有live候选代价/派发审计子项；第四试T5未执行续步和完整覆盖重放消费者仍未联合验收，不能关闭整提案或禁止全部SL。 silent-proposal-1044224808015e5c：已核同指纹T3实际损9→14、扣敌24→27；首/重试五轮样本8/24、整场459/199不同，B2零差不等安全。药瓶落点、后抽及独立后置胜线未控制；现有预测审计不能证明保血策略优于付血探索，不拟惩罚系数。 silent-proposal-c59f592f1427a67e：原提案要求101局资源链、22次镣铐和50帧船夹板等独立分母的联合验收；本轮仅复核本批局部血价、阶段、朝向与成功SL反例，未重核完整历史及全部资源消费者。各分母不能互换，父要求保持开放。",
+    "version": "S1.exp203"
+  },
+  "silent-0101": {
+    "op": "update",
+    "id": "silent-0101",
+    "ts": "2026-10-22T13:30:41+08:00",
+    "by": "learner:strategy-proposal",
+    "character": "silent",
+    "kind": "mechanic",
+    "claim": "幻影之刃本局9层只让每回合首小刀额外9伤：A3异鱼首两刀实13/4，A6知识恶魔14/5；小刀文本保留。A6实验体无实体时首刀文本14、第二刀5却各只实1，持有能力而没建立也不提供增伤；未外推升级/叠加。",
+    "evidence": [
+      {
+        "run": "T1XWKCUQW4T3",
+        "floor": 9,
+        "turn": 1,
+        "role": "support",
+        "note": "s489204建立PHANTOM_BLADES_POWER9后，首小刀52→39扣13、后两小刀扣4/4；能力已建不把普通打击6增为15，不扩升级参数。"
+      }
+    ],
+    "first_run": "10GPK5XGHCK3",
+    "prior": "unknown",
+    "prior_runs": [],
+    "prior_note": "回溯更正：更早静默10GPK5XGHCK3 A3 F17 T2已经建立幻影9层、T3两小刀137→124→120；它是本角色最早可比记录，之前复盘未提及不等于日志没有。原prior=unknown历史保留；在本次机制学习前A3已有正确施放/首刀兑现记录，不借其他角色判断。",
+    "status": "shipped",
+    "where": {
+      "proposal": [
+        "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261022-131302/learner/runs/20261022-131307-84b68a12-08f8-44bb-b129-1841f6dd9d0c-strategy-proposal/proposal.md",
+        "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261022-131302/learner/runs/20261022-131307-84b68a12-08f8-44bb-b129-1841f6dd9d0c-strategy-proposal/report.md"
+      ]
+    },
+    "asc": 3,
+    "note": "20261022-131302-strategy-proposal：仅追加本批原提案复核链接；关联silent-proposal-03754e1265894000均waiting，无新源码/合入/版本。完整原题、实际动作、后继和缺证见报告；保留旧claim/status/证据及父要求。",
+    "version": "S1.exp189"
+  },
+  "silent-0102": {
+    "op": "update",
+    "id": "silent-0102",
+    "ts": "2026-10-23T12:34:26+08:00",
+    "by": "learner:strategy-proposal",
+    "character": "silent",
+    "kind": "fight",
+    "claim": "观察：知识恶魔回血会增加实际需伤，重打转胜要看输出与损血窗口，不由首血或单次改线归因。机制：A6本体379，T4/T8/T12各回27、共81，完整需460；SL两次起59、均T13复活到21，只有末线T14结束战斗。搭配：已建3敏捷和幻影首刀增益支撑攻防，持续输出要跨越回血；没有隔离抽牌/选线/其他增益的胜因。决定胜负的战斗：A6真重打1场2次1赢，前洗牌抽序一致、后段出牌和抽牌变化（n=1）。典型案例：UACFSW4VDDLD F33首战T14敌54、21血8挡对42判死；第2次T14累计扣460、敌0玩家10，不能只按379血算伤害需求。",
+    "evidence": [
+      {
+        "run": "1ZZHM2MV19YB",
+        "floor": 33,
+        "turn": 4,
+        "note": "索引勘误：本条为正文事件的精确入口。知识恶魔 KNOWLEDGE_DEMON末试T4从320血，经紧勒 STRANGLE、防御 DEFEND_SILENT与致命毒药 DEADLY_POISON推进至307血12毒，下一T5却325血；T8开256、当轮打带毒刺击 POISONED_STAB后247血29毒，T9反到248。净敌池在T4为−5，不能称负伤害或把初始399血当固定整战需伤；回血、毒与已见力量成长同窗，完整治疗中间帧缺失，不补治疗来源或受控胜因。",
+        "role": "support"
+      }
+    ],
+    "first_run": "UACFSW4VDDLD",
+    "prior": "unknown",
+    "prior_note": "本条限定A6完整379+81需伤及同场两次结局。更早ZE A5有知识恶魔战，但回血毛额未独立核定；此前本角色没有这一A6完整需伤的可比局，不能从别进阶或首血判断。",
+    "status": "shipped",
+    "where": {
+      "proposal": [
+        "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261023-121225/learner/runs/20261023-121230-d28a3bbd-ff81-4cb5-92a5-b4f619d5e1fd-strategy-proposal/proposal.md",
+        "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261023-121225/learner/runs/20261023-121230-d28a3bbd-ff81-4cb5-92a5-b4f619d5e1fd-strategy-proposal/report.md"
+      ]
+    },
+    "asc": 6,
+    "version": "S1.exp200",
+    "note": "本批20261023-121225-strategy-proposal原始证据及消费者范围复核，关联silent-proposal-990f054036609447；逐项waiting，原因及offset/bytes/SHA见报告。不新增独立支持、不改既有claim/status/经验、无新源码或发布。"
+  },
+  "silent-0125": {
+    "op": "update",
+    "id": "silent-0125",
+    "ts": "2026-10-23T15:15:13+08:00",
+    "by": "learner:postmortem",
+    "character": "silent",
+    "kind": "fight",
+    "claim": "本局沙漏同盘的两条全败推演之间，HP护栏替换省当轮9血，同时少39伤和1永久力量，也避免原线新增一张凋萎。Jev原选攻击线与护栏结束线的五轮推演均24/24死亡，整场模拟均无赢样本，实际结束线T11阵亡；这是保血、凋萎门槛和手里剑成长共同存在的取舍观察，既不证明原线必胜，也不把符合既定8点护栏的行为认定纯bug。",
+    "evidence": [
+      {
+        "run": "QLEGQ76DJ1MN",
+        "floor": 9,
+        "note": "本局HP护栏逐题候选取舍及后继已核，详本局复盘；未执行原线不构成因果对照。",
+        "role": "support"
+      }
+    ],
+    "first_run": "Z6CFLDR3N4SB",
+    "prior": "unknown",
+    "prior_runs": [
+      "LRN0HPZ0FZS1",
+      "1HC609GTLGN3"
+    ],
+    "prior_note": "此前静默复盘已观察护栏交换伤害或延后灵动步法，故一般取舍并非首次；按护栏、保血、全败、手里剑等词未找到同盘两线全败且涉及凋萎门槛与手里剑成长的可比经验，无法判断学习前此具体局面是否处理得当。",
+    "status": "proposed",
+    "where": {
+      "proposal": [
+        "/home/dw/Projects/agent-sts2/learner/runs/20261023-144308-227bd714-ac7f-4389-b47a-61df31719f98-postmortem/QLEGQ76DJ1MN-proposal.md"
+      ]
+    },
+    "asc": 7,
+    "note": "代码提案 silent-proposal-6ed5b0be05ddcf4a → task=strategy-proposal；Roy-2026-10-07-learning",
+    "version": "S1.exp198"
+  },
+  "silent-0128": {
+    "op": "update",
+    "id": "silent-0128",
+    "ts": "2026-10-23T12:01:20+08:00",
+    "character": "silent",
+    "kind": "mechanic",
+    "claim": "静默已观察熟睡甲虫的睡层随回合和实际失血下降，醒来后覆甲消失，滚动连续增加力量。3KME36ADUE4U两次重打T1飞镖使86血6挡变77血0挡、睡3变1，杀灭再扣12使睡层消失并当轮眩晕；T2起攻击16，T3/T4/T5力量2/4/6、同招无虚弱18/20/22。末次T3突然一拳及尖啸将18降至13再9，次轮力量恢复并成长到4，中和仅把20降15，不能把临时减力当关闭成长。灵动步法的2敏捷令两防御合多4挡，仍未覆盖成长后的攻击。",
+    "evidence": [
+      {
+        "run": "PZRSP3EL4K6B",
+        "floor": 27,
+        "turn": 4,
+        "role": "support",
+        "note": "末试熟睡甲虫 SLUMBERING_BEETLE 从T1睡3／覆甲18／89血，到T2睡1／83血，T3睡与覆甲消失、78血且滚动18；T4力量2、滚动20。最后石虫 BOWLBUG_ROCK 被毒杀，丝虫 BOWLBUG_SILK 仍攻5×2，甲虫仍攻20；不能把一只的毒杀当整场斩杀。睡层下降与毒伤同窗，不能单归自然醒或毒唤醒。；原始offset/bytes/SHA、资源链及完整关键题见/home/dw/Projects/agent-sts2/learner/runs/20261022-004320-0c193933-66d6-499e-89fe-2aa352ad0521-postmortem/report.md；本次不认定关键错误重犯。"
+      }
+    ],
+    "first_run": "R0HEV5E3QT6G",
+    "prior": "partly",
+    "prior_runs": [
+      "R0HEV5E3QT6G",
+      "53FLQ68CETW0"
+    ],
+    "prior_note": "学习前R0已在醒后使用虚弱和格挡，53FL也实打攻击已醒甲虫，但对眩晕输入的后续模拟全报0损；现场处理与长线模型有对有错，两局构筑不同，不当受控胜负对照。",
+    "status": "proposed",
+    "by": "learner:strategy-proposal",
+    "where": {
+      "proposal": [
+        "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261023-114052/learner/runs/20261023-114057-7acec938-009f-4354-bce5-392ff6bf4dc3-strategy-proposal/proposal.md",
+        "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261023-114052/learner/runs/20261023-114057-7acec938-009f-4354-bce5-392ff6bf4dc3-strategy-proposal/report.md"
+      ]
+    },
+    "note": "20261023-114052-strategy-proposal：原提案silent-proposal-bddfa690a84e03d0继续waiting。十份原Markdown恢复且SHA核同；本批全文精读8份Jev题、回读74状态/63决策，571题未全文精读。具体缺数据与原始引用见报告；无源码、合入、版本或新支持局，既有局部实现及shipped历史保持。",
+    "asc": 0,
+    "version": "S1.exp132"
+  },
+  "silent-0132": {
+    "op": "update",
+    "id": "silent-0132",
+    "ts": "2026-10-20T21:57:09+08:00",
+    "character": "silent",
+    "by": "learner:strategy-proposal",
+    "kind": "mechanic",
+    "claim": "群蛇形态建立后，后续实际出牌向随机一敌补4/6伤，防御也有实伤；建立、未来触发与已兑现分账，取得或晚建立不能预支输出。三局十一场建立、九场最终存活两boss败，未隔离单能力胜因。",
+    "evidence": [
+      {
+        "run": "TR224PCKENSM",
+        "floor": 19,
+        "turn": 5,
+        "role": "support",
+        "note": "F19T4群蛇形态已建4，T5预判/咕嘟/防御的触发先减挡再减HP；s458971—458974敌挡9→5→1→0、HP62→59。未隔离整场贡献，F21未重建不继承。"
+      }
+    ],
+    "first_run": "1NZ8FE5F34R9",
+    "prior": "unknown",
+    "prior_runs": [
+      "C48LLXBGKXQ9",
+      "Y6GM2CHWJBEY",
+      "LRN0HPZ0FZS1",
+      "T082DRCUHRRD",
+      "1HC609GTLGN3",
+      "R0HEV5E3QT6G",
+      "KAY522KT5NXR",
+      "E6AVMMVCSRPC",
+      "XYYQYBRM2A01",
+      "K3676LU8B0UH",
+      "CSBR5CRDWQNB",
+      "ZZMYZ5UBCG72",
+      "10GPK5XGHCK3"
+    ],
+    "prior_note": "更早十三个静默完局全量决策/状态与本角色复盘回查没有群蛇实际施放或可比触发；CSBR、ZZMY仅拥有/计划却未建立。不借其他角色判断先验，最早实际施放是1NZ A4 F22。",
+    "status": "shipped",
+    "where": {
+      "proposal": [
+        "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261020-214302-s2/learner/runs/20261020-214311-5ef74999-59db-4676-bfb6-ac2f489d7b6c-strategy-proposal/proposal.md",
+        "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261020-214302-s2/learner/runs/20261020-214311-5ef74999-59db-4676-bfb6-ac2f489d7b6c-strategy-proposal/report.md"
+      ]
+    },
+    "asc": 4,
+    "version": "S1.exp203",
+    "note": "20261020-214302-s2原id silent-proposal-c888545b80180da7有界复核waiting：重放蜃景/群蛇窄项已有live祖先；其余敏捷、脆弱、临时力量撤回和组合消费缺联合认证。 本批无源码/知识/参数改动，无发布、消费或收益主张；仅追加审计链接，不改既有状态/分母。"
+  },
+  "silent-0154": {
+    "op": "update",
+    "id": "silent-0154",
+    "ts": "2026-10-12T22:06:15+08:00",
+    "character": "silent",
+    "kind": "mechanic",
+    "claim": "已观察的未升级隐秘匕首HIDDEN_DAGGERS花0能量、弃两张原手牌，再生成两张0费小刀SHIV；Cards=2不代表从牌堆抽两张。MGA末次boss T3五手牌施放并弃两牌后，留下两原牌加两小刀，能量仍3，两小刀各实扣4。只确认未升级与这些可见时点，不外推升级牌或缺牌情形。",
+    "evidence": [
+      {
+        "run": "PCDMYK2AEB2D",
+        "role": "support",
+        "note": "PCDMYK2AEB2D A10猎人T5只剩本体，出后仍产两刀，柔嫩后力−4两刀显示0伤且未出；缺牌未阻生成。旧J8PHG72DGD90两刀各13却被懒惰名额阻止，不能预支26。"
+      }
+    ],
+    "first_run": "10GPK5XGHCK3",
+    "prior": "partly",
+    "prior_runs": [
+      "10GPK5XGHCK3"
+    ],
+    "prior_note": "独立学习前10G F9 T5原选线含生存者却把它弃掉，重算使用生成小刀；T6则保留生存者并用小刀。实际会利用小刀但弃牌与原计划有对有错，模型一直误当抽牌，不记为完整会用协同。",
+    "status": "shipped",
+    "by": "ops:codex",
+    "where": {
+      "commits": [
+        "8edf3639928ea374ce48fd3ffbab1a7d0a7c3aba",
+        "433f0fe7d733150c8ce3322d6f6d120887489571",
+        "71ec35332f904e53b692354582506882cde397de"
+      ]
+    },
+    "asc": 3,
+    "note": "20261012-2202仅原学习者2026-10-12.12经验12项补证据按experience-integration.mapping实际上线，14关联账本限此范围；原claim/prior/证据保持，不把3代码提案、量化/牌表或自然局效果记完成。原历史链接失败/20共享记录冲突保留，同SHA原tsc/3410及当前tsc/41通过，完整宿主检查已单次请求待回执。",
+    "version": "S1.exp193"
+  },
+  "silent-0173": {
+    "op": "update",
+    "id": "silent-0173",
+    "ts": "2026-10-20T22:28:01+08:00",
+    "by": "learner:strategy-proposal",
+    "character": "silent",
+    "kind": "mechanic",
+    "claim": "永冻冰晶每战首次能力实补7挡；A3触媒/幻影、A10步法及本局幻影共三局局部支持。PJ2LL9KU7FHD族母第3次T4能力7加两防御各7合21抵21零损，首/末次T11无攻击时所得7挡下一轮归零。真实遗物机制与求解器漏算0172分账，未验证重复/重放或整战胜因。",
+    "evidence": [
+      {
+        "run": "VNSXWCWXR3VW",
+        "floor": 49,
+        "turn": 2,
+        "role": "support",
+        "note": "末试s413906→413907/d400922：触媒＋是本战首次能力，格挡11→18补7，随后T3归零。与同轮速度/后空翻11分源；无独立整战收益对照。"
+      }
+    ],
+    "first_run": "10GPK5XGHCK3",
+    "prior": "yes",
+    "prior_runs": [
+      "25226ZFLNR1J"
+    ],
+    "prior_note": "新增更早日志证据：A3 10GPK5XGHCK3 F13 T4首次触媒0→7、F17 T2首次幻影0→7。尚无本机制学习条目时已实际兑现，保持prior=yes；只判断执行、不声称模型已理解遗物。原first_run=25226ZFLNR1J留在追加历史中；更早持有局KAY522KT5NXR无已核首次能力可比帧。",
+    "status": "shipped",
+    "where": {
+      "proposal": [
+        "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261020-221302-s2/learner/runs/20261020-221334-176d4f70-d428-46e6-8e18-38145660fc9d-strategy-proposal/proposal.md#silent-0173",
+        "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261020-221302-s2/learner/runs/20261020-221334-176d4f70-d428-46e6-8e18-38145660fc9d-strategy-proposal/report.md"
+      ]
+    },
+    "asc": 3,
+    "note": "20261020-221302-s2-strategy-proposal仅本批审计补链；silent-proposal-ca596a0c614d90c6: SY0 F30/F31双向4/1力量与现有动态入口可核；缺同资源启动/不启动的完整后继和消费者追踪，不能由boss未施放强制加启动奖励。; silent-proposal-4c28c13316c0d88e: 十一项机制的联合传播/结算与消费者尚未逐项认证；幽灵药水窄门已有live祖先、蛇咬窄运输已有live来源，均不覆盖整项。留存稿SHA与登记SHA失配，保留冲突待原件/补证。；无新增源码/知识/实现或收益结论，不新增支持局，不改旧claim/evidence/status/version，宽提案等待项及父要求保留。",
+    "version": "S1.exp200"
+  },
+  "silent-0185": {
+    "op": "update",
+    "id": "silent-0185",
+    "ts": "2026-10-17T04:31:47+08:00",
+    "character": "silent",
+    "kind": "mechanic",
+    "claim": "静默已观察南瓜蜡烛PUMPKIN_CANDLE初始5充能，正数时已见轮初比基础3多1能量；本局五场战后逐次扣1、归零后沙虫轮初仅3能量。更早同角色营火添火实使0→5而当前77血不变。能量支持能力启动与防御的共同支付，但续火本身不回血；没有移除或补燃料后的整场因果对照。",
+    "evidence": [
+      {
+        "run": "08A0GEAL8KQ5",
+        "floor": 25,
+        "note": "F18初始stack5，F19/F20/F23胜后4/3/2，F25添火实2→7、56/70血不变；F27/F28/F31胜后6/5/4，F33轮初已见4能量。支持正充能支持额外能量与消耗/续火分账，不推所有正输入和上限，不把添火视回血。",
+        "role": "support"
+      }
+    ],
+    "first_run": "UJ0K3G10609Y",
+    "prior": "yes",
+    "prior_runs": [
+      "UJ0K3G10609Y"
+    ],
+    "prior_note": "账本按中文名/ID未收录前，UJ0K3G10609Y已正确识别额外能量和补燃料动作，F29主动添火并实恢复5充能；本次将该机制首证追溯旧局，不冒记本局首次接触。",
+    "status": "proposed",
+    "by": "learner:strategy-proposal",
+    "where": {
+      "proposal": [
+        "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261017-041302-s2/learner/runs/20261017-041306-d79fbe86-5266-43f6-ab5f-cb7ce9f77187-strategy-proposal/proposal.md"
+      ]
+    },
+    "asc": 10,
+    "note": "20261017-041302-s2-strategy-proposal：silent-proposal-2b4575ca64988cfe=waiting；silent-proposal-67ee9ff5277558ff=waiting。两Silent/A10局八流1791封套逐字节/身份核对；3窄项去重、7宽项缺数据详见proposal-results.json。仅where/note追溯，不新增support/repeat，不改claim/首证/prior/evidence/status/version/shipped；无本批源码、合入、版本或生产测试。",
+    "version": "S1.exp118"
+  },
+  "silent-0186": {
+    "op": "update",
+    "id": "silent-0186",
+    "ts": "2026-10-09T05:44:22+08:00",
+    "character": "silent",
+    "kind": "route",
+    "claim": "静默休息题有可用KINDLE且持有南瓜蜡烛时，单列现场充能与续火条件参考：已执行0→5不回血，回血/锻造不续火，输入1的正充能添火已核1→6且不回血，其他正量与上限仍未知。只按充能指标标同值并列，说明路线HP和boss_sim没有模拟续火/沿路消耗，不预支未选动作；不规定添火优先级，保留全部选项与原模拟，交大脑选择。",
+    "evidence": [
+      {
+        "run": "ZVYUL2YP3518",
+        "floor": 42,
+        "role": "support",
+        "note": "旧原帧再次核实KINDLE由1到6、80血不变；date/原决策时间见candle-old-evidence.json。"
+      }
+    ],
+    "first_run": "UJ0K3G10609Y",
+    "prior": "partly",
+    "prior_runs": [
+      "UJ0K3G10609Y",
+      "XBD8Z9XLPCPN"
+    ],
+    "prior_note": "已有遗物描述和KINDLE合法动作，UJ旧局已主动添火；rest_site与relicFacts未展示现场stack及收益模拟边界。本项只补可追溯事实，不声称首次会续火或证明胜率改善。",
+    "status": "shipped",
+    "by": "ops",
+    "where": {
+      "experience": [
+        "silent-pumpkin-candle-charge-energy"
+      ],
+      "commits": [
+        "832318eeb9b98a9e59773581ebbf9a67d689b441",
+        "abbb308ce3be824214f3e6a7d2397a3b83b30204",
+        "b740434894cc131fa7a4a7d030374e515bb23431",
+        "7f42091955351cb3f4bec183e2bb9c0e284b13f9"
+      ]
+    },
+    "note": "第一百一十八次经验仅原数据2026-10-09.6→2026-10-09.7，源832318ee增0改15退0/191 active，原251文件2627例tsc/vitest0；actual live/main唯一发布S1.exp118。按原学习者ledger-map仅19所属经验数据shipped；保留首证/prior/claim/evidence/support/repeat及旧状态历史，三combat/potion/SL/terminal/structure代码提案沿原自动链，不标代码实现；0328重复观察保持observed，不标本批数据上线。新数据树完整外部待原批独立续验；exp100旧完整exit1和原修复队列不关闭，当前代码与刷新保持。原merged-null/18冲突/out/err/失败历史保持。",
+    "asc": 10,
+    "version": "S1.exp118"
+  },
+  "silent-0243": {
+    "op": "update",
+    "id": "silent-0243",
+    "ts": "2026-10-22T13:23:01+08:00",
+    "character": "silent",
+    "kind": "mechanic",
+    "claim": "静默实际A9三局五对、A10十局中的九对F17→18或F33→34跨幕HP转换，全部实回floor(当时缺失HP×80%)；前后最大HP不变。本批A9/A10首帧均56/70、2药槽且有ASCENDERS_BANE，首帧不证明扣血过程或更低等级减槽/加诅咒变化。跨幕回复与营火HEAL、到火遗物、战斗回血、SL资源恢复分账；未见其他先古/遗物交互，不推未来或固定全回复。",
+    "first_run": "25226ZFLNR1J",
+    "asc": 10,
+    "prior": "yes",
+    "prior_runs": [
+      "HMVJKM56S4Q8",
+      "F4QKG4J1AJJZ",
+      "G403VCZ3BH1B"
+    ],
+    "prior_note": "本次自己重读同角色实际A9三局，五对较早跨幕已有相同转换；不以等级文本作过程证据。",
+    "status": "shipped",
+    "by": "learner:strategy-proposal",
+    "evidence": [
+      {
+        "run": "Q9KFP3J3JNU5",
+        "floor": 18,
+        "turn": null,
+        "role": "support",
+        "note": "F17赢后16/70→F18 59/70，实回43；F33赢后4/70→F34 56/70，实回52。均与既有缺失HP乘80%向下取整一致；另九次SL恢复与六次营火实回121分账。"
+      }
+    ],
+    "where": {
+      "proposal": [
+        "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261022-131302-s2/learner/runs/20261022-131307-707c13e3-db02-46c3-9b5b-4ec5bfb99b2e-strategy-proposal/proposal.md",
+        "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261022-131302-s2/learner/runs/20261022-131307-707c13e3-db02-46c3-9b5b-4ec5bfb99b2e-strategy-proposal/report.md"
+      ]
+    },
+    "note": "20261022-131302-s2-strategy-proposal：十原提案限定复核，原文SHA核同，163原行按offset/bytes/SHA核回。既有窄实现与原士兵修正待发布分列；宽项waiting，不新增支持局/参数或shipped，见本批报告。",
+    "version": "S1.exp203"
+  },
+  "silent-0247": {
+    "op": "update",
+    "id": "silent-0247",
+    "ts": "2026-10-21T19:59:53+08:00",
+    "character": "silent",
+    "kind": "mechanic",
+    "claim": "本局懒惰SLOTH_POWER的3次名额包含防御的重放1：T8防御给7×2=14挡、再手动打击后，原始cards_played_this_turn仅2，0费中和尚1能量仍被SLOTH_POWER锁住。它限制实际打出而非仅CLI动作数；仅观察该附魔及3名额组合，不推广其他自动牌或限额。实际死亡1血14挡对16，额外一次防御也少2挡。",
+    "evidence": [
+      {
+        "run": "WCDTYJKUDS4T",
+        "role": "support",
+        "note": "本角色主题支持，非每个子式的独立因果分母；新增局的层/回合及历史验证见proof.json/history-checks.json。"
+      }
+    ],
+    "first_run": "KV0JHNJCKXLS",
+    "prior": "unknown",
+    "prior_runs": [
+      "1LMBFGSMCWKU"
+    ],
+    "prior_note": "早局有懒惰但复盘没有这一重放防御占额的可比记录；silent-0200是余像/凋萎重放计数的不同触发器，不代替本项机制观察。",
+    "status": "shipped",
+    "by": "learner:strategy-proposal",
+    "where": {
+      "proposal": [
+        "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261021-194314/learner/runs/20261021-194319-ff50ee4b-05ad-4b92-80bf-b646de52c75e-strategy-proposal/proposal.md",
+        "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261021-194314/learner/runs/20261021-194319-ff50ee4b-05ad-4b92-80bf-b646de52c75e-strategy-proposal/report.md"
+      ]
+    },
+    "asc": 10,
+    "note": "20261021-194314-strategy-proposal：十原提案正文SHA均复核；13关键Jev完整题面/原答及精确决策、90状态原字节复核，另30资源边界。全部waiting，无源码/测试/合入/发布；既有经验状态不变，具体缺口见本批report。",
+    "version": "S1.exp200"
+  },
+  "silent-0274": {
+    "op": "update",
+    "id": "silent-0274",
+    "ts": "2026-10-21T19:59:53+08:00",
+    "character": "silent",
+    "kind": "card",
+    "claim": "静默A10知识恶魔的懒惰3名额窗口内，手上技法把奇巧给爆发不等于额外技能收益。本局六次T7都选爆发，随后实际防御与带毒刺击用满三牌，爆发有能量仍被SLOTH_POWER锁住，未建立增益；应按剩余名额及可执行后续牌核对奇巧兑现。未实打另一目标／另一顺序，不证明换目标可赢，也不判手上技法本身7挡无效。",
+    "evidence": [
+      {
+        "run": "VGNDNGPFYRE3",
+        "role": "support",
+        "floor": 31,
+        "note": "同角色实盘机制/资源观察，典型层回合/原字节SHA见084306经验任务报告，不预支未执行候选或缺帧后继。"
+      }
+    ],
+    "first_run": "KFRDELW2TH2P",
+    "prior": "unknown",
+    "prior_runs": [],
+    "prior_note": "检索静默账本HAND_TRICK/手上技法/奇巧/BURST/懒惰及此前静默复盘，旧0247为附魔防御重放计数，0115为爆发机制；历史五段同含手上技法与爆发的记录没有可比的SLOTH下奇巧目标兑现证据，不据其共同持牌推断先验做对。",
+    "status": "shipped",
+    "by": "learner:strategy-proposal",
+    "where": {
+      "proposal": [
+        "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261021-194314/learner/runs/20261021-194319-ff50ee4b-05ad-4b92-80bf-b646de52c75e-strategy-proposal/proposal.md",
+        "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261021-194314/learner/runs/20261021-194319-ff50ee4b-05ad-4b92-80bf-b646de52c75e-strategy-proposal/report.md"
+      ]
+    },
+    "asc": 10,
+    "note": "20261021-194314-strategy-proposal：十原提案正文SHA均复核；13关键Jev完整题面/原答及精确决策、90状态原字节复核，另30资源边界。全部waiting，无源码/测试/合入/发布；既有经验状态不变，具体缺口见本批report。",
+    "version": "S1.exp203"
+  },
+  "silent-0278": {
+    "op": "update",
+    "id": "silent-0278",
+    "ts": "2026-10-22T19:38:09+08:00",
+    "by": "learner:postmortem",
+    "character": "silent",
+    "kind": "potion",
+    "claim": "毒药水先施毒，饮用当步不扣敌本体HP。机制：29局118饮，无加量/阻挡观察105饮加6；头骨3局11饮加7，制品2局2饮阻毒并耗1层，条件分账，未见组合不外推。搭配：触媒增加结算次数，须活到实际结算；药水与限额牌数分开核，不定早喝/留药胜率。决定胜负的战斗：29支持/0反例，时点整战胜因未控（n=29）。典型案例：KFRDELW2TH2P A10恶魔六次T7各加6，末37→43毒当步敌159不变，普通触媒两结85后敌74；前五次判死截断无毒结算帧。XTSV1U9JD34T沙漏制品1耗尽但未加毒。",
+    "evidence": [
+      {
+        "run": "XL4ENZG3N7Y3",
+        "floor": 48,
+        "role": "support",
+        "note": "双毒药水必须等到结毒才能变伤害；打法（Jev出牌／药水）；本局原行与offset/bytes/SHA见/home/dw/Projects/agent-sts2/learner/runs/20261022-191307-0ff38aae-3990-4c27-8534-11b425889bc7-postmortem/report.md；仅本局观测，不增算旧局或证明未执行反事实。",
+        "turn": 2
+      }
+    ],
+    "first_run": "10GPK5XGHCK3",
+    "prior": "unknown",
+    "prior_note": "首次实饮前没有同角色可比的实际药效窗口；这里只登记剂量与触发事实，不能由首个正确饮用反推预训练或未用药胜因。",
+    "status": "shipped",
+    "where": {
+      "proposal": [
+        "/home/dw/Projects/agent-sts2/learner/runs/20261022-191307-0ff38aae-3990-4c27-8534-11b425889bc7-postmortem/XL4ENZG3N7Y3-proposal.md"
+      ]
+    },
+    "note": "代码提案 silent-proposal-381fbc4c79d98feb → task=strategy-proposal；Roy-2026-10-07-learning",
+    "asc": 3,
+    "version": "S1.exp202"
+  },
+  "silent-0301": {
+    "op": "update",
+    "id": "silent-0301",
+    "ts": "2026-10-20T02:01:38+08:00",
+    "character": "silent",
+    "by": "learner:strategy-proposal",
+    "kind": "potion",
+    "claim": "本局六次沙虫T4非攻击回合饮罐装幽灵，建立1无实体但次轮已消失，T5都损24血；取得或喝过该瓶不等于覆盖下一轮攻击。较早同角色G403的无攻击轮也有同类空耗。仅登记实盘时点与到期事实，不制定固定喝药回合或声称延后可赢。",
+    "evidence": [
+      {
+        "run": "RMNXHZKV716Y",
+        "floor": 48,
+        "role": "support",
+        "note": "罐装幽灵只覆盖实建无实体当轮，不保证下一轮。机制：已饮建1无实体、已见攻击26/20/30降1，次轮撤；其他伤源和挡分核，未知叠层不外推。搭配：当轮实攻/既有挡/状态伤合核，不设固定喝留门槛。决定胜负的战斗：7支持/0反例，改喝药时点整战未控（n=7）。典型案例：456MRNGCPD8E饮后20→1，下一轮仍死；RMNXHZKV716Y沙漏末T10敌15力弱后30、饮幽灵变1且38→38，T11无实体撤、二连40；整战最终13胜，无不饮/早饮反事实毛损。"
+      }
+    ],
+    "first_run": "G403VCZ3BH1B",
+    "prior": "partly",
+    "prior_runs": [
+      "9YBKCNBFP0X5",
+      "G403VCZ3BH1B"
+    ],
+    "prior_note": "此次登记之前的同角色持罐装幽灵选择中，9Y F48 T1面对26攻击实际将意图降1并保51血；G403 F38 T1却在无攻击、现有12挡时空耗。都重新核states／decisions，不借其他角色；判断当轮覆盖有对有错。",
+    "status": "shipped",
+    "where": {
+      "proposal": [
+        "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261020-014302-s2/learner/runs/20261020-014331-b5606693-46e6-4944-8bc3-9040eabd4616-strategy-proposal/proposal.md",
+        "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261020-014302-s2/learner/runs/20261020-014331-b5606693-46e6-4944-8bc3-9040eabd4616-strategy-proposal/report.md"
+      ]
+    },
+    "note": "20261020-014302-s2-strategy-proposal复核：silent-proposal-edaea6fac5a803c1均waiting；具体已核原文、已有子集和缺证见本批报告。仅补任务追溯，不新增support/repeat、原证据分母或科学字段，不改claim/首证/prior/status/version/shipped；无源码修改、提交、live合入、新版本或生产测试。",
+    "asc": 9,
+    "version": "S1.exp130"
+  },
+  "silent-0326": {
+    "op": "update",
+    "id": "silent-0326",
+    "ts": "2026-10-20T08:29:30+08:00",
+    "character": "silent",
+    "kind": "fight",
+    "by": "learner:strategy-proposal",
+    "status": "shipped",
+    "claim": "已醒甲虫与丝虫并存时，SL判官因丝虫可能先被毒杀而排除甲虫攻击，两个已核实例实际丝先退场、甲虫保持滚动并致死。应检验这组敌人死亡时序的剩余攻击下界，不能据单条死线或两次实盘贸然放宽全部SL规则。",
+    "first_run": "3KME36ADUE4U",
+    "prior": "no",
+    "prior_runs": [
+      "3KME36ADUE4U"
+    ],
+    "prior_note": "此前静默复盘未登记这项SL归因；回溯最早已核同型原始记录sl-attempts:543已因同伴可能死亡漏计甲虫。该窄场景学前已处理失败；另两次正确判死没有同伴毒杀条件，不当可比正确样本。",
+    "where": {
+      "proposal": [
+        "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261020-074302-s2/learner/runs/20261020-074307-d7fe9bd7-146b-4504-8487-e228f3f0759b-strategy-proposal/proposal.md",
+        "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261020-074302-s2/learner/runs/20261020-074307-d7fe9bd7-146b-4504-8487-e228f3f0759b-strategy-proposal/report.md"
+      ]
+    },
+    "evidence": [
+      {
+        "run": "WQB3YYNTRB2L",
+        "floor": 24,
+        "turn": 3,
+        "role": "support",
+        "note": "sl2429因3血3毒幼虫可能先死，排除两幼虫及OVICOPTER幸存攻击取0，未重载；s437978为玩家8血5挡、其余幼虫12/23与9/20各5攻、母体51/132血5毒6攻；s437979首幼虫消失、母体46血、另两只仍12/9、玩家0。幸存攻击16减5挡需损11；max_attempts4只一试。旧X4/N1已有产卵虫同结构，补不同敌组support；不当甲虫窄例外修复复发或新纯bug，不证明重打／未饮能力药可赢。live judge.ts1463—1475保守排除，1447—1462窄例外不含本组。"
+      }
+    ],
+    "asc": 7,
+    "note": "20261020-074302-s2-strategy-proposal；原id处置：silent-proposal-a25a6110490749de：3KME36ADUE4U A7 F27第三试T4与456MRNGCPD8E A10 F31T6为两敌存活/丝虫毒死；现有三敌/石虫毒死窄分支不适用。未完成所有合法动作和未知死亡触发的下界证明，保留拒判。 仅补本批追溯，保留原claim/status/version/shipped/首证，不增加重复支持或独立局分母；新MC窄候选未提交/未live，原沙箱入口exit1及全部失败保留。",
+    "version": "S1.exp183"
+  },
+  "silent-0327": {
+    "op": "update",
+    "id": "silent-0327",
+    "ts": "2026-10-16T14:01:20+08:00",
+    "character": "silent",
+    "kind": "mechanic",
+    "by": "learner:postmortem",
+    "status": "proposed",
+    "claim": "静默持有石化蟾蜍PETRIFIED_TOAD的已见新战首帧，在空药槽新建药水形状的石头POTION_SHAPED_ROCK；实际使用对目标扣15，玩家HP当步不变。新战生成、奖励、SL恢复与投石分账，未观察满槽或未用旧石的组合，不推固定饮药门槛。",
+    "first_run": "ZZMYZ5UBCG72",
+    "prior": "yes",
+    "prior_runs": [
+      "ZZMYZ5UBCG72"
+    ],
+    "prior_note": "账本尚无该机制条目；较早A2静默复盘已记录生成与投石，核s218165 F17T1槽0石、s218175→176 T3族母201→186且玩家52不变，学前已经执行正确；仅判断这个已见用法。",
+    "where": {
+      "proposal": [
+        "/home/dw/Projects/agent-sts2/learner/runs/20261016-134307-060a21bf-5223-4f06-9614-504b5f3deb55-postmortem/proposal-resources.md"
+      ]
+    },
+    "evidence": [
+      {
+        "run": "TCDUBRWMEMNA",
+        "floor": 45,
+        "note": "本局石化蟾蜍在F45槽1、F48槽1、F49槽0分别新生成石头；F46事件交石换奖励不算使用。F48五次投石与F49六次投石共11次，9次SL恢复不算新获得；末试F49投石当步敌517→502扣15、玩家HP6不变。",
+        "role": "support",
+        "turn": 1
+      }
+    ],
+    "asc": 2,
+    "note": "代码提案 silent-proposal-397b12597f0a738c → task=strategy-proposal；Roy-2026-10-07-learning",
+    "version": "S1.exp131"
+  },
+  "silent-0328": {
+    "op": "update",
+    "id": "silent-0328",
+    "ts": "2026-10-23T15:08:32+08:00",
+    "character": "silent",
+    "kind": "mechanic",
+    "by": "learner:strategy-proposal",
+    "claim": "静默A10已观察南瓜蜡烛PUMPKIN_CANDLE在仍有1充能时执行KINDLE，充能实从1变6，当前50/74血与28张牌组不变；随后两场胜战逐次6→5→4。这里只确认输入1时添5，不能据此推广所有正量、充能上限或续火后的整战胜率；此前零充能0→5与本观察分别保留。",
+    "evidence": [
+      {
+        "run": "J8PHG72DGD90",
+        "floor": 29,
+        "role": "support",
+        "note": "d304744实际选择添火；s312605→312606，UTC2026-10-08T19:53:53.012→19:53:53.234，南瓜蜡烛stack1→6、HP50/74与牌组28张不变；F30奖励s312650为5，F31胜出s312725为4。"
+      }
+    ],
+    "first_run": "J8PHG72DGD90",
+    "prior": "unknown",
+    "prior_runs": [],
+    "prior_note": "以静默专属ledger.py find的正充能／添火／PUMPKIN_CANDLE查询及更早带静默标题的复盘检索，既有0185只核零量0→5，0186明确正量添火未知；未见可比输入1条件，不能将零量案例的正确操作外推为已有正量先验。",
+    "status": "proposed",
+    "where": {
+      "proposal": [
+        "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261023-141301/learner/runs/20261023-141306-3589fa1a-d5a7-4a3a-aace-7bf1c9edae8b-strategy-proposal/proposal.md",
+        "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261023-141301/learner/runs/20261023-141306-3589fa1a-d5a7-4a3a-aace-7bf1c9edae8b-strategy-proposal/report.md"
+      ]
+    },
+    "asc": 10,
+    "note": "20261023-141301受阻检查点：原id silent-proposal-167b20d3b7105257的Silent A10输入1→6三文件候选未提交，HEAD/base=9870929cc25b6aa385b11c1ece95dade34940eda。原源码有效负控2失败/9通过，补源后固定普通与oneshot共11通过；tsc0、gitleaks0。完整沙箱入口运行超过40分钟仍未退出，中途45失败，两个单例分别明确listen EPERM与spawnSync bash EPERM；终态exit未知，不填测试成功或冒写exit1。另只读知识预检v6-history三方冲突且发布锁尝试busy；未改live/分配版本/标implemented或shipped。源码候选、candidate.patch、validation-receipt与完整日志保留，交运维核宿主检查终态及发布协调。报告=/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261023-141301/learner/runs/20261023-141306-3589fa1a-d5a7-4a3a-aace-7bf1c9edae8b-strategy-proposal/report.md"
+  },
+  "silent-0329": {
+    "op": "update",
+    "id": "silent-0329",
+    "ts": "2026-10-09T05:52:08+08:00",
+    "by": "learner:experience-update",
+    "character": "silent",
+    "first_run": "0DJ6GFZZ0TG9",
+    "prior": "unknown",
+    "prior_runs": [],
+    "status": "observed",
+    "where": {
+      "proposal": [
+        "/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261009-054302-experience-update/proposal-mechanisms.md"
+      ]
+    },
+    "kind": "bug-infra",
+    "claim": "爬行动物饰品饮药后实际增加本回合3力量，但同线求解器只加药水本身力量，遗物仅在白名单。F33T4肌肉药实际5+3=8，而原始同线报106伤实净扣136；漏接是新定位，30伤差未全部隔离，不声明导致局败或修后必胜。当前live turn-solver.ts:2330/:2332—2333、card-model.ts:1279、combat-plan.ts:2502。",
+    "prior_note": "更早CSBR5CRDWQNB在silent-0063已观察饰品饮火焰药暂加3力；未找到或核实该早局同饮药线的预测预算，不能凭知道机制判定模型学前一直做对或做错。本条首次定位漏接以本局为首证。",
+    "evidence": [
+      {
+        "run": "0DJ6GFZZ0TG9",
+        "floor": 33,
+        "turn": 2,
+        "role": "support",
+        "note": "d305532、s313545→313548：癫狂之触令仅剩速行者0费，饰品实建3力量/REPTILE_TRINKET_POWER3，次轮清除；源码饮药分支没有遗物增力。"
+      },
+      {
+        "run": "0DJ6GFZZ0TG9",
+        "floor": 33,
+        "turn": 4,
+        "role": "support",
+        "note": "d305541完整肌肉药/突然一拳+/杀灭+/串刺+/中和同目标线报损28伤106、敌119/91；s313554→313560实损28净扣136、敌103/77，药5+饰品3实建8力量。没有固定回放，不将30差全归单因。"
+      }
+    ],
+    "asc": 10,
+    "note": "代码提案 silent-proposal-2d70265e0aee98eb → task=strategy-proposal；Roy-2026-10-07-learning"
+  },
+  "silent-0330": {
+    "op": "update",
+    "id": "silent-0330",
+    "ts": "2026-10-23T15:15:15+08:00",
+    "by": "learner:postmortem",
+    "character": "silent",
+    "first_run": "0DJ6GFZZ0TG9",
+    "prior": "unknown",
+    "prior_runs": [],
+    "status": "shipped",
+    "where": {
+      "proposal": [
+        "/home/dw/Projects/agent-sts2/learner/runs/20261023-144308-227bd714-ac7f-4389-b47a-61df31719f98-postmortem/6ANZJ6XRKV4P-proposal.md"
+      ]
+    },
+    "kind": "mechanic",
+    "claim": "本局静默A10持爬行动物饰品时，肌肉药饮用一步建立5药水临时力量及3饰品临时力量，合8。升级锋利杀灭在虚弱下随后四段对两敌各实扣40；下一轮两种临时增益均消失。只是本局组合与时点观察，不把8当永久成长，也不指定饮用门槛或独立胜因。",
+    "prior_note": "更早silent-0063只核实饰品配火焰药的临时3力；此前静默复盘提及肌肉药，但没有找到这个饰品与肌肉药叠加后四段攻击及撤层的已核同组合，prior未知。",
+    "evidence": [
+      {
+        "run": "6ANZJ6XRKV4P",
+        "floor": 39,
+        "turn": 3,
+        "note": "F39T3代码最少损失线先用精确切击+ PRECISE_CUT使拳击12→2、防御+给6挡、致命毒药 DEADLY_POISON施方柱，再喝肌肉药水 FLEX_POTION。力量2→7，突然一拳 SUCKER_PUNCH实际打方柱15并弱化；拳击随后毒死，两侧仍46／61血、玩家归零。只支持药水加5临时力分量，旧账本饰品额外3力量不是本局已验证值；不由晚喝后的死亡制定提前喝药门槛。",
+        "role": "support"
+      }
+    ],
+    "asc": 10,
+    "note": "代码提案 silent-proposal-6ea1082d0ea33b1b → task=strategy-proposal；Roy-2026-10-07-learning",
+    "version": "S1.exp203"
+  }
+}

@@ -44,7 +44,8 @@ import { computeMemoOptions } from "../sim/compute-memo.js";
 import { FIGHT_PLAN_TASK, fightKey, fightPlanInput, fightPlanJson, isFightPlanReply, loadFightPlan, logFightPlan, needsReplan, parseFightPlan } from "../memory/fight-plan.js";
 import { actOf, isRunPlanReply, loadRunPlan, logRunPlan, parseRunPlan, RUN_PLAN_TASK, runPlanInput, runPlanLine, runPlanTrigger, type RunPlanTrigger } from "../memory/run-plan.js";
 import { currentRunPlan, ridingPlanOf, runPlanAtMap, runPlanDueAtQuestion, runPlanTaskState, withRunPlanTask } from "../memory/run-plan-merge.js";
-import { endgameScope, endgameQuestion, endgameTask, endgameProblems, endgameCheckpointRequired } from "../memory/endgame-plan.js";
+import { updateRunPlan, runPlanUpdateProblems } from "../memory/run-plan-update.js";
+import { endgameScope, endgameQuestion, endgameTask, endgameProblems, endgameCheckpointRequired, endgameReuse } from "../memory/endgame-plan.js";
 import type { Knowledge } from "../knowledge/index.js";
 import type { ActionRequest, ModClient } from "./mod/client.js";
 import type { ActionResult, GameState } from "./mod/schema.js";
@@ -1166,8 +1167,10 @@ async function runLoopWithBudgets(options: LoopOptions): Promise<LoopStats> {
             const plan = runId ? currentRunPlan(screenMemory, config.runPlanLog, runId, runPlanFloor) : null;
             const trigger = runId ? endgameUpdate ? runPlanTrigger(plan, state) ?? "review" : runPlanDueAtQuestion(screenMemory, state, plan) : null;
             if (trigger) {
-              const context = await attachDirectionRide(env, runPlanTaskState(state, knowledge, trigger, plan, decision.state), trigger, decision.label, config.runPlanLog);
-              const task = endgameUpdate ? { ...context, ...endgameTask(state, decision.label), due_because: "每道构筑题更新本局核心、缺口与终局计划" } : context;
+              const reuse = endgameUpdate && Boolean(plan?.endgame);
+              const context = await attachDirectionRide(env, runPlanTaskState(state, knowledge, trigger, plan, decision.state), reuse ? null : trigger, decision.label, config.runPlanLog);
+              const task = endgameUpdate ? { ...context, ...endgameTask(state, decision.label, reuse),
+                due_because: reuse ? "复用已有计划；仅在预期有利于本局胜率时更新受影响字段" : "建立本局终局计划" } : context;
               const carried = withRunPlanTask({ ...decision, deepseek: spec }, task);
               const carriedQuestion = carried.questions[spec.question];
               if (carriedQuestion?.type === "choice") {
@@ -1256,6 +1259,26 @@ async function runLoopWithBudgets(options: LoopOptions): Promise<LoopStats> {
             if (brain?.router.codexOnly) brainFault(brain, "run-plan", runId, `Codex run-plan answer could not be stored: ${why}`);
             onEvent({ type: "note", message: `${ask.label}: no usable run plan in the answer (${why.slice(0, 120)}); still due${since === undefined ? "" : ` since floor ${since}`}, the next question carries it` });
           };
+          if (endgameUpdate && endgameReuse(ask.state)) {
+            const problems = runPlanUpdateProblems(value, ask.state);
+            if (problems.length) return fail("invalid", problems.join("; "));
+            const previous = screenMemory.runPlan;
+            if (!previous || previous.runId !== runId) return fail("missing", "the previous run plan is unavailable");
+            const update = updateRunPlan(previous, value, state, knowledge, ride.trigger);
+            screenMemory.runPlan = update.plan;
+            screenMemory.runPlanPending = undefined;
+            runPlanRideLog = { trigger: ride.trigger, outcome: update.outcome, changed_fields: update.changed, reason: update.reason };
+            logRunPlan(config.runPlanLog, { run: runId, floor, trigger: ride.trigger, merged_into: ask.label, decision_id: decisionId,
+              observed_ts: observedTs, plan: toJsonValue(update.plan), plan_update: runPlanRideLog,
+              ...(value == null ? {} : { raw: toJsonValue(value) }), question: call, memory_chars: memoryChars(memory) });
+            if (update.outcome !== "reused") {
+              const items = journal.itemCount;
+              journal.noteRunPlan(state, ride.trigger, runPlanLine(update.plan));
+              if (journal.itemCount !== items) observedStates.touched(state, observedFp, observedTs);
+            }
+            onEvent({ type: "note", message: `run plan ${update.outcome} on ${ask.label}; changed: ${update.changed.join(", ") || "none"}` });
+            return;
+          }
           if ("missing" in found) return fail("missing", found.missing);
           if (endgameUpdate) {
             const problems = endgameProblems(found.plan["endgame"], endgameCheckpointRequired(ask.state));

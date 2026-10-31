@@ -1,0 +1,66 @@
+
+ RUN  v4.1.11 /home/dw/Projects/agent-sts2/.artifacts/integrator70-combination-20261026/actual-live-consumer/agent
+
+(node:2914938) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+ ✓ tests/brain-codex-session.test.ts (33 tests) 12200ms
+     ✓ config.toml with anything but model / effort / [tui] (or an instruction source) turns session mode off: exec mode answers  366ms
+     ✓ a stalled turn (silent after its first token) is interrupted, reverted and asked once more  1129ms
+     ✓ a cut naming an option that needs a field it lacks (a :discard option without slots, a card option without cards) is asked again; the trace says why  360ms
+     ✓ a cut is asked again as before when its prefix lacks a required field, names no option, or BRAIN_CODEX_ACCEPT_CUT is off  353ms
+     ✓ a server that dies is restarted once; when it dies again, exec mode answers for the rest of the process  2169ms
+     ✓ sweeps a dead process's threads (ours only), and deletes its own thread's files at exit  398ms
+     ✓ the server does not keep the process alive; at exit the process removes its thread's files  716ms
+   ✓ #64 strict session through persistence and restored route consumer: change  889ms
+   ✓ #64 strict session through persistence and restored route consumer: construction-only  531ms
+   ✓ #64 strict session through persistence and restored route consumer: both  538ms
+   ✓ #64 strict session through persistence and restored route consumer: omit  624ms
+   ✓ #64 strict session through persistence and restored route consumer: keep  597ms
+   ✓ #64 strict session through persistence and restored route consumer: repeat  606ms
+   ✓ #64 strict session through persistence and restored route consumer: missing-reason  630ms
+   ✓ #64 strict session through persistence and restored route consumer: invalid-route  601ms
+(node:2916196) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+ ✓ tests/brain-agent-mode.test.ts (15 tests) 387ms
+(node:2916232) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+ ✓ tests/codex-only-brain.test.ts (36 tests) 894ms
+     ✓ rest outage resumes the same real screen question and dispatches once  442ms
+(node:2916375) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+ ✓ tests/brain-query-efficiency.test.ts (9 tests) 12680ms
+   ✓ reward/card gives truthful optional external lookup counts and executable inputs without statistics  6144ms
+   ✓ shop/plan gives truthful optional external lookup counts and executable inputs without statistics  6468ms
+(node:2916925) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+ ✓ tests/brain-agent-provenance.test.ts (16 tests) 2752ms
+   ✓ labels a catalogue reconstruction as a compatible view with its actual catalogue hash  907ms
+(node:2917049) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+ ✓ tests/brain-router.test.ts (30 tests) 6084ms
+     ✓ a timeout aborts the engine and falls back  1006ms
+     ✓ two timeouts in a row (a re-ask's too) rest the engine for TIMEOUT_REST_MS: the next question does not wait on it  2009ms
+     ✓ a timeout between answers starts the count over  2007ms
+     ✓ an invalid answer whose re-ask timed out goes to the fallback too; a fallback that fails leaves the unusable answer (then Jev/code)  1002ms
+(node:2917711) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+ ✓ tests/brain-budget-evidence.test.ts (15 tests) 251ms
+(node:2917873) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+ ✓ tests/brain-agent-codex.test.ts (2 tests) 220ms
+(node:2917983) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+ ✓ tests/brain-plan-reuse.test.ts (9 tests) 97ms
+(node:2918061) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+ ✓ tests/codex-cache-engine.test.ts (5 tests) 41ms
+(node:2918103) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+ ✓ tests/brain-run-profile.test.ts (7 tests) 27ms
+
+ Test Files  11 passed (11)
+      Tests  177 passed (177)
+   Start at  01:03:29
+   Duration  44.38s (transform 3.40s, setup 1.13s, import 6.03s, tests 35.63s, environment 1ms)
+
+JSON report written to /home/dw/Projects/agent-sts2/paper/materials/20261025-issue70-integrator/actual-live-consumer-tests.json

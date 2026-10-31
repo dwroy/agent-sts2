@@ -1,0 +1,84 @@
+
+ RUN  v4.1.11 /home/dw/Projects/agent-sts2/.worktrees/issue-66-knowledge-classification/agent
+
+(node:804512) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:804512) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:804512) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+ ❯ tests/brain-query-guidance.test.ts (16 tests | 8 failed) 139ms
+   × reward/card offers a strategy count without mandatory strategy/rk guidance and retains experience cues 20ms
+   × shop/plan offers a strategy count without mandatory strategy/rk guidance and retains experience cues 6ms
+   × rest/plan offers a strategy count without mandatory strategy/rk guidance and retains experience cues 8ms
+   × event/plan offers a strategy count without mandatory strategy/rk guidance and retains experience cues 6ms
+   × event/act-plan offers a strategy count without mandatory strategy/rk guidance and retains experience cues 9ms
+   × map/act-start offers a strategy count without mandatory strategy/rk guidance and retains experience cues 6ms
+   × fight-plan offers a strategy count without mandatory strategy/rk guidance and retains experience cues 7ms
+   × keeps tools read-only, reflects library changes and fails closed on bad libraries 13ms
+(node:804512) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 8 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/brain-query-guidance.test.ts > reward/card offers a strategy count without mandatory strategy/rk guidance and retains experience cues
+ FAIL  tests/brain-query-guidance.test.ts > shop/plan offers a strategy count without mandatory strategy/rk guidance and retains experience cues
+ FAIL  tests/brain-query-guidance.test.ts > rest/plan offers a strategy count without mandatory strategy/rk guidance and retains experience cues
+ FAIL  tests/brain-query-guidance.test.ts > event/plan offers a strategy count without mandatory strategy/rk guidance and retains experience cues
+ FAIL  tests/brain-query-guidance.test.ts > event/act-plan offers a strategy count without mandatory strategy/rk guidance and retains experience cues
+ FAIL  tests/brain-query-guidance.test.ts > map/act-start offers a strategy count without mandatory strategy/rk guidance and retains experience cues
+ FAIL  tests/brain-query-guidance.test.ts > fight-plan offers a strategy count without mandatory strategy/rk guidance and retains experience cues
+AssertionError: expected { schema: 'brain-query-cues-v3', …(3) } to not have property "strategies"
+
+- Expected:
+undefined
+
++ Received:
+{
+  "count": 1,
+  "input": {
+    "limit": 3,
+    "query": "*",
+  },
+  "status": "ok",
+  "tool": "kb_strategies",
+}
+
+ ❯ tests/brain-query-guidance.test.ts:43:20
+     41|   const result = await attachQueryGuidance(req);
+     42|   const cues = JSON.parse(result.question.split("\n").at(-1)!);
+     43|   expect(cues).not.toHaveProperty("strategies"); expect(cues).not.toHa…
+       |                    ^
+     44|   expect(result.question).toContain("本题有 1 条相关策略/剧本可查。");
+     45|   expect(result.question).not.toMatch(/kb_strategies|kb_reflex|策略\/rk|…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/8]⎯
+
+ FAIL  tests/brain-query-guidance.test.ts > keeps tools read-only, reflects library changes and fails closed on bad libraries
+AssertionError: expected 'fixed question\n\n本题经验实际检索匹配数见下；只按非空线…' not to contain '"strategies"'
+
+- Expected
++ Received
+
+- "strategies"
++ fixed question
++
++ 本题经验实际检索匹配数见下；只按非空线索及需要查询，0匹配/缺失/错误跳过，直接用已有信息作答。外部统计线索仅供任选；主题仅筛明确标签，unknown不是库中没有知识，覆盖计数不当适用知识；不自动拓宽或重试刷库。构筑与爬楼路线分别判断，路线不变继续复用，不因分类更新重算。
++ {"schema":"brain-query-cues-v3","question_type":"card_reward","experience":{"status":"ok","count":3,"entries":[{"id":"rk-boss","title":"格式夹具标题","scope":"boss:FIXTURE_BOSS"},{"id":"rk-card","title":"格式夹具标题","scope":"card:FIXTURE_CARD"},{"id":"rk-elite","title":"格式夹具标题","scope":"elite:FIXTURE_ELITE"}],"omitted":0,"tool":"kb_experience","input":{"relevant":true}},"strategies":{"status":"ok","count":0}}
+
+ ❯ tests/brain-query-guidance.test.ts:83:107
+     81|   expect(readFileSync(knowledgeFile(ctx.knowledgeDir, "experience.json…
+     82|   write("strategy-entries.json", { schema: "brain-strategies-v1", char…
+     83|   expect(strategyMatches(ctx).entries).toEqual([]); expect((await atta…
+       |                                                                                                           ^
+     84|   write("strategy-entries.json", { schema: "brain-strategies-v1", char…
+     85|   expect(strategyMatches(ctx)).toMatchObject({ status: "invalid", entr…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/8]⎯
+
+
+ Test Files  1 failed | 3 passed (4)
+      Tests  8 failed | 46 passed (54)
+   Start at  16:33:15
+   Duration  5.90s (transform 1.21s, setup 485ms, import 1.38s, tests 3.53s, environment 1ms)
+

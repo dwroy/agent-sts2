@@ -1,0 +1,402 @@
+{
+  "at": "2026-10-25T02:41:05+08:00",
+  "strategy": [
+    {
+      "id": "silent-dowsing-rod-question-task",
+      "confidence": 0.25,
+      "strategy": "选寻龙尺或已持探寻/富足时，把问号任务、生成能力和已建立能力分开预算；不把未来能力当当前防护。P5HT F1牌文为不能打、进入5个?后变化；F14首记录富足1费、三升级能力选一入手且本轮免费、消耗。外部v0.111所选10轨迹均记录变化，节点8–15，5胜5败；这是代表选择，非完成率或路线收益。\n范围：Silent A10幕初/事件/营火，现场牌文与任务进度同；自有1局版本unknown且终败。原寻龙尺经验复用，不定五问号路线或升级优先级。",
+      "evidence_status": "aligned",
+      "own_support_runs": [
+        "P5HT1272P5SB"
+      ]
+    },
+    {
+      "id": "silent-fasten-defend-extra-block",
+      "confidence": 0.25,
+      "strategy": "牌组仍有5张“防御”且店内有勒紧时，按专属对象比较它与抽牌、攻击及离店，不把所有挡牌都算受益。P5HT F21原文1费、只从“防御”额外得4挡；247金买勒紧83、杂技73、精密瞄准37，共193留54。F23战斗52→40且用火焰药水，F25仍败，不能归为该购物收益。\n范围：Silent A10幕2商店、现场牌文同；1局1店，版本unknown，牌组为此前快照代理。旧勒紧机制复用；5张防御不是每轮5张可打，也不推固定购物顺序。",
+      "own_support_runs": [
+        "P5HT1272P5SB"
+      ]
+    },
+    {
+      "id": "silent-brain-b003-next-turn-copy-or-attack",
+      "confidence": 0.25,
+      "strategy": "奖励出现夜魇或暗影步时，仍分核延迟回报与当前费用；夜魇3费消耗、下回合加所选牌3复制品，暗影步弃全手后下回合攻击翻倍。新增P5HT F17已有步法+、肾上腺素，仍应同屏比较夜魇、刀刃陷阱、磨蚀与跳过：仅持潜在复制目标不保证未来手牌或施放费用。\n范围：Silent A10、现场牌文同，新增1局1次、版本unknown；旧4局证据保留，新增局最终F25败。外部所选失败轨迹6b921同在幕1末拿夜魇，不证明拿牌导致失败或固定拒拿。",
+      "evidence_status": "unassessed",
+      "own_support_runs": [
+        "P5HT1272P5SB"
+      ]
+    },
+    {
+      "id": "silent-brain-c0-upgrade-hp-trade",
+      "confidence": 0.25,
+      "strategy": "事件可失10血升级夜魇时，把降启动费与下一段实际HP预算一起比较；不要只因有未来营火就认定代价可承受。P5HT F22选失血升级，62→52、费用3→2；下一战52→40并用火焰药水。另一项原文回复25并加羽化，不能省略其入牌代价或声称替代必胜。\n范围：Silent A10幕2事件、现场为这两类选项；1局1机会、版本unknown，前态牌组为代理。原局终败非升级因果；外部缺完整事件备选，不能给选项收益或固定失血阈值。",
+      "own_support_runs": [
+        "P5HT1272P5SB"
+      ]
+    },
+    {
+      "id": "silent-route-hp-observation",
+      "confidence": 0.4,
+      "strategy": "路线复核继续把?房间的战斗可能性留在到火预算中，不将未知房间视作安全空档。P5HT F24为40/77血，休息可回23，却锻造暴露；原理由称下火前无强制战，F25问号实际开战、40血入场代理后终态0。牌组有步法+、夜魇+与富足仍未保证存活，未走休息线结果未知。\n范围：Silent A10幕2营火/路线复核，当前合法选项与可见地图同；新增1局1窗口、版本unknown。旧路线统计/反例保留；问号只表示不确定，不能在F24触发中提前写入F25敌人或定回血线。",
+      "own_support_runs": [
+        "P5HT1272P5SB"
+      ]
+    }
+  ],
+  "rk": [
+    {
+      "id": "silent-rk-c0-dowsing-stage-research",
+      "confidence": 0.25,
+      "candidate_kind": "research-only-not-loadable",
+      "runtime_entry": null,
+      "replay": "pending: no original supported capture",
+      "description_zh": "选寻龙尺或已持探寻/富足时，把问号任务、生成能力和已建立能力分开预算；不把未来能力当当前防护。P5HT F1牌文为不能打、进入5个?后变化；F14首记录富足1费、三升级能力选一入手且本轮免费、消耗。外部v0.111所选10轨迹均记录变化，节点8–15，5胜5败；这是代表选择，非完成率或路线收益。\n范围：Silent A10幕初/事件/营火，现场牌文与任务进度同；自有1局版本unknown且终败。原寻龙尺经验复用，不定五问号路线或升级优先级。"
+    },
+    {
+      "id": "silent-rk-c0-fasten-shop-target",
+      "confidence": 0.25,
+      "candidate_kind": "descriptive-tag-schema-candidate",
+      "runtime_entry": {
+        "schema": "reflex-entry-v1",
+        "id": "silent-rk-c0-fasten-shop-target",
+        "version": 1,
+        "applies_to": "shop",
+        "predicate": {
+          "op": "and",
+          "args": [
+            {
+              "op": "eq",
+              "field": "act",
+              "value": 2
+            },
+            {
+              "op": "any",
+              "field": "player.deck",
+              "arg": {
+                "op": "eq",
+                "field": "card.id",
+                "value": "DEFEND_SILENT"
+              }
+            },
+            {
+              "op": "any",
+              "field": "shop.stock",
+              "arg": {
+                "op": "eq",
+                "field": "shop_item.id",
+                "value": "FASTEN"
+              }
+            }
+          ]
+        },
+        "signal": {
+          "kind": "tag",
+          "value": "silent-rk-c0-fasten-shop-target-tag",
+          "unit": "label"
+        },
+        "label_en": "Compare Defend-specific setup with the current shop budget",
+        "evidence": {
+          "observations": [
+            {
+              "run_id": "P5HT1272P5SB",
+              "floor": 21
+            }
+          ],
+          "n_support": 1,
+          "n_contradict": 0
+        },
+        "confidence": 0.25,
+        "scope": {
+          "character": "silent",
+          "ascensions": [
+            10
+          ]
+        },
+        "directions": [],
+        "cores": [],
+        "combos": [],
+        "source_experience": [
+          "silent-fasten-defend-extra-block"
+        ],
+        "sources": [
+          {
+            "source": "own",
+            "path": "learner/runs/20261025-021443-41ad5aa7-4a88-4f67-97a0-8cc882b5bed6-strategy-proposal/scratch/raw-window-receipts.json",
+            "sha256": "2a3a66bc04f7d237d3a50561ddf38ffa0b1d8002b0bc77b8ece937426a9919af",
+            "game_version": "unknown",
+            "retrieved_at": "2026-10-25",
+            "sample": {
+              "runs": 1,
+              "players": null,
+              "selection": "P5HT1272P5SB A10 no_retry_evidence；原506/六流截止内具名题；1局1情境，非因果。"
+            }
+          }
+        ]
+      },
+      "replay": "pending: 缺同题逐候选原DTO/capture及生产消费者读回；格式通过不代匹配/采用",
+      "description_zh": "牌组仍有5张“防御”且店内有勒紧时，按专属对象比较它与抽牌、攻击及离店，不把所有挡牌都算受益。P5HT F21原文1费、只从“防御”额外得4挡；247金买勒紧83、杂技73、精密瞄准37，共193留54。F23战斗52→40且用火焰药水，F25仍败，不能归为该购物收益。\n范围：Silent A10幕2商店、现场牌文同；1局1店，版本unknown，牌组为此前快照代理。旧勒紧机制复用；5张防御不是每轮5张可打，也不推固定购物顺序。"
+    },
+    {
+      "id": "silent-rk-b003-next-turn-copy-or-attack",
+      "confidence": 0.25,
+      "candidate_kind": "descriptive-tag-schema-candidate",
+      "runtime_entry": {
+        "schema": "reflex-entry-v1",
+        "id": "silent-rk-b003-next-turn-copy-or-attack",
+        "version": 2,
+        "applies_to": "card_pick",
+        "predicate": {
+          "op": "or",
+          "args": [
+            {
+              "op": "and",
+              "args": [
+                {
+                  "op": "eq",
+                  "field": "card.id",
+                  "value": "NIGHTMARE"
+                },
+                {
+                  "op": "eq",
+                  "field": "card.upgraded",
+                  "value": false
+                }
+              ]
+            },
+            {
+              "op": "and",
+              "args": [
+                {
+                  "op": "eq",
+                  "field": "card.id",
+                  "value": "SHADOW_STEP"
+                },
+                {
+                  "op": "eq",
+                  "field": "card.upgraded",
+                  "value": false
+                }
+              ]
+            }
+          ]
+        },
+        "signal": {
+          "kind": "tag",
+          "value": "silent-rk-b003-next-turn-copy-or-attack-tag",
+          "unit": "label"
+        },
+        "evidence": {
+          "observations": [
+            {
+              "run_id": "9TG1RP5LFAAK",
+              "floor": 33
+            },
+            {
+              "run_id": "JMH5C51RLN4E",
+              "floor": 33
+            },
+            {
+              "run_id": "L704TLETMZBM",
+              "floor": 44
+            },
+            {
+              "run_id": "25226ZFLNR1J",
+              "floor": 17
+            },
+            {
+              "run_id": "P5HT1272P5SB",
+              "floor": 17
+            }
+          ],
+          "n_support": 5,
+          "n_contradict": 0
+        },
+        "confidence": 0.25,
+        "scope": {
+          "character": "silent",
+          "ascensions": [
+            10
+          ]
+        },
+        "directions": [],
+        "cores": [],
+        "combos": [],
+        "source_experience": [],
+        "sources": [
+          {
+            "source": "own",
+            "path": "paper/materials/20261024-issue51-boss-card-ops/original/221315/scratch/scenario-examples.json",
+            "sha256": "b39c183e90bca708b24ddcbcf4ff0aa16a4873dc9fc73801b8feb9f048467554",
+            "game_version": "unknown",
+            "retrieved_at": "2026-10-24",
+            "sample": {
+              "runs": 4,
+              "players": null,
+              "selection": "A10 frozen506; earliest taken and earliest other/skip per target where present, upgrade variants preserved; printed-text observations only, not effectiveness trials."
+            }
+          },
+          {
+            "source": "external:sts2fun",
+            "path": "knowledge/external/sts2fun/decision-fields-v1/statistics.json",
+            "sha256": "4cf36c85eee760ed8e74495c1758e0228bbe1214789d3d0bd97052d5ca6a1f9d",
+            "game_version": "v0.111",
+            "retrieved_at": "2026-10-21",
+            "sample": {
+              "runs": 1739,
+              "players": null,
+              "selection": "Complete cohort denominator only; per-card occurrence denominators are in external-descriptive.json. Subgroup independent run unions unknown. External context does not validate card mechanics."
+            },
+            "url": "https://sts2.fun/static/sts2_public.db.zst",
+            "license": "No explicit redistribution license; attributed aggregates only."
+          },
+          {
+            "source": "own",
+            "path": "learner/runs/20261025-021443-41ad5aa7-4a88-4f67-97a0-8cc882b5bed6-strategy-proposal/scratch/raw-window-receipts.json",
+            "sha256": "2a3a66bc04f7d237d3a50561ddf38ffa0b1d8002b0bc77b8ece937426a9919af",
+            "game_version": "unknown",
+            "retrieved_at": "2026-10-25",
+            "sample": {
+              "runs": 1,
+              "players": null,
+              "selection": "P5HT1272P5SB A10 no_retry_evidence；原506/六流截止内具名题；1局1情境，非因果。"
+            }
+          }
+        ],
+        "label_en": "Keep next-turn copies separate from discarded-hand attack setup"
+      },
+      "replay": "pending: 缺同题逐候选原DTO/capture及生产消费者读回；格式通过不代匹配/采用",
+      "description_zh": "奖励出现夜魇或暗影步时，仍分核延迟回报与当前费用；夜魇3费消耗、下回合加所选牌3复制品，暗影步弃全手后下回合攻击翻倍。新增P5HT F17已有步法+、肾上腺素，仍应同屏比较夜魇、刀刃陷阱、磨蚀与跳过：仅持潜在复制目标不保证未来手牌或施放费用。\n范围：Silent A10、现场牌文同，新增1局1次、版本unknown；旧4局证据保留，新增局最终F25败。外部所选失败轨迹6b921同在幕1末拿夜魇，不证明拿牌导致失败或固定拒拿。"
+    },
+    {
+      "id": "silent-rk-c0-hp-upgrade-research",
+      "confidence": 0.25,
+      "candidate_kind": "research-only-not-loadable",
+      "runtime_entry": null,
+      "replay": "pending: no original supported capture",
+      "description_zh": "事件可失10血升级夜魇时，把降启动费与下一段实际HP预算一起比较；不要只因有未来营火就认定代价可承受。P5HT F22选失血升级，62→52、费用3→2；下一战52→40并用火焰药水。另一项原文回复25并加羽化，不能省略其入牌代价或声称替代必胜。\n范围：Silent A10幕2事件、现场为这两类选项；1局1机会、版本unknown，前态牌组为代理。原局终败非升级因果；外部缺完整事件备选，不能给选项收益或固定失血阈值。"
+    },
+    {
+      "id": "silent-rk-c0-unknown-room-rest",
+      "confidence": 0.4,
+      "candidate_kind": "descriptive-tag-schema-candidate",
+      "runtime_entry": {
+        "schema": "reflex-entry-v1",
+        "id": "silent-rk-c0-unknown-room-rest",
+        "version": 1,
+        "applies_to": "rest",
+        "predicate": {
+          "op": "and",
+          "args": [
+            {
+              "op": "eq",
+              "field": "act",
+              "value": 2
+            },
+            {
+              "op": "exists",
+              "field": "rest.options"
+            }
+          ]
+        },
+        "signal": {
+          "kind": "tag",
+          "value": "silent-rk-c0-unknown-room-rest-tag",
+          "unit": "label"
+        },
+        "label_en": "Keep unknown rooms uncertain when comparing rest and smith",
+        "evidence": {
+          "observations": [
+            {
+              "run_id": "P5HT1272P5SB",
+              "floor": 24
+            }
+          ],
+          "n_support": 1,
+          "n_contradict": 0
+        },
+        "confidence": 0.4,
+        "scope": {
+          "character": "silent",
+          "ascensions": [
+            10
+          ]
+        },
+        "directions": [],
+        "cores": [],
+        "combos": [],
+        "source_experience": [
+          "silent-route-hp-observation"
+        ],
+        "sources": [
+          {
+            "source": "own",
+            "path": "learner/runs/20261025-021443-41ad5aa7-4a88-4f67-97a0-8cc882b5bed6-strategy-proposal/scratch/raw-window-receipts.json",
+            "sha256": "2a3a66bc04f7d237d3a50561ddf38ffa0b1d8002b0bc77b8ece937426a9919af",
+            "game_version": "unknown",
+            "retrieved_at": "2026-10-25",
+            "sample": {
+              "runs": 1,
+              "players": null,
+              "selection": "P5HT1272P5SB A10 no_retry_evidence；原506/六流截止内具名题；1局1情境，非因果。"
+            }
+          }
+        ]
+      },
+      "replay": "pending: 缺同题逐候选原DTO/capture及生产消费者读回；格式通过不代匹配/采用",
+      "description_zh": "路线复核继续把?房间的战斗可能性留在到火预算中，不将未知房间视作安全空档。P5HT F24为40/77血，休息可回23，却锻造暴露；原理由称下火前无强制战，F25问号实际开战、40血入场代理后终态0。牌组有步法+、夜魇+与富足仍未保证存活，未走休息线结果未知。\n范围：Silent A10幕2营火/路线复核，当前合法选项与可见地图同；新增1局1窗口、版本unknown。旧路线统计/反例保留；问号只表示不确定，不能在F24触发中提前写入F25敌人或定回血线。"
+    }
+  ],
+  "attachments": [
+    {
+      "id": "silent-dowsing-rod-question-task",
+      "attachment": "reused_knowledge_attachment",
+      "source_id": "silent-dowsing-rod-question-task",
+      "equal_original_baseline": true,
+      "attachment_sha256": "b752783552419022197489d1e79e2e753eab8421029d8d795bd291ceb38de71e"
+    },
+    {
+      "id": "silent-fasten-defend-extra-block",
+      "attachment": "reused_knowledge_attachment",
+      "source_id": "silent-fasten-defend-extra-block",
+      "equal_original_baseline": true,
+      "attachment_sha256": "2a9028094601da48b803fd4a24ea9b355ce281e43ede066c1ca66eb4988322ac"
+    },
+    {
+      "id": "silent-brain-b003-next-turn-copy-or-attack",
+      "attachment": "prior_entry_attachment",
+      "source_id": "silent-brain-b003-next-turn-copy-or-attack",
+      "equal_original_baseline": true,
+      "attachment_sha256": "2f7dc0862125186e7225ed0391b5bb4617c9868f6162c849e94a463beb04426c"
+    },
+    {
+      "id": "silent-route-hp-observation",
+      "attachment": "prior_entry_attachment",
+      "source_id": "silent-route-hp-observation",
+      "equal_original_baseline": true,
+      "attachment_sha256": "b2f7be63cfd15b24b745f6d5b643821c5ab7dd6c793ae560ac96f98b3064c4e1"
+    },
+    {
+      "id": "silent-route-hp-observation",
+      "attachment": "reused_knowledge_attachment",
+      "source_id": "silent-route-hp-observation",
+      "equal_original_baseline": true,
+      "attachment_sha256": "aa238667637fe0b6b4bfd5b42ca9017d604cf6bb6f7e0937d87e8fc474437366"
+    },
+    {
+      "id": "silent-rk-b003-next-turn-copy-or-attack",
+      "attachment": "prior_entry_attachment",
+      "source_id": "silent-rk-b003-next-turn-copy-or-attack",
+      "equal_original_baseline": true,
+      "attachment_sha256": "f44cd62aea8fc302fe1d3aabd0fe72912f14e3d6129afd9e1230042174fe62d8"
+    }
+  ],
+  "counts": {
+    "context_new": 1,
+    "supplement": 4,
+    "new_projection": 3,
+    "new_mechanism": 0,
+    "rk_format": 3,
+    "rk_research": 2
+  }
+}

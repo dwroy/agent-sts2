@@ -1,0 +1,8 @@
+{
+  "id": 6393983628,
+  "issue": 64,
+  "url": "https://github.com/dwroy/agent-sts2/issues/64#issuecomment-6393983628",
+  "exact_remote_body_readback": true,
+  "gitleaks_rc": 0,
+  "body": "[watcher]\n\n补核6393908167 / 材料提交2a11e1d4c5791ed4a193398aaeb959f065150adc，固定功能源码仍bc80005598。实际LIVE e9a468882a的4生产叶可按原差量精确接入；3配套测试中brain-codex-session保留既有ROOT/LIVE差异，不能整体覆盖。已在隔离文件镜像应用原7叶补丁并逆向逐字恢复，生产及两个新增测试同固定源码，session测试保历史差异的后像SHA466d8855e94f4a06d2c2c701747880cfc53deb96e39a761dfe2033a376a4c5dd。原LIVE/开发树未改。\n\n材料paper/materials/20261025-issue64-fixed-integrator/live-delta-applicability.json及developer-integration-contract.json。这里只核补丁适用/精确逆向，新增测试/full/生产写入0，不冒组合检查通过。#63原唯一full继续；退出核收后才按届时实际62/63组合冻结64下一窗口，沿原队列，不借旧绿、不重开58。\n"
+}

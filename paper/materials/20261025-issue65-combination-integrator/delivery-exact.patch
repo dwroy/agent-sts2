@@ -1,0 +1,529 @@
+diff --git a/docs/learner-tab-sessions.md b/docs/learner-tab-sessions.md
+index b2589e716..9ee2448cf 100644
+--- a/docs/learner-tab-sessions.md
++++ b/docs/learner-tab-sessions.md
+@@ -6,13 +6,30 @@
+ 
+ - 原运行根的原 state-dir 下存在 `accounts/<codex账号>/profile.json`，engine/account/learner_home 精确对应账号的 `learner` 目录；profile 与账号目录本身不得经过软链。
+ - 唯一允许的软链是该目录的 `sessions`，原始 link 文本精确指向操作系统当前用户 home 下 `.<同账号>/sessions`。不使用当前账号选择器、环境中的 CODEX_HOME，也不搜索其他账号。其他布局继续保留待核。
+-- 原 rollout 为 `YYYY/MM/DD/rollout-时间-原session UUID.jsonl`，原 receipt/result 的 session/turn/rollout 一致。原产物日志 SHA 匹配，且唯一 learner_launch 的 cwd/batch/engine 和 learner_tui_session 的 pane/session/rollout 对应原批次。
++- 原 rollout 为 `YYYY/MM/DD/rollout-时间-原session UUID.jsonl`，原 receipt/result 的 session/turn/rollout 一致。原产物日志 SHA 匹配，且唯一 learner_launch 的 cwd/engine 和 learner_tui_session 的 pane/session/rollout 对应原批次。显式 `params.batch` 必须对应原批次；普通 fix 无此字段时只按下述 #65 合同核验。
+ - 目标路径从 `/` 开始逐层以 `O_NOFOLLOW` 打开，叶子必须是普通文件；不通过软链本身读取。读取中检查文件身份稳定，原生核验与终态检查读取同一份字节，不改写 receipt 的路径。
+ 
+ 封存证明保存原逻辑路径、SHA、profile 内容和文件身份、sessions 软链身份、目标文件及目录身份。封存末尾、恢复复核和关闭 tab 前均重新验证；同目标重建软链、换 profile、嵌套/叶子软链、路径逃逸、异账号/线程、产物变化继续阻止关闭。当前证据只能证明当前映射与登记一致；没有历史 inode 回执时不倒填“从启动起未替换”。
+ 
+ 原任务终态、wrapper PID/start 绑定、原生终态、实际 pane、空输入、前后台额外进程及不确定关闭回执门保持。通用路径、账号配置、凭据、原日志、批次绑定及知识发布不由本功能修改。
+ 
++## 普通 fix 的原启动绑定（#65）
++
++普通 `fix-batch` 模板没有使用 `{{batch}}`，启动器只将模板实际引用的参数写入 `learner_launch.params`；因此原普通 fix 日志合法缺少 `params.batch`。不能补写原日志，也不能让其他任务缺字段时一概通过。
++
++只有字段完全缺席时才检查 `ordinary-fix-v1`：
++
++- 原 label 精确为 `learner-YYYYMMDD-HHMMSS-fix-batch`。原 `learn.json` 同批行的 task 为 fix-batch、learner_task 缺席或同名，无 feature_request/boss_sim；character、pane、worktree 与原 receipt/launch 一致。工作树须为原 wrapper 规定的 `.worktrees/codex-fix-<角色>-<批次时间>`。
++- 唯一 launch 的 engine=codex、task=fix-batch、transport=herdr-interactive、cwd 与原工作树一致。params 的 worktree/project_root/character 必须逐项对应原登记，不用当前账号选择器或新派发推断。
++- 原日志位于本项目 `learner/runs/YYYYMMDD-HHMMSS-<UUID>-fix-batch.jsonl`；scratch 精确为同目录同 stem，仍拒绝软链和越界。
++- 唯一匹配的 learner_tui_session 保持原 pane/session/rollout，并带 receipt 第一项 bindings/submissions 的同一 marker。后续完整原生核验仍验证 prompt SHA、turn 顺序及终态。
++
++显式 batch 即使为 null、空串或错误值也不能退到此分支；不支持的专题/其他任务布局继续保留。封存的 sessions_mapping 只为这个分支新增 launch_binding 证明，原显式 batch 和无软链封存格式保持；恢复、关闭前重核同一证明。原批次 failed/rc0 只表示业务验收失败，不妨碍有合法处置权的 UI 释放，也不因释放改成 done 或入库成功。
++
++#65 交付仅修改 `ops/learner_tabs.py` 生产叶，依赖已部署 #63 的 `ops/learner_tui.py` stream 核验接口；ops 核实际宿主两叶及适用组合后再装新 tabs 叶，不覆盖已冻结 #64 包。沿原 recover-seal / stall tick 接同一原134331样本，逐项鲜核后封存、释放及核 tab/PID 缺席；不重放原 #63 三例。部署和实际回收由原 ops 验收，固定夹具不代真实关闭。不满足门禁仍保留，原树和产物删除继续交 retention。
++
++回退 #65 时将 tabs 叶恢复到部署前固定版本，并保留 #63 配套 verifier、所有失败和新 seal/journal 原件。新分支证明仍会被旧逻辑保守拒绝，不删除证明来重放动作。无游戏行为或知识变更，不分配游戏 release_id。
++
+ ## 部署闭包与接续
+ 
+ 原集成员核固定候选与适用最终组合检查；原 ops 在原调度事务边界同时安装 `ops/learner_tabs.py` 和 `ops/learner_tui.py`。前者调用后者新增的只读 stream 参数，两叶必须配套。wrapper/tick 调用入口、state-dir、根和原批次身份保持，不热换正在封存/回收的进程。
+diff --git a/ops/learner_tabs.py b/ops/learner_tabs.py
+index 964f6f9bf..96135ea27 100644
+--- a/ops/learner_tabs.py
++++ b/ops/learner_tabs.py
+@@ -71,6 +71,41 @@ def account_sessions(root):
+     return Path(pwd.getpwuid(os.getuid()).pw_dir)
+ 
+ 
++def ordinary_fix_binding(root, directory, receipt, launch, matches, log):
++    """Recognize the original ordinary fix writer, which never rendered params.batch."""
++    batch = receipt.get("label", "").removeprefix("learner-")
++    if not re.fullmatch(r"[0-9]{8}-[0-9]{6}-fix-batch", batch):
++        raise ValueError("native sessions original account/thread binding missing")
++    row = load(safe_path(root, directory / "learn.json"))["batches"][batch]
++    params = launch["params"]
++    character = row.get("character")
++    if not isinstance(character, str) or not re.fullmatch(r"[a-z][a-z0-9_]*", character):
++        raise ValueError("native sessions ordinary fix character binding missing")
++    worktree = str(root / ".worktrees" / ("codex-fix-" + character + "-" + batch.removesuffix("-fix-batch")))
++    if (row.get("task") != "fix-batch" or row.get("learner_task", "fix-batch") != "fix-batch"
++            or row.get("feature_request") or row.get("boss_sim")
++            or launch.get("task") != "fix-batch" or launch.get("transport") != "herdr-interactive"
++            or row.get("worktree") != worktree or receipt.get("cwd") != worktree
++            or row.get("pane") != receipt.get("pane") or batch_label(batch, row) != receipt.get("label")
++            or params.get("worktree") != worktree or params.get("project_root") != str(root)
++            or params.get("character") != character):
++        raise ValueError("native sessions ordinary fix registration differs")
++    # The central log and scratch share the launcher's unique timestamp/UUID stem.
++    stem = log.stem
++    if (log.parent != root / "learner/runs" or log.suffix != ".jsonl"
++            or not re.fullmatch(r"[0-9]{8}-[0-9]{6}-[a-f0-9]{8}(?:-[a-f0-9]{4}){3}-[a-f0-9]{12}-fix-batch", stem)
++            or params.get("scratch") != str(log.with_suffix(""))):
++        raise ValueError("native sessions ordinary fix artifact binding differs")
++    safe_path(root, params["scratch"])
++    bindings, submissions = receipt.get("bindings", []), receipt.get("submissions", [])
++    if (len(matches) != 1 or not bindings or not submissions or not matches[0].get("marker")
++            or matches[0]["marker"] != bindings[0].get("marker")
++            or matches[0]["marker"] != submissions[0].get("marker")):
++        raise ValueError("native sessions ordinary fix prompt binding missing")
++    return dict(kind="ordinary-fix-v1", batch=batch, character=character, worktree=worktree,
++                scratch=params["scratch"], marker=matches[0]["marker"])
++
++
+ def native_evidence(root, directory, receipt):
+     """Read only the original rollout; the general repository path guard stays strict."""
+     path = Path(receipt["result"]["rollout"])
+@@ -122,9 +157,16 @@ def native_evidence(root, directory, receipt):
+                and r.get("pane") == receipt.get("pane") and r.get("session") == session and r.get("rollout") == str(path)]
+     if (len(launches) != 1 or launches[0].get("engine") != "codex"
+             or launches[0].get("cwd") != receipt.get("cwd")
+-            or launches[0].get("params", {}).get("batch") != receipt["label"].removeprefix("learner-").removesuffix("-postmortem")
++            or not isinstance(launches[0].get("params"), dict)
+             or not matches):
+         raise ValueError("native sessions original account/thread binding missing")
++    params = launches[0]["params"]
++    launch_binding = None
++    if "batch" in params:
++        if params["batch"] != receipt["label"].removeprefix("learner-").removesuffix("-postmortem"):
++            raise ValueError("native sessions original account/thread binding missing")
++    else:
++        launch_binding = ordinary_fix_binding(root, directory, receipt, launches[0], matches, log)
+     # Never traverse the link: open the approved target with O_NOFOLLOW at every level.
+     raw, leaf_identity = read_regular(target.joinpath(*parts[3:]))
+     if (file_identity(link.lstat()) != before or os.readlink(link) != str(target)
+@@ -132,6 +174,8 @@ def native_evidence(root, directory, receipt):
+         raise ValueError("native sessions mapping changed during read")
+     mapping = dict(version=1, account=parts[0], link=before, target=str(target), leaf=leaf_identity,
+                    profile_sha256=hashlib.sha256(profile_raw).hexdigest(), profile_identity=profile_identity)
++    if launch_binding is not None:
++        mapping["launch_binding"] = launch_binding
+     return dict(path=str(path.relative_to(root)), sha256=hashlib.sha256(raw).hexdigest(), sessions_mapping=mapping), raw
+ 
+ 
+diff --git a/ops/tests/test_learner_tabs.py b/ops/tests/test_learner_tabs.py
+index 58a742a5c..2e0197d79 100644
+--- a/ops/tests/test_learner_tabs.py
++++ b/ops/tests/test_learner_tabs.py
+@@ -178,6 +178,172 @@ class LearnerTabs(unittest.TestCase):
+                 finally:
+                     fixture.doCleanups()
+ 
++    def ordinary_fix_sessions(self, recovery=False):
++        """Sanitized #65 successor: failed/rc0, a complete native turn, no params.batch."""
++        self.batch = "20261025-134331-fix-batch"
++        self.label = "learner-" + self.batch
++        self.tree = self.root / ".worktrees/codex-fix-silent-20261025-134331"
++        self.tree.mkdir()
++        self.row.update(task="fix-batch", character="silent", worktree=str(self.tree))
++        self.host["panes"] = {self.label: dict(pane_id=self.row["pane"], title=self.tab["label"])}
++        self.receipt.update(label=self.label, cwd=str(self.tree))
++        self.write_state(); self.write_receipt()
++        (self.files / (self.batch + ".err")).write_text("original failed finish audit\n")
++        evidence = self.mapped_sessions(recovery=recovery)
++        self.row.update(state="failed", rc=0); self.write_state()
++        if recovery:
++            self.receipt["wrapper"].update(state="failed", batch_sha256=hashlib.sha256(
++                json.dumps(self.row, sort_keys=True, separators=(",", ":")).encode()).hexdigest())
++        scratch = self.root / "learner/runs/20261025-134352-49f6dd05-5c0d-4b3a-9753-57c2d6b462dd-fix-batch"
++        scratch.mkdir(parents=True)
++        (scratch / "report.md").write_text("Original candidate; checks incomplete.\n")
++        log = scratch.with_suffix(".jsonl")
++        launch = dict(type="learner_launch", engine="codex", task="fix-batch", transport="herdr-interactive",
++                      cwd=str(self.tree), params=dict(worktree=str(self.tree), project_root=str(self.root),
++                      scratch=str(scratch), character="silent"))
++        rows = [launch, dict(type="learner_tui_session", pane=self.row["pane"], session=self.receipt["session"],
++                             rollout=self.receipt["rollout"], marker="marker"),
++                dict(type="learner_summary", exit_code=0, summary=dict(sessionId=self.receipt["session"]))]
++        self.receipt["artifacts"]["log"] = str(log)
++        self.fix_log(rows)
++        return evidence
++
++    def fix_log(self, rows):
++        log = Path(self.receipt["artifacts"]["log"])
++        log.write_text("".join(json.dumps(row) + "\n" for row in rows))
++        self.receipt["artifacts"]["sha256"] = tabs.sha(log)
++        self.write_receipt()
++
++    def test_ordinary_fix_wrapper_ops_and_scheduler_recover_without_rewriting_history(self):
++        for mode in ("wrapper", "ops", "scheduler"):
++            with self.subTest(mode=mode):
++                fixture = LearnerTabs(); fixture.setUp()
++                try:
++                    evidence = fixture.ordinary_fix_sessions(recovery=mode != "wrapper")
++                    paths = [fixture.directory / "learn.json", fixture.files / (fixture.batch + ".out"),
++                             fixture.files / (fixture.batch + ".err"), fixture.files / (fixture.label + ".tui.json"),
++                             Path(fixture.receipt["artifacts"]["log"]), fixture.native,
++                             Path(fixture.receipt["artifacts"]["log"]).with_suffix("") / "report.md"]
++                    before = {p: p.read_bytes() for p in paths}
++                    if mode == "wrapper":
++                        fixture.seal()
++                    elif mode == "ops":
++                        fixture.worker.dry = True
++                        self.assertEqual(fixture.worker.recover_seal(fixture.batch, evidence)["state"], "eligible")
++                        self.assertFalse((fixture.files / (fixture.label + ".tab-retirement.json")).exists())
++                        fixture.worker.dry = False
++                        fixture.worker.recover_seal(fixture.batch, evidence)
++                        sealed = fixture.files / (fixture.label + ".tab-retirement.json")
++                        original_seal = sealed.read_bytes()
++                        fixture.worker = tabs.LearnerTabs(fixture.root, fixture.directory, herdr=fixture.herdr)
++                        fixture.worker.recover_seal(fixture.batch, evidence)
++                        self.assertEqual(sealed.read_bytes(), original_seal)
++                    else:
++                        fixture.scheduler_finish()
++                    fixture.worker = tabs.LearnerTabs(fixture.root, fixture.directory, herdr=fixture.herdr)
++                    self.assertEqual(fixture.tick()[0]["state"], "reclaimed")
++                    self.assertEqual(fixture.tick(), [])
++                    self.assertEqual(sum(c[:2] == ("tab", "close") for c in fixture.calls), 1)
++                    self.assertEqual(before, {p: p.read_bytes() for p in paths})
++                    proof = tabs.load(fixture.files / (fixture.label + ".tab-retirement.json"))
++                    binding = proof["files"]["rollout"]["sessions_mapping"]["launch_binding"]
++                    self.assertEqual(binding["kind"], "ordinary-fix-v1")
++                    self.assertEqual(binding["batch"], fixture.batch)
++                    self.assertTrue(fixture.tree.is_dir())
++                finally:
++                    fixture.doCleanups()
++
++    def test_ordinary_fix_missing_or_contradictory_binding_is_retained(self):
++        self.ordinary_fix_sessions()
++        original_receipt = copy.deepcopy(self.receipt)
++        rows = [json.loads(line) for line in Path(self.receipt["artifacts"]["log"]).read_text().splitlines()]
++        row = copy.deepcopy(self.row)
++        for bad in ("task", "worktree", "project-root", "character", "scratch", "foreign-batch", "null-batch",
++                    "missing-params", "transport", "cwd", "duplicate-launch", "duplicate-session", "no-session",
++                    "marker", "no-bindings", "registration-task", "registration-character", "feature-task", "pane"):
++            with self.subTest(bad=bad):
++                self.receipt = copy.deepcopy(original_receipt); self.row = copy.deepcopy(row)
++                changed = copy.deepcopy(rows); launch = changed[0]; params = launch["params"]
++                if bad == "task": launch["task"] = "strategy-proposal"
++                if bad == "worktree": params["worktree"] = str(self.root)
++                if bad == "project-root": params["project_root"] = str(self.tree)
++                if bad == "character": params["character"] = "ironclad"
++                if bad == "scratch": params["scratch"] += "-foreign"
++                if bad == "foreign-batch": params["batch"] = "20261025-134332-fix-batch"
++                if bad == "null-batch": params["batch"] = None
++                if bad == "missing-params": launch["params"] = None
++                if bad == "transport": launch["transport"] = "stdio"
++                if bad == "cwd": launch["cwd"] = str(self.root)
++                if bad == "duplicate-launch": changed.insert(0, copy.deepcopy(launch))
++                if bad == "duplicate-session": changed.insert(1, copy.deepcopy(changed[1]))
++                if bad == "no-session": changed.pop(1)
++                if bad == "marker": changed[1]["marker"] = "foreign"
++                if bad == "no-bindings": self.receipt["bindings"] = []
++                if bad == "registration-task": self.row["task"] = "strategy-proposal"
++                if bad == "registration-character": self.row["character"] = "ironclad"
++                if bad == "feature-task": self.row["learner_task"] = "silent-boss-calibration"
++                if bad == "pane": changed[1]["pane"] = "wR:p2"
++                self.write_state(); self.fix_log(changed)
++                with self.assertRaises(ValueError):
++                    self.worker.seal(self.batch)
++                self.assertTrue(self.present)
++                self.assertFalse((self.files / (self.label + ".tab-retirement.json")).exists())
++        self.assertFalse(any(c[:2] == ("tab", "close") for c in self.calls))
++
++    def test_ordinary_fix_sealed_busy_or_changed_evidence_never_closes(self):
++        self.ordinary_fix_sessions(); self.seal()
++        original = self.native.read_bytes()
++        for bad in ("draft", "foreground", "background", "native", "wrong-terminal", "running", "authority"):
++            with self.subTest(bad=bad):
++                self.screen = b"dw@host:~/fixture$ "
++                self.info["foreground_process_group_id"] = 333
++                self.pane["terminal_id"] = "terminal-1"
++                self.row["state"] = "failed"
++                self.receipt["retirement_authorized"] = True
++                self.native.write_bytes(original)
++                context = patch.object(tabs.issue_session, "process_children", return_value=set())
++                if bad == "draft": self.screen += b"echo pending"
++                if bad == "foreground": self.info["foreground_process_group_id"] = 555
++                if bad == "background": context = patch.object(tabs.issue_session, "process_children", return_value={"777"})
++                if bad == "native": self.native.write_bytes(original + b"{}\n")
++                if bad == "wrong-terminal": self.pane["terminal_id"] = "foreign"
++                if bad == "running": self.row["state"] = "running"
++                if bad == "authority": self.receipt["retirement_authorized"] = False
++                self.write_state(); self.write_receipt()
++                with context:
++                    self.assertIn(self.tick()[0]["state"], ("retained", "running"))
++                self.assertTrue(self.present)
++        self.assertFalse(any(c[:2] == ("tab", "close") for c in self.calls))
++
++    def test_explicit_batch_layouts_and_existing_seals_stay_compatible(self):
++        for batch, task in (("20261025-121312-strategy-proposal", "strategy-proposal"),
++                            ("20261025-121312", "postmortem")):
++            with self.subTest(task=task):
++                fixture = LearnerTabs()
++                fixture.fixture_batch, fixture.fixture_task = batch, task
++                fixture.fixture_label = "learner-" + batch + ("-postmortem" if task == "postmortem" else "")
++                fixture.setUp()
++                try:
++                    fixture.mapped_sessions(); fixture.seal()
++                    path = fixture.files / (fixture.label + ".tab-retirement.json")
++                    original = path.read_bytes()
++                    self.assertNotIn("launch_binding", tabs.load(path)["files"]["rollout"]["sessions_mapping"])
++                    fixture.worker = tabs.LearnerTabs(fixture.root, fixture.directory, herdr=fixture.herdr)
++                    self.assertEqual(fixture.tick()[0]["state"], "reclaimed")
++                    self.assertEqual(path.read_bytes(), original)
++                    self.assertEqual(fixture.tick(), [])
++                finally:
++                    fixture.doCleanups()
++
++    def test_missing_batch_does_not_enable_other_task_layouts(self):
++        self.mapped_sessions()
++        rows = [json.loads(line) for line in Path(self.receipt["artifacts"]["log"]).read_text().splitlines()]
++        rows[0]["params"].pop("batch")
++        self.fix_log(rows)
++        with self.assertRaisesRegex(ValueError, "original account/thread binding missing"):
++            self.worker.seal(self.batch)
++        self.assertTrue(self.present)
++
+     def test_original_sessions_failure_then_wrapper_seal_and_reclaim(self):
+         self.mapped_sessions()
+         # This is the original #20 failure, retained as the strict general guard.
+@@ -218,10 +384,17 @@ class LearnerTabs(unittest.TestCase):
+ 
+     def test_sessions_path_and_identity_negative_gates(self):
+         self.mapped_sessions()
++        self.assert_sessions_path_and_identity_negative_gates()
++
++    def test_ordinary_fix_keeps_account_path_native_and_busy_guards(self):
++        self.ordinary_fix_sessions()
++        self.assert_sessions_path_and_identity_negative_gates()
++
++    def assert_sessions_path_and_identity_negative_gates(self):
+         good_receipt = copy.deepcopy(self.receipt)
+         good_profile = self.profile.read_bytes()
+         native_raw = self.native.read_bytes()
+-        log = self.files / "launch.jsonl"; log_raw = log.read_bytes()
++        log = Path(self.receipt["artifacts"]["log"]); log_raw = log.read_bytes()
+         for bad in ("unknown-account", "wrong-profile", "profile-link", "unknown-target", "leaf-link", "nested-link",
+                     "wrong-thread", "wrong-turn", "wrong-pane", "missing-bindings", "missing-end", "partial-line",
+                     "unbound-log", "changed-log", "live-native", "busy", "draft", "extra-child"):
+diff --git a/paper/materials/20261025-issue65-completed-learner-reclaim/checks.json b/paper/materials/20261025-issue65-completed-learner-reclaim/checks.json
+new file mode 100644
+index 000000000..57bb4ae6e
+--- /dev/null
++++ b/paper/materials/20261025-issue65-completed-learner-reclaim/checks.json
+@@ -0,0 +1,78 @@
++{
++  "at": "2026-10-25T15:08:38.741003+08:00",
++  "base": "de78668debde8814cbadfc312efa8efb53e6dd2a",
++  "source_files": {
++    "ops/learner_tabs.py": "c4f9ddd749361f785e29a4311d98e5e734242e80fd741194487889892bce5910",
++    "ops/tests/test_learner_tabs.py": "1f4f50f89d02a2b9a380292aa377ab4c3fa634cd3ba09ae697c24f3e018b89a5",
++    "docs/learner-tab-sessions.md": "0553577ab70c9c5b8dbcfb8fed246d6c01bd47323ddce9fc321c4277fec9ee34",
++    "paper/materials/20261025-issue65-completed-learner-reclaim/readback.py": "9c0a952fb5c3e2e438b273cfb64d739579a31b611af16f87254d67ce58db9ec6"
++  },
++  "required_verifier": {
++    "path": "ops/learner_tui.py",
++    "sha256": "ea2399426f1a31f6dee0a3e266606b6c99d8cf6ff7de5ec35de1fc790139cc1c",
++    "changed": false
++  },
++  "checks": {
++    "sandbox": {
++      "command": "SANDBOX_WORKERS=1 bash agent/tools/test-sandbox.sh",
++      "rc": 0,
++      "tsc": 0,
++      "main_files": 636,
++      "main_tests": 5891,
++      "paths_files": 1,
++      "paths_tests": 11,
++      "workers": 1,
++      "nice": 19,
++      "log": ".artifacts/issue65/sandbox.log",
++      "log_sha256": "fa1743ba4c82508c1fca0d539b9457f4bca845e6b985ed6562d3ce9013e89a52"
++    },
++    "final_python": {
++      "command": "python3 -B -m unittest ops.tests.test_learner_tabs ops.tests.test_learner_tui ops.tests.test_learner_wrapper_completion",
++      "rc": 0,
++      "tests": 176,
++      "tabs_cases": 129,
++      "nice": 19,
++      "log": ".artifacts/issue65/python-final.log",
++      "log_sha256": "fc61c10dd1059f203a11ad35ee4a494f6f9be7ad1dbc94305694a18727211abe",
++      "note": "Final source rechecked after the small error-classification text adjustment during sandbox."
++    },
++    "baseline": {
++      "expected": "original wrapper/ops binding rejection; scheduler retained",
++      "rc": 0,
++      "log": ".artifacts/issue65/baseline-reproduction.log",
++      "log_sha256": "03e24c01c212741d0116d979d04e9a097086ba6b191c1fee700e38df48704424",
++      "first_harness": {
++        "rc": 1,
++        "reason": "Harness expected scheduler to throw instead of retain; corrected assertion, original output retained.",
++        "log": ".artifacts/issue65/baseline-harness-first.log",
++        "log_sha256": "3bc83d9a83904704342be7880514d0d4d82c373b842217e611f6b66d298bd10d"
++      }
++    },
++    "frozen_original": {
++      "schema": "issue65-frozen-original-readback-v1",
++      "batch": "20261025-134331-fix-batch",
++      "handoff_manifest_sha256": "1b233098aba446b79d52d8d1b0dac6a03427116b986f6f0af23228dff1929192",
++      "source_documents_verified": 6,
++      "frozen_originals_verified": 5,
++      "business_row_sha256": "16231cbab0833782b417fe6308eb269365516c64007ac39f8e5e37b321574a56",
++      "business_state": "failed",
++      "rc": 0,
++      "binding_kind": "ordinary-fix-v1",
++      "original_native_verifier_passed": true,
++      "production_seal_reclaim_close_calls": 0,
++      "scope": "frozen binding and native stream; full seal only in synthetic fixed tests"
++    },
++    "preflight_imports": {
++      "initial_unresolved": [
++        "agent/tests/v6-build-core.test.ts: ../../.cache/",
++        "agent/tests/v6-infrastructure.test.ts: ../../.cache/",
++        "agent/tools/issue29-deepseek-stream.test.ts: ../../paper/materials/issue29-brain-speed/results.jsonl"
++      ],
++      "resolution": "Create rebuildable .cache; restore exact existing HEAD issue29 blob, no fixture change or exclusion.",
++      "restored_fixture_sha256": "8d83deb7c85a8b7ceb92da9ffb195f13edf4fa2876f9be5692ec8d2ded1c23ef"
++    },
++    "diff_check": 0
++  },
++  "production_seal_close_or_live_changes": 0,
++  "runtime_acceptance": "Pending integrator applicable combination after64 and original ops deployment/reclamation."
++}
+diff --git a/paper/materials/20261025-issue65-completed-learner-reclaim/frozen-original-readback.json b/paper/materials/20261025-issue65-completed-learner-reclaim/frozen-original-readback.json
+new file mode 100644
+index 000000000..f07b4f220
+--- /dev/null
++++ b/paper/materials/20261025-issue65-completed-learner-reclaim/frozen-original-readback.json
+@@ -0,0 +1,14 @@
++{
++  "schema": "issue65-frozen-original-readback-v1",
++  "batch": "20261025-134331-fix-batch",
++  "handoff_manifest_sha256": "1b233098aba446b79d52d8d1b0dac6a03427116b986f6f0af23228dff1929192",
++  "source_documents_verified": 6,
++  "frozen_originals_verified": 5,
++  "business_row_sha256": "16231cbab0833782b417fe6308eb269365516c64007ac39f8e5e37b321574a56",
++  "business_state": "failed",
++  "rc": 0,
++  "binding_kind": "ordinary-fix-v1",
++  "original_native_verifier_passed": true,
++  "production_seal_reclaim_close_calls": 0,
++  "scope": "frozen binding and native stream; full seal only in synthetic fixed tests"
++}
+diff --git a/paper/materials/20261025-issue65-completed-learner-reclaim/readback.py b/paper/materials/20261025-issue65-completed-learner-reclaim/readback.py
+new file mode 100644
+index 000000000..608687e55
+--- /dev/null
++++ b/paper/materials/20261025-issue65-completed-learner-reclaim/readback.py
+@@ -0,0 +1,67 @@
++"""Verify frozen #65 evidence without sealing, terminal calls or production writes."""
++import argparse
++import hashlib
++import io
++import json
++from pathlib import Path
++import sys
++import tempfile
++
++WORKSPACE = Path(__file__).resolve().parents[3]
++sys.path.insert(0, str(WORKSPACE / "ops"))
++import learner_tabs
++import learner_tui
++
++
++def digest(raw):
++    return hashlib.sha256(raw).hexdigest()
++
++
++def main():
++    parser = argparse.ArgumentParser()
++    parser.add_argument("--evidence-root", required=True, type=Path)
++    args = parser.parse_args()
++    root = args.evidence_root.resolve()
++    handoff = root / "paper/materials/20261025-issue65-original-handoff-ops"
++    raw = (handoff / "manifest.json").read_bytes()
++    assert digest(raw) == "1b233098aba446b79d52d8d1b0dac6a03427116b986f6f0af23228dff1929192"
++    manifest = json.loads(raw)
++    assert digest((handoff / "handoff.md").read_bytes()) == "155e776cfffb33c614cb6972955002d1cbccc696782312760a678207b03dc3f3"
++    for item in manifest["source_documents"]:
++        raw = (root / item["path"]).read_bytes()
++        assert len(raw) == item["bytes"] and digest(raw) == item["sha256"]
++    frozen = {}
++    for item in manifest["original_five_artifacts_rechecked"]:
++        raw = (root / item["retained_copy"]).read_bytes()
++        assert len(raw) == item["bytes"] and digest(raw) == item["sha256"]
++        # Tests consume the retained copies; this only verifies originals stayed unchanged.
++        assert Path(item["original_path"]).read_bytes() == raw
++        frozen[item["kind"]] = raw
++    receipt = json.loads(frozen["tui"])
++    rows = [json.loads(line) for line in frozen["learner_log"].splitlines()]
++    launches = [row for row in rows if row.get("type") == "learner_launch"]
++    matches = [row for row in rows if row.get("type") == "learner_tui_session"
++               and all(row.get(k) == receipt[k] for k in ("pane", "session", "rollout"))]
++    assert len(launches) == 1 and "batch" not in launches[0]["params"]
++    batch = manifest["original_batch"]
++    row = json.loads((root / ".artifacts/ops-fix134331-20261025/originals/original-batch-row.json").read_bytes())
++    assert digest(json.dumps(row, sort_keys=True, separators=(",", ":")).encode()) == manifest["original_business_row_sha256"]
++    assert row["state"] == "failed" and row["rc"] == 0
++    artifacts = WORKSPACE / ".artifacts/issue65"
++    artifacts.mkdir(parents=True, exist_ok=True)
++    with tempfile.TemporaryDirectory(dir=artifacts) as temporary:
++        directory = Path(temporary)
++        (directory / "learn.json").write_text(json.dumps(dict(batches={batch: row})))
++        binding = learner_tabs.ordinary_fix_binding(root, directory, receipt, launches[0], matches,
++                                                  Path(receipt["artifacts"]["log"]))
++    learner_tui.verify_native(receipt, source=io.StringIO(frozen["rollout"].decode()))
++    print(json.dumps(dict(schema="issue65-frozen-original-readback-v1", batch=batch,
++        handoff_manifest_sha256=digest((handoff / "manifest.json").read_bytes()),
++        source_documents_verified=len(manifest["source_documents"]), frozen_originals_verified=len(frozen),
++        business_row_sha256=manifest["original_business_row_sha256"], business_state="failed", rc=0,
++        binding_kind=binding["kind"], original_native_verifier_passed=True,
++        production_seal_reclaim_close_calls=0, scope="frozen binding and native stream; full seal only in synthetic fixed tests"), indent=2))
++
++
++if __name__ == "__main__":
++    main()
+diff --git a/paper/materials/20261025-issue65-completed-learner-reclaim/report.md b/paper/materials/20261025-issue65-completed-learner-reclaim/report.md
+new file mode 100644
+index 000000000..00b7b8cb3
+--- /dev/null
++++ b/paper/materials/20261025-issue65-completed-learner-reclaim/report.md
+@@ -0,0 +1,31 @@
++# #65 已完成普通 fix 学习会话的回收兼容
++
++普通 `fix-batch` 原任务不引用 `{{batch}}`，启动器按模板引用集合生成 params，所以合法原日志没有 batch 字段。#63 的 sessions 映射入口把这个缺字段判为原账号/线程绑定不足，导致已有终态和处置权的 UI 不能封存。依据 #65 原任务及 ops 6394485809 交接，本次只补这个普通布局；原四叶产品候选留 #59，#64 检查/上线优先。
++
++## 实现
++
++生产差量只有 `ops/learner_tabs.py`。显式 batch 的原合同不变；字段缺席时，原 learn.json 登记必须和唯一原 launch 的 task、engine、transport、角色、项目根、pane、cwd 及按批次命名的独立 codex-fix 工作树相符。中央原日志和 scratch 必须具有启动器的同一 timestamp/UUID stem；唯一对应的 learner_tui_session 还须对应 receipt 第一项 bindings/submissions 的 marker。专题任务、其他任务缺 batch、显式错误/null batch、未知布局均保留。具体合同见 `docs/learner-tab-sessions.md`。
++
++新证明只在 fallback 的 sessions_mapping 增加 `launch_binding.kind=ordinary-fix-v1`；旧显式 batch 和无软链证明格式不变。复核仍走原 files、seal_proof 和关闭前重核；通用 safe_path、账号/profile、no-follow、native prompt/turn、wrapper/监督 PID、终态、处置权、原产物和空输入/前后台进程门保持。缺字段的旧类型继续沿原绑定不足分类，避免改变原本地保留/通知分界。
++
++## 原证据
++
++已核原交接 manifest SHA `1b233098aba446b79d52d8d1b0dac6a03427116b986f6f0af23228dff1929192`、handoff SHA `155e776cfffb33c614cb6972955002d1cbccc696782312760a678207b03dc3f3`、六份引用材料及五份原件/备份长度/SHA。原业务行 SHA `16231cbab0833782b417fe6308eb269365516c64007ac39f8e5e37b321574a56`，仍 failed/rc0。
++
++`readback.py` 只消费冻结副本核新绑定和现有 native verifier，原件只作字节核同；实际核验结果见 `frozen-original-readback.json`。只向本开发树临时目录写隔离登记，未调用生产 seal/reclaim/Herdr，也未修改原 launch/receipt、状态、账号、产物、树或失败历史。完整 seal/recover/tick 仅在合成固定夹具验证，不能冒称真实 UI 已释放。
++
++## 验证
++
++固定回归覆盖 wrapper 封存、ops 只读预检/恢复及重复恢复、scheduler 自动封存/回收；重建 worker 后只关闭一次，原业务行/原回执/原生流/日志/out/err/report 字节相同。覆盖新增普通 fix 与旧两失败投影、第三后继样式、s2 strategy、timestamp postmortem、无软链布局及原封存记录。负例包含错 task/batch/cwd/pane/terminal/角色、重复 launch/session、缺 marker/params/绑定、专题、错账号/profile/目标、软链/路径替换、原 SHA 变化、未终态、忙输入和额外进程；原不确定关闭门继续保留。
++
++基线 `de78668debde8814cbadfc312efa8efb53e6dd2a` 的原 reader 在新普通 fix 夹具上：wrapper/ops 精确拒绝 `native sessions original account/thread binding missing`，scheduler 保留。原输出在 `.artifacts/issue65/baseline-reproduction.log`；首个复现 harness 把 scheduler 的保留误期待成异常，修正断言后核同，首输出保留于 `baseline-harness-first.log`。
++
++项目自测及固定核验的终态、数量和日志 SHA 见 `checks.json`。预检发现 allocator 稀疏树缺既有 issue29 输入和尚未创建的 .cache，已从原 HEAD 恢复 `paper/materials/issue29-brain-speed/results.jsonl` 原 blob 并创建可重建 .cache；不改 fixture 或增加排除。只运行本开发树规定的 sandbox 自测，一个 worker/nice19；实际部署组合的唯一完整检查仍归原集成员，不借本树检查替代或夹入 #64 已冻结包。
++
++## 部署、回退和运行验收
++
++原集成员按 #64 优先顺序接本项固定提交及届时实际部署组合检查。原 ops 在原调度边界安装新 `ops/learner_tabs.py`，同时读回实际宿主 OPS 与 `ops/learner_tui.py` SHA；verifier 继续依赖已部署 #63 的 source stream 接口，本次不覆盖其叶子，也不改 live/STOP、wrapper、账号配置或游戏知识，不分配游戏 release_id。
++
++适用组合核收后，原 ops 接同一134331原 pane/receipt，鲜核监督/native 退出、处置权、身份、原 SHA、空输入和无后台工作，沿原 recover-seal 预检及 --apply、原 stall tick 逐项实际验封存/关闭/退出/tab缺席/host映射移除。重复预检不写，重复恢复不改原 seal，重复 tick 不重复关闭；sending 不确定事件须沿原处置核清。原 #63 三例和已释放开发登记不重放、不伪重开。实际运行核收仍待原 ops，科学父和学习/发布验收不由 UI 回收关闭，原树删除仍交 retention。
++
++回退只恢复部署前 tabs 叶，保留 #63 verifier 和新旧 seal/journal/原失败及全部材料。旧 reader 对新分支证明继续保守保留；不删除证明或重派学习来绕过。未向其他会话发送控制、不关闭本开发或其他会话。
+diff --git a/paper/materials/decision-log.md b/paper/materials/decision-log.md
+index 34fba6ec9..428778241 100644
+--- a/paper/materials/decision-log.md
++++ b/paper/materials/decision-log.md
+@@ -7020,3 +7020,5 @@ S键shadow已由原ops持锁实际发布V5-R369，source655e1bb→main8ecbe935/l
+ - 2026-10-25T15:12:07+08:00 [watcher] #64唯一full689文件/6727过/0败/2跳及三tsc0，原worker退出/检查锁释放/冻结SHA核同后精确main8efc532325b5e7f0f413a114f8de1001fd4ba2fb并WindowsSSH推送核远端；原issue6394745496部署差量清单逐字核回并唤醒原ops，等待新发布事务及自然路线runtime回执，未写LIVE；#60冻结缺口6394588461及新增40题39KB6394639375独核记录同存，13目标未命中/新关键词空分账，65独立、旧63三例不重回收。
+ 
+ - 2026-10-25T15:12:36+08:00 [watcher] #64交付/通知及60独核记录6732c8fee61cfad06cef56d74cdec519e6244f12已推送；原ops pane w1H:p8实际working，尚无新issue接收或发布回执，runtime沿原ops继续，工程不重full。
++
++- 2026-10-25T15:08:38+08:00 [dev #65] 普通fix无params.batch的原启动布局兼容交付待review：仅字段缺席且原task/角色/pane/按批次worktree/项目根/日志-scratch UUID stem/首prompt marker均核同才走ordinary-fix-v1；显式错batch、专题/未知布局及原账号/路径/native/产物/忙会话/不确定关闭门继续保留。原交接六材料/五原件SHA及冻结原生核验通过，failed/rc0不改；基线wrapper/ops原拒绝与scheduler保留已复现，首harness误期待异常保留。tsc0、sandbox636文件5891过及paths11过、最终回收/native/wrapper固定176项过；仅本树单worker/nice19，不抢原64部署组合full。源码生产差量仅tabs，依赖原63 verifier；原集成员按64优先接适用组合，原ops部署后沿同一原样本真实封存/回收；未改live/STOP/账号/知识/历史/其他会话，不重放旧三例、不分配游戏号。合同docs/learner-tab-sessions.md，材料paper/materials/20261025-issue65-completed-learner-reclaim/。

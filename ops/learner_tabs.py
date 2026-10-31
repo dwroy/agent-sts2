@@ -4,10 +4,13 @@ import argparse
 import datetime as dt
 import hashlib
 import importlib.util
+import io
 import json
 import os
 from pathlib import Path
 import re
+import pwd
+import stat
 import subprocess
 import sys
 
@@ -29,6 +32,151 @@ def sha(path):
             h.update(block)
         os.fsync(source.fileno())
     return h.hexdigest()
+
+
+def file_identity(value):
+    return dict(device=value.st_dev, inode=value.st_ino, mode=value.st_mode,
+                size=value.st_size, mtime_ns=value.st_mtime_ns, ctime_ns=value.st_ctime_ns)
+
+
+def read_regular(path):
+    """Open an absolute evidence file without following any directory or leaf symlink."""
+    path = Path(path)
+    if not path.is_absolute() or ".." in path.parts or secret_name(path):
+        raise ValueError("native evidence path unsafe")
+    fd = os.open("/", os.O_RDONLY | os.O_DIRECTORY)
+    parents = []
+    try:
+        for part in path.parts[1:-1]:
+            child = os.open(part, os.O_RDONLY | os.O_DIRECTORY | os.O_NOFOLLOW, dir_fd=fd)
+            os.close(fd); fd = child
+            info = os.fstat(fd)
+            parents.append(dict(device=info.st_dev, inode=info.st_ino))
+        leaf = os.open(path.name, os.O_RDONLY | os.O_NOFOLLOW | os.O_NONBLOCK, dir_fd=fd)
+        with os.fdopen(leaf, "rb") as source:
+            before = os.fstat(source.fileno())
+            if not stat.S_ISREG(before.st_mode):
+                raise ValueError("native evidence is not a regular file")
+            raw = source.read()
+            after = os.fstat(source.fileno())
+            if file_identity(before) != file_identity(after):
+                raise ValueError("native evidence changed during read")
+        return raw, file_identity(after) | dict(parents=parents)
+    finally:
+        os.close(fd)
+
+
+def account_sessions(root):
+    # Only the registered project's isolated Codex account convention is eligible.
+    return Path(pwd.getpwuid(os.getuid()).pw_dir)
+
+
+def ordinary_fix_binding(root, directory, receipt, launch, matches, log):
+    """Recognize the original ordinary fix writer, which never rendered params.batch."""
+    batch = receipt.get("label", "").removeprefix("learner-")
+    if not re.fullmatch(r"[0-9]{8}-[0-9]{6}-fix-batch", batch):
+        raise ValueError("native sessions original account/thread binding missing")
+    row = load(safe_path(root, directory / "learn.json"))["batches"][batch]
+    params = launch["params"]
+    character = row.get("character")
+    if not isinstance(character, str) or not re.fullmatch(r"[a-z][a-z0-9_]*", character):
+        raise ValueError("native sessions ordinary fix character binding missing")
+    worktree = str(root / ".worktrees" / ("codex-fix-" + character + "-" + batch.removesuffix("-fix-batch")))
+    if (row.get("task") != "fix-batch" or row.get("learner_task", "fix-batch") != "fix-batch"
+            or row.get("feature_request") or row.get("boss_sim")
+            or launch.get("task") != "fix-batch" or launch.get("transport") != "herdr-interactive"
+            or row.get("worktree") != worktree or receipt.get("cwd") != worktree
+            or row.get("pane") != receipt.get("pane") or batch_label(batch, row) != receipt.get("label")
+            or params.get("worktree") != worktree or params.get("project_root") != str(root)
+            or params.get("character") != character):
+        raise ValueError("native sessions ordinary fix registration differs")
+    # The central log and scratch share the launcher's unique timestamp/UUID stem.
+    stem = log.stem
+    if (log.parent != root / "learner/runs" or log.suffix != ".jsonl"
+            or not re.fullmatch(r"[0-9]{8}-[0-9]{6}-[a-f0-9]{8}(?:-[a-f0-9]{4}){3}-[a-f0-9]{12}-fix-batch", stem)
+            or params.get("scratch") != str(log.with_suffix(""))):
+        raise ValueError("native sessions ordinary fix artifact binding differs")
+    safe_path(root, params["scratch"])
+    bindings, submissions = receipt.get("bindings", []), receipt.get("submissions", [])
+    if (len(matches) != 1 or not bindings or not submissions or not matches[0].get("marker")
+            or matches[0]["marker"] != bindings[0].get("marker")
+            or matches[0]["marker"] != submissions[0].get("marker")):
+        raise ValueError("native sessions ordinary fix prompt binding missing")
+    return dict(kind="ordinary-fix-v1", batch=batch, character=character, worktree=worktree,
+                scratch=params["scratch"], marker=matches[0]["marker"])
+
+
+def native_evidence(root, directory, receipt):
+    """Read only the original rollout; the general repository path guard stays strict."""
+    path = Path(receipt["result"]["rollout"])
+    try:
+        safe_path(root, path)
+    except ValueError as error:
+        if str(error) != "symlink path retained":
+            raise
+    else:
+        raw, _ = read_regular(path)
+        return dict(path=str(path.relative_to(root)), sha256=hashlib.sha256(raw).hexdigest()), raw
+    accounts = directory / "accounts"
+    if not path.is_absolute() or ".." in path.parts or not path.is_relative_to(accounts):
+        raise ValueError("native sessions mapping outside registered accounts")
+    parts = path.relative_to(accounts).parts
+    if (len(parts) != 7 or not re.fullmatch(r"codex(?:[1-9][0-9]*)?", parts[0])
+            or parts[1:3] != ("learner", "sessions")
+            or not re.fullmatch(r"[0-9]{4}", parts[3])
+            or any(not re.fullmatch(r"[0-9]{2}", part) for part in parts[4:6])):
+        raise ValueError("native sessions mapping shape differs")
+    session = receipt["result"].get("session")
+    if (not isinstance(session, str) or not re.fullmatch(r"[a-f0-9]{8}(?:-[a-f0-9]{4}){3}-[a-f0-9]{12}", session)
+            or not re.fullmatch(r"rollout-[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}-[0-9]{2}-[0-9]{2}-" + session + r"\.jsonl", parts[-1])
+            or receipt.get("session") != session or receipt.get("rollout") != str(path)
+            or receipt.get("turn") != receipt["result"].get("turn")):
+        raise ValueError("native sessions mapping thread differs")
+    home = safe_path(root, accounts / parts[0] / "learner")
+    profile_path = safe_path(root, home.parent / "profile.json")
+    profile_raw, profile_identity = read_regular(profile_path)
+    profile = json.loads(profile_raw)
+    if (profile.get("engine") != "codex" or profile.get("account") != parts[0]
+            or profile.get("learner_home") != str(home)):
+        raise ValueError("native sessions account registration differs")
+    link = home / "sessions"
+    before = file_identity(link.lstat())
+    target = account_sessions(root) / ("." + parts[0]) / "sessions"
+    if not link.is_symlink() or os.readlink(link) != str(target):
+        raise ValueError("native sessions mapping target differs")
+    # Validate the immutable original producer log before reading any external evidence.
+    log = safe_path(root, receipt["artifacts"]["log"])
+    log_raw, _ = read_regular(log)
+    if hashlib.sha256(log_raw).hexdigest() != receipt["artifacts"].get("sha256"):
+        raise ValueError("native sessions original learner log changed")
+    if not log_raw.endswith(b"\n"):
+        raise ValueError("native sessions original learner log incomplete")
+    rows = [json.loads(line) for line in log_raw.splitlines()]
+    launches = [r for r in rows if r.get("type") == "learner_launch"]
+    matches = [r for r in rows if r.get("type") == "learner_tui_session"
+               and r.get("pane") == receipt.get("pane") and r.get("session") == session and r.get("rollout") == str(path)]
+    if (len(launches) != 1 or launches[0].get("engine") != "codex"
+            or launches[0].get("cwd") != receipt.get("cwd")
+            or not isinstance(launches[0].get("params"), dict)
+            or not matches):
+        raise ValueError("native sessions original account/thread binding missing")
+    params = launches[0]["params"]
+    launch_binding = None
+    if "batch" in params:
+        if params["batch"] != receipt["label"].removeprefix("learner-").removesuffix("-postmortem"):
+            raise ValueError("native sessions original account/thread binding missing")
+    else:
+        launch_binding = ordinary_fix_binding(root, directory, receipt, launches[0], matches, log)
+    # Never traverse the link: open the approved target with O_NOFOLLOW at every level.
+    raw, leaf_identity = read_regular(target.joinpath(*parts[3:]))
+    if (file_identity(link.lstat()) != before or os.readlink(link) != str(target)
+            or read_regular(profile_path) != (profile_raw, profile_identity)):
+        raise ValueError("native sessions mapping changed during read")
+    mapping = dict(version=1, account=parts[0], link=before, target=str(target), leaf=leaf_identity,
+                   profile_sha256=hashlib.sha256(profile_raw).hexdigest(), profile_identity=profile_identity)
+    if launch_binding is not None:
+        mapping["launch_binding"] = launch_binding
+    return dict(path=str(path.relative_to(root)), sha256=hashlib.sha256(raw).hexdigest(), sessions_mapping=mapping), raw
 
 
 def birth(pid):
@@ -177,7 +325,7 @@ class LearnerTabs:
         if (row2 != row or host2 != host
                 or self.automatic_owner(batch, row2, load(self.receipt_path(batch, ".tui.json", row2))) != evidence
                 or self.idle(self.pane(row2, host2, proof["label"]), proof) != proof["identity"]
-                or self.files({k: self.root / v["path"] for k, v in proof["files"].items()}) != proof["files"]):
+                or self.files({k: self.root / v["path"] for k, v in proof["files"].items()}, receipt) != proof["files"]):
             raise ValueError("automatic recovery evidence changed")
         if not self.dry:
             self.store_seal(batch, row, proof)
@@ -187,9 +335,14 @@ class LearnerTabs:
         row = load(self.state)["batches"][batch] if row is None else row
         return safe_path(self.root, self.directory / "learner" / (batch_label(batch, row) + suffix))
 
-    def files(self, paths):
+    def files(self, paths, receipt=None):
         result = {}
         for role, path in paths.items():
+            if role == "rollout" and receipt is not None:
+                if str(path) != receipt["result"].get("rollout"):
+                    raise ValueError("original rollout path changed")
+                result[role], _ = native_evidence(self.root, self.directory, receipt)
+                continue
             path = safe_path(self.root, path)
             if secret_name(path) or not path.is_file():
                 raise ValueError("batch artifacts missing or unsafe")
@@ -322,7 +475,7 @@ class LearnerTabs:
         row2, host2 = self.current(batch)
         if (row2 != row or host2 != host
                 or self.idle(self.pane(row2, host2, proof["label"]), proof) != proof["identity"]
-                or self.files({k: self.root / v["path"] for k, v in proof["files"].items()}) != proof["files"]
+                or self.files({k: self.root / v["path"] for k, v in proof["files"].items()}, receipt) != proof["files"]
                 or self.files({"evidence": evidence})["evidence"] != evidence_record):
             raise ValueError("batch or recovery evidence changed before seal")
         self.recovery_owner(batch, row2, load(self.receipt_path(batch, ".tui.json", row2)))
@@ -387,12 +540,15 @@ class LearnerTabs:
                     or birth(receipt["pid"]) == receipt.get("birth"))):
                 raise ValueError("native process is not verified stopped")
             paths.update(learner_log=Path(receipt["artifacts"]["log"]), rollout=Path(result["rollout"]))
-            initial_files = self.files(paths)
+            initial_files = self.files(paths, receipt)
+            native_record, native_raw = native_evidence(self.root, self.directory, receipt)
+            if native_record != initial_files["rollout"]:
+                raise ValueError("original native evidence changed")
             name_binding = json.dumps([label, row["pane"], proof["cwd"]], ensure_ascii=False, separators=(",", ":"))
             if (receipt.get("agent_name_version") != 1
                     or receipt.get("agent_name") != "learner-" + hashlib.sha256(name_binding.encode()).hexdigest()[:24]):
                 raise ValueError("original native agent name differs")
-            native_verifier(self.root)(receipt)
+            native_verifier(self.root)(receipt, source=io.StringIO(native_raw.decode("utf-8")))
             if sha(safe_path(self.root, paths["learner_log"])) != receipt["artifacts"].get("sha256"):
                 raise ValueError("learner artifacts changed")
             summary = None
@@ -405,7 +561,7 @@ class LearnerTabs:
                 raise ValueError("original learner summary/output missing")
             # Failed/cancelled turns also need an actual terminal native event.
             ended = False
-            for line in safe_path(self.root, paths["rollout"]).read_text().splitlines(keepends=True):
+            for line in native_raw.decode("utf-8").splitlines(keepends=True):
                 if not line.endswith("\n"):
                     raise ValueError("native record has a partial final line")
                 record = json.loads(line)
@@ -423,7 +579,7 @@ class LearnerTabs:
         if cwd == self.root / ".worktrees/live":
             raise ValueError("live learner cwd retained")
         proof["identity"] = self.idle(pane, proof)
-        proof["files"] = self.files(paths)
+        proof["files"] = self.files(paths, receipt)
         if proof["files"] != initial_files or load(path) != receipt:
             raise ValueError("original artifacts changed during seal verification")
         return proof
@@ -470,9 +626,8 @@ class LearnerTabs:
         required = {"tui", "output", "stderr"} | ({"learner_log", "rollout"} if receipt.get("state") != "not-started" else set())
         if not required <= proof.get("files", {}).keys():
             raise ValueError("retirement artifact proof missing")
-        for record in proof["files"].values():
-            if self.files({"check": self.root / record["path"]})["check"] != record:
-                raise ValueError("retirement artifacts changed")
+        if self.files({k: self.root / v["path"] for k, v in proof["files"].items()}, receipt) != proof["files"]:
+            raise ValueError("retirement artifacts changed")
         if proof["files"]["tui"]["path"] != str((self.directory / "learner" / (label + ".tui.json")).relative_to(self.root)):
             raise ValueError("original TUI receipt path changed")
         pane = self.pane(row, host, label)
@@ -492,7 +647,7 @@ class LearnerTabs:
             raise ValueError("tail persistence failed")
         # Repeat all evidence, batch, binding and input checks immediately before the destructive call.
         row2, host2 = self.current(batch)
-        if binding(row2) != proof["binding"] or host2 != host or self.files({k: self.root / v["path"] for k, v in proof["files"].items()}) != proof["files"]:
+        if binding(row2) != proof["binding"] or host2 != host or self.files({k: self.root / v["path"] for k, v in proof["files"].items()}, receipt) != proof["files"]:
             raise ValueError("batch or artifacts changed before close")
         if self.idle(self.pane(row2, host2, label), proof) != proof["identity"]:
             raise ValueError("pane changed before close")

@@ -1,0 +1,86 @@
+{
+  "at": "2026-10-25T02:12:57+08:00",
+  "T": "2026-10-25T02:12:43+08:00",
+  "release_id": "V6-R448",
+  "name": "V6.brain-plan-reuse-issue58-20261025",
+  "source_commit": "660b2e50c66307509fe70b98086df6a432b35d0f",
+  "installed_main": "7779695a839a8fd094575350db7e32a3111bcd79",
+  "behavior": {
+    "parent": "c32ff342c93840ddf40e3b6ae1cf188ce12c81d1",
+    "commit": "7500613dc3601c493acf09245bf9fcf4b0c29e90",
+    "tree": "c85267998b71dbbc9124c5a77f6dd8f253571223",
+    "paths": [
+      "agent/src/brain/brain.ts",
+      "agent/src/brain/engines/knowledge-agent.ts",
+      "agent/src/brain/router.ts",
+      "agent/src/brain/specs.ts",
+      "agent/src/brain/tools/agent-knowledge.ts",
+      "agent/src/brain/tools/capabilities.ts",
+      "agent/src/hand/loop.ts",
+      "agent/src/hand/screens/map.ts",
+      "agent/src/hand/screens/route-plan.ts",
+      "agent/src/hand/screens/route-review.ts",
+      "agent/src/memory/endgame-plan.ts",
+      "agent/src/memory/run-plan-merge.ts",
+      "agent/src/memory/run-plan-update.ts",
+      "agent/src/memory/types.ts",
+      "agent/src/v6/direction-rides.ts",
+      "agent/tests/brain-agent-mode.test.ts",
+      "agent/tests/brain-plan-reuse.test.ts",
+      "agent/tests/brain-query-efficiency.test.ts",
+      "agent/tests/brain-query-guidance.test.ts",
+      "agent/tests/endgame-plan.test.ts",
+      "agent/tools/brain-agent-report.ts",
+      "docs/brain-agent-mode.md"
+    ],
+    "scan": {
+      "manifest": "/home/dw/Projects/agent-sts2/ops/codex-ops/record-scans/runs/1d82ca7175cf49e8be946376cfcd7215/manifest.json",
+      "manifest_sha256": "5cb9e4f11b3554b3ed3ba7032ca6b682586c6761b83e30fc694fd5752317264e",
+      "scanned_leaves": 22,
+      "reused_clean_leaves": 0,
+      "full_copy_bytes": 0
+    },
+    "parallel_staged_paths_preserved": []
+  },
+  "registrations": {
+    "main": {
+      "parent": "b5548bd3916637243830f9c1c2db89f54542dc09",
+      "commit": "8b949d199aeac240a8ce16ae9f732558a936cd4d",
+      "tree": "ecd060ae5e7f402ea9e0adee9c30bbc86137f85c",
+      "paths": [
+        "eval/versions.json"
+      ],
+      "scan": {
+        "manifest": "/home/dw/Projects/agent-sts2/ops/codex-ops/record-scans/runs/86d5bc6078cf45dda86fdf3c3c6cae78/manifest.json",
+        "manifest_sha256": "b052147ff726d16f7e352e01bd6e56e139002b1021b4f57fa4b89788ecaca1d6",
+        "scanned_leaves": 1,
+        "reused_clean_leaves": 0,
+        "full_copy_bytes": 0
+      },
+      "parallel_staged_paths_preserved": []
+    },
+    "live": {
+      "parent": "7500613dc3601c493acf09245bf9fcf4b0c29e90",
+      "commit": "d0d9da10063c623f3036a6910e83f4ae3c30c06e",
+      "tree": "b759b70f4aee954fe3cda8f5ffab53ce604b4a35",
+      "paths": [
+        "eval/versions.json"
+      ],
+      "scan": {
+        "manifest": "/home/dw/Projects/agent-sts2/ops/codex-ops/record-scans/runs/09a686fe92264592bf7af93c8353d4f8/manifest.json",
+        "manifest_sha256": "77a570add7b618c56777ec7978fff0a7e8a232446cc2929de30bcdc6fb87694d",
+        "scanned_leaves": 1,
+        "reused_clean_leaves": 0,
+        "full_copy_bytes": 0
+      },
+      "parallel_staged_paths_preserved": []
+    }
+  },
+  "full_reused": true,
+  "source_leaves": 22,
+  "knowledge_changed": false,
+  "issue60_included": false,
+  "natural_runtime_acceptance": false,
+  "scientific_parents_open": true,
+  "new_full_model_tick_game": 0
+}

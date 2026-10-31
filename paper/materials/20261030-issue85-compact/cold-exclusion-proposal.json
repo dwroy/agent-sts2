@@ -1,0 +1,31 @@
+{
+  "schema": "issue85-cold-exclusion-proposal-v1",
+  "proposal_only": true,
+  "root_policy_mutated": false,
+  "contract": "ops/board_queue_admission.py:48 and .agents/queue-workspace.json:new_materials_max_bytes=4194304",
+  "scope": "Only issue85 delivery materials measured; original integrator must freeze actual ROOT policy and check the entire candidate snapshot.",
+  "issue85_materials_bytes_at_measurement": 6825141,
+  "suggested_data_only_exclusions": [
+    {
+      "path": "paper/materials/20261030-issue85-grading/source-map.json",
+      "bytes": 1499153,
+      "sha256": "7c3b50303cc16bf0479eda13da02b4212e93dc726f87aad258ba3ccbdde28945",
+      "purpose": "fixed evidence/replay data only; retained in Git and source worktree; no runtime source"
+    },
+    {
+      "path": "paper/materials/20261030-issue85-implementation/replay-questions.json",
+      "bytes": 1253930,
+      "sha256": "ab6996d1799bf8c095c62b01d07188639c17e624709b5abcc0bed486ff125cef",
+      "purpose": "fixed evidence/replay data only; retained in Git and source worktree; no runtime source"
+    },
+    {
+      "path": "paper/materials/20261030-issue85-compact/questions.json",
+      "bytes": 1079381,
+      "sha256": "99c891f1751cf7eac4476c53755c1d02640a9358ed9aaeea3f4a493a817147e2",
+      "purpose": "fixed evidence/replay data only; retained in Git and source worktree; no runtime source"
+    }
+  ],
+  "excluded_bytes": 3832464,
+  "issue85_remaining_bytes_at_measurement": 2992677,
+  "consumer_materialization": "No production/tests require these three data files. Audit/replay reads source exports, candidate, assessments and authority. Inspect excluded records from fixed Git blobs when needed."
+}

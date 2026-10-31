@@ -1,0 +1,116 @@
+{
+  "batch": "issue51-remove-card-detail-002-20261024-r56",
+  "source_commit": null,
+  "source_knowledge_head": "522197cfb8b29eea4d640032532731642a223a0d",
+  "formal_publication": "pending",
+  "consumer_readback": "pending",
+  "entries": [
+    {
+      "context": "used",
+      "strategy_id": "silent-brain-shop-used-removal-service",
+      "rk_id": "silent-rk-shop-used-removal-service",
+      "disposition": "new",
+      "new_context": true,
+      "source": "own",
+      "evidence_path": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261024-221313/learner/runs/20261024-221830-807aeefb-685c-45a9-a594-31fdd3ec69d9-strategy-proposal/scratch/evidence-used.json",
+      "formal_publication": "pending",
+      "consumer_readback": "pending",
+      "rk_scope": "descriptive shop tag only; whitelist cannot encode used/available, cross-field prices or prior-visit history; body condition must be checked",
+      "archived_overlap": null
+    },
+    {
+      "context": "short",
+      "strategy_id": "silent-brain-shop-removal-unaffordable-stock",
+      "rk_id": "silent-rk-shop-removal-unaffordable-stock",
+      "disposition": "new",
+      "new_context": true,
+      "source": "own",
+      "evidence_path": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261024-221313/learner/runs/20261024-221830-807aeefb-685c-45a9-a594-31fdd3ec69d9-strategy-proposal/scratch/evidence-short.json",
+      "formal_publication": "pending",
+      "consumer_readback": "pending",
+      "rk_scope": "descriptive shop tag only; whitelist cannot encode used/available, cross-field prices or prior-visit history; body condition must be checked",
+      "archived_overlap": null
+    },
+    {
+      "context": "later_quote",
+      "strategy_id": "silent-brain-shop-next-removal-quote",
+      "rk_id": "silent-rk-shop-next-removal-quote",
+      "disposition": "new",
+      "new_context": true,
+      "source": "own",
+      "evidence_path": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261024-221313/learner/runs/20261024-221830-807aeefb-685c-45a9-a594-31fdd3ec69d9-strategy-proposal/scratch/evidence-later_quote.json",
+      "formal_publication": "pending",
+      "consumer_readback": "pending",
+      "rk_scope": "descriptive shop tag only; whitelist cannot encode used/available, cross-field prices or prior-visit history; body condition must be checked",
+      "archived_overlap": null
+    },
+    {
+      "context": "fit",
+      "strategy_id": "silent-brain-shop-joint-budget",
+      "rk_id": "silent-rk-shop-joint-budget",
+      "disposition": "updated",
+      "new_context": false,
+      "source": "own",
+      "evidence_path": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261024-221313/learner/runs/20261024-221830-807aeefb-685c-45a9-a594-31fdd3ec69d9-strategy-proposal/scratch/evidence-fit.json",
+      "formal_publication": "pending",
+      "consumer_readback": "pending",
+      "rk_scope": "descriptive shop tag only; whitelist cannot encode used/available, cross-field prices or prior-visit history; body condition must be checked",
+      "archived_overlap": "184318 same ID, retained original rule/evidence; excluded from new-context count"
+    },
+    {
+      "context": "stop_selected",
+      "strategy_id": "silent-brain-shop-affordable-stop",
+      "rk_id": "silent-rk-shop-affordable-stop",
+      "disposition": "updated",
+      "new_context": false,
+      "source": "own",
+      "evidence_path": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261024-221313/learner/runs/20261024-221830-807aeefb-685c-45a9-a594-31fdd3ec69d9-strategy-proposal/scratch/evidence-stop_selected.json",
+      "formal_publication": "pending",
+      "consumer_readback": "pending",
+      "rk_scope": "descriptive shop tag only; whitelist cannot encode used/available, cross-field prices or prior-visit history; body condition must be checked",
+      "archived_overlap": "184318 same ID, retained original rule/evidence; excluded from new-context count"
+    }
+  ],
+  "own_game_version": "unknown",
+  "own_scope_sha256": "da915311f233ba0c350f5278a630a61fee1ab9540c520d407f6227e9c87e3478",
+  "external_source": "external:sts2fun",
+  "external_contrast": "external-contrast.json",
+  "runs_field_is_external_dispatch_identity": [],
+  "raw_read_boundary": {
+    "decisions": {
+      "path": "logs/decisions.jsonl",
+      "max_bytes": 4638939179,
+      "original_source_identity": "5ec4d712ff68d72c6a8390830c47181eb08a140c"
+    },
+    "run-config": {
+      "path": "logs/run-config.jsonl",
+      "max_bytes": 3320082,
+      "original_source_identity": "433f578df72c006af1aee2cf2ccd86bdcc74bc3f"
+    },
+    "run-plans": {
+      "path": "logs/run-plans.jsonl",
+      "max_bytes": 12781782,
+      "original_source_identity": "ee023e7458d04a745a37ebe99bfb08152e9873f3"
+    },
+    "runs": {
+      "path": "logs/runs.jsonl",
+      "max_bytes": 455331,
+      "original_source_identity": "d20854916723386af602e1a2680db285aa0488d3"
+    },
+    "sl-attempts": {
+      "path": "logs/sl-attempts.jsonl",
+      "max_bytes": 61282656,
+      "original_source_identity": "169cde8797955dbb7da961e2151a5533eff10a74"
+    },
+    "states": {
+      "path": "logs/states.jsonl",
+      "max_bytes": 17026867203,
+      "original_source_identity": "c2482d3430eaad143f5c5b91ec8a931cf978a4d7"
+    }
+  },
+  "limitations": [
+    "Archived predecessor output used for coverage/dedup only; not new evidence.",
+    "Old same-ID source references point to preserved archival bytes with verified original SHA; these are not new evidence.",
+    "No shared ledger registration, knowledge edit, code proposal, merge or release allocation."
+  ]
+}

@@ -1,5 +1,21 @@
 # 完成验收与现场回收
 
+## done 过程存储与运行证明（#76，Roy 2026-10-26）
+
+成功 `done/rc=0` 批次的 scratch 现在独立于知识入库、提案结算和父要求验收进行可恢复压缩。下一自然 sweep 先核原报告路径；旧报告缺路径时核原 launcher 的 task/cwd/scratch/batch 绑定，不按时间戳猜目录。运行者、宿主进程引用、工作树脏改动、租约、`learn.lock` 和共享发布锁继续阻止删除。没有原来源绑定、凭据名或陌生软链接仍保留并列原因。压缩不是接受源码、知识入库或关闭父要求；checkout 的实际删除仍须原发布和 owner 门。`failed` 继续走原验收，不扩大为 done。
+
+回收前调用原退休消费者：external/backfill 的 `retired` 和 TUI 完成校验须通过。原 launcher 事件流、各 run 的用量 JSONL、日志以及 batch/TUI/tab 回执引用的原文件留在原路径，且不进入过程归档；回执引用 checkout 内其他路径时只压缩 scratch、保留 checkout。消费者缺证或不兼容则跳过整批，`retained_summary` 记录批数和字节，不以 wrapper 退出代退休。归档仍逐文件 SHA、完整 tar 读回及删除前复核；小报告和脚本保留，`restore` 恢复原字节。原 learning-request launcher 在验证输入和恢复线程之前自动恢复原批归档；仍用原账号、线程、任务和树。恢复后无修改的过程副本可再次自然压缩，修改过的恢复材料保留为新证据。旧 `checkout_reclaimed` 回执可升级为 scratch 归档，原回执嵌入 `previous_manifest`，原分支恢复能力保留。
+
+原单个 nice 19 worker 按 done 积压将 learner 单轮名额从调用者下限动态扩到最多 128，处理满 50 秒后把余项留给下一自然 tick，不新增计时器或模型；一个正在归档的批次会完成 SHA/删除事务后才检查预算。普通开发/ops checkout 和缓存各仍最多 4。汇总扫描所有批次，按原因记录 `retained_summary.{原因}.{batches,bytes}`、预算延期和未知字节批次；共享未知 scratch 范围在同一原因内只计一次。`backlog-trends.json` 保存连续不下降窗口；某原因字节相对窗口起点增加且窗口满 24h，或主盘可用小于 150,000,000,000 字节时，向原 `inbox-claude.md` 追加一行，同组告警至多每日一次。plan 不发告警。
+
+`v6-refresh/<角色>/refresh-*` 与原 refresh/learn/publication 锁共用门：published 只保留 `receipt.json` 和各步 stdout/stderr；failed 全目录保留最近 20 个且最长 7 天，超额/过期也仅清过程文件、保留 receipt/log。原 receipt 的输入/输出 SHA 和发布身份保持，`storage_cleanup` 记录清理文件身份、字节及 prepared/completed，不将已删中间路径冒称在线证据；回退历史包需从正式 Git/发布来源恢复。无完成回执、坏绑定、活进程或未知文件链接保留。新 refresh 完成后和原 retention sweep 都会执行同一规则，所以既覆盖新增也覆盖历史 published 积压；不改正式知识值。
+
+上线由原集成/ops 完成。ops 记录 T/固定源码，并在 T+24h 读取原 `last-sweep.json`、归档 manifest、`backlog-trends.json`、refresh receipt 与磁盘采样：新 done 是否全部自然回收（逐项解释安全门延期），refresh 中间字节是否停止增长、主盘是否不再单调下降；原用量/TUI/退休消费者及道位/worker 也须真实读回。固定测试不代该运行验收，本开发不执行生产 sweep、不改 live/STOP、不关闭会话。
+
+下文保留原验收和恢复合同；其中“done 待证 scratch 原字节永久保留”及 learner 总上限四批由本节替代，知识/源码验收与 checkout 删除门不变。
+
+#67 新的原派发合同例外：携带 `operational_runtime` 且 SQLite 真实运营回执/原报告SHA核同的纯复盘或审计，运营记录本身可作为完成证明，无源码合入/full/经验提炼前置；不冒称已入正式知识。旧批次仍沿下文原合同，混合源码仍须工程发布检查。后续原请求/研究owner、进程、身份、实例、干净树、归档与恢复门全部保持；记录入库不等于已删除工作树。接口与逐入口范围见 [运营学习 runtime](learning-runtime.md)。
+
 Roy 2026-10-13 要求：学习入库后回收过程遗留数据。原调度器的 learn tick 和完整检查结束时启动一个 `nice 19` 回收进程，每轮最多处理四批；不新增定时器，不启动模型，不改变对局或学习者权限。
 
 所有学习任务成功退出并完成原批次登记后，启动器释放该 checkout 的租约，自动提交本批回收请求到 `retention/requests/<batch>.json`。回收器优先处理这些请求，再处理历史积压；退出只是申请，仍须实际入库、完整检查及无活动 owner 才能删除。不依赖模型手动删文件，也不需要 ops 手动派清理。专门研究、进阶验收和有父要求的任务也登记请求，但未完成的接续和入库门禁继续暂缓，记录实际原因。
@@ -26,7 +42,7 @@ nice -n 19 python3 ops/learner_retention.py restore --batch <准确批次号>
 
 同一回收进程会使用每轮剩余名额回收已发布且无活动进程的独立运维和开发工作树，总上限仍为四个（即使传入更大的 limit 也截到四个）。旧 `ops-*` 工作树须干净、至少闲置一小时、HEAD 已进入本实例 main 且来源分支引用仍在，没有原请求或学习 owner 占用。任务相对原分配基线的可执行代码和知识改动仍须实际进入 live；纯报告、研究、文档不要求整个 HEAD 进入 live。无原分配回执时保守使用 source 与 live 的共同祖先，不能因 source 已在 main 就把待发源码当成空改动。新分配的运维工作树不能以初始 HEAD 已存在于 main 为由删除。Roy 10-24（#20）授权回收任务自理：仅当 HEAD 已不同于原分配基线、源码实际满足原 main/live 发布门及 owner/进程/干净/归档等检查时，回收器自行结算，证据进入原归档 proof；其余情况仍需下面的完成回执或继续保留。live、exp、角色常驻实例、运行中、未提交、未发布、被锁定或有未完成要求的工作树始终保留。
 
-开发或运维完成一个功能时，先跑项目要求的检查并实际合入 main；要部署的源码还须合入 live，然后登记原源码和实际 main/live 提交。live SHA 对纯材料也记录为运行上下文，但不要求包含该材料提交。程序逐项比对原源码与发布树的执行代码、校验文件和知识叶子的 Git 对象，允许保留来源分支的精确叶子集成；发布提交是原源码的后代时，允许后续发布继续演进。原请求的未完成范围不能被这个工作树回执关闭。登记后原调度 tick 自动清理，手动 sweep 也经过同一门禁：
+开发或运维完成一个功能时，先跑项目要求的检查并实际合入 main；要部署的源码还须合入 live，然后登记原源码和实际 main/live 提交。live SHA 对纯材料也记录为运行上下文，但不要求包含该材料提交。程序逐项比对原源码与发布树的执行代码、校验文件和知识叶子的 Git 对象，允许保留来源分支的精确叶子集成；发布提交是原源码的后代时，允许后续发布继续演进。Roy/Claude 10-24（#20 评论6381379788）补核：精确叶子被后续发布演进或按授权回退时，当前叶子不相同不代表从未发布。原门先保留源码祖先/当前叶子核验；历史采用仅在原 allocator 回执存在各通道独立快照时启用。allocator 完成创建、校验工具/干净状态后、返回并允许任务启动前，在原 allocation 回执的 `publication_boundaries` 可选字段保存实际 integration-root HEAD 与本实例注册 live HEAD（含 root/工作树绑定）；live 缺席不推算。resume 保留原快照，不用当前值覆盖。回收器证明各自快照在对应发布提交的 first-parent 链上，只查快照之后、严格不含快照本身的原叶子；窄集成保留同文件其他修改时，仅接受完整逐文件补丁的 `git patch-id --verbatim` 一致（空白、路径、模式及上下文仍参与比较，不做模糊 hunk 匹配）。每个通道单列见证 commit、种类，补丁见证另记 parent/patch_id；不能用 main 代 live、丢弃旁支或分配前旧状态充数。#20 核验6381989248发现旧候选的 `published ^allocation-base` 对分叉live无效，该候选已退回；不能仅靠提交时间戳排除。旧 allocation 没有独立快照时，历史采用返回无法证明并保留；不改写原回执、补造边界或沿用旧三树可通过结论。当前整叶/来源祖先仍按原合同核验。最多查每叶每通道256个发布变更，超界仍保留为未知，不冒未发布或放行。二进制仅接受原叶子/源码祖先证明；测试文件仍须真实 live 采用。原请求的未完成范围不能被这个工作树回执关闭。登记后原调度 tick 自动清理，手动 sweep 也经过同一门禁：
 
 ```bash
 nice -n 19 python3 ops/worktree_retention.py complete --workspace <工作树名> \
@@ -98,7 +114,7 @@ Roy/Claude 2026-10-24（#51 评论6376022286）：外部冻结单元待派时，
 
 Roy/主管 2026-10-24（#56，覆盖 #51 旧轮换和未部署的 3:1 八叶）：外部学习按 A 流派剧本、B 单牌、C 遭遇战与 rk、D 其余决策四道分别登记，每道至多一个未结算批次。队列 plan 的 `lane` 是派发元数据，冻结来源清单、SHA 与样本分母不变；同道按原队列顺序续派，D 内保留商店/删牌→遗物→事件顺序。外部 pending/在途时另留一个自有学习槽，优先原复盘入口，之后走经验、提案等原路径；已有自有 owner 和审计文件锁不因拆道被释放。无外部需求时保留原普通流水线。新批次仍走原 ready/dispatch/finish、原生消费核验、未送草稿及工作树 retention；四道不授权并行写 live。
 
-现有五分钟订阅采样同时写 `ops/codex-ops/subscription-usage.json`，账号 home 的 SHA256 只用于绑定；不含凭据。调度器与 wrapper/launcher 共用这份最多十分钟的快照：周用量 ≤70% 为四道 ultrafast，>70% 且 <90% 为两道 fast，≥90% 停止新外部准入并向原 ops 队列去重请求 codex1 换号。#56 评论 6383255912 明确当前没有预检事务 ID，真实预检、drain、换号及验证归 ops，不在开发交付中切账号；不打断在途批次。未知/过期/账号不符也不准入。刷新快照但仍在同档允许已登记 checkout 继续，跨档需保留原注册并走原失败/重试门，不能重写租约。主盘可用空间 ≤80 GiB 拒绝新外部派发，原临时盘及其他容量门继续生效。service tier 仅经启动参数传入，不改共享 config。
+现有五分钟订阅采样同时写 `ops/codex-ops/subscription-usage.json`，账号 home 的 SHA256 只用于绑定；不含凭据。调度器与 wrapper/launcher 共用这份最多十分钟的快照：按 Roy 2026-10-28 授权（[#56/6458903164](https://github.com/dwroy/agent-sts2/issues/56#issuecomment-6458903164)），所有新外部批次固定 `service_tier=default`；周用量 ≤70% 仍为四道，>70% 且 <90% 仍为两道，≥90% 停止新外部准入并向原 ops 队列去重请求 codex1 换号。#56 评论 6383255912 明确当前没有预检事务 ID，真实预检、drain、换号及验证归 ops，不在开发交付中切账号；不打断在途批次。未知/过期/账号不符也不准入。刷新快照但仍在同一 workers 档允许已登记 checkout 继续，跨 workers 档或旧 fast/ultrafast 登记需保留原注册并走原失败/重试门，不能重写租约。主盘可用空间 ≤80 GiB 拒绝新外部派发，原临时盘及其他容量门继续生效。service tier 仅经启动参数传入，不改共享 config。
 
 每批 `external-launch.json` 初始区分 requested/effective 与尚未知的 observed；只有原生 turn_context 经原绑定核验后，调度器才补写 `observed_service_tier` 和对应只读证据。发布后由 ops 记录 T/源码、自然 tick 的四道+自有槽五个独立批次及实际档位，并在 [T,T+2h) 读回至少四个完成单元。固定测试和启动请求不能代这两项验收；R434 正式策略/rk、旧失败、未完成学习父要求与自然采用/收益保持分账。
 
@@ -108,3 +124,23 @@ Roy/主管 2026-10-24（#56，覆盖 #51 旧轮换和未部署的 3:1 八叶）�
 #56 注册超时修正：新调度在原全局 `learn.lock` 事务中为每个新 wrapper 预持独立 batch 发布锁；完整 batch（含原 supervisor PID、external binding/lane/policy）原子写入并 fsync 后，才释放该批屏障。启动准备与 learner_entry 等待该批屏障，仍核原保存的 PID/batch 租约；不必等待父 tick 后续来源校验结束。全局锁继续串行化派发/finish，超时仍120秒，旧/手动 wrapper 未携带受约束新屏障时仍走原全局路径。外部来源按空道惰性选择，一次原事务内复用已校验源，仅缓存冻结 metadata；依赖文件身份变化即重验，下一事务或独立 wrapper prepare 不复用缓存。
 
 注册修正必须完整安装父 tick/learner_jobs、`learner_registration.py`、wrapper 与外部来源模块；不得只换 wrapper 后给原在途行添加屏障或元数据。先由 ops 待原自然事务退锁并核旧 wrapper 的零模型启动证明，再沿原失败/租约/世代续接，不重放旧产物或强 tick。#56 主管6385018900的23:30前合入门保持；未能完成时，原 ops 按其裁决回退到 #56 之前的调度恢复原两槽，知识、原 owner、失败和证据原样保留。恢复数量和时刻均须实际读回，不以源代码安装代自然验收。
+
+### #77 主管裁决作废收尾
+
+主管 [6519584366](https://github.com/dwroy/agent-sts2/issues/77#issuecomment-6519584366) 对七批作废的裁决，以及 [6519962379](https://github.com/dwroy/agent-sts2/issues/77#issuecomment-6519962379) 对空闲原生进程连同子进程组 TERM 的追加授权，由原 ops 在补丁实际合入并登记 ROOT 后执行：
+
+```bash
+nice -n 10 python3 ops/codex-ops-learn.py close \
+  --batch 20261025-234303-strategy-proposal \
+  --verdict https://github.com/dwroy/agent-sts2/issues/77#issuecomment-6519584366
+```
+
+每次只处理一个 batch。允许裁决的格式是 #77 上 dwroy 的 `[Claude]` 评论，该批的裁决行须明确写“作废收尾”；CLI 经 GitHub API 核账号、issue、评论 ID/URL、原文及内容 SHA，不从终端转述推定授权。批次必须仍在 `own_learning.blockers` 或 `pending_review` 中，且保有原 `awaiting_review` 登记；running/launching 仍走原恢复入口。已完成的同一裁决只核回执，幂等返回；完成回执已持久化而 learn.json 尚未写指针的崩溃可沿同一命令补记。
+
+原 `learn.lock` 使用非阻塞准入，同时持有原 game-admission、knowledge-refresh、live-merge、ordinary-close 和各原 D1 data-publication 锁。写入中的 publication marker、未终态的 D1 journal/未知 attempt、锁忙及身份不明均返回 75，给出保留原因，不等事务结束、不清任何旗或旧事务。原 receipt、deferral 与 learn.json 登记在锁内核 SHA/逐字段绑定；pane 缺席仅登记 `pane_absent` 例外。071302 的原登记与恢复监督器 PID 不同，仅在 pane 缺席、其余注册字段一致、两个 PID 均退出时接受，并同时保留两份身份。
+
+对仍存活的原生 Codex，核原 PID/birth、会话/cwd、最近 turn 已结束且超过 30 分钟、无新排队输入、pane/空输入与独占进程组。允许同一原生进程的子进程组；陌生进程、PID 复用、换 pane、其他工作树命令/测试/写入均保留。先持久化原登记、裁决、原件 SHA、原生日志证明及完整进程快照，再复核并对数字进程组发 TERM（子组先于原生组）；最多等 10 秒确认全部原进程退出，失败留 attention 回执，不升级 KILL。共享 ROOT 的 postmortem 由原全局写锁保护，不把其他角色的 ROOT 活动归给该批。
+
+收尾回执为 `ops/codex-ops/learner/<batch>.supervisor-close.json`，终态 `supervisor_voided`。原 batch 的 state/rc/原报告/失败/研究与父项均保留，仅增 `supervisor_close` 指针；投影列入 `own_learning.closed`，释放计算槽位，原 demand 仍禁止自动重试，迟到 finish 不会改成成功。不调用发布、重置外部计划、回收 tab/工作树、关闭科学父或启动下一批。tab 后续仍交 #65；ops 在七条实际回执和下一自然自有学习首批时间读回后另报运行验收。
+
+ROOT 运行叶须同批安装 `ops/codex-ops-learn.py`、`ops/own_learning_slot.py`、新增 `ops/learner_supervisor_close.py`，无 LIVE 叶。不得只复制 CLI 或投影文件。

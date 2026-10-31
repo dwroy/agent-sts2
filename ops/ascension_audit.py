@@ -110,6 +110,9 @@ def dispatch(state, root, scripts, character, finished, alive, stamp, start, ava
         batch = {'task':'ascension-audit','learner_task':'ascension-audit','character':character,
                  'runs':runs[:10],'state':'launching','audit_key':request['key'],'worktree':tree,
                  'proposal_policy':'Roy-2026-10-07-learning','attempt':attempt,'started':time.time()}
+        batch['audit_level'] = request['level']
+        from learning_runtime import capture
+        batch['operational_runtime'] = capture(root, state_dir, 'ascension-audit')
         state['batches'][batch_id] = batch
         request.update(state='launching',attempts=attempt,batch=batch_id,worktree=tree)
         persist(state)  # A crash after launch cannot erase the lease or attempt.
@@ -183,6 +186,17 @@ def finish(state, batch_id, rc, root, out_dir, enqueue, inbox, proposal_check=la
     if not isinstance(coverage,list) or not all(isinstance(c,str) for c in coverage) or not {'floors','combat_counts','healing','campfires','rules','assumptions'} <= set(coverage):
         errors.append('incomplete observed structure coverage')
     errors.extend(proposal_check(report,batch))
+    if not errors and report.get('operational_candidate'):
+        from learning_runtime import complete
+        settled = complete(batch_id, batch, report, rc, root, enqueue, inbox)
+        if batch.get('operational_pending'):
+            request.update(state='awaiting_review', last_failure='operational transaction pending; recheck original batch')
+            return
+        if not settled:
+            batch.update(state='awaiting_review', rc=rc, report=report, checks_pending=True)
+            request.update(state='awaiting_review', last_failure='mixed source/knowledge requires its original delivery owner')
+            inbox('升阶审计 '+batch['audit_key']+' 已留运营产物，源码/正式知识仍须原工程/知识合同；不以报告完成替代发布。')
+            return
     batch.update(rc=rc,state='failed' if errors else 'done',report=report,errors=errors)
     if errors:
         batch['retry_at']=time.time()+3600

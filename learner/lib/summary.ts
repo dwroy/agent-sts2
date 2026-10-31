@@ -140,6 +140,9 @@ export class SummaryTracker {
       return undefined;
     }
     if (!isObject(event)) return undefined;
+    // TUI transports native rows rather than exec's item.completed projection.
+    if (this.summary.engine === "codex" && event["type"] === "response_item" && isObject(event["payload"]) &&
+        event["payload"]["type"] === "web_search_call" && event["payload"]["status"] === "completed") this.countTool("web_search");
     if (this.summary.engine === "claude") this.claude(event);
     else this.codex(event, tMs);
     return event;

@@ -1,0 +1,8 @@
+[watcher]
+#59 首轮最终组合已真实终态：687文件、6694过、1败、2跳，exit1。原PID3769343/birth32338202已退出，原检查锁释放；2848输入/1417依赖/326 runtime叶及tree/index条目flags均未变。失败原件与结果SHA5525a65e8401dbde5f32de66fa53f85d2b011f175cc6490f7340236a1271c0ea保存在原final-combination材料，不能记绿。
+
+唯一失败是 `ops-autoplay-console.test.ts` 日志轮换后固定2.2秒内未读到next run decision；该夹具与生产脚本均与当前ROOT及#60已过full字节相同。真实tail隔离诊断读到全部四行且viewer退出；本次诊断未复现超过2.2秒，因此“异步轮询/缺就绪屏障”保留为证据支持的夹具时序归因，不宣称已证生产缺陷。
+
+沿原codex1隔离树修了这一处测试：有界8秒实际输出屏障代固定sleep，原四内容断言、75退出和viewer退出断言全部保留；7项定向全过。**原六叶候选、生产console脚本、实际ROOT/LIVE均未改**。修复后精确七叶候选 `70c6146ae16a406089f42157aecec1623d1d04e2` / 树 `60c667ca7ceaba36ed4d858cd3bee15bc6ff47fc` 已鲜核固定，新唯一检查PID3911730/birth32529535、nice19单fork、原integrator-full-check.lock；ROOT双tsc0、LIVE生产tsc0、ROOT20/LIVE12定向全过，修复后唯一full已运行。累计原失败1＋修复后1，原失败永久保留，不是原组合盲重跑。
+
+新材料 `paper/materials/20261025-issue59-fixture-corrected-combination-integrator/`，fixture-diagnosis/assembly/seven-leaves与部署草单齐；仍未准入/合main/live。绿后交ops ROOT原三叶＋仅测试夹具一叶，LIVE仍原策略三叶，保原12处差异/#60/K绑定；旧130/75/awaiting_review、禁finish-retire-replay与科学父均不变。#62原开发与后续最终组合沿原队列；#60运行验收独立继续。

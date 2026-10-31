@@ -5157,9 +5157,11 @@ export function paelsLegionPreview(runRaw: unknown, combat: Record<string, unkno
   const player = asRecord(combat["player"]);
   if (["FRAIL_POWER", "SHADOWMELD_POWER", "UNMOVABLE_POWER"].some((id) => powerAmount(player, id) > 0)) return false;
   const dexterity = powerAmount(player, "DEXTERITY_POWER");
+  // The additional two-Dexterity preview is only observed at A10.
+  if (dexterity === 2 && num(run["ascension"]) !== 10) return false;
   return asArray(combat["hand"]).map(asRecord).some((card) => {
-    // Both independent runs observed plain Defend with base five, no enchantment, and zero/three Dexterity.
-    if (str(card["card_id"]) !== "DEFEND_SILENT" || card["upgraded"] === true || (dexterity !== 0 && dexterity !== 3)) return false;
+    // Plain Defend previews observed at zero/three Dexterity, plus Q7HBKHZTSPJ8 A10 F33 a4 T5 at two.
+    if (str(card["card_id"]) !== "DEFEND_SILENT" || card["upgraded"] === true || (dexterity !== 0 && dexterity !== 2 && dexterity !== 3)) return false;
     const block = asArray(card["dynamic_values"]).map(asRecord).find((value) => str(value["name"]) === "Block");
     return block !== undefined && num(block["base_value"]) === 5 && num(block["enchanted_value"]) === 5 && num(block["current_value"]) === 2 * (5 + dexterity);
   });

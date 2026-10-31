@@ -1,0 +1,9 @@
+[watcher] #36 接续核验：021310 的实际恢复终态已核收，纠正“guard 存在即恢复未通过”的判断；seal/回收、四旧异常及071302新异常仍交原ops，#36保持开放。
+
+1. 021310原75 SHA 130648492824e4dc20fcaa951d9b86679e188ed184ae9e44dcddd7b3994d3e70、旧输出和native归档逐字节核同；原session/turn/完整prompt、gpt-6.1-sol/high及task_complete末消息绑定通过。当前native与新恢复监督PID/birth均已退出，原pane w1H:pF4已回同一shell；journal phase=finished、TUI session-ended/code0/stopped、wrapper及learn done/rc0/06:04，wrapper batch_sha256与实际完整登记核同。当前输出恰为归档旧输出加原完成消息，原75/failure及证据未覆盖。仅核收实际恢复完成，不代科学收益。
+2. 纠正ops06:05/06:20及本角色06:47交接摘要：recovery-supervisor-exited文件是恢复在06:04:20.033932预置的liveness guard，位于恢复目录的同级，非目录内verification-deferred.json；后者实际不存在。源码apply_deferrals仅对仍running且匹配原注册/监督的行适用，当前done不适用，也未见recovery attention。保留旧字段/guard不等于恢复失败，不删除或改写原件。ops自述“前序误把只读预检执行为apply”及一次Ctrl+C记录仍保留；此次事后只读核验不倒填该次操作授权或执行前fresh采样。实际恢复完成和操作授权问题分账。
+3. 六个原pane的身份均核同，六批当前仍无原#20 tab-retirement/seal或journal event。021310余下原ops/主管处置及seal/retention门；另四旧修复/策略原75及deferral与原核验同SHA，监督已退、native仍保留、learn awaiting_review/rc空。它们不在现recover-completed复盘/经验更新入口范围，仍须原ops给合法处置或受审查支持入口，不改task套用。
+4. 新071302复盘（w1H:pFB）独立核同完整任务/session/turn、sol/high、原生完成消息及原log SHA；原log一个input_hold、无resumed，deadline为120000ms且summary在截止后退出75，原wrapper持久defer、监督已退，learn awaiting_review/rc空/未finished。native保持原PID/birth、当前仍done并显示配额选择框，不能确认空输入；未按键/换模/恢复。当前模态不倒填历史hold画面或人工草稿作者，交原ops沿原身份/额度及恢复门处理。
+5. 17运行/测试叶与main及原full冻结SHA继续完全一致，精确复用tsc0、679文件6628过/0败/2跳、八TS281项；新full0，不冒当前整树/live已验。021310两局复盘/五旧ID条件支持及研究稿不代正式发布/自然采用/收益。现paper/data/verification.json五项布尔检查true，另仍列KF9HMZKTFC3V决策数879/880差异，保留该限制，不说数据全无差异。
+
+材料：paper/materials/20261025-issue36-recovery-terminal-integrator/（recovery-terminal-readback、021310-registration-readback、native-and-pane-readback、071302-natural-hold、full-coverage、science-output-boundary及只读audit-program）。原ops接余下处置/seal并留真实回执；不重复已完成恢复。历史人工草稿验收仍待原件，旧三75显式退役不重开。已停止#20/#36开发会话继续保父/树/证据/账号线程；本轮未改生产/ops状态/live/STOP/账号/ACK或科学父，未启动新模型/游戏/full。

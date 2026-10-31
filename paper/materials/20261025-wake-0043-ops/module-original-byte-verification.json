@@ -1,0 +1,764 @@
+{
+  "run_id": "UVEXNP9HCMAY",
+  "verified": [
+    {
+      "source": {
+        "offset": 4894659561,
+        "length": 149745,
+        "sha256": "99d6cffe9f471bd5b0b80c4b34903ef3ba1ddee6750dc66c7c24fa527c817697"
+      },
+      "run_id": "UVEXNP9HCMAY",
+      "decision_id": "c430e06a-dec8-4c47-b50d-6bf13a5ea7bb",
+      "floor": 6,
+      "label": "reward/card",
+      "status": null,
+      "diagnostics": {
+        "schema": "build-sim-health-v1",
+        "status": "produced",
+        "availableCpus": 32,
+        "loadAverage": [
+          15.23,
+          13.32,
+          13.16
+        ],
+        "decks": 4,
+        "options": 4,
+        "deckCards": 18,
+        "deadlineMs": 10990.751176999998,
+        "orderSearch": null,
+        "comparison": {
+          "samples": 100,
+          "elapsedMs": 1482,
+          "timedOut": false,
+          "workers": 24,
+          "deadlineMs": 10990.714920000057,
+          "pool": {
+            "queueMs": 0,
+            "coldStart": false,
+            "preparationMs": 0,
+            "firstReplyMs": 58,
+            "chunksPlanned": 52,
+            "chunksDispatched": 52,
+            "chunksCompleted": 52,
+            "outcomesCompleted": 400
+          }
+        },
+        "boss": "LAGAVULIN_MATRIARCH",
+        "samples": 100,
+        "requested": 300,
+        "minimumShown": 300,
+        "timedOut": false,
+        "simMs": 1541,
+        "workers": 24
+      },
+      "sim_keys": [
+        "build_ranking",
+        "adaptive",
+        "readiness",
+        "completion",
+        "diagnostics",
+        "quantitative",
+        "boss",
+        "asc",
+        "entry_hp",
+        "entry_source",
+        "samples",
+        "requested",
+        "timed_out",
+        "workers",
+        "orders",
+        "sim_ms",
+        "ms",
+        "base",
+        "options",
+        "not_simulated",
+        "global_build",
+        "construction"
+      ],
+      "error": null,
+      "adaptive": {
+        "schema": "sim-adaptive-v1",
+        "mode": "on",
+        "status": "complete_adaptive",
+        "lane": "b3",
+        "stop_reason": "leader",
+        "indifference_spread": null,
+        "rule": {
+          "version": "adaptive-v1",
+          "b3First": 300,
+          "b2First": 200,
+          "batch": 100,
+          "zElim": 3,
+          "zTie": 2,
+          "profile": "silent-human-pace-v2",
+          "lowTrust": false,
+          "indifference": 0.03,
+          "first": 100,
+          "requested": 300
+        },
+        "candidates": [
+          {
+            "key": "@current",
+            "samples": 100,
+            "rounds": 1,
+            "stop": "leader",
+            "baseline": true
+          },
+          {
+            "key": "card0",
+            "samples": 100,
+            "rounds": 1,
+            "stop": "leader",
+            "baseline": false
+          },
+          {
+            "key": "card1",
+            "samples": 100,
+            "rounds": 1,
+            "stop": "eliminated",
+            "baseline": false
+          },
+          {
+            "key": "card2",
+            "samples": 100,
+            "rounds": 1,
+            "stop": "eliminated",
+            "baseline": false
+          },
+          {
+            "key": "skip",
+            "samples": 100,
+            "rounds": 1,
+            "stop": "eliminated",
+            "baseline": false
+          }
+        ],
+        "final": {
+          "leader": "card0",
+          "group": [
+            "card0"
+          ]
+        },
+        "rounds": [
+          {
+            "n": 100,
+            "leader": "card0",
+            "eliminated": [
+              {
+                "key": "card1",
+                "metric": {
+                  "key": "S",
+                  "difference": -0.00487132613032007,
+                  "se": 0.0003575830613190886
+                }
+              },
+              {
+                "key": "card2",
+                "metric": {
+                  "key": "S",
+                  "difference": -0.0051432189966335385,
+                  "se": 0.0003783348172200877
+                }
+              },
+              {
+                "key": "skip",
+                "metric": {
+                  "key": "S",
+                  "difference": -0.005357920509460523,
+                  "se": 0.0004531145430632344
+                }
+              }
+            ]
+          }
+        ],
+        "evaluable": true,
+        "work": {
+          "full": 1200,
+          "actual": 400,
+          "savedFraction": 0.6666666666666666,
+          "unit": "unique-option-sample-equivalents"
+        },
+        "limits": "Actual prefixes only. All candidates remain available with their own sample count. Full-run agreement is an independent admission result, not observed during an early-stopped question.",
+        "input_key": "human-pace-b3-v1:ec17c3bdf35dfd42e075ec74bb5069ccee2f0835f027be5a8d8cfb3152460cc8",
+        "fixed_order_search_in_work": true
+      },
+      "configuration": null
+    },
+    {
+      "source": {
+        "offset": 4894813983,
+        "length": 316623,
+        "sha256": "dc88d961341c2e4cea53f0b2646e1d5a428e710c7da58320837afb30d48d0b1e"
+      },
+      "run_id": "UVEXNP9HCMAY",
+      "decision_id": "4f830a11-edde-44c1-a12b-0ea70935dfac",
+      "floor": 7,
+      "label": "rest/choose",
+      "status": null,
+      "diagnostics": {
+        "schema": "build-sim-health-v1",
+        "status": "produced",
+        "availableCpus": 32,
+        "loadAverage": [
+          5.37,
+          9.06,
+          11.44
+        ],
+        "decks": 11,
+        "options": 10,
+        "deckCards": 19,
+        "deadlineMs": 10987.484448999981,
+        "orderSearch": null,
+        "comparison": {
+          "samples": 100,
+          "elapsedMs": 3598,
+          "timedOut": false,
+          "workers": 24,
+          "deadlineMs": 10987.333079999895,
+          "pool": {
+            "queueMs": 0,
+            "coldStart": false,
+            "preparationMs": 0,
+            "firstReplyMs": 70,
+            "chunksPlanned": 143,
+            "chunksDispatched": 143,
+            "chunksCompleted": 143,
+            "outcomesCompleted": 1100
+          }
+        },
+        "boss": "LAGAVULIN_MATRIARCH",
+        "samples": 100,
+        "requested": 300,
+        "minimumShown": 300,
+        "timedOut": false,
+        "simMs": 3655,
+        "workers": 24
+      },
+      "sim_keys": [
+        "build_ranking",
+        "adaptive",
+        "readiness",
+        "completion",
+        "diagnostics",
+        "quantitative",
+        "boss",
+        "asc",
+        "entry_hp",
+        "entry_source",
+        "samples",
+        "requested",
+        "timed_out",
+        "workers",
+        "orders",
+        "sim_ms",
+        "ms",
+        "base",
+        "options",
+        "not_simulated",
+        "global_build",
+        "construction"
+      ],
+      "error": null,
+      "adaptive": {
+        "schema": "sim-adaptive-v1",
+        "mode": "on",
+        "status": "complete_adaptive",
+        "lane": "b3",
+        "stop_reason": "indifferent",
+        "indifference_spread": 0,
+        "rule": {
+          "version": "adaptive-v1",
+          "b3First": 300,
+          "b2First": 200,
+          "batch": 100,
+          "zElim": 3,
+          "zTie": 2,
+          "profile": "silent-human-pace-v2",
+          "lowTrust": false,
+          "indifference": 0.03,
+          "first": 100,
+          "requested": 300
+        },
+        "candidates": [
+          {
+            "key": "@current",
+            "samples": 100,
+            "rounds": 1,
+            "stop": "indifferent",
+            "baseline": true
+          },
+          {
+            "key": "o0",
+            "samples": 100,
+            "rounds": 1,
+            "stop": "eliminated",
+            "baseline": false
+          },
+          {
+            "key": "o1:c0",
+            "samples": 100,
+            "rounds": 1,
+            "stop": "eliminated",
+            "baseline": false
+          },
+          {
+            "key": "o1:c5",
+            "samples": 100,
+            "rounds": 1,
+            "stop": "eliminated",
+            "baseline": false
+          },
+          {
+            "key": "o1:c10",
+            "samples": 100,
+            "rounds": 1,
+            "stop": "indifferent",
+            "baseline": false
+          },
+          {
+            "key": "o1:c11",
+            "samples": 100,
+            "rounds": 1,
+            "stop": "eliminated",
+            "baseline": false
+          },
+          {
+            "key": "o1:c13",
+            "samples": 100,
+            "rounds": 1,
+            "stop": "indifferent",
+            "baseline": false
+          },
+          {
+            "key": "o1:c14",
+            "samples": 100,
+            "rounds": 1,
+            "stop": "indifferent",
+            "baseline": false
+          },
+          {
+            "key": "o1:c15",
+            "samples": 100,
+            "rounds": 1,
+            "stop": "eliminated",
+            "baseline": false
+          },
+          {
+            "key": "o1:c17",
+            "samples": 100,
+            "rounds": 1,
+            "stop": "eliminated",
+            "baseline": false
+          },
+          {
+            "key": "o1:c18",
+            "samples": 100,
+            "rounds": 1,
+            "stop": "eliminated",
+            "baseline": false
+          }
+        ],
+        "final": {
+          "leader": "o1:c10",
+          "group": [
+            "o1:c10",
+            "o1:c13",
+            "o1:c14"
+          ]
+        },
+        "rounds": [
+          {
+            "n": 100,
+            "leader": "o1:c10",
+            "eliminated": [
+              {
+                "key": "o0",
+                "metric": {
+                  "key": "S",
+                  "difference": -0.001812321539158201,
+                  "se": 0.0002403690238012506
+                }
+              },
+              {
+                "key": "o1:c0",
+                "metric": {
+                  "key": "S",
+                  "difference": -0.0009180310068343398,
+                  "se": 0.0002758949950930475
+                }
+              },
+              {
+                "key": "o1:c5",
+                "metric": {
+                  "key": "S",
+                  "difference": -0.0022491737588619686,
+                  "se": 0.00030875824779367524
+                }
+              },
+              {
+                "key": "o1:c11",
+                "metric": {
+                  "key": "S",
+                  "difference": -0.0024189431357444485,
+                  "se": 0.0003321792705252869
+                }
+              },
+              {
+                "key": "o1:c15",
+                "metric": {
+                  "key": "S",
+                  "difference": -0.0026738074893212487,
+                  "se": 0.00035145367339532203
+                }
+              },
+              {
+                "key": "o1:c17",
+                "metric": {
+                  "key": "S",
+                  "difference": -0.0024684291731438927,
+                  "se": 0.00026986144471698577
+                }
+              },
+              {
+                "key": "o1:c18",
+                "metric": {
+                  "key": "S",
+                  "difference": -0.002664812970417615,
+                  "se": 0.00045232688879442854
+                }
+              }
+            ]
+          }
+        ],
+        "evaluable": true,
+        "work": {
+          "full": 3300,
+          "actual": 1100,
+          "savedFraction": 0.6666666666666666,
+          "unit": "unique-option-sample-equivalents"
+        },
+        "limits": "Actual prefixes only. All candidates remain available with their own sample count. Full-run agreement is an independent admission result, not observed during an early-stopped question.",
+        "input_key": "human-pace-b3-v1:e4365880c50b17fe9bc349cf8aa7fea6fb6e583f0d1cbec7255870572fc9e93f",
+        "fixed_order_search_in_work": true
+      },
+      "configuration": null
+    },
+    {
+      "source": {
+        "offset": 4895481277,
+        "length": 155969,
+        "sha256": "bae5f1b993d2732b7e9984aae146da9b32eb1de745badc438f1fee12241c96ef"
+      },
+      "run_id": "UVEXNP9HCMAY",
+      "decision_id": "6098436b-e457-4635-abbc-f2b613b0b98a",
+      "floor": 8,
+      "label": "reward/card",
+      "status": null,
+      "diagnostics": {
+        "schema": "build-sim-health-v1",
+        "status": "produced",
+        "availableCpus": 32,
+        "loadAverage": [
+          4.09,
+          6,
+          9.21
+        ],
+        "decks": 4,
+        "options": 4,
+        "deckCards": 19,
+        "deadlineMs": 10991.780218000058,
+        "orderSearch": null,
+        "comparison": {
+          "samples": 100,
+          "elapsedMs": 1570,
+          "timedOut": false,
+          "workers": 24,
+          "deadlineMs": 10991.733441000106,
+          "pool": {
+            "queueMs": 0,
+            "coldStart": false,
+            "preparationMs": 0,
+            "firstReplyMs": 69,
+            "chunksPlanned": 52,
+            "chunksDispatched": 52,
+            "chunksCompleted": 52,
+            "outcomesCompleted": 400
+          }
+        },
+        "boss": "LAGAVULIN_MATRIARCH",
+        "samples": 100,
+        "requested": 300,
+        "minimumShown": 300,
+        "timedOut": false,
+        "simMs": 1623,
+        "workers": 24
+      },
+      "sim_keys": [
+        "build_ranking",
+        "adaptive",
+        "readiness",
+        "completion",
+        "diagnostics",
+        "quantitative",
+        "boss",
+        "asc",
+        "entry_hp",
+        "entry_source",
+        "samples",
+        "requested",
+        "timed_out",
+        "workers",
+        "orders",
+        "sim_ms",
+        "ms",
+        "base",
+        "options",
+        "not_simulated",
+        "global_build",
+        "construction"
+      ],
+      "error": null,
+      "adaptive": {
+        "schema": "sim-adaptive-v1",
+        "mode": "on",
+        "status": "complete_adaptive",
+        "lane": "b3",
+        "stop_reason": "leader",
+        "indifference_spread": null,
+        "rule": {
+          "version": "adaptive-v1",
+          "b3First": 300,
+          "b2First": 200,
+          "batch": 100,
+          "zElim": 3,
+          "zTie": 2,
+          "profile": "silent-human-pace-v2",
+          "lowTrust": false,
+          "indifference": 0.03,
+          "first": 100,
+          "requested": 300
+        },
+        "candidates": [
+          {
+            "key": "@current",
+            "samples": 100,
+            "rounds": 1,
+            "stop": "leader",
+            "baseline": true
+          },
+          {
+            "key": "card0",
+            "samples": 100,
+            "rounds": 1,
+            "stop": "leader",
+            "baseline": false
+          },
+          {
+            "key": "card1",
+            "samples": 100,
+            "rounds": 1,
+            "stop": "eliminated",
+            "baseline": false
+          },
+          {
+            "key": "card2",
+            "samples": 100,
+            "rounds": 1,
+            "stop": "eliminated",
+            "baseline": false
+          },
+          {
+            "key": "skip",
+            "samples": 100,
+            "rounds": 1,
+            "stop": "eliminated",
+            "baseline": false
+          }
+        ],
+        "final": {
+          "leader": "card0",
+          "group": [
+            "card0"
+          ]
+        },
+        "rounds": [
+          {
+            "n": 100,
+            "leader": "card0",
+            "eliminated": [
+              {
+                "key": "card1",
+                "metric": {
+                  "key": "S",
+                  "difference": -0.0015344245434500425,
+                  "se": 0.00021582124459513448
+                }
+              },
+              {
+                "key": "card2",
+                "metric": {
+                  "key": "S",
+                  "difference": -0.00306174856869126,
+                  "se": 0.00022878843859932285
+                }
+              },
+              {
+                "key": "skip",
+                "metric": {
+                  "key": "S",
+                  "difference": -0.00173318460761657,
+                  "se": 0.0005015773917487318
+                }
+              }
+            ]
+          }
+        ],
+        "evaluable": true,
+        "work": {
+          "full": 1200,
+          "actual": 400,
+          "savedFraction": 0.6666666666666666,
+          "unit": "unique-option-sample-equivalents"
+        },
+        "limits": "Actual prefixes only. All candidates remain available with their own sample count. Full-run agreement is an independent admission result, not observed during an early-stopped question.",
+        "input_key": "human-pace-b3-v1:48fdb02f6e4168a0705bf77ac4f1a62f930d9494ef9f751bc1649e122699c1d8",
+        "fixed_order_search_in_work": true
+      },
+      "configuration": null
+    },
+    {
+      "source": {
+        "offset": 4892555443,
+        "length": 51799,
+        "sha256": "2eb2daf0e9b32bd893eb731846575af111b171b6ac7f75d95c06c2cc940dbda7"
+      },
+      "run_id": "UVEXNP9HCMAY",
+      "decision_id": "1f2b14c1-b0de-4538-ad14-c3c7e9e97ec6",
+      "floor": 1,
+      "label": "event/choose",
+      "status": null,
+      "diagnostics": {
+        "schema": "build-sim-health-v1",
+        "status": "produced",
+        "availableCpus": 32,
+        "loadAverage": [
+          4.18,
+          5.88,
+          13.34
+        ],
+        "decks": 1,
+        "options": 0,
+        "deckCards": 13,
+        "deadlineMs": 10891.488493,
+        "orderSearch": null,
+        "comparison": {
+          "samples": 300,
+          "elapsedMs": 963,
+          "timedOut": false,
+          "workers": 24,
+          "deadlineMs": 10891.164677,
+          "pool": {
+            "queueMs": 0,
+            "coldStart": true,
+            "preparationMs": 11,
+            "firstReplyMs": 429,
+            "chunksPlanned": 38,
+            "chunksDispatched": 38,
+            "chunksCompleted": 38,
+            "outcomesCompleted": 300
+          }
+        },
+        "boss": "LAGAVULIN_MATRIARCH",
+        "samples": 300,
+        "requested": 300,
+        "minimumShown": 300,
+        "timedOut": false,
+        "simMs": 983,
+        "workers": 24
+      },
+      "sim_keys": [
+        "build_ranking",
+        "readiness",
+        "completion",
+        "diagnostics",
+        "quantitative",
+        "boss",
+        "asc",
+        "entry_hp",
+        "entry_source",
+        "samples",
+        "requested",
+        "timed_out",
+        "workers",
+        "orders",
+        "sim_ms",
+        "ms",
+        "base",
+        "options",
+        "not_simulated",
+        "global_build",
+        "construction"
+      ],
+      "error": null,
+      "adaptive": null,
+      "configuration": null
+    }
+  ],
+  "computation": {
+    "attempts": 8,
+    "failures": 0,
+    "degraded": 0,
+    "evidence": [],
+    "alert": false,
+    "scope": "B2/B3 computation service failures; degradation permits continuation, not fault resolution."
+  },
+  "b3": {
+    "attempts": 8,
+    "skipped": 0,
+    "produced_dpr": 4,
+    "coverage": 0.5,
+    "failures": {
+      "no_complete_dpr": 3
+    },
+    "unsupported": 1,
+    "applicable_attempts": 7,
+    "unsupported_only": 1,
+    "candidates": {
+      "observed": 40,
+      "unsupported": 7,
+      "with_dpr": 23,
+      "missing_dpr": 10
+    },
+    "applicable_coverage": 0.5714285714285714,
+    "longest_failure_streak": 3,
+    "trailing_failure_streak": 3,
+    "paired_samples_min": 100,
+    "ms_max": 3681
+  },
+  "construction_pipeline": {
+    "enabled": true,
+    "evaluation_expected": 9,
+    "evaluation_attached": 9,
+    "evaluation_missing": 0,
+    "brain_evaluation": 10,
+    "accepted_evaluation": 6,
+    "accepted_choice_with_evaluation": 5,
+    "plan_due": 10,
+    "accepted_structured_plan": 6,
+    "missing_structured_plan": 0,
+    "saved_structured_plan": 6,
+    "plan_readback": 9,
+    "checkpoint_review_due": 4,
+    "probability_delivered": 0,
+    "admission": {
+      "missing_or_mismatched_prospective_calibration": 7
+    },
+    "evidence": [],
+    "alert": false,
+    "limits": "Payload delivery, accepted output and saved/read-back plans are distinct observations, not causal win-rate evidence. Missing calibration is pending, not a service failure."
+  },
+  "sample_threshold_unchanged": 300,
+  "current_chain": "v5-dpr-health/H1 -> original001302 six-leaf monitoring candidate",
+  "new_learning_model_or_restart": false,
+  "alert_preserved": true
+}

@@ -4,6 +4,8 @@
 
 ## 入口与产物
 
+#69 的[公开资料研究](../docs/learning-public-web.md)沿原策略槽显式 `write --public-web` 派发：仅获准的 Silent 纯内容批次使用 Codex 内建搜索/页面读取，shell 网络仍关闭；优先复用已下载 A10 库，来源摘要/SHA、原生事件与 runtime 交付分账。普通任务与对局大脑不因本功能开放联网，Claude 暂未接入。
+
 | 路径（项目根下） | 用途 |
 |---|---|
 | `learner/run.ts`、`learner/lib/` | 统一 CLI；任务渲染、引擎命令、权限、运行日志、摘要与密钥清洗 |

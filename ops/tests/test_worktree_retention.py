@@ -131,6 +131,205 @@ class WorkspaceRetention(unittest.TestCase):
         with self.assertRaisesRegex(ValueError, 'not in recorded publication'):
             resource.complete(self.root, self.directory, self.tree.name, source, self.head, self.head)
 
+    def pin_allocation(self):
+        path=self.directory/'retention/allocations'/(self.tree.name+'.json')
+        record=dict(schema='workspace-allocation-v1',root=str(self.root),worktree=str(self.tree),
+                    branch=self.tree.name,state='allocated',base=self.git('rev-parse','HEAD',tree=self.tree).strip(),
+                    publication_boundaries=resource.snapshot_publications(self.root))
+        resource.retention.atomic(path,record)
+        return path,record
+
+    def source_leaf(self, name, content, *, pin=True):
+        if pin: self.pin_allocation()
+        (self.tree/name).write_text(content)
+        self.git('add',name,tree=self.tree); self.git('commit','-m','independent source',tree=self.tree)
+        return self.git('rev-parse','HEAD',tree=self.tree).strip()
+
+    def published_leaf(self, tree, name, content, message='actual leaf publication'):
+        (tree/name).write_text(content)
+        self.git('add',name,tree=tree); self.git('commit','-m',message,tree=tree)
+        return self.git('rev-parse','HEAD',tree=tree).strip()
+
+    def settle_source(self, source):
+        return resource.complete(self.root,self.directory,self.tree.name,source,
+            self.git('rev-parse','HEAD').strip(),self.git('rev-parse','HEAD',tree=self.live).strip())
+
+    def test_leaf_publication_then_evolution_or_revert_remains_reclaimable(self):
+        name='agent/src/example.ts'; source=self.source_leaf(name,'export const fixed = 2;\n')
+        witnesses={}
+        for target in (self.root,self.live):
+            witnesses[str(target)]=self.published_leaf(target,name,'export const fixed = 2;\n')
+            self.published_leaf(target,name,'export const fixed = 1;\n','later intentional revert')
+        from issue_session_project import Project
+        publication=Project(self.root,self.directory).publication(dict(branch=self.tree.name,worktree=str(self.tree),
+            source=source,base=resource.allocation_base(self.root,self.directory,self.tree)))
+        self.assertTrue(all(r['boundary'] for r in publication['publication_witnesses']))
+        record=self.settle_source(source)
+        proof=record['acceptance']['publication_witnesses']
+        self.assertEqual({r['commit'] for r in proof},set(witnesses.values()))
+        self.assertTrue(all(r['kind']=='historical-leaf' for r in proof))
+        self.assertEqual(self.reclaim()['state'],'reclaimed')
+        self.assertEqual(self.git('rev-parse',self.tree.name).strip(),source)
+
+    def test_narrow_publication_preserves_unrelated_file_changes_and_later_evolution(self):
+        name='ops/fixture.py'
+        baseline='header = 1\n'+''.join('# context '+str(n)+'\n' for n in range(20))+'feature = 1\n'
+        self.published_leaf(self.root,name,baseline,'new shared baseline')
+        for target in (self.tree,self.live): self.git('merge','--ff-only','main',tree=target)
+        source=self.source_leaf(name,baseline.replace('feature = 1','feature = 2'))
+        for target in (self.root,self.live):
+            independent=baseline.replace('header = 1','header = 3')
+            self.published_leaf(target,name,independent,'unrelated runtime edit')
+            self.published_leaf(target,name,independent.replace('feature = 1','feature = 2'))
+            self.published_leaf(target,name,independent.replace('feature = 1','feature = 4'),'later evolution')
+        record=self.settle_source(source)
+        proof=record['acceptance']['publication_witnesses']
+        self.assertTrue(all(r['kind']=='verbatim-leaf-patch' for r in proof))
+        self.assertEqual(len({r['patch_id'] for r in proof}),1)
+        self.assertEqual(self.reclaim()['state'],'reclaimed')
+
+    def test_main_history_cannot_substitute_for_unpublished_live(self):
+        name='agent/src/example.ts'; source=self.source_leaf(name,'export const fixed = 2;\n')
+        self.published_leaf(self.root,name,'export const fixed = 2;\n')
+        self.published_leaf(self.root,name,'export const fixed = 3;\n','later main edit')
+        with self.assertRaisesRegex(ValueError,'not in recorded publication'):
+            self.settle_source(source)
+        self.assertTrue((self.tree/'.git').exists())
+
+    def test_dropped_side_branch_and_preallocation_blob_do_not_prove_publication(self):
+        name='agent/src/example.ts'
+        self.published_leaf(self.root,name,'export const fixed = 2;\n','old state')
+        self.published_leaf(self.root,name,'export const fixed = 1;\n','allocation baseline')
+        for target in (self.tree,self.live): self.git('merge','--ff-only','main',tree=target)
+        source=self.source_leaf(name,'export const fixed = 2;\n')
+        self.git('checkout','-b','discarded')
+        self.published_leaf(self.root,name,'export const fixed = 2;\n','side branch only')
+        self.git('checkout','main'); self.git('merge','-s','ours','discarded','-m','discard branch content')
+        self.git('merge','--ff-only','main',tree=self.live)
+        with self.assertRaisesRegex(ValueError,'not in recorded publication'):
+            self.settle_source(source)
+        self.assertFalse((self.directory/'retention/workspaces/ops-fixture.json').exists())
+
+    def test_patch_adoption_requires_whitespace_identical_change(self):
+        name='ops/fixture.py'; source=self.source_leaf(name,'fixed = 2\n')
+        for target in (self.root,self.live):
+            self.published_leaf(target,name,' fixed = 2\n','different whitespace is different code')
+        with self.assertRaisesRegex(ValueError,'not in recorded publication'):
+            self.settle_source(source)
+
+    def test_history_limit_retains_unknown_publication(self):
+        name='agent/src/example.ts'; source=self.source_leaf(name,'export const fixed = 2;\n')
+        for value in (2,3,4):
+            self.published_leaf(self.root,name,f'export const fixed = {value};\n')
+        with patch.object(resource,'PUBLICATION_HISTORY_LIMIT',1), self.assertRaisesRegex(ValueError,'history scan limit'):
+            self.settle_source(source)
+
+    def test_diverged_live_preallocation_leaf_is_not_task_adoption(self):
+        name='agent/src/example.ts'
+        # All dates are identical and deliberately unrelated to allocation order.
+        with patch.dict(os.environ,dict(GIT_AUTHOR_DATE='2035-01-01T00:00:00+00:00',
+                                       GIT_COMMITTER_DATE='2035-01-01T00:00:00+00:00')):
+            self.published_leaf(self.live,name,'export const fixed = 2;\n','old independent live')
+            self.published_leaf(self.root,name,'export const fixed = 0;\n','allocation baseline')
+            self.git('merge','--ff-only','main',tree=self.tree)
+            source=self.source_leaf(name,'export const fixed = 2;\n')
+            for value in (2,3): self.published_leaf(self.root,name,f'export const fixed = {value};\n')
+            self.published_leaf(self.live,name,'export const fixed = 3;\n','live never adopted task')
+        with self.assertRaisesRegex(ValueError,'not in recorded publication'):
+            self.settle_source(source)
+        self.assertTrue((self.tree/'.git').exists())
+        self.assertFalse((self.directory/'retention/workspaces/ops-fixture.json').exists())
+
+    def test_diverged_channels_accept_real_adoption_after_each_snapshot(self):
+        name='agent/src/example.ts'
+        old=self.published_leaf(self.live,name,'export const fixed = 9;\n','independent preallocation live')
+        self.published_leaf(self.root,name,'export const fixed = 0;\n','main allocation baseline')
+        self.git('merge','--ff-only','main',tree=self.tree)
+        source=self.source_leaf(name,'export const fixed = 2;\n')
+        for target in (self.root,self.live):
+            self.published_leaf(target,name,'export const fixed = 2;\n','new task adoption')
+            self.published_leaf(target,name,'export const fixed = 3;\n','later evolution')
+        record=self.settle_source(source)
+        live=[r for r in record['acceptance']['publication_witnesses'] if r['channel']=='live']
+        self.assertEqual(live[0]['boundary'],old)
+        self.assertNotEqual(live[0]['commit'],old)
+        self.assertEqual(self.reclaim()['state'],'reclaimed')
+
+    def test_diverged_live_preallocation_complete_patch_is_not_task_adoption(self):
+        name='ops/fixture.py'
+        baseline='header = 1\n'+''.join('# context '+str(n)+'\n' for n in range(20))+'feature = 0\n'
+        self.published_leaf(self.root,name,baseline,'shared baseline')
+        for target in (self.tree,self.live): self.git('merge','--ff-only','main',tree=target)
+        independent=baseline.replace('header = 1','header = 7')
+        self.published_leaf(self.live,name,independent,'live compatibility before allocation')
+        old=self.published_leaf(self.live,name,independent.replace('feature = 0','feature = 2'),'old identical task patch')
+        parent=self.git('rev-parse',old+'^').strip()
+        source=self.source_leaf(name,baseline.replace('feature = 0','feature = 2'))
+        base=resource.allocation_base(self.root,self.directory,self.tree)
+        self.assertEqual(resource.leaf_patch(self.root,base,source,name),resource.leaf_patch(self.root,parent,old,name))
+        for value in (2,3): self.published_leaf(self.root,name,baseline.replace('feature = 0',f'feature = {value}'))
+        self.published_leaf(self.live,name,independent.replace('feature = 0','feature = 3'),'no task adoption')
+        with self.assertRaisesRegex(ValueError,'not in recorded publication'):
+            self.settle_source(source)
+
+    def test_legacy_allocation_without_live_boundary_retains_history(self):
+        name='agent/src/example.ts';source=self.source_leaf(name,'export const fixed = 2;\n')
+        path=self.directory/'retention/allocations'/(self.tree.name+'.json')
+        record=resource.retention.load(path);record['publication_boundaries'].pop('live')
+        resource.retention.atomic(path,record)
+        for target in (self.root,self.live):
+            self.published_leaf(target,name,'export const fixed = 2;\n')
+            self.published_leaf(target,name,'export const fixed = 3;\n')
+        with self.assertRaisesRegex(ValueError,'boundary unavailable: live'):
+            self.settle_source(source)
+        record.pop('publication_boundaries');resource.retention.atomic(path,record)
+        with self.assertRaisesRegex(ValueError,'boundary unavailable: main'):
+            self.settle_source(source)
+
+    def test_forked_boundary_cannot_substitute_for_channel_snapshot(self):
+        name='agent/src/example.ts'
+        self.published_leaf(self.root,name,'export const fixed = 0;\n','main allocation base')
+        self.git('merge','--ff-only','main',tree=self.tree)
+        source=self.source_leaf(name,'export const fixed = 2;\n')
+        path=self.directory/'retention/allocations'/(self.tree.name+'.json');record=resource.retention.load(path)
+        record['publication_boundaries']['live']['commit']=record['base'];resource.retention.atomic(path,record)
+        for target in (self.root,self.live):
+            self.published_leaf(target,name,'export const fixed = 2;\n')
+            self.published_leaf(target,name,'export const fixed = 3;\n')
+        with self.assertRaisesRegex(ValueError,'boundary is not on channel first-parent: live'):
+            self.settle_source(source)
+
+    def test_allocator_records_real_channel_tips_before_return(self):
+        self.published_leaf(self.live,'agent/src/example.ts','export const fixed = 9;\n','independent live')
+        tree=self.root/'.worktrees/ops-channel-snapshot'
+        record=checkout.create(self.root,self.directory,tree,'main')
+        bounds=record['publication_boundaries']
+        self.assertEqual(bounds['main']['commit'],record['base'])
+        self.assertEqual(bounds['live']['commit'],self.git('rev-parse','HEAD',tree=self.live).strip())
+        self.assertNotEqual(bounds['live']['commit'],record['base'])
+        saved=resource.retention.load(self.directory/'retention/allocations'/ (tree.name+'.json'))
+        self.assertEqual(saved['publication_boundaries'],bounds)
+
+    def test_boundary_binding_and_accepted_allocation_hash_are_enforced(self):
+        name='agent/src/example.ts';source=self.source_leaf(name,'export const fixed = 2;\n')
+        path=self.directory/'retention/allocations'/(self.tree.name+'.json')
+        original=path.read_bytes()
+        for target in (self.root,self.live):
+            self.published_leaf(target,name,'export const fixed = 2;\n')
+            self.published_leaf(target,name,'export const fixed = 3;\n')
+        for bad in ('root','runtime'):
+            record=json.loads(original)
+            if bad=='root': record['publication_boundaries']['root']=str(self.root/'foreign')
+            if bad=='runtime': record['publication_boundaries']['live']['worktree']='.worktrees/other'
+            resource.retention.atomic(path,record)
+            with self.assertRaisesRegex(ValueError,'boundary unavailable'):
+                self.settle_source(source)
+        path.write_bytes(original);self.settle_source(source)
+        record=json.loads(original);record['publication_boundaries']['live']['commit']=self.git('rev-parse','HEAD',tree=self.live).strip()
+        resource.retention.atomic(path,record)
+        with self.assertRaisesRegex(ValueError,'accepted allocation receipt changed'):
+            self.reclaim()
+
     def test_retry_reuses_verified_archive_after_removal_failure(self):
         original = resource.git
         def fail_remove(root, *args):
@@ -283,7 +482,11 @@ class WorkspaceRetention(unittest.TestCase):
         receipt = self.directory / 'retention/requests' / (batch + '.json')
         self.assertEqual(resource.retention.load(receipt)['state'], 'checkout_reclaimed')
         resource.retention.sweep(self.root, self.directory, True, 4)
-        self.assertEqual(resource.retention.load(receipt)['state'], 'checkout_reclaimed')
+        self.assertEqual(resource.retention.load(receipt)['state'], 'reclaimed')
+        self.assertFalse((scratch / 'unresolved.bin').exists())
+        resource.retention.restore(self.root, self.directory, batch)
+        self.assertEqual((scratch / 'unresolved.bin').read_bytes(), raw)
+        self.assertTrue((tree / '.git').exists())
 
 
 if __name__ == '__main__':

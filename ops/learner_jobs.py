@@ -3,12 +3,14 @@ import hashlib
 import importlib.util
 import json
 import os
+from pathlib import Path
 import re
 import subprocess
 import sys
 import time
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 import external_learning_policy
+import publication_gate
 import learner_registration
 
 RUN_ID = re.compile(r"^[0-9A-Z]{12}$")
@@ -50,6 +52,11 @@ def _start_learner(argv, root, scripts, state_dir, label, barrier=None):
     The supervisor PID remains the scheduler's lease; only verified completion closes the pane.
     Fixed LEARNER_CMD fixtures retain the generic command-host path.
     """
+    external = (len(argv) == 9 and argv[0] == "bash" and os.path.basename(argv[1]) == "codex-ops-learner.sh"
+                and argv[5] == "strategy-proposal" and argv[7] == "strategy-proposal"
+                and str(argv[8]).startswith("external:"))
+    if publication_gate.learners_held(root, state_dir) or (publication_gate.candidates_only(root, state_dir) and not external):
+        raise RuntimeError("learner admission held; only registered external candidates may start")
     launch_env = dict(os.environ)
     launch_env.pop("LEARNER_REGISTRATION_GATE", None)
     if barrier is not None:
@@ -103,7 +110,8 @@ def _start_learner(argv, root, scripts, state_dir, label, barrier=None):
         with open(pidfile, "w", encoding="utf8") as handle:
             handle.write(str(proc.pid) + "\n")
     return proc.pid, None
-WORKTREES = {"experience-update": "exp", "fix-batch": "codex-fix", "strategy-proposal": "codex-strategy"}
+WORKTREES = {"experience-update": "exp", "fix-batch": "codex-fix", "strategy-proposal": "codex-strategy",
+             "mechanics-audit": "codex-mechanics-audit", "experience-asc-audit": "codex-experience-asc-audit"}
 STRATEGY_WORKERS = 2  # Roy approved two independent proposal workers on 2026-10-09.
 FEATURE_REQUEST = "notes/silent-boss-calibration-dispatch.json"
 # Explicit, approved templates and paths only; Roy's latest cache request has manual priority.
@@ -134,7 +142,7 @@ def external_writer(worktree):
 
 
 def available(root, task):
-    if task in ("fix-batch", "strategy-proposal"):
+    if task in ("fix-batch", "strategy-proposal", "mechanics-audit", "experience-asc-audit"):
         # Each batch gets a fresh tree; a preserved failed candidate cannot block another job.
         return os.path.exists(os.path.join(root, ".git"))
     worktree = os.path.join(root, ".worktrees", WORKTREES[task])
@@ -155,8 +163,17 @@ def feature_worktree(state, root, learner_task, request_id, alive):
             or len(prior) >= 3 or (prior and max(batch.get("retry_at", 0) for batch in prior) > time.time())):
         return None
     worktree = os.path.join(root, ".worktrees", learner_task)
+    ready = not os.path.exists(worktree) or available_worktree(worktree)
+    if learner_task == "silent-boss-calibration":
+        from learning_runtime import capture, fixed_calibration_tree_available
+        selected = capture(root, os.environ.get("CODEX_OPS_DIR"), learner_task)
+        if selected.get("enabled"):
+            if any(batch.get("worktree") == worktree and alive(batch.get("pid")) for batch in state["batches"].values()):
+                return None
+            if not ready and not external_writer(worktree):
+                ready = fixed_calibration_tree_available(root, worktree, state["batches"], alive)
     if (any(batch.get("worktree") == worktree and batch.get("state") == "running" and alive(batch.get("pid"))
-            for batch in state["batches"].values()) or (os.path.exists(worktree) and not available_worktree(worktree))
+            for batch in state["batches"].values()) or not ready
             or (learner_task != "silent-historical-core-builds" and not os.path.exists(worktree))):
         return None
     return worktree
@@ -209,12 +226,15 @@ def requested_feature(state, root, scripts, character, reason, alive, stamp, req
         import core_build_jobs
         evidence = core_build_jobs.freeze(root, state_dir, batch_id, request["request_id"])
         extra = [evidence]
+    from learning_runtime import capture as capture_operational
+    operational_runtime = capture_operational(root, state_dir, learner_task)
     pid, pane = start_learner(["bash", os.path.join(scripts, "codex-ops-learner.sh"), batch_id, "", character,
                               "fix-batch", worktree, learner_task, *extra], root, scripts, state_dir,
                              "learner-" + batch_id)
     batch = {"task": "fix-batch", "learner_task": learner_task, "character": character,
              "runs": [], "key": key, "pid": pid, "state": "running", "reason": reason, "worktree": worktree,
              "feature_request": request["request_id"], "proposal_policy": "Roy-2026-10-07-learning"}
+    batch["operational_runtime"] = operational_runtime
     if pane:
         batch["pane"] = pane
     if extra:
@@ -291,7 +311,17 @@ def fix_key(root, character):
     return hashlib.sha256(json.dumps([text, accepted], ensure_ascii=False).encode()).hexdigest()
 
 
-def dispatch_write(state, root, scripts, task, character, runs, key, reason, alive, stamp, research_request=None, implementation_request=None, backfill_source=None, external_source=None):
+def dispatch_write(state, root, scripts, task, character, runs, key, reason, alive, stamp, research_request=None, implementation_request=None, backfill_source=None, external_source=None, public_web=False):
+    directory = publication_gate.directory(root)
+    if publication_gate.learners_held(root, directory) or (publication_gate.candidates_only(root, directory) and not external_source):
+        return None
+    web_contract = None
+    if public_web:
+        if (public_web is not True or task != "strategy-proposal" or character != "silent" or reason != "ops" or runs
+                or research_request or implementation_request or backfill_source or external_source):
+            return None
+        from public_web_jobs import contract
+        web_contract = contract(root)
     if external_source is not None:
         from strategy_backfill_jobs import ID
         if (not isinstance(external_source, str) or not ID.fullmatch(external_source)
@@ -369,12 +399,21 @@ def dispatch_write(state, root, scripts, task, character, runs, key, reason, ali
         argv += [task, implementation_request]
     from ordinary_close import baseline
     ordinary_baseline = baseline(root, state_dir)
+    from knowledge_runtime_env import capture
+    knowledge_runtime = capture(root, state_dir)
+    if public_web and not knowledge_runtime.get("enabled"):
+        return None
+    from learning_runtime import capture as capture_operational
+    operational_runtime = capture_operational(root, state_dir, task)
     pid, pane = start_learner(argv, root, scripts, state_dir, "learner-" + batch_id)
     state["batches"][batch_id] = {"task": task, "character": character, "runs": runs, "key": key,
                                  "pid": pid, "state": "running", "reason": reason, "worktree": worktree,
-                                 "proposal_policy": "Roy-2026-10-07-learning", "ordinary_baseline": ordinary_baseline}
+                                 "proposal_policy": "Roy-2026-10-07-learning", "ordinary_baseline": ordinary_baseline,
+                                 "knowledge_runtime": knowledge_runtime, "operational_runtime": operational_runtime}
     if pane:
         state["batches"][batch_id]["pane"] = pane
+    if web_contract:
+        state["batches"][batch_id]["public_web"] = web_contract
     if external_source:
         state["batches"][batch_id]["external_source"] = external_source
     elif backfill_source:
@@ -390,6 +429,14 @@ def check_jobs(state, root, scripts, character, alive, stamp):
     from disk_admission import jobs_allowed
     import strategy_external_jobs as external_jobs
     directory = os.environ.get("CODEX_OPS_DIR") or os.path.join(root, "ops/codex-ops")
+    import external_stock
+    if publication_gate.learners_held(root, directory):
+        if character == "silent":
+            external_stock.maintain(state, root, alive, admission_reason="publication_hold")
+        return {"dispatched": None, "admission_hold": True}
+    if character == "silent":
+        external_stock.maintain(state, root, alive,
+            admission_reason=None if jobs_allowed(root, directory) else "disk_capacity")
     external_jobs.reconcile(state, directory)
     external_ready = character == "silent" and external_jobs.ready(state, root)
     four_lane_mode = character == "silent" and (external_ready or bool(external_jobs.active_external(state, alive)))
@@ -400,10 +447,14 @@ def check_jobs(state, root, scripts, character, alive, stamp):
     if not jobs_allowed(root, directory):
         return {"disk_capacity_hold": True, "dispatched": None}
     external = external_jobs.dispatch_lanes(state, root, scripts, character, alive, stamp, dispatch_write) if external_ready else []
-    if four_lane_mode and external_learning_policy.own_busy(state, alive, os.environ.get("CODEX_OPS_DIR") or os.path.join(root, "ops/codex-ops")):
+    if publication_gate.candidates_only(root, directory):
+        return {"candidate_only": True, "strategy_external": external, "backfill_hold": True}
+    own = external_learning_policy.own_status(state, alive, directory) if four_lane_mode else None
+    if own and own["busy"]:
         return {"experience": None, "fixes": None, "strategy": None, "calibration": None,
                 "core_builds": None, "backfill_hold": True, "strategy_external": external,
-                "code_proposal": None, "boss_sim": None, "strategy_research": None, "learning_requests": None}
+                "code_proposal": None, "boss_sim": None, "strategy_research": None, "learning_requests": None,
+                "own_learning": own}
     attempted = []
     ordinary_claimed = [False]
     def claim(result):
@@ -455,6 +506,8 @@ def check_jobs(state, root, scripts, character, alive, stamp):
     result = {"experience": experience, "fixes": fixes, "strategy": strategy, "calibration": calibration,
               "core_builds": core, "backfill_hold": bool(attempted or core_ready or external_ready), "strategy_external": external,
               "code_proposal": proposal, "boss_sim": boss_sim, "strategy_research": research, "learning_requests": learning}
+    if own is not None:
+        result["own_learning"] = own
     learner_registration.checkpoint(state)
     return result
 
@@ -465,7 +518,11 @@ def calibration_job(state, root, scripts, character, alive, stamp):
     if character != "silent":
         return None
     try:
-        with open(os.path.join(root, ".worktrees/live/knowledge/characters/silent/boss-trust.json"), encoding="utf8") as handle:
+        from learning_runtime_data import current_file
+        path = current_file(root, os.environ.get("CODEX_OPS_DIR"), "characters/silent/boss-trust.json", legacy_root=Path(root, ".worktrees/live"))
+        if not path.is_file():
+            path = Path(root, ".worktrees/live/knowledge/characters/silent/boss-trust.json")
+        with open(path, encoding="utf8") as handle:
             previous = json.load(handle)
         if previous.get("character") != "silent" or not previous.get("refresh"):
             return None  # The initial batch must publish before any automatic rerun.

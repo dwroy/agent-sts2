@@ -35,6 +35,7 @@ import { spawn, type ChildProcessWithoutNullStreams } from "node:child_process";
 import { createHash } from "node:crypto";
 import { existsSync, mkdirSync, readdirSync, readFileSync, rmSync, unlinkSync } from "node:fs";
 import { basename, dirname, join } from "node:path";
+import type { BrainEvidence, ToolEvidence } from "../evidence.js";
 
 type Json = Record<string, unknown>;
 
@@ -143,6 +144,8 @@ const STDERR_KEEP = 8_000;
 
 /** `codex app-server --listen stdio://` as a JSON-RPC client: requests with timeouts, notifications to a listener. */
 export class AppServer {
+  private stopped: Promise<void> = Promise.resolve();
+  private closing = false;
   private child: ChildProcessWithoutNullStreams | null = null;
   private buffer = "";
   private nextId = 1;
@@ -153,7 +156,8 @@ export class AppServer {
   /** Where notifications go (method, params). */
   onNotification: ((method: string, params: Json) => void) | null = null;
   /** Only the explicitly installed knowledge-tool bridge may handle a server request. */
-  onRequest: ((method: string, params: Json) => Promise<unknown>) | null = null;
+  onRequest: ((method: string, params: Json, id: string | number) => Promise<unknown>) | null = null;
+  private readonly replies = new Map<string | number, { signature: string; result: Promise<unknown> }>();
   /** Server-to-client requests seen (an approval, a tool call: none is expected), answered with an error. */
   readonly serverRequests: string[] = [];
 
@@ -171,6 +175,7 @@ export class AppServer {
   async start(clientName: string): Promise<void> {
     const child = spawn(this.opts.bin, this.opts.args, { cwd: this.opts.cwd, env: this.opts.env, stdio: ["pipe", "pipe", "pipe"], detached: true });
     this.child = child;
+    this.stopped = new Promise<void>(resolve => { child.once("exit", () => resolve()); child.once("error", () => resolve()); });
     // The server must not keep the play process alive: between questions nothing holds the event loop (a request's own
     // timer does while it waits), so the process ends as before and its exit hook removes the thread.
     child.unref();
@@ -222,7 +227,17 @@ export class AppServer {
       // Only the knowledge bridge handles tool calls; approvals and all other server requests remain unavailable.
       this.serverRequests.push(method);
       if (method === "item/tool/call" && this.onRequest) {
-        void this.onRequest(method, isObject(message["params"]) ? message["params"] : {}).then(
+        if (typeof id !== "string" && typeof id !== "number") return;
+        const params = isObject(message["params"]) ? message["params"] : {};
+        const signature = JSON.stringify(params);
+        const previous = this.replies.get(id);
+        if (previous && previous.signature !== signature) {
+          this.write({ jsonrpc: "2.0", id, error: { code: -32600, message: "conflicting tool request ID" } });
+          return;
+        }
+        const result = previous?.result ?? this.onRequest(method, params, id);
+        this.replies.set(id, { signature, result });
+        void result.then(
           result => this.write({ jsonrpc: "2.0", id, result }),
           () => this.write({ jsonrpc: "2.0", id, result: { contentItems: [{ type: "inputText", text: "knowledge bridge unavailable; answer with existing information" }], success: false } }),
         ).catch(() => undefined);
@@ -259,6 +274,8 @@ export class AppServer {
 
   /** A request; rejects with RpcError (the server said no), or SessionError (no answer in time, the server gone). */
   request(method: string, params: Json, timeoutMs: number): Promise<unknown> {
+    // Server request IDs may be reused in a later turn; deduplication belongs to one turn.
+    if (method === "turn/start") this.replies.clear();
     return new Promise((resolve, reject) => {
       if (this.dead) {
         reject(new SessionError(`codex app-server is gone (${this.dead})`, "transport"));
@@ -283,7 +300,8 @@ export class AppServer {
   /** Ends the server: stdin closed, then its process group killed. */
   close(): void {
     const child = this.child;
-    if (!child) return;
+    if (!child || this.closing) return;
+    this.closing = true;
     this.die("closed");
     try {
       child.stdin.end();
@@ -297,14 +315,20 @@ export class AppServer {
         // gone
       }
       const pid = child.pid;
-      setTimeout(() => {
+      const killTimer = setTimeout(() => {
         try {
           process.kill(-pid, "SIGKILL");
         } catch {
           // gone
         }
       }, 3_000).unref();
+      void this.stopped.then(() => clearTimeout(killTimer));
     }
+  }
+  waitForExit(): Promise<void> {
+    // A pending Promise alone cannot keep an unref'd child/kill timer alive until cleanup finishes.
+    this.child?.ref();
+    return this.stopped.finally(() => this.child?.unref());
   }
 }
 
@@ -331,6 +355,8 @@ export interface SessionTraceEvent {
 }
 
 export interface SessionTurn {
+  serverRequests?: string[];
+  nativeStatus?: string;
   nativeReceipt?: BrainNativeReceipt;
   status: "completed" | "failed" | "interrupted" | "stalled" | "aborted";
   turnId: string | null;
@@ -377,6 +403,7 @@ export interface SessionOptions {
   model: string;
   serviceTier: string | null;
   knowledgeMcpUrl?: string;
+  knowledgeAgent?: boolean;
   /** The plan's rate limits pushed by the server (account/rateLimits/updated's params). */
   onRateLimits?: (params: Json) => void;
   /** Request timeouts (tests). */
@@ -451,6 +478,8 @@ export class CodexSession {
   /** Make a new thread before the next question (a failed turn, a failed revert). */
   private renew = false;
   private knowledgeNames = new Set<string>();
+  private toolTurn: { turn: SessionTurn; evidence?: BrainEvidence; attempt?: number; cancelled: boolean;
+    calls: Map<string, { signature: string; result: Promise<unknown> }> } | null = null;
   private readonly cwd: string;
   /** The current turn's listener. */
   private listener: ((method: string, params: Json) => void) | null = null;
@@ -485,12 +514,43 @@ export class CodexSession {
       if (method === "account/rateLimits/updated") this.opts.onRateLimits?.(params);
       this.listener?.(method, params);
     };
-    if (this.opts.knowledgeMcpUrl) server.onRequest = async (_method, params) => {
+    if (this.opts.knowledgeMcpUrl) server.onRequest = async (_method, params, requestId) => {
       const tool = typeof params["tool"] === "string" ? params["tool"] : "";
-      if (!this.listener || params["threadId"] !== this.thread?.id || params["namespace"] !== "gkb" || !this.knowledgeNames.has(tool)) return { contentItems: [{ type: "inputText", text: "tool is outside the knowledge allowlist" }], success: false };
-      const result = await this.knowledgeRpc("tools/call", { name: tool, arguments: params["arguments"] ?? {} });
-      const content = Array.isArray(result["content"]) ? result["content"] : [];
-      return { contentItems: content.filter(isObject).filter(c => c["type"] === "text").map(c => ({ type: "inputText", text: String(c["text"] ?? "") })), success: result["isError"] !== true };
+      const active = this.toolTurn;
+      const callId = typeof params["callId"] === "string" ? params["callId"] : null;
+      const turnId = typeof params["turnId"] === "string" ? params["turnId"] : null;
+      const input = params["arguments"] ?? {};
+      const id = `${active?.attempt ?? 0}:${callId ?? requestId}`;
+      const entry: ToolEvidence = { id, attempt: active?.attempt ?? 0, request_id: requestId, call_id: callId,
+        thread_id: typeof params["threadId"] === "string" ? params["threadId"] : null, turn_id: turnId,
+        name: tool, input, status: "pending", output: null, ms: 0 };
+      const rejected = (text: string) => {
+        active?.evidence?.tool({ ...entry, id: `${id}:rejected:${requestId}`, status: "rejected", output: text, isError: true });
+        return { contentItems: [{ type: "inputText", text }], success: false };
+      };
+      if (!active || active.cancelled || params["threadId"] !== active.turn.threadId
+        || (active.turn.turnId && turnId !== active.turn.turnId) || !turnId
+        || params["namespace"] !== "gkb" || !this.knowledgeNames.has(tool)) return rejected("tool is outside the active knowledge turn/allowlist");
+      const signature = JSON.stringify({ tool, input, turnId });
+      const previous = active.calls.get(id);
+      if (previous) return previous.signature === signature ? previous.result : rejected("conflicting tool call ID");
+      const started = Date.now();
+      active.evidence?.tool(entry);
+      const result = (async () => {
+        try {
+          const result = await this.knowledgeRpc("tools/call", { name: tool, arguments: input });
+          const content = Array.isArray(result["content"]) ? result["content"] : [];
+          const contentItems = content.filter(isObject).filter(c => c["type"] === "text").map(c => ({ type: "inputText", text: String(c["text"] ?? "") }));
+          active.evidence?.tool({ ...entry, status: "completed", output: contentItems.map(c => c.text).join("\n"), ms: Date.now() - started, isError: result["isError"] === true });
+          return { contentItems, success: result["isError"] !== true };
+        } catch (error) {
+          const text = `knowledge bridge failed: ${error instanceof Error ? error.message : String(error)}`;
+          active.evidence?.tool({ ...entry, status: "failed", output: text, isError: true, ms: Date.now() - started });
+          return { contentItems: [{ type: "inputText", text }], success: false };
+        }
+      })();
+      active.calls.set(id, { signature, result });
+      return result;
     };
     this.server = server;
     try {
@@ -605,12 +665,15 @@ export class CodexSession {
    * One question as a turn on the base thread, watched for stalls, then reverted to the base. The turn's outcome is
    * returned whatever it was; a transport failure (the server gone, a request unanswered) throws SessionError.
    */
-  async ask(q: { observe?: BrainObserver; prompt: string; schema: unknown; effort: string; summary: string; model: string; signal?: AbortSignal; stallMs: number | null; firstTokenMs: number | null; maxAnswerChars?: number | null; maxAnswerBlanks?: number | null }): Promise<SessionTurn> {
+  async ask(q: { evidence?: BrainEvidence; attempt?: number; observe?: BrainObserver; prompt: string; schema: unknown; effort: string; summary: string; model: string; signal?: AbortSignal; stallMs: number | null; firstTokenMs: number | null; maxAnswerChars?: number | null; maxAnswerBlanks?: number | null }): Promise<SessionTurn> {
     const server = await this.ensureServer();
     const threadId = this.thread?.id;
     if (!threadId) throw new SessionError("no thread to ask on", "transport");
     const started = Date.now();
+    const requestStart = server.serverRequests.length;
     const turn: SessionTurn = { status: "failed", turnId: null, threadId, text: "", reasoning: [], usage: null, error: null, retries: [], errors: [], firstDeltaMs: null, deltas: 0, answerChars: 0, maxBlankRun: 0, answerText: "", maxGapMs: 0, ms: 0, events: [], reverted: false };
+    const active: NonNullable<CodexSession["toolTurn"]> = { turn, evidence: q.evidence, attempt: q.attempt, cancelled: false, calls: new Map() };
+    this.toolTurn = active;
     const blanks = new BlankRun();
     let last = started;
     let dropped = 0;
@@ -712,10 +775,20 @@ export class CodexSession {
         const error = isObject(t2["error"]) ? t2["error"] : null;
         if (error) turn.error = { message: String(error["message"] ?? "error").slice(0, 400), info: error["codexErrorInfo"] ?? null };
         const status = t2["status"];
+        if (typeof status === "string") turn.nativeStatus = status;
         settle(status === "completed" ? "completed" : status === "interrupted" ? "interrupted" : "failed");
       }
     };
-    const onAbort = (): void => settle("aborted");
+    const capture = (status: string, cleanup: string): void => {
+      const receipt = nativeReceipt(this.thread?.path ?? null, threadId, turn.turnId);
+      if (receipt) turn.nativeReceipt = receipt;
+      if (q.attempt) q.evidence?.attempt({ id: q.attempt, thread_id: threadId, turn_id: turn.turnId,
+        native_receipt: turn.nativeReceipt ?? null, status, ms: Date.now() - started,
+        native_status: turn.nativeStatus ?? null,
+        raw: turn.answerText, error: turn.stall ?? turn.error?.message, cleanup });
+    };
+    const onAbort = (): void => { active.cancelled = true; capture("aborted", "pending"); settle("aborted");
+      if (this.opts.knowledgeAgent) server.close(); };
     if (q.signal?.aborted) settle("aborted");
     q.signal?.addEventListener("abort", onAbort, { once: true });
     const dead = setInterval(() => {
@@ -725,29 +798,51 @@ export class CodexSession {
       const params: Json = { threadId, input: [{ type: "text", text: q.prompt, text_elements: [] }], effort: q.effort, summary: q.summary, model: q.model };
       if (this.opts.serviceTier) params["serviceTier"] = this.opts.serviceTier;
       if (q.schema) params["outputSchema"] = q.schema;
+      if (q.signal?.aborted) { turn.status = "aborted"; return turn; }
       const started2 = server.request("turn/start", params, this.timeout("turn")).then((result) => {
         const t2 = isObject(result) && isObject(result["turn"]) ? result["turn"] : null;
         if (t2 && typeof t2["id"] === "string") turn.turnId = t2["id"];
+        capture("started", "pending");
       });
       // The turn's id comes with turn/start's answer; notifications before it are this turn's (one turn at a time).
       await Promise.race([started2, done.then(() => undefined)]);
       turn.status = await done;
-      await started2.catch(() => undefined);
-      if (server.dead) throw new SessionError(`codex app-server ${server.dead} during the turn`, "transport");
-      if (turn.status === "stalled" || turn.status === "aborted") await this.interrupt(server, threadId, turn);
+      // Abort must not spend the answer reserve waiting on turn/start or control RPC timeouts.
+      if (turn.status === "aborted" && this.opts.knowledgeAgent) {
+        capture("aborted", "pending");
+        server.close();
+        await started2.catch(() => undefined);
+        await server.waitForExit();
+      } else {
+        await started2.catch(() => undefined);
+        if (server.dead) throw new SessionError(`codex app-server ${server.dead} during the turn`, "transport");
+        if (turn.status === "stalled" || turn.status === "aborted") await this.interrupt(server, threadId, turn);
+      }
+    } catch (error) {
+      if (!q.signal?.aborted || !this.opts.knowledgeAgent) throw error;
+      turn.status = "aborted";
+      capture("aborted", "pending");
+      server.close();
+      await server.waitForExit();
     } finally {
       clearTimeout(timer);
       clearInterval(dead);
       q.signal?.removeEventListener("abort", onAbort);
       turn.ms = Date.now() - started;
+      turn.serverRequests = server.serverRequests.slice(requestStart);
+      capture(turn.status, "pending");
       turn.maxGapMs = Math.max(turn.maxGapMs, Date.now() - last);
       if (dropped > 0) turn.events.push({ t: turn.ms, type: `(${dropped} notifications not kept)` });
       this.listener = null;
+      active.cancelled = true;
+      this.toolTurn = null;
     }
-    if (!this.thread?.path) await this.refreshPath();
+    if (!server.dead && !this.thread?.path) await this.refreshPath();
     const receipt = nativeReceipt(this.thread?.path ?? null, threadId, turn.turnId);
     if (receipt) turn.nativeReceipt = receipt;
-    await this.revert(server, threadId, turn);
+    capture(turn.status, "pending");
+    if (!server.dead) await this.revert(server, threadId, turn);
+    capture(turn.status, "finished");
     if (turn.status !== "completed") this.renew = true;
     return turn;
   }
@@ -788,10 +883,18 @@ export class CodexSession {
     }
   }
 
+  /** Cancel preparation as well as an active turn; no new turn may follow an abort. */
+  abort(): void {
+    if (this.toolTurn) this.toolTurn.cancelled = true;
+    this.renew = true;
+    this.server?.close();
+  }
+
   /** Ends the session: its thread deleted, the server stopped. */
   async close(): Promise<void> {
     await this.dropThread();
     this.server?.close();
+    await this.server?.waitForExit();
     this.server = null;
     rmSync(this.cwd, { recursive: true, force: true });
     LIVE.delete(this);

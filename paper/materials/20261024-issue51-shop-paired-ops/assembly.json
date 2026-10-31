@@ -1,0 +1,237 @@
+{
+  "at": "2026-10-24T19:04:18+08:00",
+  "batch": "20261024-184318-strategy-proposal",
+  "authority_comment": 6382974399,
+  "selected_strategy_ids": [
+    "silent-brain-shop-joint-budget",
+    "silent-brain-shop-affordable-stop",
+    "silent-brain-shop-golden-reserve",
+    "silent-brain-shop-curse-removal",
+    "silent-brain-shop-nonbasic-removal",
+    "silent-brain-shop-upgrade-aware-removal"
+  ],
+  "selected_rk_ids": [
+    "silent-rk-shop-joint-budget",
+    "silent-rk-shop-affordable-stop",
+    "silent-rk-shop-golden-reserve",
+    "silent-rk-shop-curse-removal",
+    "silent-rk-shop-nonbasic-removal",
+    "silent-rk-shop-upgrade-aware-removal"
+  ],
+  "selected_pairs": [
+    {
+      "strategy_id": "silent-brain-shop-joint-budget",
+      "rk_id": "silent-rk-shop-joint-budget",
+      "knowledge_candidate_id": "silent-shop-joint-budget",
+      "context": "joint-budget",
+      "support_run": "MGA0CZDDKC0P",
+      "original_case": {
+        "state": {
+          "path": "/home/dw/Projects/agent-sts2/paper/materials/20261024-issue51-shop-paired-ops/original/scratch/ops-raw/states-7344473202.jsonl",
+          "sha256": "d79e99c188eec7be83990b6f09ed82d16dc0a56ddec2ab447f400c010667605b"
+        }
+      },
+      "condition": "Exact current shop facts only; read body for dynamic budget, removal eligibility and action legality",
+      "action": "Purchases and removal can exhaust the same shop budget"
+    },
+    {
+      "strategy_id": "silent-brain-shop-affordable-stop",
+      "rk_id": "silent-rk-shop-affordable-stop",
+      "knowledge_candidate_id": "silent-shop-affordable-stop",
+      "context": "affordable-stop",
+      "support_run": "QNTW139MGECA",
+      "original_case": {
+        "state": {
+          "path": "/home/dw/Projects/agent-sts2/paper/materials/20261024-issue51-shop-paired-ops/original/scratch/ops-raw/states-8135223805.jsonl",
+          "sha256": "4cc45138628dae42fcdbb149fdda9f0b732cd43589070ffd3e3d6ef8f94057e2"
+        }
+      },
+      "condition": "Exact current shop facts only; read body for dynamic budget, removal eligibility and action legality",
+      "action": "Affordable stock does not establish intent to buy"
+    },
+    {
+      "strategy_id": "silent-brain-shop-golden-reserve",
+      "rk_id": "silent-rk-shop-golden-reserve",
+      "knowledge_candidate_id": "silent-shop-golden-reserve",
+      "context": "golden-reserve",
+      "support_run": "25226ZFLNR1J",
+      "original_case": {
+        "state": {
+          "path": "/home/dw/Projects/agent-sts2/paper/materials/20261024-issue51-shop-paired-ops/original/scratch/ops-raw/states-7368880799.jsonl",
+          "sha256": "114842c9d236b21b2f3fd64c6cba2a32fcbd6a7ea02e97eb933328eb376c2be7"
+        }
+      },
+      "condition": "Exact current shop facts only; read body for dynamic budget, removal eligibility and action legality",
+      "action": "Seal of Gold gives saved gold a combat use"
+    },
+    {
+      "strategy_id": "silent-brain-shop-curse-removal",
+      "rk_id": "silent-rk-shop-curse-removal",
+      "knowledge_candidate_id": "silent-shop-curse-removal",
+      "context": "curse-removal",
+      "support_run": "0QDRNCRMC8BU",
+      "original_case": {
+        "state": {
+          "path": "/home/dw/Projects/agent-sts2/paper/materials/20261024-issue51-shop-paired-ops/original/scratch/ops-raw/states-14334096809.jsonl",
+          "sha256": "eedb115e760b861ed9d6377d8af41cdaeef77a19046accf15a44bb119d0e893a"
+        }
+      },
+      "condition": "Exact current shop facts only; read body for dynamic budget, removal eligibility and action legality",
+      "action": "Paid curse removal competes with other current targets"
+    },
+    {
+      "strategy_id": "silent-brain-shop-nonbasic-removal",
+      "rk_id": "silent-rk-shop-nonbasic-removal",
+      "knowledge_candidate_id": "silent-shop-nonbasic-removal",
+      "context": "nonbasic-removal",
+      "support_run": "HSX4HYATB4E2",
+      "original_case": {
+        "state": {
+          "path": "/home/dw/Projects/agent-sts2/paper/materials/20261024-issue51-shop-paired-ops/original/scratch/ops-raw/states-8156251513.jsonl",
+          "sha256": "89d399fcf0bec208d2a8c747a9ed8cce3776be35536e05ba9fd5cc9425ed1130"
+        }
+      },
+      "condition": "Exact current shop facts only; read body for dynamic budget, removal eligibility and action legality",
+      "action": "Paid removal can target nonbasic cards"
+    },
+    {
+      "strategy_id": "silent-brain-shop-upgrade-aware-removal",
+      "rk_id": "silent-rk-shop-upgrade-aware-removal",
+      "knowledge_candidate_id": "silent-shop-upgrade-aware-removal",
+      "context": "upgrade-aware-removal",
+      "support_run": "NB8KCF6HRGVF",
+      "original_case": {
+        "state": {
+          "path": "/home/dw/Projects/agent-sts2/paper/materials/20261024-issue51-shop-paired-ops/original/scratch/ops-raw/states-7737876665.jsonl",
+          "sha256": "02729be12e69744ba945f1f6a91b7782ef973a777a9d5318226428cdc22f9afb"
+        }
+      },
+      "condition": "Exact current shop facts only; read body for dynamic budget, removal eligibility and action legality",
+      "action": "Mixed Strike upgrades require separate removal target comparisons"
+    }
+  ],
+  "held_pairs": [],
+  "source_counts": {
+    "new_contexts": 6,
+    "updated_existing_contexts": 0,
+    "byte_reused_contexts": 1,
+    "aliases": 0,
+    "new_knowledge_entries": 6,
+    "new_strategy_entries": 6,
+    "new_rk_descriptive_entries": 6,
+    "rk_numeric_or_effect_entries": 0,
+    "statistical_group_definitions": 16,
+    "statistical_stratum_rows": 122,
+    "external_version_contrast_rows": 8,
+    "descriptive_contexts_with_two_ge100_groups_same_stratum": 2,
+    "efficacy_comparisons_ge100": 0,
+    "formal_published": 0,
+    "production_consumer_readbacks": 0,
+    "natural_queries_observed": 0,
+    "actual_adoption_verified": 0,
+    "benefit_estimates": 0
+  },
+  "snapshots": {
+    "main": {
+      "before": {
+        "knowledge/characters/silent/strategy-entries.json": {
+          "sha256": "33689e28c175181cae0829551f1252006af0821a70ca572654beced03edf4ca7",
+          "bytes": 267006
+        },
+        "knowledge/characters/silent/reflex.json": {
+          "sha256": "e89220face0b15b5be3cc6d9c0e75f569cd1e1bded3b0f14ffc96eda02a180ed",
+          "bytes": 622414
+        },
+        "knowledge/characters/silent/reflex-vocab.json": {
+          "sha256": "b2f7935316ce1e835e7bbc299522465bef76019853a202b8270a9530e31020c6",
+          "bytes": 192632
+        }
+      },
+      "after": {
+        "knowledge/characters/silent/strategy-entries.json": {
+          "sha256": "bcc5b982c82001584ea336934ac83c882da9f017bce7165376881bfa121d7983",
+          "bytes": 275796
+        },
+        "knowledge/characters/silent/reflex.json": {
+          "sha256": "9e80fae9565fc2923459375c2c9b5de32389442f326c991e090ca364a77ff2d8",
+          "bytes": 637917
+        },
+        "knowledge/characters/silent/reflex-vocab.json": {
+          "sha256": "5ec610050a5dedd289d058842016df62fbc52120997fcc6a0ef9258e49780772",
+          "bytes": 194994
+        }
+      },
+      "updates": [],
+      "before_strategy_count": 55,
+      "after_strategy_count": 61,
+      "before_reflex_count": 103,
+      "after_reflex_count": 109
+    },
+    "live": {
+      "before": {
+        "knowledge/characters/silent/strategy-entries.json": {
+          "sha256": "bcaa5c55ce403fdbab2bc7b5522bad729000c9ec623d7fc6fd5ea4d4947fb7f0",
+          "bytes": 267006
+        },
+        "knowledge/characters/silent/reflex.json": {
+          "sha256": "e89220face0b15b5be3cc6d9c0e75f569cd1e1bded3b0f14ffc96eda02a180ed",
+          "bytes": 622414
+        },
+        "knowledge/characters/silent/reflex-vocab.json": {
+          "sha256": "b2f7935316ce1e835e7bbc299522465bef76019853a202b8270a9530e31020c6",
+          "bytes": 192632
+        }
+      },
+      "after": {
+        "knowledge/characters/silent/strategy-entries.json": {
+          "sha256": "1ddefebf25dd19de3066d8962ff5d5883dd9f8795c82c08b37c3714053d7e74a",
+          "bytes": 275796
+        },
+        "knowledge/characters/silent/reflex.json": {
+          "sha256": "9e80fae9565fc2923459375c2c9b5de32389442f326c991e090ca364a77ff2d8",
+          "bytes": 637917
+        },
+        "knowledge/characters/silent/reflex-vocab.json": {
+          "sha256": "5ec610050a5dedd289d058842016df62fbc52120997fcc6a0ef9258e49780772",
+          "bytes": 194994
+        }
+      },
+      "updates": [],
+      "before_strategy_count": 55,
+      "after_strategy_count": 61,
+      "before_reflex_count": 103,
+      "after_reflex_count": 109
+    }
+  },
+  "source_files": {
+    "strategy": {
+      "path": ".artifacts/ops-issue51-shop-paired-20261024/normalized-strategy.json",
+      "bytes": 8872,
+      "sha256": "1a1a3b1a957d2bc93f73522f5d1a83fc7dafb08fcd7897f1dd5ff6b492e2864b"
+    },
+    "rk": {
+      "path": ".artifacts/ops-issue51-shop-paired-20261024/normalized-reflex.json",
+      "bytes": 15580,
+      "sha256": "9fdceae10930ce400f421356ded2763f33ae73c29c8032f793c35fc8ad398a27"
+    },
+    "vocab": {
+      "path": ".artifacts/ops-issue51-shop-paired-20261024/normalized-vocab.json",
+      "bytes": 2566,
+      "sha256": "d3fc55148bdbf54284c346e9065531da2fd28231e5740e32a6ba4a2771739bee"
+    }
+  },
+  "verified_inventory_files": 65,
+  "verified_input_files": 143,
+  "raw_windows_verified": 4228,
+  "new_models_full_games": 0,
+  "data_only": true,
+  "complete_playbook_publication": false,
+  "executable_card_pick_advice": 0,
+  "strategy_projection_ids_added": 6,
+  "knowledge_new_contexts": 6,
+  "knowledge_updated_contexts": 0,
+  "knowledge_custom_candidates_formal_consumer": "pending",
+  "byte_reused_strategy": "silent-brain-potion-full-shop-replacement",
+  "archived_files": 62,
+  "bulk_process_copies_not_duplicated": 3
+}

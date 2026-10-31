@@ -1,0 +1,79 @@
+## 修 bug 回报
+- 合并基线：main → `520a2b7a3771dac00fc7d6126ae26c2fc6275edc`
+- 修复候选：run-config Git 溯源丢失 — 未提交 — 测试 `agent/tests/run-config-git-failure.test.ts` — 去掉修复时失败：是
+- 修复候选：遗物能量文字重复数字 — 未提交 — 测试 `agent/tests/relic-energy-prefix.test.ts` — 去掉修复时失败：是
+- 已被别人修掉的：31 项及对应提交见[完整报告](/home/dw/Projects/agent-sts2/learner/runs/20261024-231333-ebc6a6f1-1752-4166-946b-ff34a88aa315-fix-batch/report.md)。
+- 没修的：两个候选因完整沙箱未通过而未提交；其余策略类、证据不足及范围过大的条目已在报告逐组记录。
+- 测试：tsc 退出码 0；新增回归 2 文件／6 用例／退出码 0；撤掉两项修复时各 2 失败；阻塞复验 4 文件／18 用例／退出码 1。完整沙箱仍未退出，已出现 EPERM 等失败。
+- 合入：未合入。候选源码、独立补丁及日志均保留；账本和发布记录未改。
+- 需要 Roy 定的事（没有写「无」）：无
+
+```json
+{
+  "task": "fix-batch",
+  "base": "520a2b7a3771dac00fc7d6126ae26c2fc6275edc",
+  "fixes": [],
+  "skipped": [
+    {
+      "item": "infra-run-config-git-status-enobufs-20261023",
+      "reason": "候选已完成固定红绿和最终tsc；原完整沙箱出现EPERM等失败且尚无终态退出码，按提交前必须exit0的任务要求未提交、未合入；独立补丁及工作区修改保留"
+    },
+    {
+      "item": "silent-0617 遗物energyPrefix图标重复数字",
+      "reason": "候选已完成固定红绿和最终tsc；原完整沙箱出现EPERM等失败且尚无终态退出码，按提交前必须exit0的任务要求未提交、未合入；独立补丁及工作区修改保留"
+    },
+    {
+      "item": "游戏机制/出牌/药水/SL/终局及路线策略条目（含silent-0516/0579/0581/0604）",
+      "reason": "策略类；按任务边界沿已有strategy-proposal链，不重复实现，不补游戏知识"
+    },
+    {
+      "item": "v5-dpr-health/H1在V6奖励及战斗选牌路由中的监测适配",
+      "reason": "太大；当前summarize仍按旧V5及boss_sim路径，需要原六叶候选、正式V6计算回执和负控的独立组合验收，不能按开关全豁免"
+    },
+    {
+      "item": "infra-v6-refresh-invalid-json-provenance-20261020",
+      "reason": "证据不足；原全流坏行归属和覆盖契约仍需原owner核定，不静默跳行或重写原流"
+    },
+    {
+      "item": "20261022-231302-s2账本补链接回退既有shipped及历史上线时间",
+      "reason": "太大；当前CLI仅有物理/Git前缀分歧保护，需有原发布证据的更正入口并区分真正新学习和纯补链；不直接改历史账本或伪造新shipped_at"
+    },
+    {
+      "item": "框架合后检查分段续验及外层1200秒超时处置",
+      "reason": "太大；涉及发布锁/精确树覆盖/回退和进程身份，需原框架通道独立实现，保原失败及已过分段证据"
+    },
+    {
+      "item": "调度公平性核查及arch-*独立功能/归因调查",
+      "reason": "策略类或独立功能；不属于普通fix-batch纯bug"
+    },
+    {
+      "item": "core-build-notify历史rc2的安全恢复（诊断子项已修）",
+      "reason": "证据不足；当前保留失败stdout/stderr和幂等身份，但历史是否实际送达未证，不自动重发或代称成功"
+    },
+    {
+      "item": "sandbox-glob-startup-race上游扫描/删除生命周期根因",
+      "reason": "证据不足；有界启动恢复及租约绑定子项已修，具体删除者/上游扫描身份未证，不放宽deny或更改账号权限"
+    }
+  ],
+  "merged": null,
+  "tests": {
+    "tsc": 0,
+    "vitest": 1,
+    "cases": 18
+  },
+  "code_proposals": [],
+  "implementation_domains": [],
+  "report": "/home/dw/Projects/agent-sts2/learner/runs/20261024-231333-ebc6a6f1-1752-4166-946b-ff34a88aa315-fix-batch/report.md"
+}
+```
+
+== 学习者 codex / fix-batch ==
+状态：success；退出码 0
+模型：gpt-6.1-sol；会话：01a16e79-b8b0-7b32-9789-8ce1ab7eae5e
+轮数：1；工具调用：无
+token：输入 177.2k、输出 51.4k（其中推理 27.0k）、cache 读 13016.4k、cache 写 0（命中 98.7%）
+成本：未提供
+耗时：2467.0 s（墙钟）
+时间：首个事件 2466.9 s、模型首个输出 2466.9 s、首次工具 —、末次工具结束 —；工具内共 0.0 s，其余（模型生成、推理、网络）0.1 s
+codex 会话记录：AGENTS.md 已加载（/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261024-231317）；模型的工具调用 exec×78 wait×7；/home/dw/Projects/agent-sts2/ops/codex-ops/accounts/codex3/learner/sessions/2026/10/24/rollout-2026-10-24T23-13-53-01a16e79-b8b0-7b32-9789-8ce1ab7eae5e.jsonl
+日志：/home/dw/Projects/agent-sts2/learner/runs/20261024-231333-ebc6a6f1-1752-4166-946b-ff34a88aa315-fix-batch.jsonl

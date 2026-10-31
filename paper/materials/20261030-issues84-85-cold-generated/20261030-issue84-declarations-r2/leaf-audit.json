@@ -1,0 +1,448 @@
+{
+  "source84": "7a22ca832ff5a155dcd18760322dd6cfeb341154",
+  "source85": "50d8c223da550af8d30541d0714fc42afd25b536",
+  "leaves": [
+    {
+      "path": "agent/src/brain/brain.ts",
+      "in_producers": [
+        "v6-history",
+        "silent-boss-calibration"
+      ],
+      "before_blob": "e737bfede328c7a03f6ee0f64761bf3b984353f4",
+      "after_blob": "3de1fc3d7eee1a918639710e9c0fd5aebebdddec",
+      "before_sha256": "7eaa4558a953aa761e69db714e35fa79df7367e28333a5595a8338b5224b7492",
+      "after_sha256": "04ca408c76196913d0c978afaa3a4fe358033dd229cc5c04f735ac273c12961b",
+      "static_dependencies": [
+        "code:agent/src/brain/decision-knowledge.ts",
+        "code:agent/src/brain/engines/claude.ts",
+        "code:agent/src/brain/engines/codex-usage.ts",
+        "code:agent/src/brain/engines/codex.ts",
+        "code:agent/src/brain/engines/deepseek.ts",
+        "code:agent/src/brain/engines/dsh.ts",
+        "code:agent/src/brain/engines/knowledge-agent.ts",
+        "code:agent/src/brain/knowledge.ts",
+        "code:agent/src/brain/llm/deepseek.ts",
+        "code:agent/src/brain/router.ts",
+        "code:agent/src/brain/specs.ts",
+        "code:agent/src/brain/tools/agent-knowledge.ts",
+        "code:agent/src/brain/tools/capabilities.ts",
+        "code:agent/src/brain/tools/query-guidance.ts",
+        "code:agent/src/brain/tools/registry.ts",
+        "code:agent/src/brain/tools/types.ts",
+        "code:agent/src/brain/types.ts",
+        "code:agent/src/brain/wait.ts",
+        "code:agent/src/core/config.ts",
+        "code:agent/src/core/paths.ts",
+        "code:agent/src/core/util/json.ts",
+        "code:agent/src/knowledge/files.ts",
+        "code:agent/src/knowledge/open-book.ts",
+        "code:agent/src/knowledge/strategy-entries.ts",
+        "code:agent/src/memory/construction-log.ts",
+        "code:agent/src/memory/endgame-plan.ts",
+        "code:agent/src/sim/route-map.ts",
+        "code:agent/src/v6/direction-rides.ts"
+      ],
+      "static_added": [],
+      "static_removed": [],
+      "opaque_review": "whole-file SHA per unchanged TS opaque_sites contract; source/diff IO and call review below",
+      "opaque_sites": [
+        "04ca408c76196913d0c978afaa3a4fe358033dd229cc5c04f735ac273c12961b"
+      ],
+      "io_dynamic_subprocess_review": "Removes early attachDecisionKnowledge; existing decision-context tool import remains. No IO or child-call change; sending boundary delegates attachment through router."
+    },
+    {
+      "path": "agent/src/brain/decision-knowledge-exposure.ts",
+      "in_producers": [
+        "v6-history",
+        "silent-boss-calibration"
+      ],
+      "before_blob": null,
+      "after_blob": "f88529cf33a7c55912955e09f63d8fe4782ade46",
+      "before_sha256": null,
+      "after_sha256": "f69da9609387f5473029bfd1fd88ecb64da1be76669a04763d83bc1fd814243a",
+      "static_dependencies": [
+        "code:agent/src/brain/types.ts"
+      ],
+      "static_added": [
+        "code:agent/src/brain/types.ts"
+      ],
+      "static_removed": [],
+      "opaque_review": "whole-file SHA per unchanged TS opaque_sites contract; source/diff IO and call review below",
+      "opaque_sites": [
+        "f69da9609387f5473029bfd1fd88ecb64da1be76669a04763d83bc1fd814243a"
+      ],
+      "io_dynamic_subprocess_review": "New persistent DATA ledger: logsDir/decision-knowledge-exposure/<sha256(runId)>.jsonl and .lock, runId regex, exclusive lock 0600, ledger O_NOFOLLOW read/append 0600, 4MB/full-newline/schema/run-id/id-count validation, write loop, file+directory fsync and inode-owned lock unlink/close. mkdir0700, exists/lstat/fstat/read/open/write/close are explicit node:fs calls. Callback build produces JSON envelope; randomUUID/hash from node:crypto. No ledger execution, code import, child process, network or path-based module loading. Ledger bytes excluded as changing runtime data; source bytes and IO sites pinned whole-file."
+    },
+    {
+      "path": "agent/src/brain/decision-knowledge-view.ts",
+      "in_producers": [
+        "v6-history",
+        "silent-boss-calibration"
+      ],
+      "before_blob": null,
+      "after_blob": "56443f877c6b5e7e4a263fef4a1dcb6962254288",
+      "before_sha256": null,
+      "after_sha256": "2e8a57221cbde8a36772c17f73f8b6170a9132eaafd204e3488fef32abba8fc3",
+      "static_dependencies": [
+        "code:agent/src/knowledge/strategy-entries.ts",
+        "code:agent/src/knowledge/strategy-grading.ts"
+      ],
+      "static_added": [
+        "code:agent/src/knowledge/strategy-entries.ts",
+        "code:agent/src/knowledge/strategy-grading.ts"
+      ],
+      "static_removed": [],
+      "opaque_review": "whole-file SHA per unchanged TS opaque_sites contract; source/diff IO and call review below",
+      "opaque_sites": [
+        "2e8a57221cbde8a36772c17f73f8b6170a9132eaafd204e3488fef32abba8fc3"
+      ],
+      "io_dynamic_subprocess_review": "New pure compact projection; imports strategy-entries type and grading helpers. Complete claim/trigger and bounded evidence/limitations/full-document pointers are data rendering. No filesystem, network, subprocess or dynamic import."
+    },
+    {
+      "path": "agent/src/brain/decision-knowledge.ts",
+      "in_producers": [
+        "v6-history",
+        "silent-boss-calibration"
+      ],
+      "before_blob": "3d1f5c976e2dcec6eac48aab81e02336a0598c40",
+      "after_blob": "b654f9ca4b0a210a7832c5e1f0d50ee3b9fe2669",
+      "before_sha256": "48dc38303efcfed924bc78f36b0fb34680dfcd0e4046c0cc6a74739e2eb0fda0",
+      "after_sha256": "5ba0de31bfaad75f3a2f480a5c12d704a2f194c53aaf239b047bd97e30b693be",
+      "static_dependencies": [
+        "code:agent/src/brain/decision-knowledge-exposure.ts",
+        "code:agent/src/brain/decision-knowledge-view.ts",
+        "code:agent/src/brain/tools/query-guidance.ts",
+        "code:agent/src/brain/tools/types.ts",
+        "code:agent/src/brain/tools/validate.ts",
+        "code:agent/src/brain/types.ts",
+        "code:agent/src/knowledge/decision-context.ts",
+        "code:agent/src/knowledge/files.ts",
+        "code:agent/src/knowledge/runtime/reader.ts",
+        "code:agent/src/knowledge/strategy-archetypes.ts",
+        "code:agent/src/knowledge/strategy-entries.ts",
+        "code:agent/src/knowledge/strategy-grading.ts"
+      ],
+      "static_added": [
+        "code:agent/src/brain/decision-knowledge-exposure.ts",
+        "code:agent/src/brain/decision-knowledge-view.ts",
+        "code:agent/src/knowledge/strategy-grading.ts"
+      ],
+      "static_removed": [],
+      "opaque_review": "whole-file SHA per unchanged TS opaque_sites contract; source/diff IO and call review below",
+      "opaque_sites": [
+        "5ba0de31bfaad75f3a2f480a5c12d704a2f194c53aaf239b047bd97e30b693be"
+      ],
+      "io_dynamic_subprocess_review": "Adds grading, compact projection and exposure type edges; strategyEvidenceSummary uses existing strategy-entries edge. Existing boundSource reads immutable K1 via reader and strategy entries. Rendering and continuation stay data-only; new reserve(req, render) delegates journal IO to reviewed exposure module. No code loaded from K1/payload, new subprocess or dynamic import."
+    },
+    {
+      "path": "agent/src/brain/engines/codex.ts",
+      "in_producers": [
+        "v6-history",
+        "silent-boss-calibration"
+      ],
+      "before_blob": "6dc3e1a5e17e4272406d301905eaf56934f9d10c",
+      "after_blob": "d6230dd7146a949d75a40f5f3019b4aea8fb8c42",
+      "before_sha256": "030ae62a77aface8f596c770a81d7a6c751c9bb3120d1d3f947c72906ed3943b",
+      "after_sha256": "3567a3fd27996e00ecd184806f4f069d636dbe9937612ccf26da2bc4b3d11697",
+      "static_dependencies": [
+        "code:agent/src/brain/engines/codex-cache.ts",
+        "code:agent/src/brain/engines/codex-session.ts",
+        "code:agent/src/brain/engines/codex-usage.ts",
+        "code:agent/src/brain/engines/process.ts",
+        "code:agent/src/brain/message.ts",
+        "code:agent/src/brain/router.ts",
+        "code:agent/src/brain/run-profile.ts",
+        "code:agent/src/brain/specs.ts",
+        "code:agent/src/brain/tools/types.ts",
+        "code:agent/src/brain/types.ts",
+        "code:agent/src/core/config.ts",
+        "code:agent/src/core/util/jsonl.ts",
+        "code:agent/src/knowledge/files.ts"
+      ],
+      "static_added": [],
+      "static_removed": [],
+      "opaque_review": "whole-file SHA per unchanged TS opaque_sites contract; source/diff IO and call review below",
+      "opaque_sites": [
+        "3567a3fd27996e00ecd184806f4f069d636dbe9937612ccf26da2bc4b3d11697"
+      ],
+      "io_dynamic_subprocess_review": "Adds preparesRequests and prepareForSend before session.ask/exec/retry, then cacheObserver.capture and prompt regeneration. Existing session startup, schema/cache/log filesystem access and Codex executable/argv/process setup remain the same. New callback side effect resolves to router attachment and reviewed exposure ledger; no added child executable, dynamically loaded code or import edge."
+    },
+    {
+      "path": "agent/src/brain/engines/dsh.ts",
+      "in_producers": [
+        "v6-history",
+        "silent-boss-calibration"
+      ],
+      "before_blob": "39f9696e20c7e77ae6d75d4048bcf21d7dc7c0eb",
+      "after_blob": "bcfab97a6f9cbcbcbbb95166f0f603bfe21c29d9",
+      "before_sha256": "74eb738f5137776fcf466996ccf44e4d7cd2232bac4258f2b64f2b28f2931f69",
+      "after_sha256": "9c447c77cfc4df1b2e2c6398877dadd293bf4732a054dd89cb1e48f7d8c1f9d7",
+      "static_dependencies": [
+        "code:agent/src/brain/live-view.ts",
+        "code:agent/src/brain/message.ts",
+        "code:agent/src/brain/router.ts",
+        "code:agent/src/brain/types.ts",
+        "code:agent/src/core/config.ts",
+        "code:agent/src/core/paths.ts"
+      ],
+      "static_added": [],
+      "static_removed": [],
+      "opaque_review": "whole-file SHA per unchanged TS opaque_sites contract; source/diff IO and call review below",
+      "opaque_sites": [
+        "9c447c77cfc4df1b2e2c6398877dadd293bf4732a054dd89cb1e48f7d8c1f9d7"
+      ],
+      "io_dynamic_subprocess_review": "Adds preparesRequests and invokes prepareForSend before existing run. Existing headless child executable/argv, output paths and retry flow remain unchanged; delegated new ledger IO reviewed at exposure. No new module/code-file/subprocess edge."
+    },
+    {
+      "path": "agent/src/brain/engines/knowledge-agent.ts",
+      "in_producers": [
+        "v6-history",
+        "silent-boss-calibration"
+      ],
+      "before_blob": "542dd91a6fccf3940f7927dc5de1637ee6f60398",
+      "after_blob": "e408d7db7fc4ac6ad78cd2af79c172b26b25dd07",
+      "before_sha256": "cd772180efde7eb68b2e4f6f8431e06e4eb1045d5396c1e209cb25cc47a053ca",
+      "after_sha256": "0a7e7e6b7f9bb495aefdcb651d677ef7d1a11495593c3d4ccb81740c60bc6a3b",
+      "static_dependencies": [
+        "code:agent/src/brain/live-view.ts",
+        "code:agent/src/brain/tools/capabilities.ts",
+        "code:agent/src/brain/tools/knowledge-mcp.ts",
+        "code:agent/src/brain/types.ts",
+        "code:agent/src/core/config.ts"
+      ],
+      "static_added": [],
+      "static_removed": [],
+      "opaque_review": "whole-file SHA per unchanged TS opaque_sites contract; source/diff IO and call review below",
+      "opaque_sites": [
+        "0a7e7e6b7f9bb495aefdcb651d677ef7d1a11495593c3d4ccb81740c60bc6a3b"
+      ],
+      "io_dynamic_subprocess_review": "Adds send wrapper invoking prepareForSend when underlying engine does not prepare. Query/reask/answer use wrapper. Existing factory, KnowledgeMcp start/close and backend child lifecycle stay unchanged; callback delegates new ledger IO, not arbitrary module loading. No new direct IO/child/import edge."
+    },
+    {
+      "path": "agent/src/brain/router.ts",
+      "in_producers": [
+        "v6-history",
+        "silent-boss-calibration"
+      ],
+      "before_blob": "f8a54be81ebe99330cec09cc9dd5b8f178faa5be",
+      "after_blob": "ba665547a39a9a1ca8f4ad69926c0b9a05dbd37a",
+      "before_sha256": "973c92a3b13bc149df3c9100b4c32671cbfa328d24c46f781c800943c981c1f6",
+      "after_sha256": "2f5faf222a0edf4912777e248f4dd5feeaca42bf5a71c95624d505f38b09d703",
+      "static_dependencies": [
+        "code:agent/src/brain/decision-knowledge-exposure.ts",
+        "code:agent/src/brain/decision-knowledge.ts",
+        "code:agent/src/brain/evidence.ts",
+        "code:agent/src/brain/knowledge.ts",
+        "code:agent/src/brain/live-view.ts",
+        "code:agent/src/brain/run-profile.ts",
+        "code:agent/src/brain/tools/capabilities.ts",
+        "code:agent/src/brain/tools/query-guidance.ts",
+        "code:agent/src/brain/types.ts",
+        "code:agent/src/brain/wait.ts",
+        "code:agent/src/core/config.ts",
+        "code:agent/src/core/decision-budget.ts",
+        "code:agent/src/core/util/jsonl.ts"
+      ],
+      "static_added": [
+        "code:agent/src/brain/decision-knowledge-exposure.ts",
+        "code:agent/src/brain/decision-knowledge.ts"
+      ],
+      "static_removed": [],
+      "opaque_review": "whole-file SHA per unchanged TS opaque_sites contract; source/diff IO and call review below",
+      "opaque_sites": [
+        "2f5faf222a0edf4912777e248f4dd5feeaca42bf5a71c95624d505f38b09d703"
+      ],
+      "io_dynamic_subprocess_review": "Adds static imports of attachDecisionKnowledge and exposure class, owns exposure instance; builds prepareForSend closure and invokes it at the engine boundary. Existing request/log flow unchanged. New filesystem behavior is only delegated exposure ledger; no new direct path load, dynamic import or child executable."
+    },
+    {
+      "path": "agent/src/brain/tools/knowledge-projection.ts",
+      "in_producers": [
+        "v6-history",
+        "silent-boss-calibration"
+      ],
+      "before_blob": "d4c3f602dec0ca1a146e2cdac06fdf6abf311dbf",
+      "after_blob": "84cab53f69df4c013849a2918492b98c221731fd",
+      "before_sha256": "2686e11c1115e69bbfb29c7284dea61a50bb7f75480630c58f611677c6141b87",
+      "after_sha256": "d89fedc656061ec2f9f4dc451e47d3b43fef310ae51e56b5dfd559dbfc1364e8",
+      "static_dependencies": [
+        "code:agent/src/brain/tools/types.ts",
+        "code:agent/src/knowledge/strategy-entries.ts",
+        "code:agent/src/knowledge/strategy-grading.ts"
+      ],
+      "static_added": [
+        "code:agent/src/knowledge/strategy-grading.ts"
+      ],
+      "static_removed": [],
+      "opaque_review": "whole-file SHA per unchanged TS opaque_sites contract; source/diff IO and call review below",
+      "opaque_sites": [
+        "d89fedc656061ec2f9f4dc451e47d3b43fef310ae51e56b5dfd559dbfc1364e8"
+      ],
+      "io_dynamic_subprocess_review": "Adds grading helper edge; renders grading and full-document paging metadata, one complete fragment under24KB or existing bounded split. Existing tool reader data access unchanged. No new filesystem target, dynamic import, child or executable-data interpretation."
+    },
+    {
+      "path": "agent/src/brain/types.ts",
+      "in_producers": [
+        "v6-history",
+        "silent-boss-calibration"
+      ],
+      "before_blob": "f9c1785913acdc7cfb556151ed078b94d39bf7c5",
+      "after_blob": "6c9a9abad4fa4a3c386888a9443eee741f6eeb97",
+      "before_sha256": "48c5dec8cb85937c7608fd15664f0918d1b73c9c7e719584b12c8eff77a5e926",
+      "after_sha256": "30a0e094691e3c3c04ef20849e46bba640a78c6d69ad87b0435a25b44a83c2c2",
+      "static_dependencies": [
+        "code:agent/src/brain/evidence.ts",
+        "code:agent/src/brain/live-view.ts",
+        "code:agent/src/brain/run-profile.ts",
+        "code:agent/src/brain/tools/types.ts"
+      ],
+      "static_added": [],
+      "static_removed": [],
+      "opaque_review": "whole-file SHA per unchanged TS opaque_sites contract; source/diff IO and call review below",
+      "opaque_sites": [
+        "30a0e094691e3c3c04ef20849e46bba640a78c6d69ad87b0435a25b44a83c2c2"
+      ],
+      "io_dynamic_subprocess_review": "Adds optional prepareForSend callback on BrainRequest and preparesRequests capability on engine. Types only; no filesystem, dynamic import, subprocess or runtime code edge."
+    },
+    {
+      "path": "agent/src/knowledge/runtime/reader.ts",
+      "in_producers": [
+        "v6-history",
+        "silent-boss-calibration"
+      ],
+      "before_blob": "f30dddb3652eeb48616c918ebbb7a1d5a1385d3c",
+      "after_blob": "05941aade0593f98b7c26919af691f27ffec3c40",
+      "before_sha256": "fe29ad6298945a7a6aa2547c2d4004d2c3f0be61fe2678fab6b50988a0e11f2a",
+      "after_sha256": "f35acd3989f48cdb4a14051cd5eb285b5c6d57920e2dd0c2de95a9f565db6d5e",
+      "static_dependencies": [
+        "code:agent/src/knowledge/runtime-paths.ts",
+        "code:agent/src/knowledge/runtime/classification.ts",
+        "code:agent/src/knowledge/runtime/projection.ts",
+        "code:agent/src/knowledge/runtime/sqlite-version.ts",
+        "code:agent/src/knowledge/runtime/validation.ts"
+      ],
+      "static_added": [],
+      "static_removed": [],
+      "opaque_review": "whole-file SHA per unchanged TS opaque_sites contract; source/diff IO and call review below",
+      "opaque_sites": [
+        "f35acd3989f48cdb4a14051cd5eb285b5c6d57920e2dd0c2de95a9f565db6d5e"
+      ],
+      "io_dynamic_subprocess_review": "Accepts schema5 and preserves null confidence in typed readback. Existing readonly SQLite/snapshot/document reads unchanged. No new source path, dynamic import, subprocess or data execution."
+    },
+    {
+      "path": "agent/src/knowledge/runtime/schema.ts",
+      "in_producers": [
+        "silent-boss-calibration"
+      ],
+      "before_blob": "04ecd93549b6381d3b6d70424bac6c36fedb669b",
+      "after_blob": "feddd55d5326849da473a948a2c90da699acdab6",
+      "before_sha256": "5789d470cd62a7ddcfaa0ea81322a6e19cbc2518e0c84bdbc9aff2adf5321ce3",
+      "after_sha256": "09c85a6eb07c2927c40910f8f79818e1a0022bf18a96e5e16a9cc054fd83d72f",
+      "static_dependencies": [],
+      "static_added": [],
+      "static_removed": [],
+      "opaque_review": "whole-file SHA per unchanged TS opaque_sites contract; source/diff IO and call review below",
+      "opaque_sites": [
+        "09c85a6eb07c2927c40910f8f79818e1a0022bf18a96e5e16a9cc054fd83d72f"
+      ],
+      "io_dynamic_subprocess_review": "Schema version4 to5; literal schema SQL only. No import, direct IO, subprocess or dynamically loaded code."
+    },
+    {
+      "path": "agent/src/knowledge/runtime/store.ts",
+      "in_producers": [
+        "silent-boss-calibration"
+      ],
+      "before_blob": "6cdfb4b846eedf5f94f4667340f27437930a85a1",
+      "after_blob": "6c18bc8d60d2c75f1da3c2efe0567ee389b2e446",
+      "before_sha256": "09301f02be0470490467d35647baa2ef704d9e826b6bbdc6558fae261e28ba3f",
+      "after_sha256": "7728e468c46127150e727b1d6e03a9d0223e9125f8fca6f18fc581175b52822a",
+      "static_dependencies": [
+        "code:agent/src/knowledge/runtime/build-research.ts",
+        "code:agent/src/knowledge/runtime/classification-schema.ts",
+        "code:agent/src/knowledge/runtime/classification.ts",
+        "code:agent/src/knowledge/runtime/continuation.ts",
+        "code:agent/src/knowledge/runtime/projection.ts",
+        "code:agent/src/knowledge/runtime/schema.ts",
+        "code:agent/src/knowledge/runtime/sqlite-version.ts",
+        "code:agent/src/knowledge/runtime/typed-schema.ts",
+        "code:agent/src/knowledge/runtime/validation.ts"
+      ],
+      "static_added": [],
+      "static_removed": [],
+      "opaque_review": "whole-file SHA per unchanged TS opaque_sites contract; source/diff IO and call review below",
+      "opaque_sites": [
+        "7728e468c46127150e727b1d6e03a9d0223e9125f8fca6f18fc581175b52822a"
+      ],
+      "io_dynamic_subprocess_review": "Existing typed-schema edge additionally imports literal migration SQL. Accepts schema4, runs fixed STRATEGY_NULL_CONFIDENCE_SCHEMA inside existing migration transaction and preserves null confidence. Existing SQLite/snapshot/chmod/fsync/rename IO paths and executable edges unchanged; SQL comes from reviewed source constant, not ledger/external source code."
+    },
+    {
+      "path": "agent/src/knowledge/runtime/typed-schema.ts",
+      "in_producers": [
+        "silent-boss-calibration"
+      ],
+      "before_blob": "3b144e6d7364c127f6a28321fda283eec7f5bf98",
+      "after_blob": "dcb677947c6717d4a2188bc080b66d523177f42c",
+      "before_sha256": "dd58225ee9eb184d49401c982bb9b82bf976460772d64ce96b8d460ede446f32",
+      "after_sha256": "ae5cb7687dd61b839dc52cef899c23bfadadfc4089f6ee5be179cf898b1a22ce",
+      "static_dependencies": [],
+      "static_added": [],
+      "static_removed": [],
+      "opaque_review": "whole-file SHA per unchanged TS opaque_sites contract; source/diff IO and call review below",
+      "opaque_sites": [
+        "ae5cb7687dd61b839dc52cef899c23bfadadfc4089f6ee5be179cf898b1a22ce"
+      ],
+      "io_dynamic_subprocess_review": "Makes confidence nullable and exports literal migration SQL copying/dropping/renaming typed table. Pure SQL constants; no filesystem, module loader, subprocess or new external executable."
+    },
+    {
+      "path": "agent/src/knowledge/strategy-entries.ts",
+      "in_producers": [
+        "v6-history",
+        "silent-boss-calibration"
+      ],
+      "before_blob": "7395566fdd245a84469ccabd582e98d1da547656",
+      "after_blob": "4f1e1afa4b992daee82639d8f75d62a5a452723e",
+      "before_sha256": "1bbcb01d95c7fc517acc1f3b8c2586635923ab04c4a626e8b7c643a0e3dce36a",
+      "after_sha256": "2323a056e33f39c9cb843587b0b38ba07e3fd6d561d9fd2f1103de9672c7eebe",
+      "static_dependencies": [
+        "code:agent/src/brain/types.ts",
+        "code:agent/src/knowledge/files.ts",
+        "code:agent/src/knowledge/strategy-archetypes.ts",
+        "code:agent/src/knowledge/strategy-grading.ts"
+      ],
+      "static_added": [
+        "code:agent/src/knowledge/strategy-grading.ts"
+      ],
+      "static_removed": [],
+      "opaque_review": "whole-file SHA per unchanged TS opaque_sites contract; source/diff IO and call review below",
+      "opaque_sites": [
+        "2323a056e33f39c9cb843587b0b38ba07e3fd6d561d9fd2f1103de9672c7eebe"
+      ],
+      "io_dynamic_subprocess_review": "Adds grading helper/type edge, nullable confidence validation, graded ordering, library cap4MiB. Existing stat/readFileSync of knowledgeFile JSON data remain; no new source-file path, dynamic import, subprocess or code execution from JSON."
+    },
+    {
+      "path": "agent/src/knowledge/strategy-grading.ts",
+      "in_producers": [
+        "v6-history",
+        "silent-boss-calibration"
+      ],
+      "before_blob": null,
+      "after_blob": "6f69378af5611b214cd1378c73eaec5e91ce7677",
+      "before_sha256": null,
+      "after_sha256": "03389ce94e048de88d66bae5bbb712b1bbdafff9be84f3c44c6e99c4a51a9db4",
+      "static_dependencies": [],
+      "static_added": [],
+      "static_removed": [],
+      "opaque_review": "whole-file SHA per unchanged TS opaque_sites contract; source/diff IO and call review below",
+      "opaque_sites": [
+        "03389ce94e048de88d66bae5bbb712b1bbdafff9be84f3c44c6e99c4a51a9db4"
+      ],
+      "io_dynamic_subprocess_review": "New pure structural validation/canonical grading digest/category and tier ordering; node:crypto createHash only. No fs/network/child/dynamic imports. Does not read source paths or execute evidence data."
+    },
+    {
+      "path": "agent/tools/grade-strategies.ts",
+      "in_producers": [],
+      "after_blob": "492197a1efcdeea1ea2904c214ee328a48e14f72",
+      "after_sha256": "952d70a5b6561d4b1913649997c25ce405f9e38c68a7a033fd58b19b8acfdecc",
+      "exclusion_review": "Offline candidate CLI, not imported/called by either producer and outside calibration agent/src and boss-sim source-read family. Static imports classification/validation/grading/store(type) reviewed. CLI reads argv base JSON/checkpoint/authority data and writes exclusive wx0600 destination candidate JSON. No child/dynamic import; no production publishing. Data grading content stays #85 ownership; this revision neither copies nor changes it."
+    }
+  ]
+}

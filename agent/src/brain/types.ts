@@ -1,5 +1,6 @@
 import type { BrainObserver } from "./live-view.js";
 import type { BrainNativeReceipt } from "./run-profile.js";
+import type { BrainEvidence } from "./evidence.js";
 /**
  * V4 brain contract (docs/v4-architecture.md §2).
  *
@@ -32,6 +33,8 @@ export interface AnswerSpec {
   kind: "pick" | "plan";
   /** JSON Schema of the answer object (JSON mode instruction, tool schema, --json-schema, --output-schema). */
   schema: JsonSchema;
+  /** A changed route needs its own reason; schema adapters must preserve that optional field. */
+  routeReasonOnChange?: boolean;
   /** Problems with a parsed answer; [] means valid. Messages are specific enough to re-ask with. */
   validate(answer: unknown): string[];
   /**
@@ -48,6 +51,11 @@ export interface AnswerSpec {
 }
 
 export interface BrainRequest {
+  /** Local durable exposure reservation, invoked before each newly dispatched native prompt. Never serialized. */
+  prepareForSend?: (request: BrainRequest) => void;
+  /** Process-owned evidence journal, shared by phases and re-asks; never sent to a model. */
+  evidence?: BrainEvidence;
+  evidencePhase?: "query" | "answer" | "reask";
   /** Local read-only stream observer; never included in model input or run configuration. */
   observe?: BrainObserver;
   label: string;
@@ -121,6 +129,9 @@ export interface BrainUsage {
 }
 
 export interface ToolCallRecord {
+  callId?: string;
+  threadId?: string;
+  turnId?: string;
   name: string;
   input: unknown;
   /** Full tool output as returned to the model (kept for replay). */
@@ -166,6 +177,8 @@ export interface BrainAnswer {
 }
 
 export interface BrainEngine {
+  /** This adapter reserves at its native send boundary (or forwards to one that does). */
+  readonly preparesRequests?: boolean;
   readonly name: EngineName;
   readonly model: string;
   /** One attempt (plus any repair loop the engine runs internally). The router validates and re-asks. */

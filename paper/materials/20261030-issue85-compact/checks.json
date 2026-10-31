@@ -1,0 +1,40 @@
+{
+  "production_tsc": {
+    "exit": 0,
+    "command": "nice -n 19 node agent/node_modules/typescript/bin/tsc -p agent/tsconfig.json --noEmit"
+  },
+  "knowledge_runtime_tsc": {
+    "exit": 0,
+    "command": "nice -n 19 node agent/node_modules/typescript/bin/tsc -p agent/tsconfig.knowledge-runtime.json --noEmit"
+  },
+  "vitest": {
+    "files": 12,
+    "tests": 145,
+    "exit": 0,
+    "command": "nice -n 19 node node_modules/vitest/vitest.mjs run tests/strategy-grading.test.ts tests/decision-knowledge.test.ts tests/knowledge-runtime.test.ts tests/decision-observations.test.ts tests/brain-budget-evidence.test.ts tests/brain-agent-mode.test.ts tests/knowledge-consumer-projection.test.ts tests/knowledge-typed-tools.test.ts tests/strategy-entries.test.ts tests/strategy-priority.test.ts tests/build-research.test.ts tests/check-imports.test.ts --pool=threads --maxWorkers=1",
+    "log": "tests.log.gz",
+    "raw_sha256": "a2bc011cdd3fa6b8329c18d761be3f2391c41864c1bda591b5ddce1ca48a74e9",
+    "gzip_sha256": "7464db4be8e63c33ba2bf9a5b80cf849e02037a98d0930b8bd3a2916e823aa3f",
+    "files_list": [
+      "strategy-grading",
+      "decision-knowledge",
+      "knowledge-runtime",
+      "decision-observations",
+      "brain-budget-evidence",
+      "brain-agent-mode",
+      "knowledge-consumer-projection",
+      "knowledge-typed-tools",
+      "strategy-entries",
+      "strategy-priority",
+      "build-research",
+      "check-imports"
+    ]
+  },
+  "replay": {
+    "exit": 0,
+    "all_gates_passed": true,
+    "summary": "summary.json"
+  },
+  "full_integration_check": "pending original integrator on exact r2 publication combination",
+  "candidate_unchanged_sha256": "6a928688762544a624425d750d26525d6f3838dc0df522505a61f6d2452a9bb1"
+}

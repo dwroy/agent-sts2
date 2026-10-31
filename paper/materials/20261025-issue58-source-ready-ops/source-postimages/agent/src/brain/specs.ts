@@ -1,0 +1,535 @@
+/**
+ * AnswerSpecs of the questions the brain answers today (ported from jev-sts2-dsh/experiments/dsh lib/spec.ts and
+ * lib/validate.ts, whose 93 replayed questions they were checked on).
+ *
+ * - schema: a strict-mode JSON Schema (every property required, additionalProperties false, no dynamic maps, no
+ *   numeric bounds),
+ *   so the same object works as Claude's --json-schema, Codex's --output-schema and a strict tool schema. Fields
+ *   a question does not need are sent empty ([] for cards/discard).
+ * - validate: what makes an answer unusable, in words specific enough to re-ask with. It checks what the schema
+ *   cannot (the chosen option's card count, a shop list's order) and stays as lenient as the loop's own parsers
+ *   for the free-form plans: the run plan is accepted when it is a plan at all (isRunPlanReply, as v3 did), and
+ *   the loop's parsers drop unknown ids as before.
+ */
+import { isRunPlanReply, RUN_PLAN_TASK_KEY } from "../memory/run-plan.js";
+import { checkRoute, isKeep, routeIds, routeMapFromView, type RouteMap } from "../sim/route-map.js";
+import type { JsonSchema } from "./tools/types.js";
+import { directionPlanSpec } from "../v6/direction-plan.js";
+import { directionRideTask } from "../v6/direction-rides.js";
+import type { AnswerSpec } from "./types.js";
+import { rankingOverrideProblems } from "../sim/build-ranking-choice.js";
+import { ENDGAME_PLAN_SCHEMA, endgameRequired, endgameCheckpointRequired, endgameProblems, endgameReuse, endgamePlanningTask } from "../memory/endgame-plan.js";
+
+import { runPlanPatch, runPlanUpdateProblems } from "../memory/run-plan-update.js";
+
+type Json = Record<string, unknown>;
+
+const isObject = (value: unknown): value is Json => typeof value === "object" && value !== null && !Array.isArray(value);
+
+const parse = (text: string | null | undefined): Json => {
+  if (!text) return {};
+  try {
+    const value = JSON.parse(text) as unknown;
+    return isObject(value) ? value : {};
+  } catch {
+    return {};
+  }
+};
+
+const record = (value: unknown): Json => (isObject(value) ? value : {});
+
+const RANKING_REASON: JsonSchema = { type: "string", description: "If the selected candidate is outside facts.build_ranking.best_group, explain why in at most 25 words; otherwise empty." };
+function rankingOf(state: unknown): Json | null {
+  const value = record(record(record(state)["facts"])["build_ranking"]);
+  return value["schema"] === "build-ranking-v1" && Array.isArray(value["best_group"]) && value["best_group"].length ? value : null;
+}
+
+const list = (items: string[], max = 12): string => `${items.slice(0, max).join(", ")}${items.length > max ? ", ..." : ""}`;
+
+/** Suffix of the "discard potion(s), then …" variant of an option (screens/potion-discard.ts DISCARD_SUFFIX). */
+const DISCARD_SUFFIX = ":discard";
+
+/** An option that takes N deck cards (a one-shot event option, screens/oneshot.ts): how many and which. */
+export interface CardsNeed {
+  count: number;
+  upTo: boolean;
+  eligible: string[];
+}
+
+/**
+ * The route in an answer, checked on the map the question showed (M2: strategy/route-map.ts checkRoute): the node
+ * ids from one of the next nodes to the boss, along the lines (Winged Boots: jumps up to the charges left); "keep"
+ * where the question has a plan to keep. [] when it is legal.
+ */
+export function routeProblems(map: RouteMap, value: unknown, keepAllowed: boolean): string[] {
+  if (keepAllowed && isKeep(value)) return [];
+  const ids = routeIds(value);
+  if (!ids) {
+    const shown = typeof value === "string" ? value.slice(0, 40) : JSON.stringify(value ?? null).slice(0, 40);
+    return [`route "${shown}" names no node ids (${keepAllowed ? '"keep" or ' : ""}the node ids from one of next_nodes to the boss, e.g. "r4c1 r5c2 … r16c3")`];
+  }
+  return checkRoute(map, ids).map((problem) => `route: ${problem}`);
+}
+
+/**
+ * A route answer read leniently (codex only, engines/codex.ts): on a route review, "keep" followed by text that names no
+ * node id is keep; on either kind, node ids followed by other text are their leading ids when those alone make a legal
+ * route. Null when neither applies (the answer is checked as it is, and re-asked when it is wrong). 2026-10-03/04, V4.6
+ * at xhigh: 19 of 146 codex route reviews wrote "keep" and then the route_reason the instruction asks for (codex's
+ * schema has none) or its own words into route ('keep“,”route_reason“:”单精英三火堆保血', 'keep fin? No must exact keep'),
+ * The words after node ids are dropped only when they name no further node id.
+ * each re-asked (10-20 s) and 3 still garbled after it.
+ */
+export function lenientRoute(state: unknown, value: unknown): { route: string; why: string } | null {
+  if (typeof value !== "string" || isKeep(value)) return null;
+  const st = record(state);
+  const reviewMap = routeMapFromView(st["route_review"]);
+  const map = reviewMap ?? routeMapFromView(st["act_route"]);
+  if (!map) return null;
+  const shown = JSON.stringify(value.length > 60 ? `${value.slice(0, 60)}…` : value);
+  if (reviewMap && /^\s*["'“”‘’]?keep(?![a-z])/i.test(value) && routeIds(value) === null) return { route: "keep", why: `route ${shown} taken as keep: "keep", then no node id` };
+  const lead = /^\s*(r\s*\d+\s*c\s*\d+(?:\s*(?:→|->|>|,|-)?\s*r\s*\d+\s*c\s*\d+)*)([\s\S]*)$/i.exec(value);
+  // Words after the ids, and no further id in them (ids there are read with the rest, as before: routeIds).
+  if (!lead || !lead[2]!.replace(/[\s,.;→>-]+/g, "") || routeIds(lead[2]) !== null) return null;
+  const ids = routeIds(lead[1]);
+  if (!ids || checkRoute(map, ids).length > 0) return null;
+  return { route: ids.join(" "), why: `route ${shown} taken as its leading node ids (a legal route; the text after them dropped)` };
+}
+
+/** The route field's schema entry. */
+const ROUTE_FIELD = (keep: boolean): JsonSchema => ({
+  type: "string",
+  description: `${keep ? '"keep" (follow the route plan) or ' : ""}the node ids in order from one of next_nodes to the boss, space-separated ("r4c1 r5c2 … r16c3")`,
+});
+
+/**
+ * A choice among option keys: {choice, reason} plus the fields the question asks for — the route (a route review
+ * riding on the question, state.route_review: "keep" or a new node sequence, with route_reason; the act-start joint
+ * question, state.act_route: the act's node sequence), the deck cards an option takes (cards) and the potion slots a
+ * "discard, then …" option discards (discard). An illegal or (act start) missing route is a soft problem: re-asked
+ * once, then the answer's choice stands without it (the screen keeps the plan, or asks for the route at the map).
+ */
+export function pickSpec(label: string, options: Record<string, string | null>, state: unknown): AnswerSpec {
+  const keys = Object.keys(options);
+  const properties: Record<string, JsonSchema> = {
+    choice: { type: "string", description: "one option key exactly as given", enum: keys },
+    reason: { type: "string", description: "max 25 words" },
+  };
+  const required = ["choice", "reason"];
+  const st = record(state);
+  const ranking = rankingOf(state);
+  if (ranking) {
+    properties["ranking_override_reason"] = RANKING_REASON;
+    required.push("ranking_override_reason");
+  }
+  const reviewMap = routeMapFromView(st["route_review"]);
+  const actMap = reviewMap ? null : routeMapFromView(st["act_route"]);
+  let route: { mode: "review" | "act"; map: RouteMap } | null = null;
+  if (reviewMap) {
+    route = { mode: "review", map: reviewMap };
+    properties["route"] = ROUTE_FIELD(true);
+    properties["route_reason"] = { type: "string", description: endgamePlanningTask(st)
+      ? "only when changing route: current facts, tradeoff and expected win benefit; no invented percentage" : "max 15 words" };
+    if (!endgamePlanningTask(st)) required.push("route", "route_reason");
+  } else if (actMap) {
+    route = { mode: "act", map: actMap };
+    properties["route"] = ROUTE_FIELD(false);
+    required.push("route");
+  }
+  const cards: Record<string, CardsNeed> = {};
+  for (const [key, text] of Object.entries(options)) {
+    const option = parse(text);
+    const eligible = Object.keys(record(option["eligible_cards"]));
+    if (eligible.length === 0) continue;
+    const m = /\[(up to )?(\d+) keys/.exec(String(option["cards_to_name"] ?? ""));
+    cards[key] = { count: m ? Number(m[2]) : 1, upTo: Boolean(m?.[1]), eligible };
+  }
+  if (Object.keys(cards).length > 0) {
+    const all = [...new Set(Object.values(cards).flatMap((need) => need.eligible))];
+    properties["cards"] = { type: "array", description: "the deck card keys the chosen option takes, when it lists eligible_cards (repeat a key for several copies); [] otherwise", items: { type: "string", enum: all } };
+    required.push("cards");
+  }
+  const discardable = st["v6_potion_decider"] !== "jev" && keys.some((key) => key.endsWith(DISCARD_SUFFIX));
+  if (discardable) {
+    properties["discard"] = { type: "array", description: 'potion slot numbers a "discard potion(s), then …" option (key ending ":discard") discards first; [] otherwise', items: { type: "integer" } };
+    required.push("discard");
+  }
+  // A due run plan riding on the question (RUN_PLAN_MERGE): its field, never a problem (a missing or unusable plan stays
+  // due for the next question; strategy/run-plan-merge.ts).
+  if (carriesRunPlan(st)) properties["run_plan"] = runPlanField(st);
+  if (endgameRequired(st) || endgameCheckpointRequired(st)) required.push("run_plan");
+  return {
+    label,
+    kind: "pick",
+    schema: { type: "object", properties, required, additionalProperties: false },
+    ...(route || ranking ? { reask: true } : {}),
+    validate(answer: unknown): string[] {
+      if (!isObject(answer)) return ["the answer is not a JSON object"];
+      const problems: string[] = [];
+      const choice = answer["choice"];
+      if (typeof choice !== "string" || !choice.trim()) problems.push('missing "choice"');
+      else if (!keys.includes(choice)) problems.push(`choice "${choice.slice(0, 40)}" is not one of ${list(keys)}`);
+      if (typeof choice === "string") {
+        const need = cards[choice];
+        const given = answer["cards"];
+        if (given !== undefined && given !== null && !Array.isArray(given)) problems.push('"cards" is not a list');
+        else if (need) {
+          const named = (given ?? []) as unknown[];
+          const bad = named.filter((card) => typeof card !== "string" || !need.eligible.includes(card));
+          if (bad.length > 0) problems.push(`cards ${JSON.stringify(bad).slice(0, 60)} are not in ${choice}'s eligible_cards (${list(need.eligible)})`);
+          const n = named.length;
+          if (need.upTo ? n < 1 || n > need.count : n !== need.count) problems.push(`${choice} takes ${need.upTo ? "up to " : ""}${need.count} card(s) from its eligible_cards, got ${n}`);
+        }
+        const discard = answer["discard"];
+        if (discard !== undefined && discard !== null && !Array.isArray(discard)) problems.push('"discard" is not a list');
+        else if (discardable && choice.endsWith(DISCARD_SUFFIX) && (!Array.isArray(discard) || discard.length === 0)) problems.push(`${choice} discards potions first: "discard" must name 1 or more potion slot numbers`);
+      }
+      return [...problems, ...(ranking ? rankingOverrideProblems(ranking, answer) : [])];
+    },
+    softValidate(answer: unknown): string[] {
+      if (!route || !isObject(answer)) return [];
+      const given = answer["route"];
+      const missing = given === undefined || given === null || (typeof given === "string" && !given.trim());
+      // A review without a route keeps the plan (logged, not re-asked: the route rides on this question for free).
+      if (missing) return route.mode === "act" ? ['missing "route": the node ids from one of state.act_route.next_nodes to the boss'] : [];
+      const problems = routeProblems(route.map, given, route.mode === "review");
+      if (!problems.length && route.mode === "review" && endgamePlanningTask(st) && !isKeep(given)
+        && routeIds(given)?.join(" ") !== routeIds(record(st["route_review"])["plan"])?.join(" ")
+        && !(typeof answer["route_reason"] === "string" && answer["route_reason"].trim())) problems.push("route_reason must explain current facts, tradeoff and expected win benefit");
+      return problems;
+    },
+  };
+}
+
+/**
+ * The route questions of the MAP screen (map/route-plan: the act's route on the whole map in state.route_map;
+ * map/route-review: keep the plan or a new route): {route, reason} (and "discard" with White Beast Statue). The route
+ * must be legal (checkRoute); an illegal one is re-asked once with its errors, and stays unusable after that (the
+ * screen then keeps the plan it had, or moves by code's baseline).
+ */
+export function routePlanSpec(label: string, state: unknown): AnswerSpec {
+  const st = record(state);
+  const view = record(st["route_map"]);
+  const map = routeMapFromView(view);
+  const keep = label === "map/route-review" || typeof view["plan"] === "string";
+  return {
+    label,
+    kind: "plan",
+    reask: true,
+    schema: {
+      type: "object",
+      properties: {
+        route: ROUTE_FIELD(keep),
+        reason: { type: "string", description: "max 30 words" },
+        discard: { type: "array", description: "White Beast Statue only: potion slot numbers to discard before the first step; [] otherwise", items: { type: "integer" } },
+        drink: { type: "array", description: "White Beast Statue only: the one potion slot number (drinkable_potions) to drink on the map before the first step; [] otherwise", items: { type: "integer" } },
+      },
+      required: ["route", "reason"],
+      additionalProperties: false,
+    },
+    validate(answer: unknown): string[] {
+      if (!isObject(answer)) return ["the answer is not a JSON object"];
+      const given = answer["route"];
+      if (given === undefined || given === null || (typeof given === "string" && !given.trim())) return [`missing "route" (${keep ? '"keep" or ' : ""}the node ids from one of next_nodes to the boss)`];
+      if (!map) return [];
+      return routeProblems(map, given, keep);
+    },
+  };
+}
+
+/**
+ * The shopping list of an answer: its "plan", else the list written into "choice" (VTREB5A9XWS7 F6:
+ * {"choice": "buy_potion2, remove:c0, buy_card1", "reason": …}, judged "no plan list" and asked again step by
+ * step, 150.8 s more): a JSON list, or the steps separated by commas, semicolons or arrows. Every step is then
+ * checked like a plan's, so only a list of real steps is taken. null when there is neither. The shop screen
+ * (screens/shop.ts parseShopPlan) and the shop plan's spec read it the same way.
+ */
+export function shopPlanList(json: Record<string, unknown>): { list: unknown[]; fromChoice: boolean } | null {
+  if (Array.isArray(json["plan"])) return { list: json["plan"], fromChoice: false };
+  const choice = json["choice"];
+  if (Array.isArray(choice)) return choice.length > 0 ? { list: choice, fromChoice: true } : null;
+  if (typeof choice !== "string") return null;
+  const text = choice.trim();
+  if (text.startsWith("[")) {
+    try {
+      const parsed: unknown = JSON.parse(text);
+      return Array.isArray(parsed) ? { list: parsed, fromChoice: true } : null;
+    } catch {
+      return null;
+    }
+  }
+  const list = text.split(/\s*(?:[,，、;；]|->|→|=>)\s*/).map((step) => step.replace(/^["'“”]+|["'“”]+$/g, "").trim()).filter((step) => step !== "");
+  if (list.length === 0 || list.some((step) => /^(null|none|undefined)$/i.test(step))) return null;
+  return { list, fromChoice: true };
+}
+
+/**
+ * The same schema for every question of a kind, for engines whose structured-output schema sits in front of the
+ * prompt cache (Claude Code turns --json-schema into a tool definition, which comes before the system prompt):
+ * a per-question schema (its option keys as an enum) would make every question miss the cached prefix. Picks get
+ * one superset shape (choice and reason required; route, route_reason, cards and discard given when the question
+ * asks for them); a shop list loses its step enum; the run and fight plans are the same for every question
+ * already. spec.validate still checks the question's own keys and fields.
+ */
+export function stableSchema(spec: AnswerSpec): JsonSchema {
+  if (spec.kind === "pick") {
+    const run = spec.schema.properties?.["run_plan"];
+    const base = run?.properties?.["construction"] || run?.properties?.["v6"] || run?.properties?.["endgame"] ? { ...STABLE_PICK_SCHEMA, properties: { ...STABLE_PICK_SCHEMA.properties, run_plan: run },
+      required: spec.schema.required?.includes("run_plan") ? [...STABLE_PICK_SCHEMA.required!, "run_plan"] : STABLE_PICK_SCHEMA.required }
+      : run ? STABLE_PICK_SCHEMA_WITH_RUN_PLAN : STABLE_PICK_SCHEMA;
+    const scoped = run?.properties?.["endgame"] && spec.schema.properties?.["route_reason"]
+      ? { ...base, properties: { ...base.properties, route_reason: spec.schema.properties["route_reason"] } } : base;
+    const direction = spec.schema.properties?.["v6"];
+    const riding = direction ? { ...scoped, properties: { ...scoped.properties, v6: direction } } : scoped;
+    return spec.schema.properties?.["ranking_override_reason"] ? { ...riding, properties: { ...riding.properties, ranking_override_reason: RANKING_REASON },
+      required: [...(riding.required ?? []), "ranking_override_reason"] } : riding;
+  }
+  const plan = spec.schema.properties?.["plan"];
+  if (plan?.items?.enum) {
+    return { ...spec.schema, properties: { ...spec.schema.properties, plan: { ...plan, items: { type: "string" } } } };
+  }
+  return spec.schema;
+}
+
+const STABLE_PICK_SCHEMA: JsonSchema = {
+  type: "object",
+  properties: {
+    choice: { type: "string", description: "one option key exactly as given in options" },
+    reason: { type: "string", description: "max 25 words" },
+    route: { type: "string", description: 'only when the question asks for a route (state.route_review, state.act_route): "keep" or the node ids from one of next_nodes to the boss, space-separated' },
+    route_reason: { type: "string", description: "only with a route review: max 15 words" },
+    cards: { type: "array", description: "only when the chosen option lists eligible_cards: the deck card keys it takes", items: { type: "string" } },
+    discard: { type: "array", description: 'only for a "discard, then …" option (key ending ":discard"): the potion slot numbers it discards first', items: { type: "integer" } },
+  },
+  required: ["choice", "reason"],
+  additionalProperties: false,
+};
+
+/** The stable pick shape of a question a run plan rides on (RUN_PLAN_MERGE): the same plus the optional run_plan. */
+const STABLE_PICK_SCHEMA_WITH_RUN_PLAN: JsonSchema = { ...STABLE_PICK_SCHEMA, properties: { ...STABLE_PICK_SCHEMA.properties, run_plan: { ...runPlanSchema(), description: "only when state.run_plan_task is given: the run plan it asks for" } } };
+
+/** A shop visit as one ordered shopping list (screens/shop.ts parseShopPlan is the final judge). */
+export function shopPlanSpec(label: string, options: Record<string, string | null>, state: unknown): AnswerSpec {
+  const st = record(state);
+  const ranking = rankingOf(state);
+  const yourCards = Object.keys(record(st["your_cards"] ?? record(st["facts"])["your_cards"]));
+  const prices: Record<string, number | null> = {};
+  const affordable: Record<string, boolean> = {};
+  let removalAvailable = false;
+  const tokens: string[] = [];
+  for (const [key, text] of Object.entries(options)) {
+    const option = parse(text);
+    if (key === "remove") {
+      removalAvailable = true;
+      continue;
+    }
+    tokens.push(key);
+    prices[key] = typeof option["price"] === "number" ? option["price"] : null;
+    affordable[key] = option["affordable_now"] !== false;
+  }
+  if (removalAvailable) for (const card of yourCards) tokens.push(`remove:${card}`);
+  if (!tokens.includes("leave")) tokens.push("leave");
+  return {
+    label,
+    kind: "plan",
+    ...(ranking ? { reask: true } : {}),
+    schema: {
+      type: "object",
+      properties: {
+        plan: { type: "array", description: 'the steps in order: option keys, "remove:<card key>", discard_potionN; leaving is implied after the last step; [] buys nothing', items: { type: "string", enum: tokens } },
+        reason: { type: "string", description: "max 40 words" },
+        ...(ranking ? { ranking_override_reason: RANKING_REASON } : {}),
+      },
+      required: ["plan", "reason", ...(ranking ? ["ranking_override_reason"] : [])],
+      additionalProperties: false,
+    },
+    validate(answer: unknown): string[] {
+      if (!isObject(answer)) return ["the answer is not a JSON object"];
+      const plan = shopPlanList(answer)?.list;
+      if (!plan) return ['missing "plan" list'];
+      const problems: string[] = [];
+      const seen = new Set<string>();
+      let removals = 0;
+      for (const [i, step] of plan.entries()) {
+        if (typeof step !== "string") {
+          problems.push(`step ${i + 1} is not a string`);
+          continue;
+        }
+        if (!tokens.includes(step)) {
+          problems.push(`step "${step.slice(0, 40)}" is not a valid step (valid: ${list(tokens, 20)})`);
+          continue;
+        }
+        if (step === "leave") break;
+        if (seen.has(step)) problems.push(`step ${step} repeated`);
+        seen.add(step);
+        if (step.startsWith("remove:")) removals += 1;
+        if (i === 0 && affordable[step] === false) problems.push(`first step ${step} is not affordable now`);
+      }
+      if (removals > 1) problems.push("more than one card removal");
+      return [...problems, ...(ranking ? rankingOverrideProblems(ranking, { ...answer, plan }, true) : [])];
+    },
+  };
+}
+
+/** The run plan's answer object (RUN_PLAN_TASK's format). */
+function constructionContext(state: unknown): Record<string, unknown> | null {
+  const st = record(state), facts = record(st["facts"]);
+  const value = record(facts["construction_evaluation"] ?? record(facts["construction"])["evaluation"] ?? st["construction_context"]
+    ?? record(st["run_plan_task"])["construction_context"]);
+  return value["character"] === "silent" && Array.isArray(value["coreCatalog"]) ? value : null;
+}
+const CONSTRUCTION_FIELD: JsonSchema = {
+  type: "object", description: "Explicit construction hypothesis; unknown complete-core performance stays unknown.",
+  properties: {
+    primary: { type: "string", description: "one coreCatalog ID, or uncommitted" },
+    alternatives: { type: "array", items: { type: "string" }, description: "up to three other coreCatalog IDs" },
+    checkpoint: { type: "integer", description: "a future floor, strictly after the current floor, to review this direction" },
+    reason: { type: "string", description: "evidence and current choice tradeoff; do not invent unavailable probabilities" },
+    pivot_if: { type: "string", description: "observable conditions for changing direction" },
+  }, required: ["primary", "alternatives", "checkpoint", "reason", "pivot_if"], additionalProperties: false,
+};
+function constructionProblems(answer: Record<string, unknown>, state: unknown): string[] {
+  const context = constructionContext(state);
+  if (!context) return [];
+  const c = record(answer["construction"]), problems: string[] = [];
+  const ids = new Set((context["coreCatalog"] as unknown[]).map((x) => record(x)["id"]));
+  if (c["primary"] !== "uncommitted" && !ids.has(c["primary"])) problems.push("construction.primary must be a coreCatalog ID or uncommitted");
+  const alternatives = c["alternatives"];
+  if (!Array.isArray(alternatives) || alternatives.length > 3 || new Set(alternatives).size !== alternatives.length
+    || alternatives.some((id) => !ids.has(id) || id === c["primary"])) problems.push("construction.alternatives must contain up to three distinct alternative core IDs");
+  const floor = Number(context["floor"] ?? record(state)["floor"] ?? record(record(state)["facts"])["floor"] ?? 0);
+  if (!Number.isInteger(c["checkpoint"]) || Number(c["checkpoint"]) <= floor || Number(c["checkpoint"]) > 100) problems.push("construction.checkpoint must be a future floor");
+  for (const key of ["reason", "pivot_if"]) if (typeof c[key] !== "string" || !String(c[key]).trim()) problems.push(`construction.${key} is required`);
+  return problems;
+}
+function runPlanSchema(construction = false): JsonSchema {
+  return {
+    type: "object",
+    properties: {
+      archetype: { type: "string", description: "the deck direction, max 12 words" },
+      want: { type: "array", description: "card ids to pick when offered, most important first, max 6", items: { type: "string" } },
+      avoid: { type: "array", description: "card ids not to take, max 6", items: { type: "string" } },
+      remove: { type: "array", description: "card ids in the deck to remove first, max 3", items: { type: "string" } },
+      block_target: { type: "integer", description: "number of block cards the deck should hold by the act boss (0-20)" },
+      elites: { type: "string", enum: ["seek", "normal", "avoid"] },
+      rest: { type: "string", enum: ["heal", "smith", "auto"] },
+      boss_prep: { type: "string", description: "max 30 words: what to have ready for the act boss" },
+      summary: { type: "string", description: "max 40 words: the plan in plain words" },
+      ...(construction ? { construction: CONSTRUCTION_FIELD } : {}),
+    },
+    required: ["archetype", "want", "avoid", "remove", "block_target", "elites", "rest", "boss_prep", "summary", ...(construction ? ["construction"] : [])],
+    additionalProperties: false,
+  };
+}
+
+/** The run_plan field of a question a due run plan rides on (RUN_PLAN_MERGE). */
+const RUN_PLAN_FIELD: JsonSchema = { ...runPlanSchema(), description: "the run plan state.run_plan_task asks for (RUN_PLAN_TASK's fields)" };
+function runPlanField(state: unknown): JsonSchema {
+  const schema = withDirectionRideField({ label: "run-plan", kind: "plan", schema: constructionContext(state)
+    ? { ...runPlanSchema(true), description: RUN_PLAN_FIELD.description } : RUN_PLAN_FIELD, validate: () => [] }, state).schema;
+  if (endgameReuse(state)) return { ...schema, description: "可选：只更新受影响字段；省略或null沿用当前计划。实际改线须说明预期收益。",
+    properties: { ...schema.properties, change_reason: { type: "string", description: "结合当前情况说明旧/新取舍与预期胜率收益；仅改线时给出，不编数字" },
+      endgame: { ...ENDGAME_PLAN_SCHEMA, required: endgameCheckpointRequired(state) ? ["checkpoint"] : [] } },
+    required: endgameCheckpointRequired(state) ? ["endgame"] : [] };
+  return endgameRequired(state) ? { ...schema, properties: { ...schema.properties, endgame: ENDGAME_PLAN_SCHEMA },
+    required: [...(schema.required ?? []), "endgame"] } : schema;
+}
+
+/** Optional direction updates never invalidate the original V5 answer or cause a re-ask. */
+export function withDirectionRideField(spec: AnswerSpec, state: unknown): AnswerSpec {
+  const task = directionRideTask(state), direction = task && directionPlanSpec(task);
+  if (!direction) return spec;
+  return { ...spec, schema: { ...spec.schema, properties: { ...spec.schema.properties,
+    v6: { ...direction.schema, description: "Optional direction update requested in v6_direction_task; null retains the previous weights." } } } };
+}
+
+/** Whether a question's state carries a due run plan (RUN_PLAN_MERGE: state.run_plan_task). */
+export function carriesRunPlan(state: unknown): boolean {
+  return isObject(state) && isObject(state[RUN_PLAN_TASK_KEY]);
+}
+
+/**
+ * A plan question (a shop list, a route) a due run plan rides on (RUN_PLAN_MERGE): its schema gains the optional
+ * run_plan field; its checks are its own (a missing or unusable run plan is never a problem: it stays due).
+ */
+export function withRunPlanField(spec: AnswerSpec, state?: unknown): AnswerSpec {
+  return { ...spec, schema: { ...spec.schema, properties: { ...spec.schema.properties, run_plan: runPlanField(state) },
+    ...(endgameRequired(state) || endgameCheckpointRequired(state) ? { required: [...(spec.schema.required ?? []), "run_plan"] } : {}) } };
+}
+
+/** The run plan (strategy/run-plan.ts RUN_PLAN_TASK); accepted when it is a plan at all, as v3 did. */
+export function runPlanSpec(label = "run-plan", state?: unknown): AnswerSpec {
+  const direction = directionPlanSpec(state, label);
+  if (direction) return direction;
+  return {
+    label,
+    kind: "plan",
+    schema: runPlanField(state),
+    validate(answer: unknown): string[] {
+      if (endgameReuse(state)) {
+        const problems = runPlanUpdateProblems(answer, state), patch = runPlanPatch(answer);
+        return [...problems, ...(patch["construction"] ? constructionProblems(patch, state) : [])];
+      }
+      if (!isObject(answer)) return ["the answer is not a JSON object"];
+      return isRunPlanReply(answer) ? [...constructionProblems(answer, state), ...(endgameRequired(state)
+        ? endgameProblems(answer["endgame"], endgameCheckpointRequired(state)) : [])] : ["not a run plan: an object without archetype, want, avoid, remove, block_target, elites, rest, boss_prep or summary (an echo of the {choice, reason} format?)"];
+    },
+  };
+}
+
+/**
+ * The fight plan (strategy/fight-plan.ts FIGHT_PLAN_TASK). Its potions field is a map in the task's format;
+ * a strict schema cannot hold a map, so the schema asks for [{potion, use}] and fightPlanFromSchema turns it
+ * back. Any object is accepted, as v3 did (parseFightPlan drops what it does not know).
+ */
+export function fightPlanSpec(label = "fight-plan"): AnswerSpec {
+  return {
+    label,
+    kind: "plan",
+    schema: {
+      type: "object",
+      properties: {
+        approach: { type: "string", enum: ["race", "setup", "defend"] },
+        setup_cards: { type: "array", description: "card ids from the deck to play in the first turns, most important first, max 3; [] for none", items: { type: "string" } },
+        focus_enemy: { type: "string", description: "enemy_id to kill first, or empty" },
+        potions: {
+          type: "array",
+          description: "one entry for EVERY potion listed",
+          items: { type: "object", properties: { potion: { type: "string" }, use: { type: "string", enum: ["early", "big_hit", "emergency", "save", "any"] } }, required: ["potion", "use"], additionalProperties: false },
+        },
+        key_turns: { type: "string", description: "max 30 words: the dangerous turns and what to do on them" },
+        summary: { type: "string", description: "max 40 words: the plan in plain words" },
+      },
+      required: ["approach", "setup_cards", "focus_enemy", "potions", "key_turns", "summary"],
+      additionalProperties: false,
+    },
+    validate(answer: unknown): string[] {
+      return isObject(answer) ? [] : ["the answer is not a JSON object"];
+    },
+  };
+}
+
+/** A fight plan answered in the schema's form ([{potion, use}]) in the task's form ({potion: use}). */
+export function fightPlanFromSchema(answer: Json): Json {
+  const potions = answer["potions"];
+  if (!Array.isArray(potions)) return answer;
+  const map: Json = {};
+  for (const entry of potions) {
+    const item = record(entry);
+    if (typeof item["potion"] === "string" && typeof item["use"] === "string") map[item["potion"]] = item["use"];
+  }
+  return { ...answer, potions: map };
+}
+
+/** A free-form task answer: any object that `accept` takes (no accept: any object). */
+export function freeSpec(label: string, schema: JsonSchema, accept?: (json: Json) => boolean): AnswerSpec {
+  return {
+    label,
+    kind: "plan",
+    schema,
+    validate(answer: unknown): string[] {
+      if (!isObject(answer)) return ["the answer is not a JSON object"];
+      return !accept || accept(answer) ? [] : ["the answer is not in the task's format"];
+    },
+  };
+}

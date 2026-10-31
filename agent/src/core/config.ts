@@ -527,6 +527,8 @@ export type KnowledgePrefixMode = "off" | "full";
 
 /** V4 brain (src/brain/router.ts): which engine answers which question, and each engine's settings. */
 export interface BrainConfig {
+  /** Review-gated #81 consumer; absent in historical fixed configurations means off. */
+  decisionKnowledge?: { enabled: boolean; bytes: number };
   /** Production knowledge agent limits, frozen with the process/run configuration. */
   agent: { maxToolCalls: number; codexTotalMs: number; deepseekTotalMs: number; codexAnswerMs: number; deepseekAnswerMs: number };
   dsh: { bin: string; stallMs: number };
@@ -580,7 +582,7 @@ export interface BrainConfig {
     home: string;
     /** BRAIN_CODEX_SUMMARY: the reasoning summary codex asks for (default auto; logged, not shown to the model). */
     summary: "auto" | "concise" | "detailed" | "none";
-    /** Normal service tier for every Codex session (Roy 2026-10-11). */
+    /** BRAIN_CODEX_SERVICE_TIER: brain-only default/fast/priority; unset explicitly clears inherited priority. */
     serviceTier: string | null;
     /**
      * BRAIN_CODEX_STALL_MS (default 120 s): after the first output token, a run whose stream is silent this long is
@@ -616,6 +618,7 @@ export interface BrainConfig {
     /**
      * BRAIN_CODEX_ROUTE_REASON: "drop" (default) leaves route_reason out of codex's answer schema (only logged; the
      * replayed runaways were all in it), "keep" keeps it capped at 60 characters (engines/codex.ts codexSchema).
+     * A question requiring a route-change reason preserves the optional field regardless of this legacy setting.
      */
     routeReason: "drop" | "keep";
     /**
@@ -867,6 +870,8 @@ export function readBrainConfig(env: NodeJS.ProcessEnv, problems: ConfigProblem[
   const schemaMode: "kind" | "question" = schemaRaw === "question" ? "question" : "kind";
   const summaryRaw = (readEnv(env, "BRAIN_CODEX_SUMMARY") ?? "auto").toLowerCase();
   if (!["auto", "concise", "detailed", "none"].includes(summaryRaw)) problems.push({ field: "BRAIN_CODEX_SUMMARY", message: `expected auto, concise, detailed or none, got "${summaryRaw}"` });
+  const serviceTier = readEnv(env, "BRAIN_CODEX_SERVICE_TIER") ?? CODEX_SERVICE_TIER;
+  if (!["default", "fast", "priority"].includes(serviceTier)) problems.push({ field: "BRAIN_CODEX_SERVICE_TIER", message: `expected default, fast or priority, got "${serviceTier}"` });
   const stallRaw = readEnv(env, "BRAIN_CODEX_STALL_MS");
   const stallMs = stallRaw === null ? DEFAULT_CODEX_STALL_MS : ["off", "none", "0"].includes(stallRaw.toLowerCase()) ? null : parseInteger(stallRaw, "BRAIN_CODEX_STALL_MS", problems, { min: 1_000, max: 3_600_000 });
   const maxAnswerRaw = readEnv(env, "BRAIN_CODEX_MAX_ANSWER_CHARS");
@@ -914,6 +919,8 @@ export function readBrainConfig(env: NodeJS.ProcessEnv, problems: ConfigProblem[
   for (const name of ["codex", "deepseek"] as const) if (agent[`${name}AnswerMs`] >= agent[`${name}TotalMs`]) problems.push({ field: `BRAIN_AGENT_${name.toUpperCase()}_ANSWER_MS`, message: "answer reserve must be smaller than total budget" });
   return {
     agent,
+    decisionKnowledge: { enabled: parseOnOff(readEnv(env, "BRAIN_DECISION_KNOWLEDGE"), "BRAIN_DECISION_KNOWLEDGE", problems) ?? false,
+      bytes: agentInt("BRAIN_DECISION_KNOWLEDGE_BYTES", 8000, 2048, 24000) },
     productionEngine: readEnv(env, "BRAIN_ENGINE") === null ? "codex" : engine === "deepseek" ? "deepseek" : "codex",
     dsh: { bin: readEnv(env, "BRAIN_DSH_BIN") ?? join(homedir(), ".local/bin/dsh"), stallMs: agentInt("BRAIN_DSH_STALL_MS", 180_000, 1_000, 3_600_000) },
     ...(runProfile ? { runProfile } : {}),
@@ -935,7 +942,7 @@ export function readBrainConfig(env: NodeJS.ProcessEnv, problems: ConfigProblem[
       bin: resolveCodexBin(env),
       home: resolveCodexHome(env),
       summary: (["auto", "concise", "detailed", "none"].includes(summaryRaw) ? summaryRaw : "auto") as BrainConfig["codex"]["summary"],
-      serviceTier: CODEX_SERVICE_TIER,
+      serviceTier,
       stallMs,
       firstTokenMs,
       mode: modeRaw === "session" ? "session" : "exec",

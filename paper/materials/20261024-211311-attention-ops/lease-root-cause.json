@@ -1,0 +1,16 @@
+{
+  "at": "2026-10-24T21:38:05+08:00",
+  "cause": "previous ops row annotation changed full-registration startup lease",
+  "source": "learner/lib/startup-recovery.ts:captureStartupLease hashes entire batch row plus PID birth",
+  "original_lease": "0ee5a7f839dc20428246bfde4eb3eda57b34214c58b254f0355b2d0ac796a81e",
+  "reconstructed_before_lease": "0ee5a7f839dc20428246bfde4eb3eda57b34214c58b254f0355b2d0ac796a81e",
+  "before_matches": true,
+  "after_only_external_lane_hash": "edf804fc4f1f2a189e8c8b39e761e43e6576d85e7fe02724b300075cf21208d3",
+  "after_differs": true,
+  "configuration_write_T": "2026-10-24T21:22:10+08:00",
+  "deferred_T": "2026-10-24T21:22:12.336856+08:00",
+  "native_task_complete_T": "2026-10-24T21:29:57.781+08:00",
+  "responsibility": "ops annotation error; frozen task and model were not stopped",
+  "prevention": "never annotate running batch rows; future dispatch registers lane atomically before startup",
+  "no_old_failure_rewritten": true
+}

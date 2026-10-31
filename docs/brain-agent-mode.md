@@ -2,6 +2,8 @@
 
 Roy 2026-10-22 授权直接切换，不做 A/B，不额外开实验局。生产 `createBrain/createRouter` 使用知识 agent：状态、选项、投影和本局工作记忆照旧随题给出；全量知识前缀、开卷附件、策略库附件和记忆里的经验段改为工具查询。历史通用引擎适配器和固定回放仍保留原接口。
 
+#81 的[决策点默认知识摘要](decision-knowledge-injection.md)是默认关闭的待审扩展；启用后题面可携带本局 K1 的有界背景，工具继续按需查询。#80 审阅通过前不集成、发布或启用，不以本段声明改变当前生产状态。
+
 默认生产引擎是 Codex，GPT-6.1 Sol / high；DeepSeek 为 max，经本机现有 Nova dsh 启动器运行，不使用旧 API 直连。没有跨引擎自动兜底。Codex 的服务不可用等待机制沿用；等待不代表已作答，也不代表达到本题完成验收。
 
 主循环对两种生产知识引擎使用相同的出题入口；dsh 不要求旧 `DEEPSEEK_API_KEY`，也不受旧直连 `DEEPSEEK_MAX_CALLS` 门禁控制。实际限制登记在 `brain.agent`，不会把未使用的 API 模型或额度记成 dsh 的配置。原有 L1 安全回退与 Codex 的故障等待策略保留。
@@ -15,6 +17,7 @@ Roy 2026-10-22 授权直接切换，不做 A/B，不额外开实验局。生产 
 | `BRAIN_ENGINE` | `codex`（生产入口） | `codex` 或 `deepseek`；后者实际使用 dsh |
 | `BRAIN_RUN_CONFIG` | 未设置 | 复用 #31 的按局 JSON；例如 `{"engine":"codex","effort":"high"}` 或 `{"engine":"deepseek","effort":"max"}`，优先于普通设置；不启动交替试验 |
 | `BRAIN_CODEX_EFFORT` | `high` | 可设置 Codex 支持的强度 |
+| `BRAIN_CODEX_SERVICE_TIER` | `default` | 仅对局脑Codex：严格允许 `default/fast/priority`，非法值拒绝配置；不改变模型或effort |
 | `BRAIN_DEEPSEEK_EFFORT` | `max` | dsh 支持 `low/high/max`，不自动逐题降低 |
 | `BRAIN_DEEPSEEK_MODEL` | `deepseek/deepseek-flash` | Nova dsh 模型 ID |
 | `BRAIN_MAX_TOOL_CALLS` | `8` | 每题最多执行的知识查询数；错误查询也计入，重问不重新发额度 |
@@ -24,6 +27,8 @@ Roy 2026-10-22 授权直接切换，不做 A/B，不额外开实验局。生产 
 | `BRAIN_AGENT_DEEPSEEK_ANSWER_MS` | `300000` | 在总预算内保留的无工具作答时间 |
 | `BRAIN_DSH_BIN` | `~/.local/bin/dsh` | 已配置 Nova 的现有启动器；不创建/修改账号或共用配置 |
 | `BRAIN_DSH_STALL_MS` | `180000` | 无流式进展的卡住检测 |
+
+`BRAIN_CODEX_SERVICE_TIER` 未设置时仍向CLI、thread/start及每轮turn/start**显式发送default**，清除线程继承的priority；不是省略参数。设置fast/priority时原值沿既有 `service_tier` / `serviceTier` 参数传递，run-config的 `brain.codex.service_tier` 记录选定值并参与配置SHA。学习/ops启动器共用的 `CODEX_SERVICE_TIER=default` 常量及其shell policy不改，战斗和DeepSeek不读此项。源码入口不等于已开启：ops沿原发布边界在下一自然局设置 `BRAIN_CODEX_SERVICE_TIER=fast`，不热切当前局，再分核Sol、xhigh和实际服务档；run-config配置声明不代原生/服务端回执。回退为下一自然启动unset或设default。fast/priority的API语义见[官方Fast模式说明](https://developers.openai.com/api/docs/guides/fast-mode)，本机协议及固定测试证据见 `paper/materials/20261030-issue81-brain-fast/`。
 
 初值理由：8 次查询容纳本题实体、经验、策略和统计的少量定向检索，避免无边界搜索；Codex 查询阶段最多180秒，DeepSeek最多600秒，分别留下120/300秒完成 JSON。DeepSeek 总预算比旧90秒大脑节奏长，完成率优先。值是工程初值，不是从游戏胜率学出的规则。预算与实际引擎/强度记录在原 run-config 的 `brain.agent`、`brain.engines` 和 human-pace 段。
 
@@ -93,3 +98,17 @@ nice -n 19 node --import tsx tools/brain-agent-report.ts <after.jsonl> <after-ru
 接口参考：[官方 Codex App Server 文档](https://developers.openai.com/codex/app-server/)。实际 CLI、dsh 的已安装协议和固定夹具另行验证；没有外部游戏知识变更。
 
 小修正的自然验收须另冻结发布后首批窗口，继续分列查询率、命中率及 latency_ms_median/mean/p95，与原18局口径比较。约14秒中位数为目标，固定测试不证明时延或命中率收益；不追加实验局。
+
+## 工具能力与计划复用（#58）
+
+生产系统提示按**本次请求实际注册**的 `ToolDef.name/description/inputSchema` 生成工具定义、主要输入与用途；Silent 为15项，其余角色按实际清单。用途写在原 ToolDef.description，MCP 与提示共用，不维护另一份工具能力表。机械资料、经验、策略/rk及统计分别帮助启动与过渡、本幕Boss、最终双Boss、路线及拿/删/升级/商店决策；工具本身不新增模拟或预测能力。查询由大脑按需选择，没有“查策略/rk后才能答”的固定前置条件。
+
+Silent A10 的终局目标继续从第一幕面向 F48→F49 连胜。初次建立完整 `run_plan`（含 endgame）；后续已有计划时，省略或 `null` 的 `run_plan` 沿用原计划，不要求每题声明保持/更新。确需调整时，在同题给受影响字段及 `change_reason`，说明当前事实、相较旧计划的取舍和预期胜率收益，缺证可写未知，不编造百分比。`endgame` 可仅更新一项，其他策略、方向权重及终局字段保留。重复相同字段按复用处理；幕末只须在 `run_plan.endgame.checkpoint` 回答准备程度，不强制换路线或重写全套计划。
+
+爬楼继续使用原 `RoutePlan`、代码逐节点执行和合法性检查。普通复核题可省略 route 或给 `keep`，重复相同节点序列也复用原计划；真实改线才给合法新节点序列及 `route_reason`，结合当前情况说明取舍和预期收益。初始路线、路线失效、幕初随机结果的一次复核沿原入口处理；两类路线分别调整。非目标角色/进阶保留原控制与日志语义。
+
+Silent A10 的改线题在严格 Codex 输出格式中保留可空的 `route_reason`，即使历史配置为 `BRAIN_CODEX_ROUTE_REASON=drop`；默认文本上限仍为 60 字符。不改线可给 null，解析后等同省略。理由只随真实改线进入路线记录，构筑的 `run_plan.change_reason` 不代替它；字段存在不表示代码能验证理由语义或胜率收益。
+
+Silent A10 的 `routeBlockState` 按实际依赖分别缓存 `plan_facts`、`next_rest` 和初始 `candidate_routes`。地图/当前位置/可达性/飞行靴、剩余节点与房间代价参与键，HP/maxHP、连续战斗数、休息选项及文字说明按各自消费者参与；金币、牌组等仍随当前事实更新，经 `routeCosts` 实际改变的回血/房间模型也会失效。仅休息选项变化不重算无关的 next_rest；重复题且依赖未变不再计算同一整段投影/枚举替代线。缓存不落盘，冷启动重新核算当前数值；不拿原计划投影冒充当前HP。缓存数据复制后交题面，不能被消费者修改污染。
+
+沿原自然局读取 `brain.jsonl` 和 `run-plans.jsonl`，报告 `planning_questions` 列实际查库、路线/构筑变更理由、`route_calculation` 复用/失效原因、答案JSON字符数、原文字符数、输出token及整题耗时。`run_plan_merge`/`plan_update` 记录 reused/updated/checkpoint 与变更字段；合法执行仍核 decisions 的 route_review、route-change及后继读回。报告的 accepted 只证明接口接受，不能代实际落盘/采用或决策质量；缺字段/空样本保持未知。ops 在自然发布边界核实际提示SHA/工具清单与消费者、恢复后，继续观察自然决策质量与原 #50 达标线/终局效果；不为本项增开局或以查询次数下降单独验收。

@@ -1,0 +1,22 @@
+{
+  "original_failures_retained": true,
+  "attempts": [
+    {
+      "stage": "source-ref collection",
+      "failure": "candidate source records include ref and battle entry/exit shapes; ref-only assumption rejected",
+      "correction": "all explicit source refs flattened; no row skipped"
+    },
+    {
+      "stage": "raw identity verification",
+      "failure": "state stream identity nested under state.run_id, root-only assumption rejected",
+      "correction": "explicit raw nested run_id checked against original dispatch list"
+    },
+    {
+      "stage": "candidate consumer",
+      "failure": "typed parsed run.deck does not preserve raw card_id expected by exact-ID retrieval",
+      "correction": "use parsed.raw as production brain.toolContextOf does; raw cards/labels adapted as learner fixture, no artificial missing fields added"
+    }
+  ],
+  "production_source_or_game_rules_changed": false,
+  "final_fixed_consumer_receipt": "candidate-consumers.json"
+}

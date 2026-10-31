@@ -1,0 +1,57 @@
+{
+  "at": "2026-10-25T23:27:25+08:00",
+  "command": "nice -n19 python3 ops/paper_dataset.py --no-raw",
+  "exit_code": 0,
+  "one_run_only": true,
+  "purpose": "two old learner-done events134302/164303; new operational221302 callback separately causes no Git/dataset",
+  "verification": {
+    "checks": {
+      "decisions attributed + unattributed == play records": true,
+      "decisions_by_label sum == attributed decisions": true,
+      "escalations rows == records with escalation": true,
+      "every runs.jsonl id present in runs.csv": true,
+      "commits == git rev-list --all --count": true,
+      "runs.jsonl decision-count mismatches": [
+        [
+          "KF9HMZKTFC3V",
+          879,
+          880
+        ]
+      ]
+    },
+    "row_counts": {
+      "runs.csv": 1031,
+      "decisions_by_label.csv": 34319,
+      "escalations.csv": 3600,
+      "fight_plans.csv": 1461,
+      "commits.csv": 9094
+    }
+  },
+  "source_checks_passed": true,
+  "preserved_historical_mismatch": "KF9HMZKTFC3V decisions879vs880, no repair/rewrite",
+  "ledger_check_exit": 0,
+  "ledger_items": 771,
+  "ledger_problems": 0,
+  "logs": {
+    "paper-dataset.out": {
+      "path": ".artifacts/ops-wake2255-20261025/paper-dataset.out",
+      "bytes": 961,
+      "sha256": "e3b67616884ac0cf4ee4b77643ee17d0f26a4845f53193696b22d3576392a600"
+    },
+    "paper-dataset.err": {
+      "path": ".artifacts/ops-wake2255-20261025/paper-dataset.err",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "ledger-check.out": {
+      "path": ".artifacts/ops-wake2255-20261025/ledger-check.out",
+      "bytes": 94,
+      "sha256": "f23ede76d56032b7cd7e28f4c301161c99a796c3282d3e50d761563215899485"
+    },
+    "ledger-check.err": {
+      "path": ".artifacts/ops-wake2255-20261025/ledger-check.err",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    }
+  }
+}

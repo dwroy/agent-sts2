@@ -1,0 +1,141 @@
+
+ RUN  v4.1.11 /home/dw/Projects/agent-sts2/.worktrees/integrator56-r2-20261024-2026/agent
+
+ ❯ tests/run-plan-merge.test.ts (19 tests | 1 failed) 5235ms
+     ✓ is on by default; off when set; an unreadable value warns and stays on 3ms
+     ✓ the separate call's task is byte for byte what it was; the merged note shares its brief and format 1ms
+     ✓ the map keeps runPlanTrigger's checkpoints: due is pending, not asked; nothing due clears it 3ms
+     ✓ asked on its own after 2 floors with no question carrying it, or right away when the act boss is next 1ms
+     ✓ a question carries what the map left pending; the run start rides on the run's first question (before any map) 1ms
+     ✓ an answer's run_plan is used when it is a plan 1ms
+     ✓ a question carrying the run plan gets the run_plan field (never a problem); without it the spec is as before 2ms
+     ✓ its thinking effort is the run plan's when that is higher (a card reward thinks at high, the run plan at max) 1ms
+     ✓ a run plan sent as its own object after the answer joins the answer; a reply without one is read as before 1ms
+     ✓ one call: the Ancient's option, the act's route and the run plan; all three stored  815ms
+     ✓ RUN_PLAN_MERGE=off: the run plan's own call at the map, then the Ancient's question exactly as the screen built it  646ms
+     ✓ nothing due: the question is byte for byte the same with RUN_PLAN_MERGE on and off  1222ms
+     ✓ an answer whose run_plan is no plan: the option and the route are used, the plan stays due and is asked on its own two floors on  701ms
+     ✓ an illegal route re-asked by the router: the corrected answer without a run_plan keeps the first answer's plan  616ms
+     ✓ no question at all: asked on its own once the plan has waited the floors 223ms
+     ✓ the act boss next: asked on its own at once (the fight comes before any question) 100ms
+     ✓ the run start rides on the run's first question (no plan yet)  544ms
+     × the real client reads the run plan from the answer, or from its own object after it 25ms
+     ✓ the review due at the F4 map rides on the F5 card reward (the route plan restored from the logs): one call, the card, the route and the plan  327ms
+ ✓ tests/ops-herdr.test.ts (28 tests) 41888ms
+     ✓ new learner tabs follow the live ops pane when workspace labels are duplicated  1352ms
+     ✓ shows verified live learner 20261010-164301-strategy-proposal beside ops and closes its reused viewer on exit  5716ms
+     ✓ shows verified live learner 20261010-164301 beside ops and closes its reused viewer on exit  5622ms
+     ✓ run, reuse, busy, status, stop; only its own labels  2082ms
+     ✓ --close-on-exit: the pane closes when the job ends and its last lines are kept  3227ms
+     ✓ brain viewer follows fixed logs across runs, reuses its tab and restarts independently  4371ms
+     ✓ starts the TUI once, prompts, reads the turn's answer and tokens from the session file  816ms
+     ✓ other arguments (a new key file, another effort): the idle TUI is restarted  1262ms
+     ✓ waits for both shell exit and registry retirement before starting the replacement  1756ms
+     ✓ retries a short name-release race only after rechecking that the pane and name are free  1693ms
+     ✓ defers a persistent name conflict without duplicate prompts or another stop  1291ms
+     ✓ defers a competing name conflict without duplicate prompts or another stop  1138ms
+     ✓ defers (75) while a person's text sits in the composer or a dialog is up; nothing is sent  2216ms
+     ✓ a turn that does not end in time is interrupted with esc (124); the TUI stays  5429ms
+     ✓ a startup dialog (agent_not_ready) defers without answering it  386ms
+     ✓ a post-mortem batch runs in its own pane, reports as before, and the pane closes  3077ms
+     ✓ herdr unavailable: the batch starts with setsid as before  350ms
+ ❯ tests/brain-claude.test.ts (15 tests | 1 failed) 2978ms
+     ✓ runs claude -p with only our context: no settings, no built-in tools, no MCP but ours, a clean environment 42ms
+     ✓ picks the model per question kind, pins the opus alias to its full id and reports the model that answered 68ms
+     ✓ puts the re-ask after the question and maps an option name to its key 32ms
+     ✓ with tools: our stdio MCP server is the only one, pre-approved, and its calls come back recorded  538ms
+     ✓ recognises a used-up quota, a rate limit and a lost login as engine failures with a rest 63ms
+     ✓ the environment a CLI agent inherits holds no keys 0ms
+     ✓ answers in the v3 shape with a brain note naming the engine 42ms
+     ✓ a used-up Claude quota falls back to DeepSeek at once and logs why 35ms
+     ✓ an answer still invalid after the re-ask is the loop's answered-but-unusable error; a run plan keeps its format check 70ms
+     × checkClaudeBin: a version line is ok; a failing exit, a missing program and a hang say why 15ms
+     ✓ a program that does not start is an unavailable failure with a rest (not a silent per-question error) 4ms
+     ✓ preflight: a failed check marks Claude unavailable; with no fallback its questions fail at once without starting it 5ms
+     ✓ preflight: nothing is checked when no configuration asks Claude 1ms
+     ✓ an abort kills what the agent started too (a child holding its output), and the call ends at once 24ms
+     ✓ an agent that exits while something it started holds its output: the call ends after the grace, with the output, and the leftover is killed  2033ms
+....................
+----------------------------------------------------------------------
+Ran 20 tests in 0.715s
+
+OK
+ ✓ tests/strategy-external.test.ts (16 tests) 1453ms
+   ✓ external admission, source proof, original writer gates and retirement use fixed aggregates  851ms
+ ✓ tests/external-strategy-evidence.test.ts (43 tests) 210ms
+ ✓ tests/paths.test.ts (11 tests) 51ms
+ ✓ tests/subscription-usage.test.ts (5 tests) 9ms
+ ✓ tests/learner-wrapper-scripts.test.ts (3 tests) 6ms
+ ✓ tests/strategy-concurrency.test.ts (2 tests) 352ms
+     ✓ claims disjoint inputs, retains active ownership and bootstraps the second slot  348ms
+ ✓ tests/shared-tools.test.ts (2 tests) 641ms
+   ✓ attaches only matching pinned tools and retains all private/foreign copies  635ms
+ ✓ tests/strategy-research-scheduling.test.ts (10 tests) 5455ms
+   ✓ frozen research group 1 takes the next slot and starts only after its actual registration is saved  406ms
+   ✓ frozen research group 2 takes the next slot and starts only after its actual registration is saved  468ms
+   ✓ frozen research group 3 takes the next slot and starts only after its actual registration is saved  339ms
+   ✓ frozen research group 4 takes the next slot and starts only after its actual registration is saved  395ms
+   ✓ frozen research group 5 takes the next slot and starts only after its actual registration is saved  396ms
+   ✓ frozen research group 6 takes the next slot and starts only after its actual registration is saved  462ms
+   ✓ frozen research group 7 takes the next slot and starts only after its actual registration is saved  336ms
+   ✓ frozen research group 8 takes the next slot and starts only after its actual registration is saved  396ms
+   ✓ frozen research group 9 takes the next slot and starts only after its actual registration is saved  1378ms
+   ✓ frozen research group 10 takes the next slot and starts only after its actual registration is saved  876ms
+ ✓ tests/agent-board-poll.test.ts (1 test) 262ms
+ ✓ tests/brain-view.test.ts (1 test) 384ms
+   ✓ renders and follows fixed brain logs with redaction, title protection and isolated lifecycle  382ms
+ ✓ tests/learner-tabs.test.ts (1 test) 4531ms
+   ✓ reclaims only verified terminal learner tabs with the current native verifier  4530ms
+ ✓ tests/check-imports.test.ts (1 test) 132ms
+ ✓ tests/worktree-retention.test.ts (1 test) 10956ms
+   ✓ retires only verified workspaces and recovers preserved artifacts after interruptions  10955ms
+ ✓ tests/reclaim-gates.test.ts (1 test) 5117ms
+   ✓ protects real runtime identities while retiring inherited bindings and main-only reports  5116ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 2 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/brain-claude.test.ts > the claude program: found, checked before play, and rested when it cannot start > checkClaudeBin: a version line is ok; a failing exit, a missing program and a hang say why
+AssertionError: expected '/home/dw/Projects/agent-sts2/.artifac…' to match /could not start: spawn .*ENOENT/
+
+- Expected:
+/could not start: spawn .*ENOENT/
+
++ Received:
+"/home/dw/Projects/agent-sts2/.artifacts/integrator56-r2-20261024-2026/deliberately-long-temp-path-for-the-original-bounded-ENOENT-diagnostic-check/fake-claude-nJL7Ah/no-such-claude could not start: sp"
+
+ ❯ tests/brain-claude.test.ts:246:42
+    244|     const missing = await checkClaudeBin(join(dir, "no-such-claude"));
+    245|     expect(missing.ok).toBe(false);
+    246|     expect(!missing.ok && missing.error).toMatch(/could not start: spa…
+       |                                          ^
+    247|     const slow = join(dir, "version-slow.sh");
+    248|     writeFileSync(slow, `#!/bin/sh\nexec sleep 5\n`);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/2]⎯
+
+ FAIL  tests/run-plan-merge.test.ts > act start in the loop: the Ancient's question carries the act's run plan > the real client reads the run plan from the answer, or from its own object after it
+AssertionError: expected +0 to be 1 // Object.is equality
+
+- Expected
++ Received
+
+- 1
++ 0
+
+ ❯ tests/run-plan-merge.test.ts:480:35
+    478|       const { client, bodies } = await scriptedDeepSeek([{ content, re…
+    479|       const { stats, records, runPlans } = await play(dir, actStart(),…
+    480|       expect(stats.deepseekCalls).toBe(1);
+       |                                   ^
+    481|       expect(records.find((r) => r["label"] === "event/act-plan")).toM…
+    482|       expect(runPlans.at(-1)).toMatchObject({ trigger: "act", merged_i…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/2]⎯
+
+
+ Test Files  2 failed | 15 passed (17)
+      Tests  2 failed | 158 passed (160)
+   Start at  20:31:22
+   Duration  88.60s (transform 4.16s, setup 1.17s, import 5.83s, tests 79.66s, environment 2ms)
+
+JSON report written to /home/dw/Projects/agent-sts2/.artifacts/integrator56-r2-20261024-2026/directed.json

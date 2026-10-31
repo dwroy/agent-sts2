@@ -1,0 +1,955 @@
+{
+  "schema": "reflex-file-v1",
+  "character": "silent",
+  "entries": [
+    {
+      "schema": "reflex-entry-v1",
+      "id": "silent-encounter-rk-insatiable-bite-block-and-weaken",
+      "version": 1,
+      "applies_to": "combat_line",
+      "predicate": {
+        "op": "and",
+        "args": [
+          {
+            "op": "eq",
+            "field": "act",
+            "value": 2
+          },
+          {
+            "op": "any",
+            "field": "enemies.items",
+            "arg": {
+              "op": "and",
+              "args": [
+                {
+                  "op": "eq",
+                  "field": "enemy.id",
+                  "value": "THE_INSATIABLE"
+                },
+                {
+                  "op": "eq",
+                  "field": "enemy.alive",
+                  "value": true
+                },
+                {
+                  "op": "eq",
+                  "field": "enemy.move_id",
+                  "value": "LUNGING_BITE_MOVE"
+                }
+              ]
+            }
+          },
+          {
+            "op": "any",
+            "field": "player.hand",
+            "arg": {
+              "op": "and",
+              "args": [
+                {
+                  "op": "eq",
+                  "field": "card.id",
+                  "value": "NEUTRALIZE"
+                },
+                {
+                  "op": "eq",
+                  "field": "card.can_play",
+                  "value": true
+                }
+              ]
+            }
+          },
+          {
+            "op": "any",
+            "field": "player.hand",
+            "arg": {
+              "op": "and",
+              "args": [
+                {
+                  "op": "eq",
+                  "field": "card.id",
+                  "value": "DEFEND_SILENT"
+                },
+                {
+                  "op": "eq",
+                  "field": "card.can_play",
+                  "value": true
+                }
+              ]
+            }
+          },
+          {
+            "op": "eq",
+            "field": "option.kind",
+            "value": "combat_line"
+          },
+          {
+            "op": "any",
+            "field": "option.actions",
+            "arg": {
+              "op": "and",
+              "args": [
+                {
+                  "op": "eq",
+                  "field": "action.kind",
+                  "value": "card"
+                },
+                {
+                  "op": "eq",
+                  "field": "card.id",
+                  "value": "NEUTRALIZE"
+                }
+              ]
+            }
+          }
+        ]
+      },
+      "signal": {
+        "kind": "tag",
+        "value": "silent-encounter-rk-insatiable-bite-block-and-weaken-tag",
+        "unit": "label"
+      },
+      "label_en": "Compare block and weakening in the observed lunging bite window",
+      "evidence": {
+        "observations": [
+          {
+            "run_id": "0CLP16ZR4ZZC",
+            "floor": 33,
+            "turn": 3
+          }
+        ],
+        "n_support": 1,
+        "n_contradict": 0
+      },
+      "confidence": 0.3,
+      "scope": {
+        "character": "silent",
+        "ascensions": [
+          10
+        ]
+      },
+      "directions": [],
+      "cores": [],
+      "combos": [],
+      "source_experience": [],
+      "sources": [
+        {
+          "source": "own",
+          "path": "learner/runs/20261024-221830-c8d35716-6b15-44d5-b35f-297e2d57303b-strategy-proposal/scratch/raw/states-15278671601-36754.json",
+          "sha256": "86fd538111ee25f688ba26e738f19b2e2602613656563ff06f8882d1c19b1d37",
+          "game_version": "unknown",
+          "retrieved_at": "2026-10-24",
+          "sample": {
+            "runs": 1,
+            "players": null,
+            "selection": "A10 no_retry_evidence; exact fingerprint-matched action receipts and observed successor; single descriptive window, no counterfactual"
+          }
+        },
+        {
+          "source": "external:sts2fun",
+          "path": "knowledge/external/sts2fun/builds-v1/matchups.json",
+          "sha256": "516f03137d3ca0182f3a308e711d933d4d8a0f4a6398ade2569a8a450677414b",
+          "game_version": "v0.111",
+          "retrieved_at": "2026-10-21",
+          "sample": {
+            "runs": 338,
+            "players": null,
+            "selection": "ENCOUNTER.THE_INSATIABLE_BOSS; disjoint terminal-cluster upload rows, context only; natural-run independence unknown"
+          },
+          "url": "https://sts2.fun/static/sts2_public.db.zst",
+          "license": "No explicit dataset redistribution license found; attributed aggregate statistics only."
+        }
+      ]
+    },
+    {
+      "schema": "reflex-entry-v1",
+      "id": "silent-encounter-rk-insatiable-salivate-escape",
+      "version": 1,
+      "applies_to": "combat_line",
+      "predicate": {
+        "op": "and",
+        "args": [
+          {
+            "op": "eq",
+            "field": "act",
+            "value": 2
+          },
+          {
+            "op": "any",
+            "field": "enemies.items",
+            "arg": {
+              "op": "and",
+              "args": [
+                {
+                  "op": "eq",
+                  "field": "enemy.id",
+                  "value": "THE_INSATIABLE"
+                },
+                {
+                  "op": "eq",
+                  "field": "enemy.alive",
+                  "value": true
+                },
+                {
+                  "op": "eq",
+                  "field": "enemy.move_id",
+                  "value": "SALIVATE_MOVE"
+                }
+              ]
+            }
+          },
+          {
+            "op": "any",
+            "field": "player.hand",
+            "arg": {
+              "op": "and",
+              "args": [
+                {
+                  "op": "eq",
+                  "field": "card.id",
+                  "value": "FRANTIC_ESCAPE"
+                },
+                {
+                  "op": "eq",
+                  "field": "card.can_play",
+                  "value": true
+                }
+              ]
+            }
+          },
+          {
+            "op": "any",
+            "field": "player.hand",
+            "arg": {
+              "op": "and",
+              "args": [
+                {
+                  "op": "eq",
+                  "field": "card.id",
+                  "value": "DASH"
+                },
+                {
+                  "op": "eq",
+                  "field": "card.can_play",
+                  "value": true
+                }
+              ]
+            }
+          },
+          {
+            "op": "eq",
+            "field": "option.kind",
+            "value": "combat_line"
+          },
+          {
+            "op": "any",
+            "field": "option.actions",
+            "arg": {
+              "op": "and",
+              "args": [
+                {
+                  "op": "eq",
+                  "field": "action.kind",
+                  "value": "card"
+                },
+                {
+                  "op": "eq",
+                  "field": "card.id",
+                  "value": "FRANTIC_ESCAPE"
+                }
+              ]
+            }
+          }
+        ]
+      },
+      "signal": {
+        "kind": "tag",
+        "value": "silent-encounter-rk-insatiable-salivate-escape-tag",
+        "unit": "label"
+      },
+      "label_en": "Compare escape expenditure during the observed salivate window",
+      "evidence": {
+        "observations": [
+          {
+            "run_id": "0CLP16ZR4ZZC",
+            "floor": 33,
+            "turn": 4
+          }
+        ],
+        "n_support": 1,
+        "n_contradict": 0
+      },
+      "confidence": 0.3,
+      "scope": {
+        "character": "silent",
+        "ascensions": [
+          10
+        ]
+      },
+      "directions": [],
+      "cores": [],
+      "combos": [],
+      "source_experience": [],
+      "sources": [
+        {
+          "source": "own",
+          "path": "learner/runs/20261024-221830-c8d35716-6b15-44d5-b35f-297e2d57303b-strategy-proposal/scratch/raw/states-15278880042-36110.json",
+          "sha256": "a0d1c2f9a942b9a2b71b4775f493dea43eaf35b2f56900fe564b355e57b94538",
+          "game_version": "unknown",
+          "retrieved_at": "2026-10-24",
+          "sample": {
+            "runs": 1,
+            "players": null,
+            "selection": "A10 no_retry_evidence; exact fingerprint-matched action receipts and observed successor; single descriptive window, no counterfactual"
+          }
+        },
+        {
+          "source": "external:sts2fun",
+          "path": "knowledge/external/sts2fun/builds-v1/matchups.json",
+          "sha256": "516f03137d3ca0182f3a308e711d933d4d8a0f4a6398ade2569a8a450677414b",
+          "game_version": "v0.111",
+          "retrieved_at": "2026-10-21",
+          "sample": {
+            "runs": 338,
+            "players": null,
+            "selection": "ENCOUNTER.THE_INSATIABLE_BOSS; disjoint terminal-cluster upload rows, context only; natural-run independence unknown"
+          },
+          "url": "https://sts2.fun/static/sts2_public.db.zst",
+          "license": "No explicit dataset redistribution license found; attributed aggregate statistics only."
+        }
+      ]
+    },
+    {
+      "schema": "reflex-entry-v1",
+      "id": "silent-encounter-rk-matriarch-sleep-setup",
+      "version": 1,
+      "applies_to": "combat_line",
+      "predicate": {
+        "op": "and",
+        "args": [
+          {
+            "op": "eq",
+            "field": "act",
+            "value": 1
+          },
+          {
+            "op": "any",
+            "field": "enemies.items",
+            "arg": {
+              "op": "and",
+              "args": [
+                {
+                  "op": "eq",
+                  "field": "enemy.id",
+                  "value": "LAGAVULIN_MATRIARCH"
+                },
+                {
+                  "op": "eq",
+                  "field": "enemy.alive",
+                  "value": true
+                },
+                {
+                  "op": "eq",
+                  "field": "enemy.move_id",
+                  "value": "SLEEP_MOVE"
+                }
+              ]
+            }
+          },
+          {
+            "op": "any",
+            "field": "player.hand",
+            "arg": {
+              "op": "and",
+              "args": [
+                {
+                  "op": "eq",
+                  "field": "card.id",
+                  "value": "NOXIOUS_FUMES"
+                },
+                {
+                  "op": "eq",
+                  "field": "card.can_play",
+                  "value": true
+                }
+              ]
+            }
+          },
+          {
+            "op": "any",
+            "field": "player.hand",
+            "arg": {
+              "op": "and",
+              "args": [
+                {
+                  "op": "eq",
+                  "field": "card.id",
+                  "value": "FOOTWORK"
+                },
+                {
+                  "op": "eq",
+                  "field": "card.can_play",
+                  "value": true
+                }
+              ]
+            }
+          },
+          {
+            "op": "eq",
+            "field": "option.kind",
+            "value": "combat_line"
+          },
+          {
+            "op": "any",
+            "field": "option.actions",
+            "arg": {
+              "op": "and",
+              "args": [
+                {
+                  "op": "eq",
+                  "field": "action.kind",
+                  "value": "card"
+                },
+                {
+                  "op": "eq",
+                  "field": "card.id",
+                  "value": "FOOTWORK"
+                }
+              ]
+            }
+          }
+        ]
+      },
+      "signal": {
+        "kind": "tag",
+        "value": "silent-encounter-rk-matriarch-sleep-setup-tag",
+        "unit": "label"
+      },
+      "label_en": "Compare Fumes and Footwork setup while the matriarch is asleep",
+      "evidence": {
+        "observations": [
+          {
+            "run_id": "U1QYLX1AE1WX",
+            "floor": 17,
+            "turn": 3
+          }
+        ],
+        "n_support": 1,
+        "n_contradict": 0
+      },
+      "confidence": 0.3,
+      "scope": {
+        "character": "silent",
+        "ascensions": [
+          10
+        ]
+      },
+      "directions": [],
+      "cores": [],
+      "combos": [],
+      "source_experience": [],
+      "sources": [
+        {
+          "source": "own",
+          "path": "learner/runs/20261024-221830-c8d35716-6b15-44d5-b35f-297e2d57303b-strategy-proposal/scratch/raw/states-11045122245-29534.json",
+          "sha256": "7808d4de9ef72f471b05b2e36db48d7c3b86094fa5378da1b5fe2332e5af989c",
+          "game_version": "unknown",
+          "retrieved_at": "2026-10-24",
+          "sample": {
+            "runs": 1,
+            "players": null,
+            "selection": "A10 no_retry_evidence; exact fingerprint-matched action receipts and observed successor; single descriptive window, no counterfactual"
+          }
+        },
+        {
+          "source": "external:sts2fun",
+          "path": "knowledge/external/sts2fun/builds-v1/matchups.json",
+          "sha256": "516f03137d3ca0182f3a308e711d933d4d8a0f4a6398ade2569a8a450677414b",
+          "game_version": "v0.111",
+          "retrieved_at": "2026-10-21",
+          "sample": {
+            "runs": 257,
+            "players": null,
+            "selection": "ENCOUNTER.LAGAVULIN_MATRIARCH_BOSS; disjoint terminal-cluster upload rows, context only; natural-run independence unknown"
+          },
+          "url": "https://sts2.fun/static/sts2_public.db.zst",
+          "license": "No explicit dataset redistribution license found; attributed aggregate statistics only."
+        }
+      ]
+    },
+    {
+      "schema": "reflex-entry-v1",
+      "id": "silent-encounter-rk-matriarch-reduced-stats-block",
+      "version": 1,
+      "applies_to": "combat_line",
+      "predicate": {
+        "op": "and",
+        "args": [
+          {
+            "op": "eq",
+            "field": "act",
+            "value": 1
+          },
+          {
+            "op": "any",
+            "field": "enemies.items",
+            "arg": {
+              "op": "and",
+              "args": [
+                {
+                  "op": "eq",
+                  "field": "enemy.id",
+                  "value": "LAGAVULIN_MATRIARCH"
+                },
+                {
+                  "op": "eq",
+                  "field": "enemy.alive",
+                  "value": true
+                },
+                {
+                  "op": "eq",
+                  "field": "enemy.move_id",
+                  "value": "SLASH_MOVE"
+                }
+              ]
+            }
+          },
+          {
+            "op": "or",
+            "args": [
+              {
+                "op": "ne",
+                "field": "player.powers.STRENGTH_POWER",
+                "value": 0
+              },
+              {
+                "op": "ne",
+                "field": "player.powers.DEXTERITY_POWER",
+                "value": 0
+              }
+            ]
+          },
+          {
+            "op": "any",
+            "field": "player.hand",
+            "arg": {
+              "op": "and",
+              "args": [
+                {
+                  "op": "eq",
+                  "field": "card.id",
+                  "value": "DEFEND_SILENT"
+                },
+                {
+                  "op": "eq",
+                  "field": "card.can_play",
+                  "value": true
+                }
+              ]
+            }
+          },
+          {
+            "op": "eq",
+            "field": "option.kind",
+            "value": "combat_line"
+          },
+          {
+            "op": "any",
+            "field": "option.actions",
+            "arg": {
+              "op": "and",
+              "args": [
+                {
+                  "op": "eq",
+                  "field": "action.kind",
+                  "value": "card"
+                },
+                {
+                  "op": "eq",
+                  "field": "card.id",
+                  "value": "DEFEND_SILENT"
+                }
+              ]
+            }
+          }
+        ]
+      },
+      "signal": {
+        "kind": "tag",
+        "value": "silent-encounter-rk-matriarch-reduced-stats-block-tag",
+        "unit": "label"
+      },
+      "label_en": "Recount current block after observed strength and dexterity changes",
+      "evidence": {
+        "observations": [
+          {
+            "run_id": "U1QYLX1AE1WX",
+            "floor": 17,
+            "turn": 8
+          }
+        ],
+        "n_support": 1,
+        "n_contradict": 0
+      },
+      "confidence": 0.3,
+      "scope": {
+        "character": "silent",
+        "ascensions": [
+          10
+        ]
+      },
+      "directions": [],
+      "cores": [],
+      "combos": [],
+      "source_experience": [],
+      "sources": [
+        {
+          "source": "own",
+          "path": "learner/runs/20261024-221830-c8d35716-6b15-44d5-b35f-297e2d57303b-strategy-proposal/scratch/raw/states-11045734263-29769.json",
+          "sha256": "3295ee882a79fa0f899cae10409f924c19d2935ba33bc5862b8e46f1f3607e2e",
+          "game_version": "unknown",
+          "retrieved_at": "2026-10-24",
+          "sample": {
+            "runs": 1,
+            "players": null,
+            "selection": "A10 no_retry_evidence; exact fingerprint-matched action receipts and observed successor; single descriptive window, no counterfactual"
+          }
+        },
+        {
+          "source": "external:sts2fun",
+          "path": "knowledge/external/sts2fun/builds-v1/matchups.json",
+          "sha256": "516f03137d3ca0182f3a308e711d933d4d8a0f4a6398ade2569a8a450677414b",
+          "game_version": "v0.111",
+          "retrieved_at": "2026-10-21",
+          "sample": {
+            "runs": 257,
+            "players": null,
+            "selection": "ENCOUNTER.LAGAVULIN_MATRIARCH_BOSS; disjoint terminal-cluster upload rows, context only; natural-run independence unknown"
+          },
+          "url": "https://sts2.fun/static/sts2_public.db.zst",
+          "license": "No explicit dataset redistribution license found; attributed aggregate statistics only."
+        }
+      ]
+    },
+    {
+      "schema": "reflex-entry-v1",
+      "id": "silent-encounter-rk-ceremonial-plow-weaken-block",
+      "version": 1,
+      "applies_to": "combat_line",
+      "predicate": {
+        "op": "and",
+        "args": [
+          {
+            "op": "eq",
+            "field": "act",
+            "value": 1
+          },
+          {
+            "op": "any",
+            "field": "enemies.items",
+            "arg": {
+              "op": "and",
+              "args": [
+                {
+                  "op": "eq",
+                  "field": "enemy.id",
+                  "value": "CEREMONIAL_BEAST"
+                },
+                {
+                  "op": "eq",
+                  "field": "enemy.alive",
+                  "value": true
+                },
+                {
+                  "op": "eq",
+                  "field": "enemy.move_id",
+                  "value": "PLOW_MOVE"
+                }
+              ]
+            }
+          },
+          {
+            "op": "any",
+            "field": "player.hand",
+            "arg": {
+              "op": "and",
+              "args": [
+                {
+                  "op": "eq",
+                  "field": "card.id",
+                  "value": "SUCKER_PUNCH"
+                },
+                {
+                  "op": "eq",
+                  "field": "card.can_play",
+                  "value": true
+                }
+              ]
+            }
+          },
+          {
+            "op": "any",
+            "field": "player.hand",
+            "arg": {
+              "op": "and",
+              "args": [
+                {
+                  "op": "eq",
+                  "field": "card.id",
+                  "value": "DEFEND_SILENT"
+                },
+                {
+                  "op": "eq",
+                  "field": "card.can_play",
+                  "value": true
+                }
+              ]
+            }
+          },
+          {
+            "op": "eq",
+            "field": "option.kind",
+            "value": "combat_line"
+          },
+          {
+            "op": "any",
+            "field": "option.actions",
+            "arg": {
+              "op": "and",
+              "args": [
+                {
+                  "op": "eq",
+                  "field": "action.kind",
+                  "value": "card"
+                },
+                {
+                  "op": "eq",
+                  "field": "card.id",
+                  "value": "SUCKER_PUNCH"
+                }
+              ]
+            }
+          }
+        ]
+      },
+      "signal": {
+        "kind": "tag",
+        "value": "silent-encounter-rk-ceremonial-plow-weaken-block-tag",
+        "unit": "label"
+      },
+      "label_en": "Compare weakening plus block in the observed ceremonial plow",
+      "evidence": {
+        "observations": [
+          {
+            "run_id": "Q3R929GHT14R",
+            "floor": 17,
+            "turn": 3
+          }
+        ],
+        "n_support": 1,
+        "n_contradict": 0
+      },
+      "confidence": 0.3,
+      "scope": {
+        "character": "silent",
+        "ascensions": [
+          10
+        ]
+      },
+      "directions": [],
+      "cores": [],
+      "combos": [],
+      "source_experience": [],
+      "sources": [
+        {
+          "source": "own",
+          "path": "learner/runs/20261024-221830-c8d35716-6b15-44d5-b35f-297e2d57303b-strategy-proposal/scratch/raw/states-16466713684-30860.json",
+          "sha256": "bfb6bcb1931b4b3241d8e009d69b789e8cab7f48679ed2f58be7c28383dd2c1e",
+          "game_version": "unknown",
+          "retrieved_at": "2026-10-24",
+          "sample": {
+            "runs": 1,
+            "players": null,
+            "selection": "A10 no_retry_evidence; exact fingerprint-matched action receipts and observed successor; single descriptive window, no counterfactual"
+          }
+        },
+        {
+          "source": "external:sts2fun",
+          "path": "knowledge/external/sts2fun/builds-v1/matchups.json",
+          "sha256": "516f03137d3ca0182f3a308e711d933d4d8a0f4a6398ade2569a8a450677414b",
+          "game_version": "v0.111",
+          "retrieved_at": "2026-10-21",
+          "sample": {
+            "runs": 251,
+            "players": null,
+            "selection": "ENCOUNTER.CEREMONIAL_BEAST_BOSS; disjoint terminal-cluster upload rows, context only; natural-run independence unknown"
+          },
+          "url": "https://sts2.fun/static/sts2_public.db.zst",
+          "license": "No explicit dataset redistribution license found; attributed aggregate statistics only."
+        }
+      ]
+    },
+    {
+      "schema": "reflex-entry-v1",
+      "id": "silent-encounter-rk-ceremonial-cry-output-versus-next-defense",
+      "version": 1,
+      "applies_to": "combat_line",
+      "predicate": {
+        "op": "and",
+        "args": [
+          {
+            "op": "eq",
+            "field": "act",
+            "value": 1
+          },
+          {
+            "op": "any",
+            "field": "enemies.items",
+            "arg": {
+              "op": "and",
+              "args": [
+                {
+                  "op": "eq",
+                  "field": "enemy.id",
+                  "value": "CEREMONIAL_BEAST"
+                },
+                {
+                  "op": "eq",
+                  "field": "enemy.alive",
+                  "value": true
+                },
+                {
+                  "op": "eq",
+                  "field": "enemy.move_id",
+                  "value": "BEAST_CRY_MOVE"
+                },
+                {
+                  "op": "eq",
+                  "field": "enemy.intent_type",
+                  "value": "Debuff"
+                }
+              ]
+            }
+          },
+          {
+            "op": "any",
+            "field": "player.hand",
+            "arg": {
+              "op": "and",
+              "args": [
+                {
+                  "op": "eq",
+                  "field": "card.id",
+                  "value": "DEADLY_POISON"
+                },
+                {
+                  "op": "eq",
+                  "field": "card.can_play",
+                  "value": true
+                }
+              ]
+            }
+          },
+          {
+            "op": "any",
+            "field": "player.hand",
+            "arg": {
+              "op": "and",
+              "args": [
+                {
+                  "op": "eq",
+                  "field": "card.id",
+                  "value": "TORIC_TOUGHNESS"
+                },
+                {
+                  "op": "eq",
+                  "field": "card.can_play",
+                  "value": true
+                }
+              ]
+            }
+          },
+          {
+            "op": "eq",
+            "field": "option.kind",
+            "value": "combat_line"
+          },
+          {
+            "op": "any",
+            "field": "option.actions",
+            "arg": {
+              "op": "and",
+              "args": [
+                {
+                  "op": "eq",
+                  "field": "action.kind",
+                  "value": "card"
+                },
+                {
+                  "op": "eq",
+                  "field": "card.id",
+                  "value": "DEADLY_POISON"
+                }
+              ]
+            }
+          }
+        ]
+      },
+      "signal": {
+        "kind": "tag",
+        "value": "silent-encounter-rk-ceremonial-cry-output-versus-next-defense-tag",
+        "unit": "label"
+      },
+      "label_en": "Compare output and delayed defense during the observed beast cry",
+      "evidence": {
+        "observations": [
+          {
+            "run_id": "1913SE84AXQF",
+            "floor": 17,
+            "turn": 5
+          }
+        ],
+        "n_support": 1,
+        "n_contradict": 0
+      },
+      "confidence": 0.3,
+      "scope": {
+        "character": "silent",
+        "ascensions": [
+          10
+        ]
+      },
+      "directions": [],
+      "cores": [],
+      "combos": [],
+      "source_experience": [],
+      "sources": [
+        {
+          "source": "own",
+          "path": "learner/runs/20261024-221830-c8d35716-6b15-44d5-b35f-297e2d57303b-strategy-proposal/scratch/raw/states-8720066049-32539.json",
+          "sha256": "a58c1dd0e2c88b3d2ac61ec9b7b2669ec23371844960bd9715b7f4f89245d0ef",
+          "game_version": "unknown",
+          "retrieved_at": "2026-10-24",
+          "sample": {
+            "runs": 1,
+            "players": null,
+            "selection": "A10 no_retry_evidence; exact fingerprint-matched action receipts and observed successor; single descriptive window, no counterfactual"
+          }
+        },
+        {
+          "source": "external:sts2fun",
+          "path": "knowledge/external/sts2fun/builds-v1/matchups.json",
+          "sha256": "516f03137d3ca0182f3a308e711d933d4d8a0f4a6398ade2569a8a450677414b",
+          "game_version": "v0.111",
+          "retrieved_at": "2026-10-21",
+          "sample": {
+            "runs": 251,
+            "players": null,
+            "selection": "ENCOUNTER.CEREMONIAL_BEAST_BOSS; disjoint terminal-cluster upload rows, context only; natural-run independence unknown"
+          },
+          "url": "https://sts2.fun/static/sts2_public.db.zst",
+          "license": "No explicit dataset redistribution license found; attributed aggregate statistics only."
+        }
+      ]
+    }
+  ]
+}

@@ -5,6 +5,7 @@ import type { DecisionEnv } from "../memory/types.js";
 import { mapActOf } from "../hand/screens/route-plan.js";
 import { parsePotionEquivalents, potionEquivalentFrom } from "../knowledge/potion-equivalents.js";
 import { KNOWLEDGE_DIR } from "../knowledge/files.js";
+import { runtimeDataRoot } from "../knowledge/runtime-data.js";
 import type { AnswerSet } from "../reflex/jev/answers.js";
 import type { QuestionSet } from "../reflex/jev/questions.js";
 import { currentDecisionBudget, DecisionBudget, withDecisionBudget, withinDecisionBudget } from "../core/decision-budget.js";
@@ -90,10 +91,11 @@ export function potionEntries(env: DecisionEnv, ids: string[], options: {
   let table: ReturnType<typeof parsePotionEquivalents> | null = null;
   if (knowledge.character) {
     try {
-      const root = realpathSync(join(dir, "characters", knowledge.character));
+      const dataDir = runtimeDataRoot(dir, `characters/${knowledge.character}/potion-equivalents.json`);
+      const root = realpathSync(join(dataDir, "characters", knowledge.character));
       const path = realpathSync(join(root, "potion-equivalents.json"));
       const rel = relative(root, path);
-      if (root === join(realpathSync(dir), "characters", knowledge.character) && !rel.startsWith("..") && !isAbsolute(rel)) {
+      if (root === join(realpathSync(dataDir), "characters", knowledge.character) && !rel.startsWith("..") && !isAbsolute(rel)) {
         table = parsePotionEquivalents(readFileSync(path, "utf8"), path, true);
       }
     } catch { /* Missing character-owned values remain unknown. */ }

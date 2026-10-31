@@ -1,0 +1,41 @@
+{
+  "at": "2026-10-25T02:57:14+08:00",
+  "source": "28780925be9e2ba4029a328920946aac05d9b328",
+  "validation_anchor": "4e435fa174b88009e2c239067dfc2b138d78fe12",
+  "full_result_sha256": "99803774472adf367990ce974febef90e1afce6468b297fef7725ca07c901eb4",
+  "engineering_accepted": false,
+  "installation_allowed": false,
+  "source_or_live_installed": false,
+  "production_db_or_control_written": false,
+  "full_rerun_started": false,
+  "repair_owner": "original dev #60",
+  "root_cause": "Temporary test roots copy run.sh without its new required knowledge_runtime_env.py dependency; real parser must be copied, not bypassed and expected assertions retained.",
+  "affected_fixtures": [
+    {
+      "path": "ops/tests/test_llm_handoff.py",
+      "sha256": "40c02a88cdb00d256bc6ce2b0aa5837144442e6e25bdb96b18ddde26fe942d52",
+      "copy_sites": [
+        {
+          "line": 136,
+          "text": "        for name in (\"paths.sh\", \"run.sh\", \"autoplay.sh\", \"codex-ops-actions.sh\", \"publication_gate.py\"):"
+        },
+        {
+          "line": 149,
+          "text": "        for name in (\"paths.sh\", \"run.sh\", \"publication_gate.py\"): shutil.copy(ROOT / \"ops\" / name, ops / name)"
+        }
+      ]
+    },
+    {
+      "path": "ops/tests/test_publication_gate.py",
+      "sha256": "75d94d105e02b2bc957c527661c41e7bee003b0b075e86ab93af4057fc74ae42",
+      "copy_sites": [
+        {
+          "line": 46,
+          "text": "        for name in (\"publication_gate.py\", \"paths.sh\", \"run.sh\", \"autoplay.sh\", \"codex-ops-actions.sh\", \"codex-ops.sh\"):"
+        }
+      ]
+    }
+  ],
+  "unresolved_runtime_acceptance": "original ops; not covered by isolated tests",
+  "observation_correction": "observation-correction.json"
+}

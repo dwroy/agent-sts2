@@ -1,0 +1,72 @@
+{
+  "at": "2026-10-25T02:56:48+08:00",
+  "worker_pid": 2026370,
+  "worker_birth": "29104679",
+  "current_birth": null,
+  "original_worker_exited": true,
+  "original_check_lock_available": true,
+  "inputs_rehash_count": 2788,
+  "inputs_unchanged": true,
+  "dependencies_rehash_count": 1417,
+  "dependencies_unchanged": true,
+  "index_entries_sha256": "658b577353def8825402c427209eb827eaa2d41fe60f2e550f1e7b97cc794b89",
+  "index_flags_sha256": "dbeed8327b858fcd04f3f9c58f5aed9565c23fd572a1a6545f799bdc9ec27cca",
+  "tree": "8998bfe7737d9a40d057fdd98058302fed7ada00",
+  "result_sha256": "99803774472adf367990ce974febef90e1afce6468b297fef7725ca07c901eb4",
+  "files": 679,
+  "passed": 6626,
+  "failed": 2,
+  "skipped": 2,
+  "tsc_rc": 0,
+  "wrapper_results": [
+    {
+      "name": "external-build-stats.test.ts",
+      "status": "passed",
+      "assertions": [
+        {
+          "name": "reconstructs and validates external build statistics with deterministic private-field exclusion",
+          "status": "passed"
+        }
+      ]
+    },
+    {
+      "name": "own-build-stats.test.ts",
+      "status": "passed",
+      "assertions": [
+        {
+          "name": "keeps own evidence separate and verifies allowlisted external decision fields",
+          "status": "passed"
+        }
+      ]
+    }
+  ],
+  "check_lock_released": true,
+  "new_full_runs": 1,
+  "model_calls": 0,
+  "production_operations": 0,
+  "failed_assertions": [
+    {
+      "file": "tests/account-drain.test.ts",
+      "assertions": [
+        {
+          "name": "validates drain lifecycle: test_llm_handoff.py",
+          "failure_messages": [
+            "AssertionError: .F..........F...\n======================================================================\nFAIL: test_brain_selector_is_passed_to_next_play (__main__.Protocol.test_brain_selector_is_passed_to_next_play)\n----------------------------------------------------------------------\nTraceback (most recent call last):\n  File \"/home/dw/Projects/agent-sts2/.worktrees/integrator60-wiring-composition-20261025-0228/agent/../ops/tests/test_llm_handoff.py\", line 164, in test_brain_selector_is_passed_to_next_play\n    self.assertEqual(result.returncode, 0, result.stderr)\n    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nAssertionError: 78 != 0 : python3: can't open file '/home/dw/Projects/agent-sts2/.artifacts/integrator60-wiring-composition-20261025-0228/deliberately-long-temp-path-for-the-original-bounded-ENOENT-diagnostic-check/tmpq_bermqu/ops/knowledge_runtime_env.py': [Errno 2] No such file or directory\n\n\n======================================================================\nFAIL: test_real_launchers_defer_before_any_game_or_broker_work (__main__.Protocol.test_real_launchers_defer_before_any_game_or_broker_work)\n----------------------------------------------------------------------\nTraceback (most recent call last):\n  File \"/home/dw/Projects/agent-sts2/.worktrees/integrator60-wiring-composition-20261025-0228/agent/../ops/tests/test_llm_handoff.py\", line 144, in test_real_launchers_defer_before_any_game_or_broker_work\n    self.assertEqual(result.returncode, expected, result.stderr)\n    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nAssertionError: 78 != 76 : python3: can't open file '/home/dw/Projects/agent-sts2/.artifacts/integrator60-wiring-composition-20261025-0228/deliberately-long-temp-path-for-the-original-bounded-ENOENT-diagnostic-check/tmpzkm_mzvb/ops/knowledge_runtime_env.py': [Errno 2] No such file or directory\n\n\n----------------------------------------------------------------------\nRan 16 tests in 0.459s\n\nFAILED (failures=2)\n: expected 1 to be +0 // Object.is equality\n    at /home/dw/Projects/agent-sts2/.worktrees/integrator60-wiring-composition-20261025-0228/agent/tests/account-drain.test.ts:13:38\n    at processTicksAndRejections (node:internal/process/task_queues:103:5)\n    at file:///home/dw/Projects/agent-sts2/agent/node_modules/@vitest/runner/dist/chunk-artifact.js:1903:20"
+          ]
+        }
+      ]
+    },
+    {
+      "file": "tests/publication-admission.test.ts",
+      "assertions": [
+        {
+          "name": "publication waiting isolates candidate learning, game admission and publication writers",
+          "failure_messages": [
+            "Error: Command failed: nice -n 19 python3 -B ../ops/tests/test_publication_gate.py\n......F......\n======================================================================\nFAIL: test_all_three_real_game_entries_refuse_publication_and_global_markers (__main__.Publication.test_all_three_real_game_entries_refuse_publication_and_global_markers)\n----------------------------------------------------------------------\nTraceback (most recent call last):\n  File \"/home/dw/Projects/agent-sts2/.worktrees/integrator60-wiring-composition-20261025-0228/agent/../ops/tests/test_publication_gate.py\", line 54, in test_all_three_real_game_entries_refuse_publication_and_global_markers\n    self.assertEqual(result.returncode, code, result.stderr)\n    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nAssertionError: 78 != 76 : b\"python3: can't open file '/home/dw/Projects/agent-sts2/.artifacts/integrator60-wiring-composition-20261025-0228/deliberately-long-temp-path-for-the-original-bounded-ENOENT-diagnostic-check/tmpnk_ta4tx/ops/knowledge_runtime_env.py': [Errno 2] No such file or directory\\n\"\n\n----------------------------------------------------------------------\nRan 13 tests in 0.205s\n\nFAILED (failures=1)\n\n    at genericNodeError (node:internal/errors:983:15)\n    at wrappedFn (node:internal/errors:537:14)\n    at checkExecSyncError (node:child_process:916:11)\n    at execFileSync (node:child_process:952:15)\n    at /home/dw/Projects/agent-sts2/.worktrees/integrator60-wiring-composition-20261025-0228/agent/tests/publication-admission.test.ts:5:10\n    at file:///home/dw/Projects/agent-sts2/agent/node_modules/@vitest/runner/dist/chunk-artifact.js:302:11\n    at file:///home/dw/Projects/agent-sts2/agent/node_modules/@vitest/runner/dist/chunk-artifact.js:1903:26\n    at file:///home/dw/Projects/agent-sts2/agent/node_modules/@vitest/runner/dist/chunk-artifact.js:2326:20\n    at new Promise (<anonymous>)\n    at runWithCancel (file:///home/dw/Projects/agent-sts2/agent/node_modules/@vitest/runner/dist/chunk-artifact.js:2323:10)"
+          ]
+        }
+      ]
+    }
+  ],
+  "installation_allowed": false
+}

@@ -1,0 +1,98 @@
+{
+  "schema": "reflex-entry-v1",
+  "id": "silent-rk-c3-random-power-realized-rest",
+  "version": 1,
+  "applies_to": "rest",
+  "predicate": {
+    "op": "and",
+    "args": [
+      {
+        "op": "any",
+        "field": "rest.options",
+        "arg": {
+          "op": "eq",
+          "field": "rest_option.enabled",
+          "value": true
+        }
+      },
+      {
+        "op": "any",
+        "field": "player.deck",
+        "arg": {
+          "op": "eq",
+          "field": "card.id",
+          "value": "INFINITE_BLADES"
+        }
+      },
+      {
+        "op": "any",
+        "field": "player.deck",
+        "arg": {
+          "op": "eq",
+          "field": "card.id",
+          "value": "CLOAK_AND_DAGGER"
+        }
+      },
+      {
+        "op": "eq",
+        "field": "act",
+        "value": 2
+      }
+    ]
+  },
+  "signal": {
+    "kind": "tag",
+    "value": "silent-rk-c3-random-power-realized-rest-review",
+    "unit": "label"
+  },
+  "label_en": "Review realized knife source and current rest resources",
+  "evidence": {
+    "observations": [
+      {
+        "run_id": "1913SE84AXQF",
+        "floor": 28
+      }
+    ],
+    "n_support": 1,
+    "n_contradict": 0
+  },
+  "confidence": 0.25,
+  "scope": {
+    "character": "silent",
+    "ascensions": [
+      10
+    ]
+  },
+  "directions": [],
+  "cores": [],
+  "combos": [],
+  "source_experience": [],
+  "sources": [
+    {
+      "source": "own",
+      "path": "learner/runs/20261025-004846-81d42fb3-8560-4b93-9a36-eee613e26039-strategy-proposal/scratch/1913-F31-entry.raw.json",
+      "sha256": "2d2d84aa6f3b26820d8b770bbe9ef04de3cc857e387aae2894fbe20dd06083bb",
+      "game_version": "unknown",
+      "retrieved_at": "2026-10-25",
+      "sample": {
+        "runs": 1,
+        "players": null,
+        "selection": "仅本批核实局的当前牌文/已发生选择；非HP收益。上下文与机会分母见source-ledger.json。"
+      }
+    },
+    {
+      "source": "external:sts2fun",
+      "path": "knowledge/external/sts2fun/builds-v1/representative-timelines.json",
+      "sha256": "dfde8d6ec66f58fca63ca30d45d86d47c2d822e807e9f77f65cb3c4c65268eda",
+      "game_version": "v0.111",
+      "retrieved_at": "2026-10-21",
+      "url": "https://sts2.fun/static/sts2_public.db.zst",
+      "license": "许可未明确，仅匿名派生摘录与署名统计，不分发原库。",
+      "sample": {
+        "runs": 10,
+        "players": null,
+        "selection": "簇3固定顺序前5对/10完整轨迹，非随机留出；仅方向对照，不证明本条机制或收益。"
+      }
+    }
+  ]
+}

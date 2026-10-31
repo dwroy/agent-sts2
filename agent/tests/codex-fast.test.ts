@@ -14,7 +14,7 @@ const request: EngineRequest = {
 
 describe("Shared Codex defaults across session entry points", () => {
   it.each(["IRONCLAD", "SILENT"])("uses GPT-6.1 Sol/high/normal for %s", (character) => {
-    for (const legacyTier of [undefined, "default", "priority"]) {
+    for (const legacyTier of [undefined, "default"]) {
       const config = loadConfig({ CHARACTER: character, BRAIN_CODEX_SERVICE_TIER: legacyTier });
       expect(config.brain.codex.serviceTier).toBe("default");
       expect(config.brain.engines.codex.model).toBe("gpt-6.1-sol");
@@ -22,16 +22,17 @@ describe("Shared Codex defaults across session entry points", () => {
     }
   });
 
-  it("applies Fast tier and 512k only to ops init/resume and interactive resume", () => {
+  it("applies normal tier and 512k to ops init/resume and interactive start/resume", () => {
     const commands = [
       initCommand(request, "TASK", "codex").args,
       resumeCommand(request, SESSION, "TASK", "codex").args,
+      interactiveArgs(request),
       interactiveArgs(request, SESSION),
     ];
     for (const args of commands) {
       expect(args).toContain("model_context_window=512000");
       expect(args).toContain("model_auto_compact_token_limit=460800");
-      expect(args).toContain('service_tier="fast"');
+      expect(args.filter((arg) => arg.startsWith("service_tier="))).toEqual(['service_tier="default"']);
       expect(args).toContain('model_reasoning_effort="xhigh"');
       expect(args).toContain("gpt-6.1-sol");
     }
@@ -41,7 +42,7 @@ describe("Shared Codex defaults across session entry points", () => {
     expect(engineDefaults("codex")).toEqual({ model: "gpt-6.1-sol", effort: "high" });
     const opsArgs = initCommand({ ...request, model: undefined, effort: undefined }, "TASK", "codex").args;
     expect(opsArgs).toContain("gpt-6.1-sol");
-    expect(opsArgs).toContain('service_tier="fast"');
+    expect(opsArgs).toContain('service_tier="default"');
     expect(opsArgs).toContain('model_reasoning_effort="high"');
     const args = codexCommand({ ...request, model: undefined, effort: undefined }, "TASK", "codex").args;
     expect(args).toContain("gpt-6.1-sol");
@@ -49,7 +50,7 @@ describe("Shared Codex defaults across session entry points", () => {
     expect(args).toContain("--ignore-user-config");
     expect(args).toContain("model_context_window=512000");
     expect(args).toContain("model_auto_compact_token_limit=460800");
-    expect(args).toContain('service_tier="default"');
+    expect(args.filter((arg) => arg.startsWith("service_tier="))).toEqual(['service_tier="default"']);
   });
 
   it("passes normal tier and 512k through both play transports and preserves their isolation settings", () => {
@@ -64,7 +65,7 @@ describe("Shared Codex defaults across session entry points", () => {
     for (const args of commands) {
       expect(args).toContain("model_context_window=512000");
       expect(args).toContain("model_auto_compact_token_limit=460800");
-      expect(args).toContain('service_tier="default"');
+      expect(args.filter((arg) => arg.startsWith("service_tier="))).toEqual(['service_tier="default"']);
       expect(args).toContain('model_reasoning_effort="high"');
       expect(args).toContain("project_doc_max_bytes=0");
       expect(args).toContain("hooks");

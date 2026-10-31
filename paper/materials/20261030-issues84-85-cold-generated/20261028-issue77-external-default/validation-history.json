@@ -1,0 +1,42 @@
+{
+  "schema": "issue77-default-validation-history-v1",
+  "initial_python": {
+    "tests": 22,
+    "exit_code": 0,
+    "log": "python-external.log"
+  },
+  "initial_targeted": {
+    "files": 2,
+    "tests": 19,
+    "exit_code": 0,
+    "log": "targeted-vitest.log"
+  },
+  "sandbox": {
+    "exit_code": 1,
+    "files": 644,
+    "passed_files": 642,
+    "passed_tests": 5946,
+    "failed_tests": 2,
+    "log": "sandbox.log",
+    "failure": "publication_registration_fixture.py still asserted ultrafast; affected learner-registration-pipeline and publication-admission",
+    "scope": "before added ops/codex/lib.ts authorization; no source mutated while this run was active",
+    "paths_phase": "not reached because sandbox script stopped at initial Vitest failure"
+  },
+  "edit_cwd_error": {
+    "error": "FileNotFoundError: ops/codex/lib.ts",
+    "cwd": "agent",
+    "source_mutated": false,
+    "following_pre_ops_tsc_exit_code": 0,
+    "log": "pre-ops-tsc.log"
+  },
+  "final_checks": {
+    "tsc_exit_code": 0,
+    "tsc_log": "final-tsc.log",
+    "vitest_exit_code": 0,
+    "vitest_files": 8,
+    "vitest_passed_tests": 78,
+    "vitest_log": "final-targeted-vitest.log",
+    "source_scope": "final six production leaves, corrected registration fixtures, paths phase, ops init/resume/herdr, external launcher and native wrapper",
+    "scope_limit": "targeted follow-up, not a repeated sandbox or integrator combined full"
+  }
+}

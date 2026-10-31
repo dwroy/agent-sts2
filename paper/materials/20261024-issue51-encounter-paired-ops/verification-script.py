@@ -1,0 +1,20 @@
+from pathlib import Path
+import hashlib,json,subprocess
+R=Path.cwd();L=R/'.worktrees/live';A=Path(__file__).resolve().parent;M=R/'paper/materials/20261024-issue51-encounter-paired-ops';s=json.loads((M/'publication-state.json').read_bytes());p=json.loads((M/'publication.json').read_bytes());assert s['published'] and not s['held_locks'] and 'ledger-verified' in s['phase'];assert json.loads((M/'actual-live-consumers.json').read_bytes())['passed'];assert json.loads((M/'ledger-check-after.json').read_bytes())['rc']==0
+rows=[]
+for label,root,commit in [('main',R,p['source']['commit']),('live',L,p['behavior']['commit'])]:
+ assert subprocess.run(['git','-C',str(root),'merge-base','--is-ancestor',commit,'HEAD']).returncode==0
+ changed=subprocess.check_output(['git','-C',str(root),'diff-tree','--no-commit-id','--name-only','-r',commit],text=True).splitlines();assert set(changed)==set(p['behavior']['paths'])
+ for leaf in ['knowledge/characters/silent/strategy-entries.json','knowledge/characters/silent/reflex.json','knowledge/characters/silent/reflex-vocab.json']:
+  b=(root/leaf).read_bytes();blob=subprocess.check_output(['git','-C',str(root),'show',commit+':'+leaf]);assert b==blob;rows.append({'root':label,'path':leaf,'bytes':len(b),'sha256':hashlib.sha256(b).hexdigest()})
+ doc=json.loads((root/'eval/versions.json').read_bytes());v=[e for e in doc['versions'] if e.get('release_id')==s['release_id']];assert len(v)==1 and v[0]['commit']==p['behavior']['commit']
+ledger=json.loads((M/'ledger-published.json').read_bytes());assert len(ledger['own_lines'])==12 and len({json.loads(x)['id'] for x in ledger['own_lines']})==12
+# R435 receipts remain untouched and all its six strategy/rk entries survive this release.
+a=json.loads((R/'paper/materials/20261024-issue51-blade-paired-ops/assembly.json').read_bytes())
+prior_s=json.loads((R/a['source_files']['strategy']['path']).read_bytes())['entries'];prior_r=json.loads((R/a['source_files']['rk']['path']).read_bytes())['entries']
+lib=json.loads((L/'knowledge/characters/silent/strategy-entries.json').read_bytes());rk=json.loads((L/'knowledge/characters/silent/reflex.json').read_bytes())
+for old in prior_s:assert next(e for e in lib['entries'] if e['id']==old['id'])==old
+for old in prior_r:assert next(e for e in rk['entries'] if e['id']==old['id'])==old
+for ref in json.loads((M/'R435-return-verified.json').read_bytes())['original_receipts'].values():assert hashlib.sha256((R/ref['path']).read_bytes()).hexdigest()==ref['sha256']
+(M/'verification.json').write_text(json.dumps({'at':subprocess.check_output(['date','-Is'],text=True).strip(),'release_id':s['release_id'],'source_commit':p['source']['commit'],'behavior_commit':p['behavior']['commit'],'registered_live':s['live'],'actual_main_live_rows':rows,'exact_data_paths_only':True,'ledger_shipped_projection_ids':12,'new_contexts':2,'same_id_updates':4,'R435_six_strategy_six_rk_exact':True,'R435_receipts_exact':True,'fixed_strategy_queries':6,'fixed_rk_combat_planning_queries':6,'fixed_rk_construction_negatives':6,'current_state_predicates_true':6,'full_predicates_unknown_without_Plan':6,'wrong_enemy_controls':6,'new_executable_comparisons':0,'natural_adoption_benefit':'pending','scientific_parents_open':True,'preflight_boundaries':['Original worktree .git already reclaimed; native terminal and original clean postflight used, never upward fallback main HEAD.','Candidate-core dependencies are byte-identical regular copies inside role boundary; no production loader bypass.','Own legacy evidence without explicit type remains own per original contracts; an adapter preflight stopped before ledger writes and was corrected, original marker retained.'],'no_original_reports_rewritten':True,'source_permissions_changed':False,'new_full_models_games_ticks':0,'held_locks':s['held_locks'],'live_lock_seconds':s['live_lock_seconds']},ensure_ascii=False,indent=2)+'\n')
+print(json.dumps({'release':s['release_id'],'main_live_exact':True,'R435_preserved':True,'ledger_shipped':12,'lock_seconds':s['live_lock_seconds']}))

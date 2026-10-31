@@ -1,0 +1,24 @@
+{
+  "schema": "ops-registration-followup-v1",
+  "at": "2026-10-24T21:50:02+08:00",
+  "issue": 56,
+  "phase": "await-original-natural-tick-terminal-and-source-fix",
+  "status": "pending",
+  "parent": {
+    "pid": 116632,
+    "birth": "27391130",
+    "observed_at": "2026-10-24T21:48:42+08:00"
+  },
+  "batch": "20261024-214311",
+  "original_wrapper_pid": 117156,
+  "pane": "w1H:pEE",
+  "evidence": "paper/materials/20261024-214311-registration-ops/natural-registration-blocker.json",
+  "next": [
+    "verify original parent PID/birth and lock terminal; do not signal",
+    "read original disk registrations only after original save; do not overwrite in-flight rows",
+    "verify per-batch absence/presence of actual native starts and preserved stderr before original scoped continuation",
+    "source owner fixes durable registration and long-lock ordering; preserve sources, generations, lease, no-input and retirement gates"
+  ],
+  "no_new_model_tick_or_timeout_bypass": true,
+  "source_issue_comment": 6385006635
+}

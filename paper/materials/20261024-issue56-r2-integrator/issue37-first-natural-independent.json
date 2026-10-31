@@ -1,0 +1,74 @@
+{
+  "at": "2026-10-24T20:28:15+08:00",
+  "scope": "independent first natural F2/T1 pair after R438; no whole-run or benefit claim",
+  "request_ref": {
+    "path": "logs/jev-prompts.jsonl",
+    "offset": 3362130764,
+    "bytes": 92277,
+    "sha256": "d0cb117f92ddee5e9170c019ebfb3a953b46f595f3f45c586f17dc7703c9253e"
+  },
+  "decision_ref": {
+    "path": "logs/decisions.jsonl",
+    "offset": 4828221226,
+    "bytes": 75280,
+    "sha256": "4357f819a590dd441c883c098bb32ce9941aec84b6625ee581bbefe55673e71b"
+  },
+  "run_id": "7RDXHY68SMWF",
+  "decision_id": "833e1b76-b40f-4f3f-8b32-5cf6241cc30f",
+  "floor": 2,
+  "turn": 1,
+  "request_keys": [
+    "model",
+    "state",
+    "questions"
+  ],
+  "fallback": false,
+  "result": "completed: Action completed.",
+  "matching_raw_slices_verified": true,
+  "products": [
+    {
+      "path": "agent/src/eye/jev-prompt-log.ts",
+      "sha256": "709fa8abe7a15834c59a38a9be59d23ae107b3ab748cb865d3468001da193cad"
+    },
+    {
+      "path": "agent/src/reflex/jev/client.ts",
+      "sha256": "a5f8bf8f80b9e4b46b796342f1ff6b168ced52b53e44b483ef4b2a5d15028bad"
+    },
+    {
+      "path": "agent/tests/jev-decision-projection.test.ts",
+      "sha256": "714cbbd7ee125415c960714af0009b09a1f17d5cacb63d6cbeee48f5a16a9e09"
+    },
+    {
+      "path": "agent/tests/open-book.test.ts",
+      "sha256": "f3cab516d194dc53f47e48d163fd4607737e204502522a2280c5b8ae36426f5d"
+    },
+    {
+      "path": "agent/tests/v6-combat-entries.test.ts",
+      "sha256": "76e79c3c7f655cc58f9cc8724dfa238626240b23f82a54bc1d229020341303dd"
+    },
+    {
+      "path": "docs/open-book.md",
+      "sha256": "f53e47f164838cb4e3e17f21fa69091386f077d66af084af2f367b20e7305f9e"
+    },
+    {
+      "path": "agent/tools/v6/combat-entry-replay.ts",
+      "sha256": "402fe69ce4eb5c3b07d9154a2215e693700bd19f64beef2457420e9067833b0c"
+    },
+    {
+      "path": "agent/tests/learner-launch-failures.test.ts",
+      "sha256": "3086f3baf67164b061777b684ed7545d2d22e4bacf21f7635ce450b2a756bf16"
+    },
+    {
+      "path": "ops/tests/test_reclaim_gates.py",
+      "sha256": "dfe55b8a6ed7a8dacca5dde2d2f079730aef9a8d47106ef66796c972f17073c8"
+    }
+  ],
+  "native_code_identity": {
+    "native_commit": null,
+    "original_error": "git status failed: spawnSync git ENOBUFS",
+    "live_commit_verified_separately": "069fd0107a1f16ec958e10af8dc49d7a612c6ec8",
+    "native_commit_backfilled": false
+  },
+  "native_identity_null_not_backfilled": true,
+  "model_game_tick_calls": 0
+}

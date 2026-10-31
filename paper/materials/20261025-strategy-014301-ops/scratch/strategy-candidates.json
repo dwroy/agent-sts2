@@ -1,0 +1,976 @@
+{
+  "schema": "brain-strategies-v1",
+  "character": "silent",
+  "id": "silent-events003-strategy-candidates",
+  "formal_publication": "pending",
+  "consumer_readback": "pending",
+  "entries": [
+    {
+      "id": "silent-events003-automaton-random-pools",
+      "version": "1.0.0",
+      "trigger": {
+        "question_types": [
+          "event"
+        ],
+        "acts": [
+          2
+        ]
+      },
+      "strategy": "被寄生的自动机械：按当前需要比较“随机能力牌”和“随机0费牌”两个池，取得后按真实牌面重评；别把学习预支成指定毒/防御成长。自有39局39次均只加1牌、当下HP不变（A10为37）；外部v0.111学习39/101整局胜、触核8/19，后者高3.49个百分点，不能据此固定选触核。\n范围：当前事件与两项原文相符；外部A10/自有版本unknown分账，随机池分布与选择因果收益未知，旧版本反向结果见来源账本。",
+      "evidence": [
+        {
+          "type": "own",
+          "run": "0CLP16ZR4ZZC",
+          "floor": 31,
+          "ref": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261025-014301/learner/runs/20261025-014408-67b768ca-2220-48c1-a414-61df93f6ddd7-strategy-proposal/scratch/raw-refs.json#decisions:3361355118; fingerprint-matched states:15278032484",
+          "role": "support"
+        },
+        {
+          "type": "own",
+          "run": "DXF5L8WH8X12",
+          "floor": 20,
+          "ref": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261025-014301/learner/runs/20261025-014408-67b768ca-2220-48c1-a414-61df93f6ddd7-strategy-proposal/scratch/raw-refs.json#decisions:4499345618; fingerprint-matched states:16829348049",
+          "role": "support"
+        },
+        {
+          "type": "own",
+          "run": "JBX9JLH46KVN",
+          "floor": 24,
+          "ref": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261025-014301/learner/runs/20261025-014408-67b768ca-2220-48c1-a414-61df93f6ddd7-strategy-proposal/scratch/raw-refs.json#decisions:832621108; fingerprint-matched states:9959237497",
+          "role": "support"
+        },
+        {
+          "type": "own",
+          "run": "KYJMB7ELM6FN",
+          "floor": 27,
+          "ref": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261025-014301/learner/runs/20261025-014408-67b768ca-2220-48c1-a414-61df93f6ddd7-strategy-proposal/scratch/raw-refs.json#decisions:2932329183; fingerprint-matched states:14696164469",
+          "role": "support"
+        },
+        {
+          "type": "external_aggregate",
+          "source": "external:sts2fun",
+          "url": "https://sts2.fun/static/sts2_public.db.zst",
+          "version": "v0.111",
+          "dataset_sha256": "1f7c0c3d441aedb5c85f04bcd4d8d6a1039b438a8b6fda2d96cfa5c27580cbf5",
+          "downloaded_at": "2026-10-21",
+          "license": "No explicit dataset redistribution license found on public FAQ; aggregate statistics with attribution only; no raw redistribution.",
+          "filters": {
+            "character": "silent",
+            "ascension": 10,
+            "criteria": "character='SILENT' AND ascension=10 AND n_players=1 AND is_valid=1 AND was_abandoned=0 AND has_modifiers=0; build=v0.111.0; event=INFESTED_AUTOMATON; act=2; event_choices title=INFESTED_AUTOMATON.pages.INITIAL.options.STUDY.title; no final-cluster restriction"
+          },
+          "statistic": {
+            "name": "whole_run_winning_upload_fraction_descriptive",
+            "value": 0.38613861386138615,
+            "unit": "fraction"
+          },
+          "denominator": {
+            "unit": "runs",
+            "n": 101
+          },
+          "design": "observational",
+          "limitations": [
+            "观察性、自选上传、玩家水平/SL/生存和未观察混杂；不作因果收益或固定拿牌命令。",
+            "distinct_uploaded_runs是该cell上传局分母，非已核独立玩家；不同cell不相加。",
+            "事件title没有完整未选项、变量、即时资源或动机；外部HP为节点末/前节点末代理。",
+            "版本机制对照缺失，逐build保留，不推定机制未改；自有game_version=unknown。",
+            "不使用终局牌组/簇号/后续胜负作为当前触发；数据与本系统验证分账。"
+          ],
+          "ref": "knowledge/external/sts2fun/decision-fields-v1/statistics.json#rows[76151]; input_sha256=4cf36c85eee760ed8e74495c1758e0228bbe1214789d3d0bd97052d5ca6a1f9d",
+          "role": "support"
+        },
+        {
+          "type": "external_aggregate",
+          "source": "external:sts2fun",
+          "url": "https://sts2.fun/static/sts2_public.db.zst",
+          "version": "v0.111",
+          "dataset_sha256": "1f7c0c3d441aedb5c85f04bcd4d8d6a1039b438a8b6fda2d96cfa5c27580cbf5",
+          "downloaded_at": "2026-10-21",
+          "license": "No explicit dataset redistribution license found on public FAQ; aggregate statistics with attribution only; no raw redistribution.",
+          "filters": {
+            "character": "silent",
+            "ascension": 10,
+            "criteria": "character='SILENT' AND ascension=10 AND n_players=1 AND is_valid=1 AND was_abandoned=0 AND has_modifiers=0; build=v0.111.0; event=INFESTED_AUTOMATON; act=2; event_choices title=INFESTED_AUTOMATON.pages.INITIAL.options.TOUCH_CORE.title; no final-cluster restriction"
+          },
+          "statistic": {
+            "name": "whole_run_winning_upload_fraction_descriptive",
+            "value": 0.42105263157894735,
+            "unit": "fraction"
+          },
+          "denominator": {
+            "unit": "runs",
+            "n": 19
+          },
+          "design": "observational",
+          "limitations": [
+            "观察性、自选上传、玩家水平/SL/生存和未观察混杂；不作因果收益或固定拿牌命令。",
+            "distinct_uploaded_runs是该cell上传局分母，非已核独立玩家；不同cell不相加。",
+            "事件title没有完整未选项、变量、即时资源或动机；外部HP为节点末/前节点末代理。",
+            "版本机制对照缺失，逐build保留，不推定机制未改；自有game_version=unknown。",
+            "不使用终局牌组/簇号/后续胜负作为当前触发；数据与本系统验证分账。"
+          ],
+          "ref": "knowledge/external/sts2fun/decision-fields-v1/statistics.json#rows[76152]; input_sha256=4cf36c85eee760ed8e74495c1758e0228bbe1214789d3d0bd97052d5ca6a1f9d",
+          "role": "support"
+        }
+      ],
+      "source": "mixed",
+      "confidence": 0.45,
+      "evidence_status": "unassessed",
+      "formal_publication": "pending",
+      "consumer_readback": "pending",
+      "candidate_batch": "20261025-014301-strategy-proposal",
+      "source_commit": null,
+      "context_id": "events003/automaton-random-pools",
+      "body_conditions": "当前事件ID与两池原文；按当前牌组/资源评估需要，不能预知随机结果。",
+      "counterexamples_and_limits": "自有学习36次取得7种已观察能力ID；触核3次分别侧步/精准切割/背刺，均面板0费；不是完整池。外部反例：v0.109.0触核0/9，学习11/24。",
+      "evidence_ledger": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261025-014301/learner/runs/20261025-014408-67b768ca-2220-48c1-a414-61df93f6ddd7-strategy-proposal/scratch/source-ledger.json#INFESTED_AUTOMATON",
+      "own_strata": [
+        {
+          "game_version": "unknown",
+          "ascension": 0,
+          "attempt_scope": "retry_or_predicted_death",
+          "option_index": 0,
+          "final_victory": false,
+          "distinct_runs": 1,
+          "opportunities": 1
+        },
+        {
+          "game_version": "unknown",
+          "ascension": 6,
+          "attempt_scope": "retry_or_predicted_death",
+          "option_index": 0,
+          "final_victory": false,
+          "distinct_runs": 1,
+          "opportunities": 1
+        },
+        {
+          "game_version": "unknown",
+          "ascension": 10,
+          "attempt_scope": "no_retry_evidence",
+          "option_index": 0,
+          "final_victory": false,
+          "distinct_runs": 3,
+          "opportunities": 3
+        },
+        {
+          "game_version": "unknown",
+          "ascension": 10,
+          "attempt_scope": "no_retry_evidence",
+          "option_index": 0,
+          "final_victory": true,
+          "distinct_runs": 1,
+          "opportunities": 1
+        },
+        {
+          "game_version": "unknown",
+          "ascension": 10,
+          "attempt_scope": "retry_or_predicted_death",
+          "option_index": 0,
+          "final_victory": false,
+          "distinct_runs": 30,
+          "opportunities": 30
+        },
+        {
+          "game_version": "unknown",
+          "ascension": 10,
+          "attempt_scope": "retry_or_predicted_death",
+          "option_index": 1,
+          "final_victory": false,
+          "distinct_runs": 3,
+          "opportunities": 3
+        }
+      ],
+      "rk_candidate_id": "silent-rk-events003-automaton-random-pools",
+      "mechanism_version_alignment": "unknown; no pooling across builds; require current option text match",
+      "current_information_only": true,
+      "replay": "pending"
+    },
+    {
+      "id": "silent-events003-dummy-three-turn-feasibility",
+      "version": "1.0.0",
+      "trigger": {
+        "question_types": [
+          "event"
+        ],
+        "acts": [
+          3
+        ]
+      },
+      "strategy": "战痕假人先按题面3回合期限核输出；若只支持75目标、150/300尚无依据，优先保留第1档比较，不为高档奖励直接加目标血量。三档为75→1随机药水、150→2随机升级、300→随机遗物；从75升150翻倍，升300为4倍。自有第1档27/31通过，仍4次失败；其中A10为25/29，另A4/A6各1次通过。\n范围：只限当前假人菜单相符；本批不设牌组DPR或安全HP阈值，迟到的成长不冒3回合输出；SL/预判必死与无重试证据分层，3回合为文本期限、非保证。",
+      "evidence": [
+        {
+          "type": "own",
+          "run": "KUHYZBFFLALU",
+          "floor": 38,
+          "ref": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261025-014301/learner/runs/20261025-014408-67b768ca-2220-48c1-a414-61df93f6ddd7-strategy-proposal/scratch/raw-refs.json#decisions:4203089735; fingerprint-matched states:16426840931",
+          "role": "support"
+        },
+        {
+          "type": "own",
+          "run": "0B2567HG3T4D",
+          "floor": 37,
+          "ref": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261025-014301/learner/runs/20261025-014408-67b768ca-2220-48c1-a414-61df93f6ddd7-strategy-proposal/scratch/raw-refs.json#decisions:892745451; fingerprint-matched states:10525011712; contradicts safety/generalized success, not 75 target text",
+          "role": "contradict"
+        },
+        {
+          "type": "own",
+          "run": "SWXESN56U1QJ",
+          "floor": 37,
+          "ref": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261025-014301/learner/runs/20261025-014408-67b768ca-2220-48c1-a414-61df93f6ddd7-strategy-proposal/scratch/raw-refs.json#decisions:3977732620; fingerprint-matched states:16100151836; tier1 failure",
+          "role": "contradict"
+        },
+        {
+          "type": "external_aggregate",
+          "source": "external:sts2fun",
+          "url": "https://sts2.fun/static/sts2_public.db.zst",
+          "version": "v0.111",
+          "dataset_sha256": "1f7c0c3d441aedb5c85f04bcd4d8d6a1039b438a8b6fda2d96cfa5c27580cbf5",
+          "downloaded_at": "2026-10-21",
+          "license": "No explicit dataset redistribution license found on public FAQ; aggregate statistics with attribution only; no raw redistribution.",
+          "filters": {
+            "character": "silent",
+            "ascension": 10,
+            "criteria": "character='SILENT' AND ascension=10 AND n_players=1 AND is_valid=1 AND was_abandoned=0 AND has_modifiers=0; build=v0.111.0; event=BATTLEWORN_DUMMY; act=3; event_choices title=BATTLEWORN_DUMMY.pages.INITIAL.options.SETTING_1.title; no final-cluster restriction"
+          },
+          "statistic": {
+            "name": "whole_run_winning_upload_fraction_descriptive",
+            "value": 0.5882352941176471,
+            "unit": "fraction"
+          },
+          "denominator": {
+            "unit": "runs",
+            "n": 17
+          },
+          "design": "observational",
+          "limitations": [
+            "观察性、自选上传、玩家水平/SL/生存和未观察混杂；不作因果收益或固定拿牌命令。",
+            "distinct_uploaded_runs是该cell上传局分母，非已核独立玩家；不同cell不相加。",
+            "事件title没有完整未选项、变量、即时资源或动机；外部HP为节点末/前节点末代理。",
+            "版本机制对照缺失，逐build保留，不推定机制未改；自有game_version=unknown。",
+            "不使用终局牌组/簇号/后续胜负作为当前触发；数据与本系统验证分账。"
+          ],
+          "ref": "knowledge/external/sts2fun/decision-fields-v1/statistics.json#rows[81134]; input_sha256=4cf36c85eee760ed8e74495c1758e0228bbe1214789d3d0bd97052d5ca6a1f9d",
+          "role": "support"
+        },
+        {
+          "type": "external_aggregate",
+          "source": "external:sts2fun",
+          "url": "https://sts2.fun/static/sts2_public.db.zst",
+          "version": "v0.111",
+          "dataset_sha256": "1f7c0c3d441aedb5c85f04bcd4d8d6a1039b438a8b6fda2d96cfa5c27580cbf5",
+          "downloaded_at": "2026-10-21",
+          "license": "No explicit dataset redistribution license found on public FAQ; aggregate statistics with attribution only; no raw redistribution.",
+          "filters": {
+            "character": "silent",
+            "ascension": 10,
+            "criteria": "character='SILENT' AND ascension=10 AND n_players=1 AND is_valid=1 AND was_abandoned=0 AND has_modifiers=0; build=v0.111.0; event=BATTLEWORN_DUMMY; act=3; event_choices title=BATTLEWORN_DUMMY.pages.INITIAL.options.SETTING_2.title; no final-cluster restriction"
+          },
+          "statistic": {
+            "name": "whole_run_winning_upload_fraction_descriptive",
+            "value": 0.62,
+            "unit": "fraction"
+          },
+          "denominator": {
+            "unit": "runs",
+            "n": 100
+          },
+          "design": "observational",
+          "limitations": [
+            "观察性、自选上传、玩家水平/SL/生存和未观察混杂；不作因果收益或固定拿牌命令。",
+            "distinct_uploaded_runs是该cell上传局分母，非已核独立玩家；不同cell不相加。",
+            "事件title没有完整未选项、变量、即时资源或动机；外部HP为节点末/前节点末代理。",
+            "版本机制对照缺失，逐build保留，不推定机制未改；自有game_version=unknown。",
+            "不使用终局牌组/簇号/后续胜负作为当前触发；数据与本系统验证分账。"
+          ],
+          "ref": "knowledge/external/sts2fun/decision-fields-v1/statistics.json#rows[81163]; input_sha256=4cf36c85eee760ed8e74495c1758e0228bbe1214789d3d0bd97052d5ca6a1f9d",
+          "role": "support"
+        },
+        {
+          "type": "external_aggregate",
+          "source": "external:sts2fun",
+          "url": "https://sts2.fun/static/sts2_public.db.zst",
+          "version": "v0.111",
+          "dataset_sha256": "1f7c0c3d441aedb5c85f04bcd4d8d6a1039b438a8b6fda2d96cfa5c27580cbf5",
+          "downloaded_at": "2026-10-21",
+          "license": "No explicit dataset redistribution license found on public FAQ; aggregate statistics with attribution only; no raw redistribution.",
+          "filters": {
+            "character": "silent",
+            "ascension": 10,
+            "criteria": "character='SILENT' AND ascension=10 AND n_players=1 AND is_valid=1 AND was_abandoned=0 AND has_modifiers=0; build=v0.111.0; event=BATTLEWORN_DUMMY; act=3; event_choices title=BATTLEWORN_DUMMY.pages.INITIAL.options.SETTING_3.title; no final-cluster restriction"
+          },
+          "statistic": {
+            "name": "whole_run_winning_upload_fraction_descriptive",
+            "value": 0.4,
+            "unit": "fraction"
+          },
+          "denominator": {
+            "unit": "runs",
+            "n": 5
+          },
+          "design": "observational",
+          "limitations": [
+            "观察性、自选上传、玩家水平/SL/生存和未观察混杂；不作因果收益或固定拿牌命令。",
+            "distinct_uploaded_runs是该cell上传局分母，非已核独立玩家；不同cell不相加。",
+            "事件title没有完整未选项、变量、即时资源或动机；外部HP为节点末/前节点末代理。",
+            "版本机制对照缺失，逐build保留，不推定机制未改；自有game_version=unknown。",
+            "不使用终局牌组/簇号/后续胜负作为当前触发；数据与本系统验证分账。"
+          ],
+          "ref": "knowledge/external/sts2fun/decision-fields-v1/statistics.json#rows[81231]; input_sha256=4cf36c85eee760ed8e74495c1758e0228bbe1214789d3d0bd97052d5ca6a1f9d",
+          "role": "support"
+        }
+      ],
+      "source": "mixed",
+      "confidence": 0.45,
+      "evidence_status": "conflict",
+      "formal_publication": "pending",
+      "consumer_readback": "pending",
+      "candidate_batch": "20261025-014301-strategy-proposal",
+      "source_commit": null,
+      "context_id": "events003/dummy-three-turn-feasibility",
+      "body_conditions": "当前3回合菜单；当前可得输出只支持低档而非高档。未有输出证据时不得声称已满足。",
+      "counterexamples_and_limits": "四次第1档失败保留；最低档也非免费药水。整局胜/败不等于本事件通过/失败。",
+      "evidence_ledger": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261025-014301/learner/runs/20261025-014408-67b768ca-2220-48c1-a414-61df93f6ddd7-strategy-proposal/scratch/source-ledger.json#BATTLEWORN_DUMMY",
+      "own_strata": [
+        {
+          "game_version": "unknown",
+          "ascension": 4,
+          "attempt_scope": "retry_or_predicted_death",
+          "option_index": 0,
+          "final_victory": false,
+          "distinct_runs": 1,
+          "opportunities": 1
+        },
+        {
+          "game_version": "unknown",
+          "ascension": 6,
+          "attempt_scope": "retry_or_predicted_death",
+          "option_index": 0,
+          "final_victory": false,
+          "distinct_runs": 1,
+          "opportunities": 1
+        },
+        {
+          "game_version": "unknown",
+          "ascension": 9,
+          "attempt_scope": "retry_or_predicted_death",
+          "option_index": 1,
+          "final_victory": true,
+          "distinct_runs": 1,
+          "opportunities": 1
+        },
+        {
+          "game_version": "unknown",
+          "ascension": 10,
+          "attempt_scope": "no_retry_evidence",
+          "option_index": 0,
+          "final_victory": false,
+          "distinct_runs": 4,
+          "opportunities": 4
+        },
+        {
+          "game_version": "unknown",
+          "ascension": 10,
+          "attempt_scope": "no_retry_evidence",
+          "option_index": 0,
+          "final_victory": true,
+          "distinct_runs": 1,
+          "opportunities": 1
+        },
+        {
+          "game_version": "unknown",
+          "ascension": 10,
+          "attempt_scope": "retry_or_predicted_death",
+          "option_index": 0,
+          "final_victory": false,
+          "distinct_runs": 23,
+          "opportunities": 23
+        },
+        {
+          "game_version": "unknown",
+          "ascension": 10,
+          "attempt_scope": "retry_or_predicted_death",
+          "option_index": 0,
+          "final_victory": true,
+          "distinct_runs": 1,
+          "opportunities": 1
+        },
+        {
+          "game_version": "unknown",
+          "ascension": 10,
+          "attempt_scope": "retry_or_predicted_death",
+          "option_index": 1,
+          "final_victory": false,
+          "distinct_runs": 1,
+          "opportunities": 1
+        }
+      ],
+      "rk_candidate_id": "silent-rk-events003-dummy-three-turn-feasibility",
+      "mechanism_version_alignment": "unknown; no pooling across builds; require current option text match",
+      "current_information_only": true,
+      "replay": "pending"
+    },
+    {
+      "id": "silent-events003-dummy-random-upgrades-tradeoff",
+      "version": "1.0.0",
+      "trigger": {
+        "question_types": [
+          "event"
+        ],
+        "acts": [
+          3
+        ]
+      },
+      "strategy": "若当前另有依据支持3回合150目标，且更需要升级，再把第2档与第1档药水作资源比较；两个升级是随机，不能当定向升两张核心。自有A9一次成功实际升级打击与防御；A10一次选第2档失败，不能外推成功率。外部v0.111第2档整局胜62/100、第1档10/17，差3.18个百分点；不是事件通过率或收益。\n范围：当前假人原菜单、已持牌/药水位与升级需求；输出可行性仍须本题独立核，未核不冒已达150。第3档自有0次，外部仅5局，不升成固定拿遗物规则。",
+      "evidence": [
+        {
+          "type": "own",
+          "run": "G403VCZ3BH1B",
+          "floor": 38,
+          "ref": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261025-014301/learner/runs/20261025-014408-67b768ca-2220-48c1-a414-61df93f6ddd7-strategy-proposal/scratch/raw-refs.json#decisions:558502997; fingerprint-matched states:7328522248",
+          "role": "support"
+        },
+        {
+          "type": "own",
+          "run": "UJ0K3G10609Y",
+          "floor": 42,
+          "ref": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261025-014301/learner/runs/20261025-014408-67b768ca-2220-48c1-a414-61df93f6ddd7-strategy-proposal/scratch/raw-refs.json#decisions:585533084; fingerprint-matched states:7591085743; A10 tier2 failed; A9 success must not establish A10 success",
+          "role": "contradict"
+        },
+        {
+          "type": "external_aggregate",
+          "source": "external:sts2fun",
+          "url": "https://sts2.fun/static/sts2_public.db.zst",
+          "version": "v0.111",
+          "dataset_sha256": "1f7c0c3d441aedb5c85f04bcd4d8d6a1039b438a8b6fda2d96cfa5c27580cbf5",
+          "downloaded_at": "2026-10-21",
+          "license": "No explicit dataset redistribution license found on public FAQ; aggregate statistics with attribution only; no raw redistribution.",
+          "filters": {
+            "character": "silent",
+            "ascension": 10,
+            "criteria": "character='SILENT' AND ascension=10 AND n_players=1 AND is_valid=1 AND was_abandoned=0 AND has_modifiers=0; build=v0.111.0; event=BATTLEWORN_DUMMY; act=3; event_choices title=BATTLEWORN_DUMMY.pages.INITIAL.options.SETTING_2.title; no final-cluster restriction"
+          },
+          "statistic": {
+            "name": "whole_run_winning_upload_fraction_descriptive",
+            "value": 0.62,
+            "unit": "fraction"
+          },
+          "denominator": {
+            "unit": "runs",
+            "n": 100
+          },
+          "design": "observational",
+          "limitations": [
+            "观察性、自选上传、玩家水平/SL/生存和未观察混杂；不作因果收益或固定拿牌命令。",
+            "distinct_uploaded_runs是该cell上传局分母，非已核独立玩家；不同cell不相加。",
+            "事件title没有完整未选项、变量、即时资源或动机；外部HP为节点末/前节点末代理。",
+            "版本机制对照缺失，逐build保留，不推定机制未改；自有game_version=unknown。",
+            "不使用终局牌组/簇号/后续胜负作为当前触发；数据与本系统验证分账。"
+          ],
+          "ref": "knowledge/external/sts2fun/decision-fields-v1/statistics.json#rows[81163]; input_sha256=4cf36c85eee760ed8e74495c1758e0228bbe1214789d3d0bd97052d5ca6a1f9d",
+          "role": "support"
+        },
+        {
+          "type": "external_aggregate",
+          "source": "external:sts2fun",
+          "url": "https://sts2.fun/static/sts2_public.db.zst",
+          "version": "v0.111",
+          "dataset_sha256": "1f7c0c3d441aedb5c85f04bcd4d8d6a1039b438a8b6fda2d96cfa5c27580cbf5",
+          "downloaded_at": "2026-10-21",
+          "license": "No explicit dataset redistribution license found on public FAQ; aggregate statistics with attribution only; no raw redistribution.",
+          "filters": {
+            "character": "silent",
+            "ascension": 10,
+            "criteria": "character='SILENT' AND ascension=10 AND n_players=1 AND is_valid=1 AND was_abandoned=0 AND has_modifiers=0; build=v0.111.0; event=BATTLEWORN_DUMMY; act=3; event_choices title=BATTLEWORN_DUMMY.pages.INITIAL.options.SETTING_1.title; no final-cluster restriction"
+          },
+          "statistic": {
+            "name": "whole_run_winning_upload_fraction_descriptive",
+            "value": 0.5882352941176471,
+            "unit": "fraction"
+          },
+          "denominator": {
+            "unit": "runs",
+            "n": 17
+          },
+          "design": "observational",
+          "limitations": [
+            "观察性、自选上传、玩家水平/SL/生存和未观察混杂；不作因果收益或固定拿牌命令。",
+            "distinct_uploaded_runs是该cell上传局分母，非已核独立玩家；不同cell不相加。",
+            "事件title没有完整未选项、变量、即时资源或动机；外部HP为节点末/前节点末代理。",
+            "版本机制对照缺失，逐build保留，不推定机制未改；自有game_version=unknown。",
+            "不使用终局牌组/簇号/后续胜负作为当前触发；数据与本系统验证分账。"
+          ],
+          "ref": "knowledge/external/sts2fun/decision-fields-v1/statistics.json#rows[81134]; input_sha256=4cf36c85eee760ed8e74495c1758e0228bbe1214789d3d0bd97052d5ca6a1f9d",
+          "role": "support"
+        },
+        {
+          "type": "external_aggregate",
+          "source": "external:sts2fun",
+          "url": "https://sts2.fun/static/sts2_public.db.zst",
+          "version": "v0.111",
+          "dataset_sha256": "1f7c0c3d441aedb5c85f04bcd4d8d6a1039b438a8b6fda2d96cfa5c27580cbf5",
+          "downloaded_at": "2026-10-21",
+          "license": "No explicit dataset redistribution license found on public FAQ; aggregate statistics with attribution only; no raw redistribution.",
+          "filters": {
+            "character": "silent",
+            "ascension": 10,
+            "criteria": "character='SILENT' AND ascension=10 AND n_players=1 AND is_valid=1 AND was_abandoned=0 AND has_modifiers=0; build=v0.111.0; event=BATTLEWORN_DUMMY; act=3; event_choices title=BATTLEWORN_DUMMY.pages.INITIAL.options.SETTING_3.title; no final-cluster restriction"
+          },
+          "statistic": {
+            "name": "whole_run_winning_upload_fraction_descriptive",
+            "value": 0.4,
+            "unit": "fraction"
+          },
+          "denominator": {
+            "unit": "runs",
+            "n": 5
+          },
+          "design": "observational",
+          "limitations": [
+            "观察性、自选上传、玩家水平/SL/生存和未观察混杂；不作因果收益或固定拿牌命令。",
+            "distinct_uploaded_runs是该cell上传局分母，非已核独立玩家；不同cell不相加。",
+            "事件title没有完整未选项、变量、即时资源或动机；外部HP为节点末/前节点末代理。",
+            "版本机制对照缺失，逐build保留，不推定机制未改；自有game_version=unknown。",
+            "不使用终局牌组/簇号/后续胜负作为当前触发；数据与本系统验证分账。"
+          ],
+          "ref": "knowledge/external/sts2fun/decision-fields-v1/statistics.json#rows[81231]; input_sha256=4cf36c85eee760ed8e74495c1758e0228bbe1214789d3d0bd97052d5ca6a1f9d",
+          "role": "support"
+        }
+      ],
+      "source": "mixed",
+      "confidence": 0.45,
+      "evidence_status": "conflict",
+      "formal_publication": "pending",
+      "consumer_readback": "pending",
+      "candidate_batch": "20261025-014301-strategy-proposal",
+      "source_commit": null,
+      "context_id": "events003/dummy-random-upgrades-tradeoff",
+      "body_conditions": "与上条不同：不是低档可行性，而是已核150条件下，随机升级和当前药水需求的机会成本比较。",
+      "counterexamples_and_limits": "G403为A9/retry_or_predicted_death，UJ0为A10/retry_or_predicted_death。外部v0.107.0第2档22/38，第1档10/14，方向相反。",
+      "evidence_ledger": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261025-014301/learner/runs/20261025-014408-67b768ca-2220-48c1-a414-61df93f6ddd7-strategy-proposal/scratch/source-ledger.json#BATTLEWORN_DUMMY",
+      "own_strata": [
+        {
+          "game_version": "unknown",
+          "ascension": 4,
+          "attempt_scope": "retry_or_predicted_death",
+          "option_index": 0,
+          "final_victory": false,
+          "distinct_runs": 1,
+          "opportunities": 1
+        },
+        {
+          "game_version": "unknown",
+          "ascension": 6,
+          "attempt_scope": "retry_or_predicted_death",
+          "option_index": 0,
+          "final_victory": false,
+          "distinct_runs": 1,
+          "opportunities": 1
+        },
+        {
+          "game_version": "unknown",
+          "ascension": 9,
+          "attempt_scope": "retry_or_predicted_death",
+          "option_index": 1,
+          "final_victory": true,
+          "distinct_runs": 1,
+          "opportunities": 1
+        },
+        {
+          "game_version": "unknown",
+          "ascension": 10,
+          "attempt_scope": "no_retry_evidence",
+          "option_index": 0,
+          "final_victory": false,
+          "distinct_runs": 4,
+          "opportunities": 4
+        },
+        {
+          "game_version": "unknown",
+          "ascension": 10,
+          "attempt_scope": "no_retry_evidence",
+          "option_index": 0,
+          "final_victory": true,
+          "distinct_runs": 1,
+          "opportunities": 1
+        },
+        {
+          "game_version": "unknown",
+          "ascension": 10,
+          "attempt_scope": "retry_or_predicted_death",
+          "option_index": 0,
+          "final_victory": false,
+          "distinct_runs": 23,
+          "opportunities": 23
+        },
+        {
+          "game_version": "unknown",
+          "ascension": 10,
+          "attempt_scope": "retry_or_predicted_death",
+          "option_index": 0,
+          "final_victory": true,
+          "distinct_runs": 1,
+          "opportunities": 1
+        },
+        {
+          "game_version": "unknown",
+          "ascension": 10,
+          "attempt_scope": "retry_or_predicted_death",
+          "option_index": 1,
+          "final_victory": false,
+          "distinct_runs": 1,
+          "opportunities": 1
+        }
+      ],
+      "rk_candidate_id": "silent-rk-events003-dummy-random-upgrades-tradeoff",
+      "mechanism_version_alignment": "unknown; no pooling across builds; require current option text match",
+      "current_information_only": true,
+      "replay": "pending"
+    },
+    {
+      "id": "silent-events003-nest-immediate-health",
+      "version": "1.0.0",
+      "trigger": {
+        "question_types": [
+          "event"
+        ],
+        "acts": [
+          1
+        ]
+      },
+      "strategy": "多尼斯异鸟巢若要补下一段即时血量，优先比较吃蛋的确定生命资源；带蛋当下不补血。自有吃蛋31局31次均当前/最大HP各+7（A10为29，A4/A7各1）；满血例70/70→77/77，不能把满血时收益写成0。外部v0.111吃蛋100上传局的节点末减前节点末HP代理均值+7.05；这不是纯事件净治疗或安全阈值。\n范围：当前菜单确为+7最大HP/加入蛋；自有版本unknown，A10即时变化独立于整局胜负。吃蛋组外部整局胜29/100，带蛋7/22，保留反向关联，不声称吃蛋提高胜率。",
+      "evidence": [
+        {
+          "type": "own",
+          "run": "1303HVDLVMGR",
+          "floor": 14,
+          "ref": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261025-014301/learner/runs/20261025-014408-67b768ca-2220-48c1-a414-61df93f6ddd7-strategy-proposal/scratch/raw-refs.json#decisions:4112764665; fingerprint-matched states:16297179273",
+          "role": "support"
+        },
+        {
+          "type": "own",
+          "run": "SV2GP9NX4HQD",
+          "floor": 6,
+          "ref": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261025-014301/learner/runs/20261025-014408-67b768ca-2220-48c1-a414-61df93f6ddd7-strategy-proposal/scratch/raw-refs.json#decisions:813768825; fingerprint-matched states:9772241759",
+          "role": "support"
+        },
+        {
+          "type": "own",
+          "run": "4H1T5UB23GEP",
+          "floor": 14,
+          "ref": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261025-014301/learner/runs/20261025-014408-67b768ca-2220-48c1-a414-61df93f6ddd7-strategy-proposal/scratch/raw-refs.json#decisions:3324464110; fingerprint-matched states:15232951787",
+          "role": "support"
+        },
+        {
+          "type": "external_aggregate",
+          "source": "external:sts2fun",
+          "url": "https://sts2.fun/static/sts2_public.db.zst",
+          "version": "v0.111",
+          "dataset_sha256": "1f7c0c3d441aedb5c85f04bcd4d8d6a1039b438a8b6fda2d96cfa5c27580cbf5",
+          "downloaded_at": "2026-10-21",
+          "license": "No explicit dataset redistribution license found on public FAQ; aggregate statistics with attribution only; no raw redistribution.",
+          "filters": {
+            "character": "silent",
+            "ascension": 10,
+            "criteria": "character='SILENT' AND ascension=10 AND n_players=1 AND is_valid=1 AND was_abandoned=0 AND has_modifiers=0; build=v0.111.0; event=BYRDONIS_NEST; act=1; event_choices title=BYRDONIS_NEST.pages.INITIAL.options.EAT.title; no final-cluster restriction"
+          },
+          "statistic": {
+            "name": "whole_run_winning_upload_fraction_descriptive",
+            "value": 0.29,
+            "unit": "fraction"
+          },
+          "denominator": {
+            "unit": "runs",
+            "n": 100
+          },
+          "design": "observational",
+          "limitations": [
+            "观察性、自选上传、玩家水平/SL/生存和未观察混杂；不作因果收益或固定拿牌命令。",
+            "distinct_uploaded_runs是该cell上传局分母，非已核独立玩家；不同cell不相加。",
+            "事件title没有完整未选项、变量、即时资源或动机；外部HP为节点末/前节点末代理。",
+            "版本机制对照缺失，逐build保留，不推定机制未改；自有game_version=unknown。",
+            "不使用终局牌组/簇号/后续胜负作为当前触发；数据与本系统验证分账。"
+          ],
+          "ref": "knowledge/external/sts2fun/decision-fields-v1/statistics.json#rows[69410]; input_sha256=4cf36c85eee760ed8e74495c1758e0228bbe1214789d3d0bd97052d5ca6a1f9d",
+          "role": "support"
+        },
+        {
+          "type": "external_aggregate",
+          "source": "external:sts2fun",
+          "url": "https://sts2.fun/static/sts2_public.db.zst",
+          "version": "v0.111",
+          "dataset_sha256": "1f7c0c3d441aedb5c85f04bcd4d8d6a1039b438a8b6fda2d96cfa5c27580cbf5",
+          "downloaded_at": "2026-10-21",
+          "license": "No explicit dataset redistribution license found on public FAQ; aggregate statistics with attribution only; no raw redistribution.",
+          "filters": {
+            "character": "silent",
+            "ascension": 10,
+            "criteria": "character='SILENT' AND ascension=10 AND n_players=1 AND is_valid=1 AND was_abandoned=0 AND has_modifiers=0; build=v0.111.0; event=BYRDONIS_NEST; act=1; event_choices title=BYRDONIS_NEST.pages.INITIAL.options.TAKE.title; no final-cluster restriction"
+          },
+          "statistic": {
+            "name": "whole_run_winning_upload_fraction_descriptive",
+            "value": 0.3181818181818182,
+            "unit": "fraction"
+          },
+          "denominator": {
+            "unit": "runs",
+            "n": 22
+          },
+          "design": "observational",
+          "limitations": [
+            "观察性、自选上传、玩家水平/SL/生存和未观察混杂；不作因果收益或固定拿牌命令。",
+            "distinct_uploaded_runs是该cell上传局分母，非已核独立玩家；不同cell不相加。",
+            "事件title没有完整未选项、变量、即时资源或动机；外部HP为节点末/前节点末代理。",
+            "版本机制对照缺失，逐build保留，不推定机制未改；自有game_version=unknown。",
+            "不使用终局牌组/簇号/后续胜负作为当前触发；数据与本系统验证分账。"
+          ],
+          "ref": "knowledge/external/sts2fun/decision-fields-v1/statistics.json#rows[69411]; input_sha256=4cf36c85eee760ed8e74495c1758e0228bbe1214789d3d0bd97052d5ca6a1f9d",
+          "role": "support"
+        }
+      ],
+      "source": "mixed",
+      "confidence": 0.45,
+      "evidence_status": "unassessed",
+      "formal_publication": "pending",
+      "consumer_readback": "pending",
+      "candidate_batch": "20261025-014301-strategy-proposal",
+      "source_commit": null,
+      "context_id": "events003/nest-immediate-health",
+      "body_conditions": "当前资源需要：下一段即时生命；满血也核增加最大HP后的真实当前HP，不用未来胜负触发。",
+      "counterexamples_and_limits": "A10吃蛋29局最终均败；这反驳保证胜利，不否认已观察+7。外部v0.111吃蛋整局胜率较带蛋低2.82个百分点，v0.107.0反向高20.56个百分点。",
+      "evidence_ledger": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261025-014301/learner/runs/20261025-014408-67b768ca-2220-48c1-a414-61df93f6ddd7-strategy-proposal/scratch/source-ledger.json#BYRDONIS_NEST",
+      "own_strata": [
+        {
+          "game_version": "unknown",
+          "ascension": 4,
+          "attempt_scope": "retry_or_predicted_death",
+          "option_index": 0,
+          "final_victory": false,
+          "distinct_runs": 1,
+          "opportunities": 1
+        },
+        {
+          "game_version": "unknown",
+          "ascension": 7,
+          "attempt_scope": "no_retry_evidence",
+          "option_index": 0,
+          "final_victory": true,
+          "distinct_runs": 1,
+          "opportunities": 1
+        },
+        {
+          "game_version": "unknown",
+          "ascension": 10,
+          "attempt_scope": "no_retry_evidence",
+          "option_index": 0,
+          "final_victory": false,
+          "distinct_runs": 9,
+          "opportunities": 9
+        },
+        {
+          "game_version": "unknown",
+          "ascension": 10,
+          "attempt_scope": "no_retry_evidence",
+          "option_index": 1,
+          "final_victory": false,
+          "distinct_runs": 1,
+          "opportunities": 1
+        },
+        {
+          "game_version": "unknown",
+          "ascension": 10,
+          "attempt_scope": "retry_or_predicted_death",
+          "option_index": 0,
+          "final_victory": false,
+          "distinct_runs": 20,
+          "opportunities": 20
+        },
+        {
+          "game_version": "unknown",
+          "ascension": 10,
+          "attempt_scope": "retry_or_predicted_death",
+          "option_index": 1,
+          "final_victory": false,
+          "distinct_runs": 2,
+          "opportunities": 2
+        }
+      ],
+      "rk_candidate_id": "silent-rk-events003-nest-immediate-health",
+      "mechanism_version_alignment": "unknown; no pooling across builds; require current option text match",
+      "current_information_only": true,
+      "replay": "pending"
+    },
+    {
+      "id": "silent-events003-nest-hatching-opportunity",
+      "version": "1.0.0",
+      "trigger": {
+        "question_types": [
+          "event"
+        ],
+        "acts": [
+          1
+        ]
+      },
+      "strategy": "多尼斯异鸟巢若考虑带蛋，先核当前可达营火及其休息/锻造需求，再比较延后孵化；有即时回血缺口时不要把未孵的蛋算作可用攻击。自有3局取得蛋时HP不变；后续各1次营火孵化，蛋被移除并取得异鸟宝宝及0费14伤异鸟扑击，孵化前蛋面写“不能被打出”。\n范围：仅当前菜单/蛋面与已知路线条件相符；3局均A10且最终败，1局无重试证据、2局有重试/预判必死。孵化与休息/锻造是同次营火备选，代价依当前题面；不由这3例保证成型、宝宝战斗效果或总体收益。",
+      "evidence": [
+        {
+          "type": "own",
+          "run": "4H1T5UB23GEP",
+          "floor": 14,
+          "ref": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261025-014301/learner/runs/20261025-014408-67b768ca-2220-48c1-a414-61df93f6ddd7-strategy-proposal/scratch/raw-refs.json#decisions:3324464110; fingerprint-matched states:15232951787; egg-followup-4H1T5UB23GEP.json rest F16",
+          "role": "support"
+        },
+        {
+          "type": "own",
+          "run": "8FP19V1W4SRQ",
+          "floor": 15,
+          "ref": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261025-014301/learner/runs/20261025-014408-67b768ca-2220-48c1-a414-61df93f6ddd7-strategy-proposal/scratch/raw-refs.json#decisions:3808425294; fingerprint-matched states:15871090070; egg-followup-8FP19V1W4SRQ.json rest F16",
+          "role": "support"
+        },
+        {
+          "type": "own",
+          "run": "JKDUL0AL0TW6",
+          "floor": 7,
+          "ref": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261025-014301/learner/runs/20261025-014408-67b768ca-2220-48c1-a414-61df93f6ddd7-strategy-proposal/scratch/raw-refs.json#decisions:2153863605; fingerprint-matched states:13796882958; egg-followup-JKDUL0AL0TW6.json rest F8",
+          "role": "support"
+        },
+        {
+          "type": "external_aggregate",
+          "source": "external:sts2fun",
+          "url": "https://sts2.fun/static/sts2_public.db.zst",
+          "version": "v0.111",
+          "dataset_sha256": "1f7c0c3d441aedb5c85f04bcd4d8d6a1039b438a8b6fda2d96cfa5c27580cbf5",
+          "downloaded_at": "2026-10-21",
+          "license": "No explicit dataset redistribution license found on public FAQ; aggregate statistics with attribution only; no raw redistribution.",
+          "filters": {
+            "character": "silent",
+            "ascension": 10,
+            "criteria": "character='SILENT' AND ascension=10 AND n_players=1 AND is_valid=1 AND was_abandoned=0 AND has_modifiers=0; build=v0.111.0; event=BYRDONIS_NEST; act=1; event_choices title=BYRDONIS_NEST.pages.INITIAL.options.TAKE.title; no final-cluster restriction"
+          },
+          "statistic": {
+            "name": "whole_run_winning_upload_fraction_descriptive",
+            "value": 0.3181818181818182,
+            "unit": "fraction"
+          },
+          "denominator": {
+            "unit": "runs",
+            "n": 22
+          },
+          "design": "observational",
+          "limitations": [
+            "观察性、自选上传、玩家水平/SL/生存和未观察混杂；不作因果收益或固定拿牌命令。",
+            "distinct_uploaded_runs是该cell上传局分母，非已核独立玩家；不同cell不相加。",
+            "事件title没有完整未选项、变量、即时资源或动机；外部HP为节点末/前节点末代理。",
+            "版本机制对照缺失，逐build保留，不推定机制未改；自有game_version=unknown。",
+            "不使用终局牌组/簇号/后续胜负作为当前触发；数据与本系统验证分账。"
+          ],
+          "ref": "knowledge/external/sts2fun/decision-fields-v1/statistics.json#rows[69411]; input_sha256=4cf36c85eee760ed8e74495c1758e0228bbe1214789d3d0bd97052d5ca6a1f9d",
+          "role": "support"
+        },
+        {
+          "type": "external_aggregate",
+          "source": "external:sts2fun",
+          "url": "https://sts2.fun/static/sts2_public.db.zst",
+          "version": "v0.111",
+          "dataset_sha256": "1f7c0c3d441aedb5c85f04bcd4d8d6a1039b438a8b6fda2d96cfa5c27580cbf5",
+          "downloaded_at": "2026-10-21",
+          "license": "No explicit dataset redistribution license found on public FAQ; aggregate statistics with attribution only; no raw redistribution.",
+          "filters": {
+            "character": "silent",
+            "ascension": 10,
+            "criteria": "character='SILENT' AND ascension=10 AND n_players=1 AND is_valid=1 AND was_abandoned=0 AND has_modifiers=0; build=v0.111.0; event=BYRDONIS_NEST; act=1; event_choices title=BYRDONIS_NEST.pages.INITIAL.options.EAT.title; no final-cluster restriction"
+          },
+          "statistic": {
+            "name": "whole_run_winning_upload_fraction_descriptive",
+            "value": 0.29,
+            "unit": "fraction"
+          },
+          "denominator": {
+            "unit": "runs",
+            "n": 100
+          },
+          "design": "observational",
+          "limitations": [
+            "观察性、自选上传、玩家水平/SL/生存和未观察混杂；不作因果收益或固定拿牌命令。",
+            "distinct_uploaded_runs是该cell上传局分母，非已核独立玩家；不同cell不相加。",
+            "事件title没有完整未选项、变量、即时资源或动机；外部HP为节点末/前节点末代理。",
+            "版本机制对照缺失，逐build保留，不推定机制未改；自有game_version=unknown。",
+            "不使用终局牌组/簇号/后续胜负作为当前触发；数据与本系统验证分账。"
+          ],
+          "ref": "knowledge/external/sts2fun/decision-fields-v1/statistics.json#rows[69410]; input_sha256=4cf36c85eee760ed8e74495c1758e0228bbe1214789d3d0bd97052d5ca6a1f9d",
+          "role": "support"
+        }
+      ],
+      "source": "mixed",
+      "confidence": 0.45,
+      "evidence_status": "unassessed",
+      "formal_publication": "pending",
+      "consumer_readback": "pending",
+      "candidate_batch": "20261025-014301-strategy-proposal",
+      "source_commit": null,
+      "context_id": "events003/nest-hatching-opportunity",
+      "body_conditions": "当前已知可达营火/当前生命与锻造需求；未来实际拿到异鸟扑击只作结果，不是原事件时的已持牌触发。",
+      "counterexamples_and_limits": "3/3后来孵化不是全体带蛋玩家成功率；只抽取3个本系统真实带蛋机会，无当前安全HP阈值或孵化胜率。外部TAKE title不提供孵化动作。",
+      "evidence_ledger": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261025-014301/learner/runs/20261025-014408-67b768ca-2220-48c1-a414-61df93f6ddd7-strategy-proposal/scratch/source-ledger.json#BYRDONIS_NEST",
+      "own_strata": [
+        {
+          "game_version": "unknown",
+          "ascension": 4,
+          "attempt_scope": "retry_or_predicted_death",
+          "option_index": 0,
+          "final_victory": false,
+          "distinct_runs": 1,
+          "opportunities": 1
+        },
+        {
+          "game_version": "unknown",
+          "ascension": 7,
+          "attempt_scope": "no_retry_evidence",
+          "option_index": 0,
+          "final_victory": true,
+          "distinct_runs": 1,
+          "opportunities": 1
+        },
+        {
+          "game_version": "unknown",
+          "ascension": 10,
+          "attempt_scope": "no_retry_evidence",
+          "option_index": 0,
+          "final_victory": false,
+          "distinct_runs": 9,
+          "opportunities": 9
+        },
+        {
+          "game_version": "unknown",
+          "ascension": 10,
+          "attempt_scope": "no_retry_evidence",
+          "option_index": 1,
+          "final_victory": false,
+          "distinct_runs": 1,
+          "opportunities": 1
+        },
+        {
+          "game_version": "unknown",
+          "ascension": 10,
+          "attempt_scope": "retry_or_predicted_death",
+          "option_index": 0,
+          "final_victory": false,
+          "distinct_runs": 20,
+          "opportunities": 20
+        },
+        {
+          "game_version": "unknown",
+          "ascension": 10,
+          "attempt_scope": "retry_or_predicted_death",
+          "option_index": 1,
+          "final_victory": false,
+          "distinct_runs": 2,
+          "opportunities": 2
+        }
+      ],
+      "rk_candidate_id": "silent-rk-events003-nest-hatching-opportunity",
+      "mechanism_version_alignment": "unknown; no pooling across builds; require current option text match",
+      "current_information_only": true,
+      "replay": "pending"
+    }
+  ]
+}

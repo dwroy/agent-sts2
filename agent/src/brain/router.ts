@@ -1,3 +1,6 @@
+import { attachDecisionKnowledge } from "./decision-knowledge.js";
+import { DecisionKnowledgeExposure } from "./decision-knowledge-exposure.js";
+import { withoutToolCapabilities } from "./tools/capabilities.js";
 import { BrainLiveWriter, observeBrain } from "./live-view.js";
 import type { BrainRunProfile, BrainNativeReceipt } from "./run-profile.js";
 import { currentDecisionBudget, withinDecisionBudget, withIndependentDecisionBudget, HUMAN_PACE_BUDGETS, DecisionBudgetExpired } from "../core/decision-budget.js";
@@ -56,6 +59,7 @@ import type { BrainAnswer, BrainEngine, BrainRequest, BrainUsage, EngineName, Kn
 import { BrainBlockedError, BrainWait } from "./wait.js";
 import { isContextOverflow } from "./knowledge.js";
 import { queryAudit } from "./tools/query-guidance.js";
+import { BrainEvidence } from "./evidence.js";
 
 /** The env-var suffix of a label: its first segment, upper case, non-alphanumerics as "_". */
 export function labelPrefix(label: string): string {
@@ -151,6 +155,7 @@ export function failureKind(error: unknown): FailureKind {
 type Attempt = BrainAnswer & { first?: { answer: unknown; problems: string[] }; reasks?: number };
 
 export interface BrainLogRow {
+  evidence?: ReturnType<BrainEvidence["snapshot"]>;
   ts: string;
   /** The run the question belongs to (the same value as decisions.jsonl's run_id), when known. */
   run_id?: string;
@@ -418,6 +423,9 @@ export class BrainRouter {
     }
     if (request.budgetSignal?.aborted) throw new DecisionBudgetExpired(request.label);
     request.questionId ??= this.nextQuestionId();
+    if (this.knowledgeAgent) request.evidence ??= new BrainEvidence({ question_id: request.questionId,
+      ...(request.runId ? { run_id: request.runId } : {}) }, this.deps.config.log
+        ? `${dirname(this.deps.config.log)}/brain-evidence.jsonl` : undefined);
     const req = request;
     if (this.codexOnly) return this.decideCodex(req);
     const primary = this.engineFor(req.label);
@@ -504,7 +512,7 @@ export class BrainRouter {
         return result;
       } catch (error) {
         if (error instanceof DecisionBudgetExpired || req.budgetSignal?.aborted) {
-          this.write("codex", req, null, new DecisionBudgetExpired(req.label), undefined, this.spent(error, began));
+          this.write("codex", req, null, error, undefined, this.spent(error, began));
           this.wait.finish("budget", req, "H1 hard deadline; existing L1 fallback");
           throw new DecisionBudgetExpired(req.label);
         }
@@ -589,7 +597,7 @@ export class BrainRouter {
     let second: BrainAnswer;
     try {
       second = await this.call(engine, { ...req, ...(this.knowledgeAgent ? {
-        tools: [], timeoutMs: Math.max(1, (req.timeoutMs ?? 300_000) - (this.now() - began)),
+        tools: [], system: withoutToolCapabilities(req.system, req.tools ?? []), timeoutMs: Math.max(1, (req.timeoutMs ?? 300_000) - (this.now() - began)),
         question: `${req.question}\n\n已查询的知识（不再调用工具）：${JSON.stringify(first.toolCalls)}`,
       } : {}), reask: { answer: previous || "(no answer)", problems: firstProblems } }, asFallback);
     } catch (error) {
@@ -636,6 +644,7 @@ export class BrainRouter {
   }
 
   /** engine.decide within the engine's call budget (and, as the fallback, the caller's) and under its timeout (BRAIN_<ENGINE>_TIMEOUT_MS, or the request's). */
+  private readonly decisionExposure = new DecisionKnowledgeExposure();
   private async call(engine: BrainEngine, req: BrainRequest, asFallback = false): Promise<BrainAnswer> {
     if (this.codexOnly) this.wait.check();
     if (!this.budgetLeft(engine.name)) {
@@ -650,6 +659,13 @@ export class BrainRouter {
     const pace = currentDecisionBudget();
     const ms = pace ? Math.min(req.timeoutMs ?? Infinity, pace.remaining()) : req.timeoutMs ?? this.deps.config.engines[engine.name].timeoutMs;
     if (pace && (ms ?? 0) <= 0) throw new DecisionBudgetExpired(req.label);
+    if (this.deps.config.decisionKnowledge?.enabled) {
+      req.prepareForSend = sending => {
+        Object.assign(sending, attachDecisionKnowledge(sending, this.deps.config.decisionKnowledge, this.decisionExposure));
+        req.payload = sending.payload;
+      };
+      if (!engine.preparesRequests) req.prepareForSend(req);
+    }
     let broadcast: ReturnType<BrainLiveWriter["begin"]> | undefined;
     try { broadcast = this.live?.begin(req, engine.name, engine.model,
       req.effort ?? this.deps.config.engines[engine.name].effort ?? "?", asFallback); } catch { /* display only */ }
@@ -664,7 +680,7 @@ export class BrainRouter {
     const outer = this.codexOnly ? this.wait.signal : undefined;
     let rejectCancel: ((error: BrainBlockedError | DecisionBudgetExpired) => void) | undefined;
     const cancellation = new Promise<never>((_, reject) => { rejectCancel = reject; });
-    const cancel = (): void => { controller.abort(); rejectCancel?.(req.budgetSignal?.aborted ? new DecisionBudgetExpired(req.label) : new BrainBlockedError("cancelled", "Codex brain call cancelled")); };
+    const cancel = (): void => { req.evidence?.cancel(req.budgetSignal?.aborted ? "outer-budget" : "stop"); controller.abort(); rejectCancel?.(req.budgetSignal?.aborted ? new DecisionBudgetExpired(req.label) : new BrainBlockedError("cancelled", "Codex brain call cancelled")); };
     outer?.addEventListener("abort", cancel, { once: true });
     req.budgetSignal?.addEventListener("abort", cancel, { once: true });
     if (outer?.aborted || req.budgetSignal?.aborted) cancel();
@@ -678,11 +694,13 @@ export class BrainRouter {
     }, 1_000) : undefined;
     const timeout = new Promise<never>((_, reject) => {
       if (ms) timer = setTimeout(() => {
+        req.evidence?.cancel("call-timeout");
         controller.abort();
         reject(new BrainTimeoutError(engine.name, ms));
       }, ms);
     });
     try {
+      if (controller.signal.aborted) throw req.budgetSignal?.aborted ? new DecisionBudgetExpired(req.label) : new BrainBlockedError("cancelled", "Codex brain call cancelled");
       const answer = await Promise.race([engine.decide({ ...req, ...(ms ? { timeoutMs: ms } : {}) }, controller.signal), timeout, cancellation]);
       this.timeouts.delete(engine.name);
       finishBroadcast(answer.answer);
@@ -734,7 +752,10 @@ export class BrainRouter {
         model = "";
       }
     }
-    const receipt = result?.nativeReceipt ?? null;
+    const evidence = req.evidence?.snapshot();
+    const receipt = result?.nativeReceipt ?? [...(evidence?.attempts ?? [])].reverse().find(a => a.native_receipt)?.native_receipt ?? null;
+    const failedTools = req.evidence?.toolCalls();
+    const toolCalls = result?.toolCalls ?? (failedTools?.length ? failedTools : error && typeof error === "object" && "brainToolCalls" in error ? error.brainToolCalls as BrainAnswer["toolCalls"] : []);
     if (req.runId && req.questionId && receipt) this.nativeReceipts.set(req.runId, { question_id: req.questionId, receipt });
     const row: BrainLogRow = {
       ts: new Date().toISOString(),
@@ -754,14 +775,15 @@ export class BrainRouter {
       ...(req.options ? { options: req.options } : {}),
       payload: req.payload,
       tools: (this.toolsFor(engine) ? req.tools ?? [] : []).map((tool) => tool.name),
-      tool_calls: result?.toolCalls ?? (error && typeof error === "object" && "brainToolCalls" in error ? error.brainToolCalls as BrainAnswer["toolCalls"] : []),
-      ...(req.knowledge?.mode === "tools" ? { query_audit: queryAudit(result?.toolCalls ?? (error && typeof error === "object" && "brainToolCalls" in error ? error.brainToolCalls as BrainAnswer["toolCalls"] : [])) } : {}),
+      tool_calls: toolCalls,
+      ...(evidence ? { evidence } : {}),
+      ...(req.knowledge?.mode === "tools" ? { query_audit: queryAudit(toolCalls) } : {}),
       ...(result?.agent ? { agent: result.agent } : error && typeof error === "object" && "brainAgent" in error ? { agent: error.brainAgent as BrainAnswer["agent"] } : {}),
       answer: result?.answer ?? null,
       accepted: result !== null && !BrainRouter.unusable(req, result),
       problems: result?.problems ?? [],
       reasks: result?.reasks ?? 0,
-      attempts: result?.attempts ?? 0,
+      attempts: evidence?.attempts.length || result?.attempts || 0,
       latency_ms: result?.latencyMs ?? failed?.latencyMs ?? 0,
       usage: result?.usage ?? failed?.usage ?? { inputTokens: 0, outputTokens: 0 },
       ...(result?.first ? { first: result.first } : {}),

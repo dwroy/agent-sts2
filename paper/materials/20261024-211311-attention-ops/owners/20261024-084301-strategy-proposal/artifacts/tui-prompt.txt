@@ -1,0 +1,156 @@
+[learner-batch:68f91d71-956e-46d1-b2fc-994df4f82a4b]
+【启动器说明（codex）】任务说明里的工具名是通用叫法，在这里这样对应：Read = 用只读的 shell 命令看文件（sed -n '起,止p'、head、tail；大文件不许整份输出），Grep = rg 或 grep，Glob = rg --files、ls 或 find，Bash = shell 命令，Edit / Write = apply_patch（或 shell 写文件）。
+本任务允许的工具：Read、Grep、Glob、Bash、Edit、Write。沙箱：工作目录、项目目录和临时目录可写，不联网；key 文件和 .env 读不到。
+
+# 外部来源专线
+
+本批角色 silent，真实调度ID 20261024-084301-strategy-proposal，工作树 /home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261024-084301，项目根 /home/dw/Projects/agent-sts2，临时产出 /home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261024-084301/learner/runs/20261024-084306-f04c0c24-c1ff-4b64-b72f-c9fc5263701e-strategy-proposal。自行完成，不派下级模型。先读 README、最新 STATE、decision-log 末尾和 docs/learning-protocol.md 第9节。仅处理宿主附加的 external_binding 与冻结 work_spec；它优先于普通选题，没有旧四专题/旧批次身份。先核 learn.json 本批 external_source、绑定清单 SHA、实际 HEAD=dispatch_base；失配即停，不改请求或登记。
+
+只读冻结的、已脱敏聚合 JSON 与发布契约，不读原始数据库、逐玩家数据或玩家标识，不下载新数据。游戏知识只能来自这些证据，不从预训练知识补齐。来源统一 external:sts2fun；逐结论记录版本、采集日期、输入 SHA、独立样本分母、观察性限制、反例和缺口。v0.111 与 v0.107–v0.110 分 cohort 统计，不能混算；本系统 live 证据另账，runs=[]，不得补局号或把玩家聚合冒成本系统验证。
+
+按 work_spec 的有界单批主题提炼 knowledge/strategy/rk 候选。先核 #27/#28/#42 冻结契约，命中同场景就合并候选/指向既有ID，冲突保留本系统与外部两条证据和适用条件。rk 保留可复盘条件与缺口；#50 双Boss准备度要求照绑定规格交付。只在 scratch 保存真实候选和来源账本；每条写 formal_publication=pending、consumer_readback=pending。正式发布仍沿既有发布锁、学习账本、消费者读回和后续自然采用流程，候选完成不关闭科学父。不改源码/正式知识、不合入 main/live；HEAD 保持 dispatch_base。
+
+所有 unit_ids 逐项写具体处置和缺证理由，允许 waiting；不得捏造发布、读回、收益或样本。保存 /home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261024-084301/learner/runs/20261024-084306-f04c0c24-c1ff-4b64-b72f-c9fc5263701e-strategy-proposal/report.md，最后输出同一 JSON：task=strategy-proposal、character=silent、batch=真实ID、base=dispatch_base、runs=[]、fixes=[]、merged=null、tests={tsc:null,vitest:null,cases:null}、report=报告绝对路径、external_source=绑定plan_id、input_sha256=冻结manifest SHA、external_results=[{id:unit_id,state:processed或waiting,destinations:[{kind:knowledge或strategy或rk或merged-into,id:目标ID,path:scratch中真实候选文件绝对路径}],reason:具体理由}]。processed 表示候选已落盘且至少一个去向；waiting 的 destinations=[]。不得把启动参数或请求档位当原生已采用档位，使用量/耗时以原启动回执与运行记录为准。
+
+## 首批：双 Boss（并入 #50 第4条）
+仅研究实际到达 F48 的有效单人 Silent A10 聚合：核 F48/F49 与 Boss 语义，分 F49 胜/败；比较 F48 入场血量/上限、可用药水、牌组规模与升级、能力牌数量、可观察攻防来源。终局牌组/药水不能充当入场快照，未核实 F49 结局不能用最终胜利替代。保留缺失、排除与删失计数；缺快照则列出允许字段的后续聚合导出需求，本批 waiting。分版本保留实际分母，不沿用 issue 引言样本数。交付每个候选的来源与适用条件，独立验收、发布、读回。
+
+
+本批冻结身份（路径相对 project_root）：
+{
+  "batch": "20261024-084301-strategy-proposal",
+  "worktree": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261024-084301",
+  "request_id": "github-issue-51-external-boss-learning-20261023",
+  "plan_id": "issue51-dual-boss-001",
+  "source": "external:sts2fun",
+  "input_manifest": {
+    "path": "paper/materials/20261023-issue51-enable-ops/issue51-dual-boss-001.json",
+    "bytes": 5703,
+    "sha256": "84d72850825dfb202073aea00c5a7897ca8ed2e5d79010886072404bb76ffa93"
+  },
+  "work_spec": {
+    "path": "paper/materials/20261023-issue51-enable-ops/issue51-dual-boss-001.md",
+    "bytes": 1582,
+    "sha256": "60a71dff5f4cc20206abfe1cb5b3785a4fcb3ba08f3a0f7fa0f5455d11437634"
+  },
+  "topic": "dual-boss",
+  "provenance": {
+    "url": "https://sts2.fun/static/sts2_public.db.zst",
+    "downloaded_at": "2026-10-21",
+    "database_sha256": "1f7c0c3d441aedb5c85f04bcd4d8d6a1039b438a8b6fda2d96cfa5c27580cbf5",
+    "compressed_sha256": "0f3e1660cdd41665c5e29695232137252187713a5fde87fb888ab3e228c69ac7",
+    "query_version": "ops-safe-boss-aggregate-v1",
+    "query": {
+      "path": "paper/materials/20261023-issue51-enable-ops/safe-projection.sql",
+      "bytes": 1681,
+      "sha256": "0289f387b5133de5c1718fe336ee4a2d93623e7ac25d912fd11c3f0f4efd02e4"
+    },
+    "export_receipt": {
+      "path": "paper/materials/20261023-issue51-enable-ops/export-receipt.json",
+      "bytes": 4376,
+      "sha256": "c14f545c912fbf0db763d056d78d348221bf24a20c70783996014e2692f476ba"
+    },
+    "design": "observational",
+    "raw_source_hash_basis": "Original acquisition/provenance digest retained, not rehashed 13GB in this wake. DB opened read-only and size/mtime pinned."
+  },
+  "entry_ids": [
+    "external-dual-boss-mapping",
+    "external-dual-boss-entry-resources",
+    "external-dual-boss-deck-and-output"
+  ],
+  "all_entry_ids": [
+    "external-dual-boss-mapping",
+    "external-dual-boss-entry-resources",
+    "external-dual-boss-deck-and-output"
+  ],
+  "dispatch_runs": [],
+  "cohorts": [
+    {
+      "version": "v0.107",
+      "sample_count": 2932,
+      "sample_denominator": 2932,
+      "sample_definition": "all valid filtered runs used in export; each boss/terminal subgroup has its own n and missingness",
+      "collected_at": "2026-10-21",
+      "contains_player_identifiers": false,
+      "aggregates": [
+        {
+          "path": "paper/materials/20261023-issue51-enable-ops/aggregates/dual-boss-v0.107.json",
+          "bytes": 31944,
+          "sha256": "e49a841be9ee56c7b37f9274812338d4188b547a365926e12f5c68dc90b64459"
+        }
+      ]
+    },
+    {
+      "version": "v0.108",
+      "sample_count": 683,
+      "sample_denominator": 683,
+      "sample_definition": "all valid filtered runs used in export; each boss/terminal subgroup has its own n and missingness",
+      "collected_at": "2026-10-21",
+      "contains_player_identifiers": false,
+      "aggregates": [
+        {
+          "path": "paper/materials/20261023-issue51-enable-ops/aggregates/dual-boss-v0.108.json",
+          "bytes": 23761,
+          "sha256": "b36f94df83773cd149291ff41ab2370e35f7103f3cac571a7f2da6c85a99f0fd"
+        }
+      ]
+    },
+    {
+      "version": "v0.109",
+      "sample_count": 583,
+      "sample_denominator": 583,
+      "sample_definition": "all valid filtered runs used in export; each boss/terminal subgroup has its own n and missingness",
+      "collected_at": "2026-10-21",
+      "contains_player_identifiers": false,
+      "aggregates": [
+        {
+          "path": "paper/materials/20261023-issue51-enable-ops/aggregates/dual-boss-v0.109.json",
+          "bytes": 22546,
+          "sha256": "121e2e261a7d91866669f1d3e80109bfcfda6acb96fa10d3f73b4cd0082fdfa8"
+        }
+      ]
+    },
+    {
+      "version": "v0.110",
+      "sample_count": 411,
+      "sample_denominator": 411,
+      "sample_definition": "all valid filtered runs used in export; each boss/terminal subgroup has its own n and missingness",
+      "collected_at": "2026-10-21",
+      "contains_player_identifiers": false,
+      "aggregates": [
+        {
+          "path": "paper/materials/20261023-issue51-enable-ops/aggregates/dual-boss-v0.110.json",
+          "bytes": 21138,
+          "sha256": "21d4dc2a49834d96ceb234f5ce5c59ad16056016146b52fd20d6c5a91f8aafd3"
+        }
+      ]
+    },
+    {
+      "version": "v0.111",
+      "sample_count": 1739,
+      "sample_denominator": 1739,
+      "sample_definition": "all valid filtered runs used in export; each boss/terminal subgroup has its own n and missingness",
+      "collected_at": "2026-10-21",
+      "contains_player_identifiers": false,
+      "aggregates": [
+        {
+          "path": "paper/materials/20261023-issue51-enable-ops/aggregates/dual-boss-v0.111.json",
+          "bytes": 28795,
+          "sha256": "346cf4c6f1763086cd1134033cd8afa8fa024f9b16048bce2b59bc9e9b453976"
+        }
+      ]
+    }
+  ],
+  "retry_generation": 0,
+  "dispatch_base": "08269ee6fc39cabae776b4f3f06388bc47c79884"
+}
+# issue51-dual-boss-001
+
+仅消费所绑安全聚合与冻结契约，source=external:sts2fun、Silent A10；五版本严格分账。本批分母为本次实际过滤的2932/683/583/411/1739，共6348局，不能抄旧引言22812或把某boss组样本当全体。样本为观测数据；不读原DB、玩家标识或逐玩家明细，不新增网络/模型/实验。当前导出无显式floor、节点deck/potion快照；global_visit_ordinal仅访问序号，previous_point_end_hp仅上节点末HP。先核对应关系及缺失，不能称为精确F48入场快照、不能把terminal_deck当早前牌组。未提供攻防/能力核心牌的可观测机制时留unknown。实际节点单房间总受伤非净损，多房间总受伤不可拆给各boss。终局与继续访问所示胜/败分别标来源，未核语义不能用最终win代单场胜。每个unit独立processed/waiting，缺关键输入就明确waiting及所需安全列；禁止强行写阈值或因果排名。与自有证据冲突并列，游戏推理只由本学习者从这些证据得出。正式策略/知识/rk发布、#28回放、自然消费/收益与此候选完成分开。
+
+复用#50第4条，不另建父。先用实际双boss路径、访问序号分布及schema缺失计数审核F48/F49对应；比较已记录的双boss终局胜/败资源，注意F48前资源与两场之间资源分开。当前多房间组与terminal_run_loss不自动等于输第二场；必要时本批waiting。
+
+工作单元：external-dual-boss-mapping, external-dual-boss-entry-resources, external-dual-boss-deck-and-output。
+
+
+工作树存储：历史 paper/materials、paper/raw、experiments 与 paper/data/history 的干净副本可能按需展开，当前交接和学习账本保留。缺文件不代表证据不存在；用 git ls-tree HEAD -- <路径> 核基线，再运行 python3 /home/dw/Projects/agent-sts2/ops/worktree_storage.py materialize --root /home/dw/Projects/agent-sts2 --workspace codex-strategy-silent-20261024-084301 --path <精确文件路径> 恢复，检查返回的提交及 blob。只恢复任务需要的文件，每棵树历史输入缓存最多256 MiB，空闲时由原调度器回收；修改过的材料不回收。原日志仍从 logs_dir 读取。固定源码对照记录 Git 提交、git diff --binary 和必要输入，禁止把整个仓库归档后再完整展开成 source-checkout/before-checkout；避免同时保存完整 tar 和展开副本。已有过程副本如需恢复，按 docs/learner-retention.md 的 restore-copies 流程操作，不更改任务状态、原线程或账号。

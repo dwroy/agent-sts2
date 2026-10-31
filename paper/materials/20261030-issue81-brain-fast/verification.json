@@ -1,0 +1,63 @@
+{
+  "actual_base": "bc06e8f975b2db4f79fcf5cd4e8c9093e277dca7",
+  "normalized_source_head": "2c41e2a8410ed77859550b5e830aa2f5e438f98b",
+  "component_checkpoint": "a75fe8e9ffad28791a8295e7b3016627959ae70c",
+  "component_ref": "refs/heads/issue-81-brain-fast-9711-checkpoint",
+  "component_full": "first-combo/verification.json",
+  "normalized_tsc": {
+    "exit_code": 0,
+    "log": ".artifacts/issue81-fast/normalized-tsc.log"
+  },
+  "normalized_targeted": {
+    "files_passed": 8,
+    "tests_passed": 118,
+    "exit_code": 0,
+    "log": ".artifacts/issue81-fast/normalized-targeted.log"
+  },
+  "normalized_paths": {
+    "files_passed": 1,
+    "tests_passed": 11,
+    "exit_code": 0,
+    "log": ".artifacts/issue81-fast/normalized-paths.log"
+  },
+  "normalized_scope": "Six TS inputs identical to green9711 component; R462 declaration retains all predecessor changes and updates exactly two config node SHA/opaque_sites. Actual combined ROOT/LIVE full remains original unique queue check. No duplicate production submit/full or old terminal relabeling.",
+  "seven_inputs_unchanged": true,
+  "TS_byte_identity_with_component": true,
+  "declaration_exact_two_nodes": true,
+  "producer_edges_and_contract_unchanged": true,
+  "method_previews_only": "method-previews.json; not installed LIVE/admission",
+  "production_models_called": 0,
+  "actual_fast_activation": false,
+  "existing_gate_boundary": "81/6521348652: do not replace original83 ticket, redeploy using installed-only resume, release early or change owner. Supervisor/original ops coordinate segmentation.",
+  "logs": {
+    ".artifacts/issue81-fast/normalized-tsc.log": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    ".artifacts/issue81-fast/normalized-targeted.log": {
+      "bytes": 1259,
+      "sha256": "c65752c12941ab9a7c5d97b8bd454ce55085e6d6917a6b8a59ca5ad1d448f6bd"
+    },
+    ".artifacts/issue81-fast/normalized-paths.log": {
+      "bytes": 442,
+      "sha256": "0b461f9a4d950a11af38de907e9158a4d93be2bf43eede8de1029712bb7d0a1c"
+    },
+    ".artifacts/issue81-fast/gitleaks-checkpoint.log": {
+      "bytes": 173,
+      "sha256": "1d33672b5721f338443ac24332369d2a057a7583d06f456f9bfe45044b9d9b84"
+    },
+    ".artifacts/issue81-fast/gitleaks-updated.log": {
+      "bytes": 173,
+      "sha256": "70854e136831e06a2afebdba9e6f9b0f5a284dacae5d15ccc62584d0cff83259"
+    },
+    ".artifacts/issue81-fast/gitleaks-progress.log": {
+      "bytes": 142,
+      "sha256": "55488c1c9d1e3dd759434a3ec1a1aca5206b73398077cf03d75e6182df78306c"
+    },
+    ".artifacts/issue81-fast/gitleaks-scope.log": {
+      "bytes": 141,
+      "sha256": "d3b47b3710c07ea603b6d9f4fc74885df44b6f895297aab5694721c2d3119562"
+    }
+  },
+  "gitleaks": "Checkpoint/updated staged and progress bodies exit0. Final staged and final public-body scan before delivery; receipts retained locally."
+}

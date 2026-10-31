@@ -1,0 +1,285 @@
+{
+  "frozen_contracts": "#27/#42 brain-strategies and #55 retrieval; #28 source/predicate/replay contract; no switch or model runs",
+  "prior_211311_cards": [
+    "PIERCING_WAIL",
+    "PREPARED",
+    "CLOAK_AND_DAGGER",
+    "DEFLECT",
+    "LEG_SWEEP",
+    "SNAKEBITE",
+    "ADRENALINE",
+    "HIDDEN_DAGGERS",
+    "DODGE_AND_ROLL",
+    "CALCULATED_GAMBLE",
+    "UNTOUCHABLE",
+    "EXPOSE",
+    "ESCAPE_PLAN",
+    "RICOCHET",
+    "ECHOING_SLASH",
+    "ACROBATICS",
+    "DAGGER_THROW",
+    "DASH",
+    "AFTERIMAGE",
+    "BACKSTAB"
+  ],
+  "prior_090927_cards": [
+    "ACCURACY",
+    "POISONED_STAB",
+    "INFINITE_BLADES",
+    "BUBBLE_BUBBLE",
+    "MALAISE",
+    "PHANTOM_BLADES",
+    "MIRAGE",
+    "BLADE_OF_INK",
+    "SKEWER",
+    "BLUR",
+    "BOUNCING_FLASK",
+    "KNIFE_TRAP",
+    "HAZE",
+    "LEADING_STRIKE",
+    "NOXIOUS_FUMES",
+    "WELL_LAID_PLANS",
+    "DEADLY_POISON",
+    "ACCELERANT",
+    "BURST",
+    "SUCKER_PUNCH",
+    "ABRASIVE",
+    "SHADOWMELD",
+    "OUTBREAK",
+    "BACKFLIP",
+    "DAGGER_SPRAY"
+  ],
+  "overlap_with_fixed20": [],
+  "old_artifacts_used_as_new_evidence": false,
+  "formal_strategy_mentions": [
+    {
+      "id": "silent-brain-blade-flexible-formation-review",
+      "cards": [
+        "FAN_OF_KNIVES"
+      ],
+      "applies_to": null,
+      "text": "已有刀源时，按当前已持牌分别比较增伤、群伤、防护与过牌，不以刀扇＋精准＋刀舞齐全作成型或安全前提。外部v0.111终局还原一致赢家中，仅25/101观察到这三牌齐全，76/101未观察到；首幕齐全7/101。自有A10无重试证据0/4齐全，重试层1/3到F45齐全而仍败，不能把缺三牌当败因。\n范围：Silent A10；外部还原与自有首次观察均为时序代理，非固定拿牌排序。自有版本unknown，旧版本机制未知另账。"
+    },
+    {
+      "id": "silent-fan-of-knives-capacity",
+      "cards": [
+        "FAN_OF_KNIVES"
+      ],
+      "applies_to": null,
+      "text": "本战已持刀扇时，比较2费启动、实际手位和随后合法出刀，不把产刀直接算成已伤害；普通牌文产4刀。9R916WW0V65N有4次单步施放（1局，含重试），均建立1层群伤并添4刀；F48三次及F45一次，后者整战仍掉20血。外部v0.111所选代表终局刀扇为胜6/10、负1/10，配对有赢家选择偏差。\n范围：Silent A10，实测自有版本unknown；rk仅收窄到当前实验体，未验证拥挤手牌或升级数量，不从这4次定安全启动顺序。"
+    },
+    {
+      "id": "silent-accuracy-shiv-scaling",
+      "cards": [
+        "FAN_OF_KNIVES"
+      ],
+      "applies_to": null,
+      "text": "已持精准与可打小刀时，比较付1费后再出刀与即时攻防，按当前敌能力核实伤。9R916WW0V65N四次带既有小刀施放使牌面4→8或5→9（12次施放中8次当步无刀，均仅1局）。F48末试T12实验体有无实体1：三张群伤9小刀各实扣1，共3并补3余像挡；不能按27伤算斩杀。\n范围：Silent A10、自有版本unknown、含SL。外部v0.111精准＋刀扇终局匹配胜24/63、负27/63，差-4.76pp、q=1，保留反向而非拿牌收益；其他敌人/阶段不外推。"
+    },
+    {
+      "id": "silent-brain-shop-joint-budget",
+      "cards": [
+        "FLICK_FLACK"
+      ],
+      "applies_to": null,
+      "text": "购买与删牌各自买得起时，先比较同一笔金币能完成的整套方案，再决定把预算给哪边。证据局100金币买51金币翻越撑击后剩49，原100删牌已不可付；另一局162金币先删100后仍能买52药。A10无重试证据购买互斥125机会/84局、选择删牌28/27；重试或判死组522/280、142/127。\n范围：Silent A10/自有版本unknown；只证明预算互斥与实际执行，不证明买牌或删牌更好，不固定删牌优先。"
+    },
+    {
+      "id": "silent-brain-shop-nonbasic-removal",
+      "cards": [
+        "TACTICIAN"
+      ],
+      "applies_to": null,
+      "text": "当前非基础牌的费用、条件或用途不再合适时，也把它列入付费删牌比较，和基础牌、购买及离店一起审查。实际各付100删TORIC_TOUGHNESS或TACTICIAN，328→228、204→104；前者当前2费，后者当前3费且牌文有奇巧，不据名字补机制。A10无重试证据非基础非诅咒移除1机会/1局；重试或判死组9/9，十局最终均败。\n范围：Silent A10/自有版本unknown，仅提示扩展真实目标比较，不固定删除这些牌、不把旧理由或模型推断当收益。基本牌删除另账，不用稀疏样本排名。"
+    },
+    {
+      "id": "silent-brain-relic-fan-current-attack-supply",
+      "cards": [
+        "SLICE"
+      ],
+      "applies_to": null,
+      "text": "货架有精致折扇、当前有刀源或低费攻击时，比较同轮攻击换挡与直接补防；先核攻击能否同轮兑现。G3TD6JEN47KT F12已有刀刃之舞和两张切割，花208金买折扇，258→50；当时斗篷与匕首标价49。1局1次购买，牌组不变，终F24败。\n范围：Silent A10/版本unknown/无重试证据；原牌文次数和挡量占位未知，本批不重验旧机制，不保证触发、挡够或购买更优。"
+    },
+    {
+      "id": "silent-brain-relic-whetstone-eligible-attack-pool",
+      "cards": [
+        "SLICE"
+      ],
+      "applies_to": null,
+      "text": "货架有磨刀石时，先列当前未升级攻击牌池，按随机结果比较升级价值；产刀的技能/能力不能因产刀就算攻击升级目标。YXY2RL1E83HM F28有刀刃之舞/飞刀风暴，花188金，782→594；后继实际只见一张打击和一张切割变为升级，牌组张数不变。1局1次购买，终F48败。\n范围：Silent A10/版本unknown/无重试证据；这次两张升级不保证下次命中核心，也未证明比186金弹珠袋或202金忍术卷轴更优。"
+    }
+  ],
+  "formal_rk_mentions": [
+    {
+      "id": "silent-r2-card-flechettes",
+      "cards": [
+        "FLECHETTES"
+      ],
+      "applies_to": "combat_line",
+      "text": "Observed remaining-turn HP loss with Flechettes"
+    },
+    {
+      "id": "silent-r2-card-precise-cut",
+      "cards": [
+        "PRECISE_CUT"
+      ],
+      "applies_to": "combat_line",
+      "text": "Observed remaining-turn HP loss with Precise Cut"
+    },
+    {
+      "id": "silent-r2-card-bullet-time",
+      "cards": [
+        "BULLET_TIME"
+      ],
+      "applies_to": "combat_line",
+      "text": "Observed remaining-turn HP loss with Bullet Time"
+    },
+    {
+      "id": "silent-r2-card-finisher",
+      "cards": [
+        "FINISHER"
+      ],
+      "applies_to": "combat_line",
+      "text": "Observed remaining-turn HP loss with Finisher"
+    },
+    {
+      "id": "silent-r2-card-envenom",
+      "cards": [
+        "ENVENOM"
+      ],
+      "applies_to": "combat_line",
+      "text": "Observed remaining-turn HP loss with Envenom"
+    },
+    {
+      "id": "silent-r2-card-serpent-form",
+      "cards": [
+        "SERPENT_FORM"
+      ],
+      "applies_to": "combat_line",
+      "text": "Observed remaining-turn HP loss with Serpent Form"
+    },
+    {
+      "id": "silent-r2-card-fan-of-knives",
+      "cards": [
+        "FAN_OF_KNIVES"
+      ],
+      "applies_to": "combat_line",
+      "text": "Generated Shivs still need capacity and legal plays"
+    },
+    {
+      "id": "silent-r2-card-hand-trick",
+      "cards": [
+        "HAND_TRICK"
+      ],
+      "applies_to": "combat_line",
+      "text": "Observed remaining-turn HP loss with Hand Trick"
+    },
+    {
+      "id": "silent-rk-blade-fan-setup-test-subject",
+      "cards": [
+        "FAN_OF_KNIVES"
+      ],
+      "applies_to": "combat_line",
+      "text": "Fan setup creates knives before their actual attacks"
+    },
+    {
+      "id": "silent-rk-shop-nonbasic-removal",
+      "cards": [
+        "FINISHER",
+        "TACTICIAN",
+        "PRECISE_CUT",
+        "FAN_OF_KNIVES"
+      ],
+      "applies_to": "shop",
+      "text": "Paid removal can target nonbasic cards"
+    }
+  ],
+  "decisions": [
+    {
+      "id": "silent-b002-next-turn-resources",
+      "disposition": "new",
+      "reason": "本批奖励候选的印刷效果及边界对比；匹配到的旧记录属于战斗结果/删牌/商店预算/遗物购买，题型与决策条件不同，不覆写旧ID。",
+      "related_existing_ids": []
+    },
+    {
+      "id": "silent-b002-skill-discount-and-draw-lock",
+      "disposition": "new",
+      "reason": "本批奖励候选的印刷效果及边界对比；匹配到的旧记录属于战斗结果/删牌/商店预算/遗物购买，题型与决策条件不同，不覆写旧ID。",
+      "related_existing_ids": [
+        "silent-r2-card-bullet-time"
+      ]
+    },
+    {
+      "id": "silent-b002-three-count-dependent-attacks",
+      "disposition": "new",
+      "reason": "本批奖励候选的印刷效果及边界对比；匹配到的旧记录属于战斗结果/删牌/商店预算/遗物购买，题型与决策条件不同，不覆写旧ID。",
+      "related_existing_ids": [
+        "silent-r2-card-flechettes",
+        "silent-r2-card-precise-cut",
+        "silent-r2-card-finisher",
+        "silent-rk-shop-nonbasic-removal"
+      ]
+    },
+    {
+      "id": "silent-b002-explicit-keyword-resource-boundary",
+      "disposition": "new",
+      "reason": "本批奖励候选的印刷效果及边界对比；匹配到的旧记录属于战斗结果/删牌/商店预算/遗物购买，题型与决策条件不同，不覆写旧ID。",
+      "related_existing_ids": [
+        "silent-brain-shop-nonbasic-removal",
+        "silent-r2-card-hand-trick",
+        "silent-rk-shop-nonbasic-removal"
+      ]
+    },
+    {
+      "id": "silent-b002-draw-and-discard-timing",
+      "disposition": "new",
+      "reason": "本批奖励候选的印刷效果及边界对比；匹配到的旧记录属于战斗结果/删牌/商店预算/遗物购买，题型与决策条件不同，不覆写旧ID。",
+      "related_existing_ids": []
+    },
+    {
+      "id": "silent-b002-zero-cost-attack-constraints",
+      "disposition": "new",
+      "reason": "本批奖励候选的印刷效果及边界对比；匹配到的旧记录属于战斗结果/删牌/商店预算/遗物购买，题型与决策条件不同，不覆写旧ID。",
+      "related_existing_ids": [
+        "silent-brain-relic-fan-current-attack-supply",
+        "silent-brain-relic-whetstone-eligible-attack-pool"
+      ]
+    },
+    {
+      "id": "silent-b002-generated-knives-purpose",
+      "disposition": "new",
+      "reason": "专门比较刀扇与袖里乾坤的取得数量/自减费/攻击范围；与旧已有刀源成型/战斗实验体启动不同，保留旧相关ID不复制其证据。",
+      "related_existing_ids": [
+        "silent-brain-blade-flexible-formation-review",
+        "silent-fan-of-knives-capacity",
+        "silent-accuracy-shiv-scaling",
+        "silent-r2-card-fan-of-knives",
+        "silent-rk-blade-fan-setup-test-subject",
+        "silent-rk-shop-nonbasic-removal"
+      ]
+    },
+    {
+      "id": "silent-b002-two-power-trigger-conditions",
+      "disposition": "new",
+      "reason": "本批奖励候选的印刷效果及边界对比；匹配到的旧记录属于战斗结果/删牌/商店预算/遗物购买，题型与决策条件不同，不覆写旧ID。",
+      "related_existing_ids": [
+        "silent-r2-card-envenom",
+        "silent-r2-card-serpent-form"
+      ]
+    },
+    {
+      "id": "silent-b002-all-enemy-printed-damage",
+      "disposition": "new",
+      "reason": "本批奖励候选的印刷效果及边界对比；匹配到的旧记录属于战斗结果/删牌/商店预算/遗物购买，题型与决策条件不同，不覆写旧ID。",
+      "related_existing_ids": [
+        "silent-brain-shop-joint-budget"
+      ]
+    },
+    {
+      "id": "silent-b002-conditional-extra-reward",
+      "disposition": "new",
+      "reason": "本批奖励候选的印刷效果及边界对比；匹配到的旧记录属于战斗结果/删牌/商店预算/遗物购买，题型与决策条件不同，不覆写旧ID。",
+      "related_existing_ids": []
+    }
+  ]
+}

@@ -27,14 +27,16 @@ vi.mock("node:fs", async (original) => {
 const knowledge = makeKnowledge({ cards: [
   { id: "DEFEND_SILENT", type: "Skill" }, { id: "NEUTRALIZE", type: "Attack" },
   { id: "STRIKE_SILENT", type: "Attack" }, { id: "MIRAGE", type: "Skill" }, { id: "PRODUCTION", type: "Curse" },
+  { id: "BLUR", type: "Skill" }, { id: "POISONED_STAB", type: "Attack" }, { id: "FRANTIC_ESCAPE", type: "Skill" },
 ] }, "cache");
 const originalRollout = rolloutLiveOptions.enabled;
 beforeEach(() => { rolloutLiveOptions.enabled = false; });
 afterEach(() => { rolloutLiveOptions.enabled = originalRollout; solveTap.onSolve = null; });
 
-function observedInput(key: keyof typeof evidence, character = "SILENT", held = true): SolverInput {
+function observedInput(key: keyof typeof evidence, character = "SILENT", held = true, ascension?: number): SolverInput {
   const raw = structuredClone(evidence[key].state);
   raw.run.character_id = character;
+  if (ascension !== undefined) raw.run.ascension = ascension;
   if (!held) raw.run.relics = [];
   const state = parseGameState(raw);
   const env: DecisionEnv = { state, knowledge, brief: buildRunBrief(state, knowledge),
@@ -67,6 +69,32 @@ it("A10 F33 T8: the complete observed line gains sixteen plus eight Block and lo
 it("A7 F48 T4: Strike before two Defends gains ten plus five Block, not twenty", () => {
   const input = observedInput("a7-start");
   expect(replaySteps(input, steps(input, [1, 2, 3], 0))!.outcome.blockGained).toBe(15);
+});
+
+it("Q7HBKHZTSPJ8 A10 F33 attempt 4 T5: two Dexterity consumes fourteen then seven Block", () => {
+  const input = observedInput("a10-dex2-start");
+  expect(input.player.paelsLegionPreview).toBe(true);
+  const outcome = replaySteps(input, steps(input, [0, 1, 3], 0))!.outcome;
+  expect(outcome).toMatchObject({ blockGained: 21, hpLoss: 0, hpAfter: 20, unknownCards: [] });
+  // The observed Blur keeps only 21 - 18 = 3 Block, not the old preview's ten.
+  expect(outcome.blockGained - 18).toBe(3);
+  const afterFirst = observedInput("a10-dex2-after-first");
+  expect(afterFirst.player.paelsLegionPreview).toBeUndefined();
+  expect(replaySteps(afterFirst, steps(afterFirst, [0, 2], 0))!.outcome.blockGained).toBe(7);
+});
+
+it.each([0, 7, 9, 11])("keeps the previous two-Dexterity preview behavior outside observed A10 (A%i)", (ascension) => {
+  const input = observedInput("a10-dex2-start", "SILENT", true, ascension);
+  expect(input.player.paelsLegionPreview).toBeUndefined();
+  expect(replaySteps(input, steps(input, [0, 1, 3], 0))!.outcome.blockGained).toBe(28);
+});
+
+it("keeps the two-Dexterity preview unchanged for Ironclad and relic-free boards", () => {
+  for (const [character, held] of [["IRONCLAD", true], ["SILENT", false]] as const) {
+    const input = observedInput("a10-dex2-start", character, held);
+    expect(input.player.paelsLegionPreview).toBeUndefined();
+    expect(replaySteps(input, steps(input, [0, 1, 3], 0))!.outcome.blockGained).toBe(28);
+  }
 });
 
 it("after the first Block, stack two and plain previews prevent a second consumption on re-planning", () => {

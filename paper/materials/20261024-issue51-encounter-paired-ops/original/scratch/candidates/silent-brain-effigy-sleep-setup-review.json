@@ -1,0 +1,70 @@
+{
+  "schema": "brain-strategies-v1",
+  "character": "silent",
+  "entries": [
+    {
+      "id": "silent-brain-effigy-sleep-setup-review",
+      "version": "1.0.0",
+      "trigger": {
+        "question_types": [
+          "fight_plan"
+        ],
+        "acts": [
+          1
+        ]
+      },
+      "evidence": [
+        {
+          "type": "own",
+          "run": "0CLP16ZR4ZZC",
+          "floor": 8,
+          "ref": "learner/runs/20261024-182410-9392a61c-9554-4f9d-ac41-209aa6052d76-strategy-proposal/scratch/raw/decisions-3349383622-29913.json; fingerprint-matched original state; completed receipts and observed successors",
+          "role": "support"
+        },
+        {
+          "type": "own",
+          "run": "2Q6ZYZ6JHM0M",
+          "floor": 8,
+          "ref": "learner/runs/20261024-182410-9392a61c-9554-4f9d-ac41-209aa6052d76-strategy-proposal/scratch/own-fight-pages/bygone-limitation.json; generalization limitation; exact action predicate unverified; retries kept separate",
+          "role": "contradict"
+        },
+        {
+          "type": "external_aggregate",
+          "source": "external:sts2fun",
+          "url": "https://sts2.fun/static/sts2_public.db.zst",
+          "version": "v0.111",
+          "dataset_sha256": "1f7c0c3d441aedb5c85f04bcd4d8d6a1039b438a8b6fda2d96cfa5c27580cbf5",
+          "downloaded_at": "2026-10-21",
+          "filters": {
+            "character": "silent",
+            "ascension": 10,
+            "criteria": "character='SILENT' AND ascension=10 AND n_players=1 AND is_valid=1 AND was_abandoned=0 AND has_modifiers=0; patch_major in v0.107-v0.111; selected c1 pair0; recorded ENCOUNTER.BYGONE_EFFIGY_ELITE nodes only; not population representative"
+          },
+          "statistic": {
+            "name": "selected_representative_node_gross_damage_mean_context_only",
+            "value": 10.0,
+            "unit": "hp"
+          },
+          "denominator": {
+            "unit": "fights",
+            "n": 1
+          },
+          "design": "observational",
+          "limitations": [
+            "挑选的匿名完整代表，非随机样本；不估总体效果。",
+            "无逐回合动作/真实入场牌组；节点前末HP只作代理。",
+            "终局簇不作当前触发；自有版本unknown分账；外部反例/未到达不当作同遭遇动作反证。"
+          ],
+          "license": "No explicit dataset redistribution license found on public FAQ; aggregate statistics with attribution only; no raw redistribution.",
+          "ref": "knowledge/external/sts2fun/builds-v1/representative-timelines.json#v0.111,c1,pair0,ENCOUNTER.BYGONE_EFFIGY_ELITE"
+        }
+      ],
+      "strategy": "旧日雕像当前为SLEEP_MOVE且灵动步法可打时，把先建敏捷的线与直接输出比较，随后按真实醒转/攻击重算防护。0CLP16ZR4ZZC F8的一次A10机会，实打灵动步法后敏捷0→2，随后迷雾/用药/攻击，至T2仍49血；整战49→30，并非免伤保证。另局2Q6ZYZ6JHM0M也持灵动步法，48血进场仍实际败；未核同一动作窗口。\n范围：Silent/A10/自有版本unknown、仅当前具名敌人和合法手牌；1局1机会，后继观察非因果，不推固定启动顺序或安全血线。",
+      "source": "mixed",
+      "confidence": 0.3,
+      "evidence_status": "conflict",
+      "formal_publication": "pending",
+      "consumer_readback": "pending"
+    }
+  ]
+}

@@ -1,0 +1,68 @@
+{
+  "observed_at": "2026-10-24T19:20:21+08:00",
+  "batch": "20261024-191311-strategy-proposal",
+  "receipt": "ops/codex-ops/learner/learner-20261024-191311-strategy-proposal.tui.json",
+  "receipt_sha256": "7ffceed56dfe35d7c9053aaac5fb5fd566a67c509c6f2a99859e3631cedd8577",
+  "state_at_observation": "native-accepted",
+  "pane": "w1H:pEB",
+  "session": "01a16d9e-1daf-7c41-8a21-8cf5aae68a9a",
+  "turn": "01a16d9e-91ec-77f0-ab81-6eb8910c0695",
+  "native_pid": 3772411,
+  "native_birth": "26496982",
+  "processes": [
+    {
+      "pid": 3770985,
+      "birth": "26494198",
+      "ppid": "1",
+      "executable": "bash",
+      "root_entry_paths": [
+        "/home/dw/Projects/agent-sts2/ops/codex-ops-learner.sh"
+      ]
+    },
+    {
+      "pid": 3771996,
+      "birth": "26496400",
+      "ppid": "3770985",
+      "executable": "python3",
+      "root_entry_paths": [
+        "/home/dw/Projects/agent-sts2/ops/learner_entry.py",
+        "/home/dw/Projects/agent-sts2/learner/run.ts"
+      ]
+    },
+    {
+      "pid": 3772411,
+      "birth": "26496982",
+      "ppid": "3770934",
+      "executable": "node",
+      "root_entry_paths": []
+    }
+  ],
+  "native_metadata": [
+    {
+      "type": "session_meta",
+      "timestamp": "2026-10-24T11:14:31.029Z",
+      "id": "01a16d9e-1daf-7c41-8a21-8cf5aae68a9a",
+      "cwd": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261024-191311",
+      "model": null,
+      "effort": null,
+      "turn_id": null
+    },
+    {
+      "type": "turn_context",
+      "timestamp": "2026-10-24T11:14:32.644Z",
+      "id": null,
+      "cwd": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261024-191311",
+      "model": "gpt-6.1-sol",
+      "effort": "high",
+      "turn_id": "01a16d9e-91ec-77f0-ab81-6eb8910c0695"
+    }
+  ],
+  "new_natural_start_observed": true,
+  "runtime_loading_limit": "Actual root entry paths and later process births verified; current file hashes do not prove in-memory module byte identity or abnormal branch execution. No hot switch claimed.",
+  "terminal_observed": false,
+  "bounded_text_observation_observed": false,
+  "terminal_unverified_75_observed": false,
+  "retirement_authorized": false,
+  "model_calls_started_by_watcher": 0,
+  "production_mutations": 0
+}

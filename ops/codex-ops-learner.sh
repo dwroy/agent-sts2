@@ -18,7 +18,7 @@ if [ -n "${LEARNER_REGISTRATION_GATE:-}" ]; then
   [ "$LEARNER_REGISTRATION_GATE" = "$registration_directory/learner/registration/$batch.lock" ] || exit 2
   registration_lock="$LEARNER_REGISTRATION_GATE"
 fi
-case "$task" in postmortem|experience-update|fix-batch|strategy-proposal|ascension-audit) ;; *) exit 2 ;; esac
+case "$task" in postmortem|experience-update|fix-batch|strategy-proposal|ascension-audit|mechanics-audit|experience-asc-audit) ;; *) exit 2 ;; esac
 learner_task="${6:-$task}"
 research_request=""
 implementation_request=""
@@ -28,6 +28,7 @@ source_kind=backfill
 external_tier=""
 unset LEARNER_EXTERNAL_SOURCE LEARNER_EXTERNAL_SERVICE_TIER
 backfill_task_file=""
+public_web_task_file=""
 if [ "$task" = strategy-proposal ] && [ "$#" -ge 7 ]; then
   [ "$#" = 7 ] && [ "$learner_task" = "$task" ] && [ "$character" = silent ] \
     && { [[ "$7" =~ ^(backfill|external):[a-z0-9][a-z0-9._-]{0,119}$ ]] || [ "$7" = roy-20261010-silent-deck-size-value ] || [ "$7" = roy-20261010-silent-core-reuse-value ] \
@@ -125,9 +126,12 @@ elif [ "$task" = fix-batch ] && [ "$learner_task" = "$task" ]; then
 elif [ "$task" = strategy-proposal ]; then
   [ "$worktree" = "$ROOT/.worktrees/codex-strategy-$character-${batch%-strategy-proposal}" ] || exit 2
   fresh_tree=1
+elif [ "$task" = mechanics-audit ] || [ "$task" = experience-asc-audit ]; then
+  [ "$worktree" = "$ROOT/.worktrees/codex-$task-$character-${batch%-$task}" ] || exit 2
+  fresh_tree=1
 fi
 if [ "$fresh_tree" = 1 ] && [ "$audit_ready" = 1 ]; then
-  [[ "$character" =~ ^[a-z][a-z0-9_]*$ ]] && [[ "$batch" =~ ^[0-9]{8}-[0-9]{6}-(fix-batch|strategy-proposal)$|^[0-9]{8}-[0-9]{6}-s2-strategy-proposal$ ]] || exit 2
+  [[ "$character" =~ ^[a-z][a-z0-9_]*$ ]] && [[ "$batch" =~ ^[0-9]{8}-[0-9]{6}-(fix-batch|strategy-proposal|mechanics-audit|experience-asc-audit)$|^[0-9]{8}-[0-9]{6}-s2-strategy-proposal$ ]] || exit 2
   exec 9> "$DIR/learner/${worktree##*/}.lock"
   flock -w 5 9 || exit 75
   if [ ! -f "$worktree/.git" ]; then
@@ -191,6 +195,20 @@ if [ "$audit_ready" = 1 ] && [ -n "$backfill_source" ]; then
 fi
 # Scheduled ordinary work uses high; frozen specialist requests retain xhigh. No shared config edits.
 # LEARNER_CMD overrides the command for fixed tests only.
+learner_merge=live
+[ "$source_kind" != external ] || learner_merge=no
+check_admission=0
+[ "$source_kind" != external ] || check_admission=1
+# Ordinary legacy launches need no new helper when every admission marker is absent.
+for admission_flag in PUBLICATION_ADMISSION.json PAUSE ACCOUNT_DRAIN LLM_DRAIN; do
+  if [ -e "$DIR/$admission_flag" ] || [ -L "$DIR/$admission_flag" ]; then check_admission=1; fi
+done
+if [ "$audit_ready" = 1 ] && [ "$check_admission" = 1 ]; then
+  if ! (flock -w 120 8 && nice -n 19 python3 "$OPS/publication_gate.py" --root "$ROOT" --state-dir "$DIR" \
+    check-learner --batch "$batch" --cwd "$worktree" --merge "$learner_merge") 8> "$registration_lock" >> "$out" 2>> "$err"; then
+    audit_ready=0
+  fi
+fi
 if [ "$audit_ready" != 1 ]; then
   if [ -n "$backfill_source" ]; then
     python3 "$OPS/strategy_${source_kind}_jobs.py" not-started "$ROOT" "$DIR" "$batch" "$character" "$worktree" "$backfill_source" 2>> "$err"
@@ -222,8 +240,17 @@ else
   if [ "$learner_task" != "$task" ] || [ -n "$research_request$implementation_request" ]; then
     learner_effort=xhigh
   fi
-  args=(--engine codex --model gpt-6.1-sol --effort "$learner_effort" --task "${backfill_task_file:-${implementation_task_file:-$learner_task}}" --character "$character" --cwd "$worktree")
+  # Read only the original registration, after checkout and before selecting the task template.
+  if [ "$task" = strategy-proposal ] && [ "$audit_ready" = 1 ]; then
+    if ! (flock -w 120 8) 8> "$registration_lock"; then exit 75; fi
+    public_web_registered=$(nice -n 19 python3 -c 'import json,sys; b=json.load(open(sys.argv[1]))["batches"][sys.argv[2]]; print("yes" if "public_web" in b else "no")' "$DIR/learn.json" "$batch") || exit 2
+    if [ "$public_web_registered" = yes ]; then
+      public_web_task_file=$(nice -n 19 python3 "$OPS/public_web_jobs.py" "$ROOT" "$DIR" "$batch" "$character" "$worktree" 2>> "$err") || exit 2
+    fi
+  fi
+  args=(--engine codex --model gpt-6.1-sol --effort "$learner_effort" --task "${public_web_task_file:-${backfill_task_file:-${implementation_task_file:-$learner_task}}}" --character "$character" --cwd "$worktree")
   [ "$task" != strategy-proposal ] || args+=(--set "batch=$batch")
+  if [ "$task" = mechanics-audit ] || [ "$task" = experience-asc-audit ]; then args+=(--set "batch=$batch"); fi
   if [ "$learner_task" = silent-historical-core-builds ]; then
     args+=(--set "evidence=${7}" --set "batch=$batch")
   fi
@@ -231,10 +258,13 @@ else
   if [ "$task" = postmortem ]; then args+=(--set "runs=$runs");
   elif [ "$task" = ascension-audit ]; then
     args+=(--set "runs=$runs" --set "target_ascension=$level" --set "previous_ascension=$previous")
+  elif [ -n "$public_web_task_file" ]; then
+    args+=(--set merge=no)
   elif [ "$source_kind" != external ] && [ "$learner_task" != silent-historical-core-builds ]; then
     args+=(--set merge=live)
     [ "$task" = fix-batch ] || args+=(--set "runs=$runs")
   fi
+  [ "$source_kind" != external ] || args+=(--set merge=no)
   # The launcher may retry only a proven pre-session failure under this same registration.
   export LEARNER_BATCH_ID="$batch" LEARNER_STATE_FILE="$DIR/learn.json"
   unset LEARNER_BACKFILL_SOURCE LEARNER_EXTERNAL_SOURCE LEARNER_EXTERNAL_SERVICE_TIER
@@ -248,10 +278,13 @@ else
   fi
   # Wait for this batch publication before either entry point captures the lease.
   # A later source validation in the same tick does not hold this batch barrier.
+  launcher_source="$ROOT"
+  # External candidates import only their immutable source tree during publication.
+  [ "$source_kind" != external ] || launcher_source="$worktree"
   if (flock -w 120 8) 8> "$registration_lock"; then
     # Use current instance policy for persistent old workspaces; task source and native cwd stay bound below.
     nice -n 19 python3 "$OPS/learner_entry.py" "$ROOT" "$worktree" "$batch" "$DIR/learn.json" "$out" "$err" \
-      -- "$ROOT/agent/node_modules/.bin/tsx" "$ROOT/learner/run.ts" "${args[@]}"
+      -- "$ROOT/agent/node_modules/.bin/tsx" "$launcher_source/learner/run.ts" "${args[@]}"
     rc=$?
   else
     echo "learner registration lock wait timed out after 120 seconds; no model started" >> "$err"

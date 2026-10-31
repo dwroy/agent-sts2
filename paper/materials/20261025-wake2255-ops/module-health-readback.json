@@ -1,0 +1,3695 @@
+{
+  "summary": {
+    "alerts": 11,
+    "computation_attempts": 70,
+    "service_failures": 0,
+    "degraded": 0,
+    "pipeline_attached": 83,
+    "pipeline_expected": 83,
+    "missing": 0,
+    "legacy_missing_plan_evidence": 66,
+    "verified_plan_reuse_true": 66,
+    "DPR_failure_rows": 5,
+    "timeouts": 4
+  },
+  "alerts": [
+    {
+      "events": [
+        2
+      ],
+      "run": "WBDA6CTM07R4",
+      "alert_source": {
+        "path": "ops/codex-ops/module-health/WBDA6CTM07R4-alert.json",
+        "bytes": 16513,
+        "sha256": "fa1bcd83175094a3796498d093d2efe21774f96fee9062a7da2ac96a414bb025"
+      },
+      "coverage": {
+        "decisions_complete": true,
+        "decisions": {
+          "path": "/home/dw/Projects/agent-sts2/logs/decisions.jsonl",
+          "start": 4962640382,
+          "end": 4995887150,
+          "complete": false,
+          "malformed": 0,
+          "first_ts": "2026-10-25T04:39:27.198Z"
+        },
+        "brain": {
+          "path": "/home/dw/Projects/agent-sts2/logs/brain.jsonl",
+          "start": 1681471292,
+          "end": 1714969192,
+          "complete": false,
+          "malformed": 0,
+          "first_ts": "2026-10-24T23:42:48.726Z"
+        },
+        "plans": {
+          "path": "/home/dw/Projects/agent-sts2/logs/run-plans.jsonl",
+          "start": 13163640,
+          "end": 17357312,
+          "complete": false,
+          "malformed": 0,
+          "first_ts": "2026-10-24T03:15:38.998Z"
+        },
+        "config": {
+          "path": "/home/dw/Projects/agent-sts2/logs/run-config.jsonl",
+          "start": 0,
+          "end": 3656846,
+          "complete": true,
+          "malformed": 0,
+          "first_ts": "2026-09-30T00:10:45.685Z"
+        }
+      },
+      "computation": {
+        "attempts": 7,
+        "failures": 0,
+        "degraded": 0,
+        "evidence": [],
+        "alert": false,
+        "scope": "B2/B3 computation service failures; degradation permits continuation, not fault resolution."
+      },
+      "shadow_adaptive": {
+        "mode": "on",
+        "observed": 7,
+        "produced": 7,
+        "errors": 0,
+        "evaluable": 0,
+        "matched": 0,
+        "unknown": 0,
+        "complete_adaptive": 7,
+        "budgeted_partial": 0,
+        "production_evaluable": 0,
+        "production_matched": 0,
+        "agreement": null,
+        "production_agreement": null,
+        "saved_fraction": {
+          "p50": null,
+          "p90": null
+        },
+        "actual_saved_fraction": {
+          "p50": 0.6666666666666666,
+          "p90": 0.6666666666666666
+        },
+        "stop_counts": {
+          "leader": 10,
+          "indifferent": 9,
+          "eliminated": 15
+        },
+        "alert": false,
+        "admission_state": "accepted",
+        "admission": "accepted source; runtime mode=on; never auto-enable",
+        "limits": "Shadow estimates and actual on-mode sample work are separate. On-mode cannot observe full-run agreement; no elapsed-time saving or game benefit inferred."
+      },
+      "sampling": {
+        "minimumShown_values": [
+          300
+        ],
+        "actual_sample_counts": {
+          "100": 7
+        },
+        "sim_ms": [
+          752,
+          530,
+          694,
+          627,
+          1155,
+          825,
+          2266
+        ],
+        "timed_out_count": 0,
+        "stage_pool": [
+          {
+            "samples": 100,
+            "elapsedMs": 737,
+            "timedOut": false,
+            "workers": 24,
+            "deadlineMs": 10897.677039,
+            "pool": {
+              "queueMs": 0,
+              "coldStart": true,
+              "preparationMs": 10,
+              "firstReplyMs": 366,
+              "chunksPlanned": 26,
+              "chunksDispatched": 26,
+              "chunksCompleted": 26,
+              "outcomesCompleted": 200
+            }
+          },
+          {
+            "samples": 100,
+            "elapsedMs": 511,
+            "timedOut": false,
+            "workers": 24,
+            "deadlineMs": 10985.503802000007,
+            "pool": {
+              "queueMs": 0,
+              "coldStart": false,
+              "preparationMs": 0,
+              "firstReplyMs": 29,
+              "chunksPlanned": 52,
+              "chunksDispatched": 52,
+              "chunksCompleted": 52,
+              "outcomesCompleted": 400
+            }
+          },
+          {
+            "samples": 100,
+            "elapsedMs": 662,
+            "timedOut": false,
+            "workers": 24,
+            "deadlineMs": 10990.786368000001,
+            "pool": {
+              "queueMs": 0,
+              "coldStart": false,
+              "preparationMs": 0,
+              "firstReplyMs": 31,
+              "chunksPlanned": 52,
+              "chunksDispatched": 52,
+              "chunksCompleted": 52,
+              "outcomesCompleted": 400
+            }
+          },
+          {
+            "samples": 100,
+            "elapsedMs": 597,
+            "timedOut": false,
+            "workers": 24,
+            "deadlineMs": 10989.806057000009,
+            "pool": {
+              "queueMs": 0,
+              "coldStart": false,
+              "preparationMs": 0,
+              "firstReplyMs": 26,
+              "chunksPlanned": 52,
+              "chunksDispatched": 52,
+              "chunksCompleted": 52,
+              "outcomesCompleted": 400
+            }
+          },
+          {
+            "samples": 100,
+            "elapsedMs": 1143,
+            "timedOut": false,
+            "workers": 24,
+            "deadlineMs": 10987.481842999987,
+            "pool": {
+              "queueMs": 0,
+              "coldStart": true,
+              "preparationMs": 13,
+              "firstReplyMs": 627,
+              "chunksPlanned": 26,
+              "chunksDispatched": 26,
+              "chunksCompleted": 26,
+              "outcomesCompleted": 200
+            }
+          },
+          {
+            "samples": 100,
+            "elapsedMs": 803,
+            "timedOut": false,
+            "workers": 24,
+            "deadlineMs": 10993.449781999981,
+            "pool": {
+              "queueMs": 0,
+              "coldStart": false,
+              "preparationMs": 0,
+              "firstReplyMs": 32,
+              "chunksPlanned": 52,
+              "chunksDispatched": 52,
+              "chunksCompleted": 52,
+              "outcomesCompleted": 400
+            }
+          },
+          {
+            "samples": 100,
+            "elapsedMs": 2191,
+            "timedOut": false,
+            "workers": 24,
+            "deadlineMs": 10991.68116399995,
+            "pool": {
+              "queueMs": 0,
+              "coldStart": false,
+              "preparationMs": 0,
+              "firstReplyMs": 33,
+              "chunksPlanned": 130,
+              "chunksDispatched": 130,
+              "chunksCompleted": 130,
+              "outcomesCompleted": 1000
+            }
+          }
+        ]
+      },
+      "construction_pipeline": {
+        "enabled": true,
+        "evaluation_expected": 8,
+        "evaluation_attached": 8,
+        "evaluation_missing": 0,
+        "brain_evaluation": 8,
+        "accepted_evaluation": 8,
+        "accepted_choice_with_evaluation": 7,
+        "plan_due": 8,
+        "accepted_structured_plan": 1,
+        "missing_structured_plan": 7,
+        "saved_structured_plan": 8,
+        "plan_readback": 7,
+        "checkpoint_review_due": 1,
+        "probability_delivered": 0,
+        "admission": {
+          "missing_or_mismatched_prospective_calibration": 6
+        },
+        "alert": true,
+        "limits": "Payload delivery, accepted output and saved/read-back plans are distinct observations, not causal win-rate evidence. Missing calibration is pending, not a service failure."
+      },
+      "verified_pipeline_evidence": [
+        {
+          "kind": "accepted_without_structured_plan",
+          "source": {
+            "offset": 1714413444,
+            "length": 45989,
+            "sha256": "b328a9c584d1ead8324d3fe81234fa071e33106dd00cabe35712e469c10f02cd"
+          },
+          "question": "mvnfexhe-296454-2",
+          "accepted": true,
+          "run_plan_present": false,
+          "plan_reuse": true,
+          "current_plan_present": true
+        },
+        {
+          "kind": "accepted_without_structured_plan",
+          "source": {
+            "offset": 1714459433,
+            "length": 76173,
+            "sha256": "3ec6c7af1141072beb7dba0fbbb029e4865baebfc337b8dd3e4f6761fd768907"
+          },
+          "question": "mvnfexhe-296454-3",
+          "accepted": true,
+          "run_plan_present": false,
+          "plan_reuse": true,
+          "current_plan_present": true
+        },
+        {
+          "kind": "accepted_without_structured_plan",
+          "source": {
+            "offset": 1714535606,
+            "length": 80599,
+            "sha256": "f23d2264f8a7ccb1f7b1a9279d093d5c93aabc8d5bf7dceb7d1e1ced7d138d1c"
+          },
+          "question": "mvnfexhe-296454-4",
+          "accepted": true,
+          "run_plan_present": false,
+          "plan_reuse": true,
+          "current_plan_present": true
+        },
+        {
+          "kind": "accepted_without_structured_plan",
+          "source": {
+            "offset": 1714616205,
+            "length": 77208,
+            "sha256": "fdce8a6836197dea32001c670937ff7d30d069f2dfc9f8c7a003aacc09c190d6"
+          },
+          "question": "mvnfexhe-296454-5",
+          "accepted": true,
+          "run_plan_present": false,
+          "plan_reuse": true,
+          "current_plan_present": true
+        },
+        {
+          "kind": "accepted_without_structured_plan",
+          "source": {
+            "offset": 1714693413,
+            "length": 48929,
+            "sha256": "b1470f065fcb296670ea4e2728c802ef9bbd9a7f9d95d8068f6fe5427fa0a1a4"
+          },
+          "question": "mvnfexhe-296454-6",
+          "accepted": true,
+          "run_plan_present": false,
+          "plan_reuse": true,
+          "current_plan_present": true
+        },
+        {
+          "kind": "accepted_without_structured_plan",
+          "source": {
+            "offset": 1714742342,
+            "length": 83745,
+            "sha256": "568fed630edd6ce763eb08b9100cdee325747072352efe8727ece73cc4e2ac1e"
+          },
+          "question": "mvnfexhe-296454-7",
+          "accepted": true,
+          "run_plan_present": false,
+          "plan_reuse": true,
+          "current_plan_present": true
+        },
+        {
+          "kind": "accepted_without_structured_plan",
+          "source": {
+            "offset": 1714826087,
+            "length": 143105,
+            "sha256": "d69713ac92c2ddf72c800099a58acdea12b2e9c130d7f64aa8fc97b712c4f321"
+          },
+          "question": "mvnfexhe-296454-8",
+          "accepted": true,
+          "run_plan_present": false,
+          "plan_reuse": true,
+          "current_plan_present": true
+        }
+      ],
+      "verified_DPR_failure_rows": [],
+      "DPR_delivery": {
+        "observed_questions": 7,
+        "questions_with_dpr": 7,
+        "accepted_with_dpr": 7,
+        "decision_use": "unknown; delivery is not evidence of reasoning or a fixed DPR weight"
+      },
+      "owner": "original58/H1 module-monitor compatibility +64 deployed route/reuse runtime; current4Q6 brain budget/cut issue already handed to original brain-adapter chain via51/6399132155",
+      "limits": "300 requested/minimum gate and calibration unknown preserved; adaptive actual work counts not automatic full300 or calibration passed. DPR payload delivery is separate from accepted brain/plans; no restart/relearning/threshold change."
+    },
+    {
+      "events": [
+        22
+      ],
+      "run": "YXPPTPDMYKXN",
+      "alert_source": {
+        "path": "ops/codex-ops/module-health/YXPPTPDMYKXN-alert.json",
+        "bytes": 20270,
+        "sha256": "a34e8c713aca6d771c90b19a99bbaa81489832a24ace4c18fc357031da46759f"
+      },
+      "coverage": {
+        "decisions_complete": true,
+        "decisions": {
+          "path": "/home/dw/Projects/agent-sts2/logs/decisions.jsonl",
+          "start": 4965424982,
+          "end": 4998973110,
+          "complete": false,
+          "malformed": 0,
+          "first_ts": "2026-10-25T04:44:33.906Z"
+        },
+        "brain": {
+          "path": "/home/dw/Projects/agent-sts2/logs/brain.jsonl",
+          "start": 1682389150,
+          "end": 1715915687,
+          "complete": false,
+          "malformed": 0,
+          "first_ts": "2026-10-24T23:58:21.672Z"
+        },
+        "plans": {
+          "path": "/home/dw/Projects/agent-sts2/logs/run-plans.jsonl",
+          "start": 13193352,
+          "end": 17383964,
+          "complete": false,
+          "malformed": 0,
+          "first_ts": "2026-10-24T03:19:01.524Z"
+        },
+        "config": {
+          "path": "/home/dw/Projects/agent-sts2/logs/run-config.jsonl",
+          "start": 0,
+          "end": 3670026,
+          "complete": true,
+          "malformed": 0,
+          "first_ts": "2026-09-30T00:10:45.685Z"
+        }
+      },
+      "computation": {
+        "attempts": 9,
+        "failures": 0,
+        "degraded": 0,
+        "evidence": [],
+        "alert": false,
+        "scope": "B2/B3 computation service failures; degradation permits continuation, not fault resolution."
+      },
+      "shadow_adaptive": {
+        "mode": "on",
+        "observed": 8,
+        "produced": 8,
+        "errors": 0,
+        "evaluable": 0,
+        "matched": 0,
+        "unknown": 0,
+        "complete_adaptive": 8,
+        "budgeted_partial": 0,
+        "production_evaluable": 0,
+        "production_matched": 0,
+        "agreement": null,
+        "production_agreement": null,
+        "saved_fraction": {
+          "p50": null,
+          "p90": null
+        },
+        "actual_saved_fraction": {
+          "p50": 0.6666666666666666,
+          "p90": 0.6666666666666666
+        },
+        "stop_counts": {
+          "leader": 8,
+          "eliminated": 25,
+          "indifferent": 28
+        },
+        "alert": false,
+        "admission_state": "accepted",
+        "admission": "accepted source; runtime mode=on; never auto-enable",
+        "limits": "Shadow estimates and actual on-mode sample work are separate. On-mode cannot observe full-run agreement; no elapsed-time saving or game benefit inferred."
+      },
+      "sampling": {
+        "minimumShown_values": [
+          300
+        ],
+        "actual_sample_counts": {
+          "300": 1,
+          "100": 5,
+          "200": 3
+        },
+        "sim_ms": [
+          940,
+          578,
+          510,
+          519,
+          1010,
+          5483,
+          2612,
+          2252,
+          8967
+        ],
+        "timed_out_count": 0,
+        "stage_pool": [
+          {
+            "samples": 300,
+            "elapsedMs": 925,
+            "timedOut": false,
+            "workers": 24,
+            "deadlineMs": 10884.587243999998,
+            "pool": {
+              "queueMs": 0,
+              "coldStart": true,
+              "preparationMs": 12,
+              "firstReplyMs": 492,
+              "chunksPlanned": 38,
+              "chunksDispatched": 38,
+              "chunksCompleted": 38,
+              "outcomesCompleted": 300
+            }
+          },
+          {
+            "samples": 100,
+            "elapsedMs": 550,
+            "timedOut": false,
+            "workers": 24,
+            "deadlineMs": 10984.327507000009,
+            "pool": {
+              "queueMs": 0,
+              "coldStart": false,
+              "preparationMs": 0,
+              "firstReplyMs": 29,
+              "chunksPlanned": 52,
+              "chunksDispatched": 52,
+              "chunksCompleted": 52,
+              "outcomesCompleted": 400
+            }
+          },
+          {
+            "samples": 100,
+            "elapsedMs": 498,
+            "timedOut": false,
+            "workers": 24,
+            "deadlineMs": 10993.555133999966,
+            "pool": {
+              "queueMs": 0,
+              "coldStart": false,
+              "preparationMs": 0,
+              "firstReplyMs": 21,
+              "chunksPlanned": 52,
+              "chunksDispatched": 52,
+              "chunksCompleted": 52,
+              "outcomesCompleted": 400
+            }
+          },
+          {
+            "samples": 100,
+            "elapsedMs": 499,
+            "timedOut": false,
+            "workers": 24,
+            "deadlineMs": 10993.692697999999,
+            "pool": {
+              "queueMs": 0,
+              "coldStart": false,
+              "preparationMs": 0,
+              "firstReplyMs": 29,
+              "chunksPlanned": 52,
+              "chunksDispatched": 52,
+              "chunksCompleted": 52,
+              "outcomesCompleted": 400
+            }
+          },
+          {
+            "samples": 100,
+            "elapsedMs": 1003,
+            "timedOut": false,
+            "workers": 24,
+            "deadlineMs": 10987.47603999998,
+            "pool": {
+              "queueMs": 0,
+              "coldStart": true,
+              "preparationMs": 15,
+              "firstReplyMs": 557,
+              "chunksPlanned": 26,
+              "chunksDispatched": 26,
+              "chunksCompleted": 26,
+              "outcomesCompleted": 200
+            }
+          },
+          {
+            "samples": 200,
+            "elapsedMs": 5342,
+            "timedOut": false,
+            "workers": 24,
+            "deadlineMs": 10921.992279999948,
+            "pool": {
+              "queueMs": 0,
+              "coldStart": true,
+              "preparationMs": 11,
+              "firstReplyMs": 407,
+              "chunksPlanned": 416,
+              "chunksDispatched": 416,
+              "chunksCompleted": 416,
+              "outcomesCompleted": 3200
+            }
+          },
+          {
+            "samples": 100,
+            "elapsedMs": 2574,
+            "timedOut": false,
+            "workers": 24,
+            "deadlineMs": 10992.35324299999,
+            "pool": {
+              "queueMs": 0,
+              "coldStart": true,
+              "preparationMs": 10,
+              "firstReplyMs": 412,
+              "chunksPlanned": 130,
+              "chunksDispatched": 130,
+              "chunksCompleted": 130,
+              "outcomesCompleted": 1000
+            }
+          },
+          {
+            "samples": 200,
+            "elapsedMs": 2165,
+            "timedOut": false,
+            "workers": 24,
+            "deadlineMs": 10983.907726000005,
+            "pool": {
+              "queueMs": 0,
+              "coldStart": false,
+              "preparationMs": 0,
+              "firstReplyMs": 61,
+              "chunksPlanned": 104,
+              "chunksDispatched": 104,
+              "chunksCompleted": 104,
+              "outcomesCompleted": 800
+            }
+          },
+          {
+            "samples": 200,
+            "elapsedMs": 8798,
+            "timedOut": false,
+            "workers": 24,
+            "deadlineMs": 10976.712338999962,
+            "pool": {
+              "queueMs": 0,
+              "coldStart": true,
+              "preparationMs": 60,
+              "firstReplyMs": 1156,
+              "chunksPlanned": 234,
+              "chunksDispatched": 234,
+              "chunksCompleted": 234,
+              "outcomesCompleted": 1800
+            }
+          }
+        ]
+      },
+      "construction_pipeline": {
+        "enabled": true,
+        "evaluation_expected": 10,
+        "evaluation_attached": 10,
+        "evaluation_missing": 0,
+        "brain_evaluation": 10,
+        "accepted_evaluation": 10,
+        "accepted_choice_with_evaluation": 9,
+        "plan_due": 10,
+        "accepted_structured_plan": 1,
+        "missing_structured_plan": 9,
+        "saved_structured_plan": 10,
+        "plan_readback": 9,
+        "checkpoint_review_due": 4,
+        "probability_delivered": 0,
+        "admission": {
+          "missing_or_mismatched_prospective_calibration": 8
+        },
+        "alert": true,
+        "limits": "Payload delivery, accepted output and saved/read-back plans are distinct observations, not causal win-rate evidence. Missing calibration is pending, not a service failure."
+      },
+      "verified_pipeline_evidence": [
+        {
+          "kind": "accepted_without_structured_plan",
+          "source": {
+            "offset": 1715040443,
+            "length": 27688,
+            "sha256": "989daedae2398268f4b7ddf749e969110434b4fc52e8062b62f2ae1d522c9b69"
+          },
+          "question": "mvnfq659-353046-2",
+          "accepted": true,
+          "run_plan_present": false,
+          "plan_reuse": true,
+          "current_plan_present": true
+        },
+        {
+          "kind": "accepted_without_structured_plan",
+          "source": {
+            "offset": 1715068131,
+            "length": 76684,
+            "sha256": "19092f6a631b5100fe2e57990de4f3eeedff0f295c473cbb762d13fa1c8fc6b7"
+          },
+          "question": "mvnfq659-353046-3",
+          "accepted": true,
+          "run_plan_present": false,
+          "plan_reuse": true,
+          "current_plan_present": true
+        },
+        {
+          "kind": "accepted_without_structured_plan",
+          "source": {
+            "offset": 1715144815,
+            "length": 79388,
+            "sha256": "045a9ed1a32c19b9ae26d67950c5cd644fac6d3dcef825c04ce680d6a803c566"
+          },
+          "question": "mvnfq659-353046-4",
+          "accepted": true,
+          "run_plan_present": false,
+          "plan_reuse": true,
+          "current_plan_present": true
+        },
+        {
+          "kind": "accepted_without_structured_plan",
+          "source": {
+            "offset": 1715224203,
+            "length": 77181,
+            "sha256": "62656da6efe77d47e2fa1ab8ab41da0aed59022fafdbb7a0d16babd60fc2a8ba"
+          },
+          "question": "mvnfq659-353046-5",
+          "accepted": true,
+          "run_plan_present": false,
+          "plan_reuse": true,
+          "current_plan_present": true
+        },
+        {
+          "kind": "accepted_without_structured_plan",
+          "source": {
+            "offset": 1715301384,
+            "length": 49441,
+            "sha256": "4bcf23a1318ada6a48c1593ebecb97d1388760081dbc50d292f39a72ea8d2b60"
+          },
+          "question": "mvnfq659-353046-6",
+          "accepted": true,
+          "run_plan_present": false,
+          "plan_reuse": true,
+          "current_plan_present": true
+        },
+        {
+          "kind": "accepted_without_structured_plan",
+          "source": {
+            "offset": 1715350825,
+            "length": 188109,
+            "sha256": "0dc20392b146a3efdfba9d90b2c416e3a0488a53d91ba2bbe93ef5aae1751368"
+          },
+          "question": "mvnfq659-353046-7",
+          "accepted": true,
+          "run_plan_present": false,
+          "plan_reuse": true,
+          "current_plan_present": true
+        },
+        {
+          "kind": "accepted_without_structured_plan",
+          "source": {
+            "offset": 1715538934,
+            "length": 141120,
+            "sha256": "970c8794ad3ff230219b2bb8b5e434bb4381c90e6e684036baea49d311bcb0ee"
+          },
+          "question": "mvnfq659-353046-8",
+          "accepted": true,
+          "run_plan_present": false,
+          "plan_reuse": true,
+          "current_plan_present": true
+        },
+        {
+          "kind": "accepted_without_structured_plan",
+          "source": {
+            "offset": 1715680054,
+            "length": 82102,
+            "sha256": "e1062686cbcec90af7f628374204ab8d7d46bf95f60ba7039419d367885f0d6d"
+          },
+          "question": "mvnfq659-353046-9",
+          "accepted": true,
+          "run_plan_present": false,
+          "plan_reuse": true,
+          "current_plan_present": true
+        },
+        {
+          "kind": "accepted_without_structured_plan",
+          "source": {
+            "offset": 1715762156,
+            "length": 153531,
+            "sha256": "81971f26427d9755197ec63e07fa4767b60d0468d5a0d748d48858a79b48a976"
+          },
+          "question": "mvnfq659-353046-10",
+          "accepted": true,
+          "run_plan_present": false,
+          "plan_reuse": true,
+          "current_plan_present": true
+        }
+      ],
+      "verified_DPR_failure_rows": [],
+      "DPR_delivery": {
+        "observed_questions": 9,
+        "questions_with_dpr": 8,
+        "accepted_with_dpr": 8,
+        "decision_use": "unknown; delivery is not evidence of reasoning or a fixed DPR weight"
+      },
+      "owner": "original58/H1 module-monitor compatibility +64 deployed route/reuse runtime; current4Q6 brain budget/cut issue already handed to original brain-adapter chain via51/6399132155",
+      "limits": "300 requested/minimum gate and calibration unknown preserved; adaptive actual work counts not automatic full300 or calibration passed. DPR payload delivery is separate from accepted brain/plans; no restart/relearning/threshold change."
+    },
+    {
+      "events": [
+        29
+      ],
+      "run": "F1WN4HMR0N1Z",
+      "alert_source": {
+        "path": "ops/codex-ops/module-health/F1WN4HMR0N1Z-alert.json",
+        "bytes": 18128,
+        "sha256": "2272a636ee7f7dee67d0f63dde36a420e66941f3414134d2898a3bb035267678"
+      },
+      "coverage": {
+        "decisions_complete": true,
+        "decisions": {
+          "path": "/home/dw/Projects/agent-sts2/logs/decisions.jsonl",
+          "start": 4979738485,
+          "end": 5013225693,
+          "complete": false,
+          "malformed": 0,
+          "first_ts": "2026-10-25T05:10:01.848Z"
+        },
+        "brain": {
+          "path": "/home/dw/Projects/agent-sts2/logs/brain.jsonl",
+          "start": 1686740684,
+          "end": 1720259982,
+          "complete": false,
+          "malformed": 0,
+          "first_ts": "2026-10-25T01:03:18.267Z"
+        },
+        "plans": {
+          "path": "/home/dw/Projects/agent-sts2/logs/run-plans.jsonl",
+          "start": 13288869,
+          "end": 17479677,
+          "complete": false,
+          "malformed": 0,
+          "first_ts": "2026-10-24T03:39:17.357Z"
+        },
+        "config": {
+          "path": "/home/dw/Projects/agent-sts2/logs/run-config.jsonl",
+          "start": 0,
+          "end": 3683206,
+          "complete": true,
+          "malformed": 0,
+          "first_ts": "2026-09-30T00:10:45.685Z"
+        }
+      },
+      "computation": {
+        "attempts": 8,
+        "failures": 0,
+        "degraded": 0,
+        "evidence": [],
+        "alert": false,
+        "scope": "B2/B3 computation service failures; degradation permits continuation, not fault resolution."
+      },
+      "shadow_adaptive": {
+        "mode": "on",
+        "observed": 8,
+        "produced": 8,
+        "errors": 0,
+        "evaluable": 0,
+        "matched": 0,
+        "unknown": 0,
+        "complete_adaptive": 8,
+        "budgeted_partial": 0,
+        "production_evaluable": 0,
+        "production_matched": 0,
+        "agreement": null,
+        "production_agreement": null,
+        "saved_fraction": {
+          "p50": null,
+          "p90": null
+        },
+        "actual_saved_fraction": {
+          "p50": 0.5833333333333333,
+          "p90": 0.6666666666666666
+        },
+        "stop_counts": {
+          "leader": 14,
+          "eliminated": 36,
+          "max": 3
+        },
+        "alert": false,
+        "admission_state": "accepted",
+        "admission": "accepted source; runtime mode=on; never auto-enable",
+        "limits": "Shadow estimates and actual on-mode sample work are separate. On-mode cannot observe full-run agreement; no elapsed-time saving or game benefit inferred."
+      },
+      "sampling": {
+        "minimumShown_values": [
+          300
+        ],
+        "actual_sample_counts": {
+          "100": 4,
+          "200": 3,
+          "300": 1
+        },
+        "sim_ms": [
+          1111,
+          814,
+          5553,
+          4845,
+          1655,
+          1594,
+          850,
+          2081
+        ],
+        "timed_out_count": 0,
+        "stage_pool": [
+          {
+            "samples": 100,
+            "elapsedMs": 1090,
+            "timedOut": false,
+            "workers": 24,
+            "deadlineMs": 10860.800381000001,
+            "pool": {
+              "queueMs": 0,
+              "coldStart": true,
+              "preparationMs": 14,
+              "firstReplyMs": 529,
+              "chunksPlanned": 26,
+              "chunksDispatched": 26,
+              "chunksCompleted": 26,
+              "outcomesCompleted": 200
+            }
+          },
+          {
+            "samples": 100,
+            "elapsedMs": 781,
+            "timedOut": false,
+            "workers": 24,
+            "deadlineMs": 10989.669274999964,
+            "pool": {
+              "queueMs": 0,
+              "coldStart": false,
+              "preparationMs": 0,
+              "firstReplyMs": 39,
+              "chunksPlanned": 52,
+              "chunksDispatched": 52,
+              "chunksCompleted": 52,
+              "outcomesCompleted": 400
+            }
+          },
+          {
+            "samples": 200,
+            "elapsedMs": 5392,
+            "timedOut": false,
+            "workers": 24,
+            "deadlineMs": 10905.765427000006,
+            "pool": {
+              "queueMs": 0,
+              "coldStart": true,
+              "preparationMs": 13,
+              "firstReplyMs": 467,
+              "chunksPlanned": 364,
+              "chunksDispatched": 364,
+              "chunksCompleted": 364,
+              "outcomesCompleted": 2800
+            }
+          },
+          {
+            "samples": 300,
+            "elapsedMs": 4747,
+            "timedOut": false,
+            "workers": 24,
+            "deadlineMs": 10986.687718000001,
+            "pool": {
+              "queueMs": 0,
+              "coldStart": true,
+              "preparationMs": 15,
+              "firstReplyMs": 501,
+              "chunksPlanned": 234,
+              "chunksDispatched": 234,
+              "chunksCompleted": 234,
+              "outcomesCompleted": 1800
+            }
+          },
+          {
+            "samples": 200,
+            "elapsedMs": 1594,
+            "timedOut": false,
+            "workers": 24,
+            "deadlineMs": 10991.92750599992,
+            "pool": {
+              "queueMs": 0,
+              "coldStart": false,
+              "preparationMs": 0,
+              "firstReplyMs": 41,
+              "chunksPlanned": 78,
+              "chunksDispatched": 78,
+              "chunksCompleted": 78,
+              "outcomesCompleted": 600
+            }
+          },
+          {
+            "samples": 200,
+            "elapsedMs": 1562,
+            "timedOut": false,
+            "workers": 24,
+            "deadlineMs": 10987.518686000025,
+            "pool": {
+              "queueMs": 0,
+              "coldStart": true,
+              "preparationMs": 12,
+              "firstReplyMs": 459,
+              "chunksPlanned": 52,
+              "chunksDispatched": 52,
+              "chunksCompleted": 52,
+              "outcomesCompleted": 400
+            }
+          },
+          {
+            "samples": 100,
+            "elapsedMs": 827,
+            "timedOut": false,
+            "workers": 24,
+            "deadlineMs": 10953.954555000062,
+            "pool": {
+              "queueMs": 0,
+              "coldStart": false,
+              "preparationMs": 0,
+              "firstReplyMs": 31,
+              "chunksPlanned": 52,
+              "chunksDispatched": 52,
+              "chunksCompleted": 52,
+              "outcomesCompleted": 400
+            }
+          },
+          {
+            "samples": 100,
+            "elapsedMs": 2034,
+            "timedOut": false,
+            "workers": 24,
+            "deadlineMs": 10947.866428000038,
+            "pool": {
+              "queueMs": 0,
+              "coldStart": true,
+              "preparationMs": 12,
+              "firstReplyMs": 434,
+              "chunksPlanned": 117,
+              "chunksDispatched": 117,
+              "chunksCompleted": 117,
+              "outcomesCompleted": 900
+            }
+          }
+        ]
+      },
+      "construction_pipeline": {
+        "enabled": true,
+        "evaluation_expected": 9,
+        "evaluation_attached": 9,
+        "evaluation_missing": 0,
+        "brain_evaluation": 9,
+        "accepted_evaluation": 9,
+        "accepted_choice_with_evaluation": 8,
+        "plan_due": 9,
+        "accepted_structured_plan": 1,
+        "missing_structured_plan": 8,
+        "saved_structured_plan": 9,
+        "plan_readback": 8,
+        "checkpoint_review_due": 1,
+        "probability_delivered": 0,
+        "admission": {
+          "missing_or_mismatched_prospective_calibration": 7
+        },
+        "alert": true,
+        "limits": "Payload delivery, accepted output and saved/read-back plans are distinct observations, not causal win-rate evidence. Missing calibration is pending, not a service failure."
+      },
+      "verified_pipeline_evidence": [
+        {
+          "kind": "accepted_without_structured_plan",
+          "source": {
+            "offset": 1719457066,
+            "length": 45862,
+            "sha256": "d1693d772816d4dc034d34de41812012716ca88dc2f69bd07b43b6a9dc2fc743"
+          },
+          "question": "mvnh5x5p-532733-2",
+          "accepted": true,
+          "run_plan_present": false,
+          "plan_reuse": true,
+          "current_plan_present": true
+        },
+        {
+          "kind": "accepted_without_structured_plan",
+          "source": {
+            "offset": 1719502928,
+            "length": 77936,
+            "sha256": "05bc9919a48b786486e76663110834250e24fb3defebf6fcb6e8a0079fc47003"
+          },
+          "question": "mvnh5x5p-532733-3",
+          "accepted": true,
+          "run_plan_present": false,
+          "plan_reuse": true,
+          "current_plan_present": true
+        },
+        {
+          "kind": "accepted_without_structured_plan",
+          "source": {
+            "offset": 1719580864,
+            "length": 167638,
+            "sha256": "21034dd8ca60f6fa146d1f5b9538cb9cf5374d1e2d4e676fa84debbe1d6bbdbe"
+          },
+          "question": "mvnh5x5p-532733-4",
+          "accepted": true,
+          "run_plan_present": false,
+          "plan_reuse": true,
+          "current_plan_present": true
+        },
+        {
+          "kind": "accepted_without_structured_plan",
+          "source": {
+            "offset": 1719748502,
+            "length": 166047,
+            "sha256": "5a2d60401a41e21fdb2bbbb462b2264ae4772795ec860ecb50c4ac191d99bd74"
+          },
+          "question": "mvnh5x5p-532733-5",
+          "accepted": true,
+          "run_plan_present": false,
+          "plan_reuse": true,
+          "current_plan_present": true
+        },
+        {
+          "kind": "accepted_without_structured_plan",
+          "source": {
+            "offset": 1719914549,
+            "length": 78553,
+            "sha256": "326e80b5c41407145d94bf23d29cb5f33f7c94e91b29b3492f3ef3b579816f5c"
+          },
+          "question": "mvnh5x5p-532733-6",
+          "accepted": true,
+          "run_plan_present": false,
+          "plan_reuse": true,
+          "current_plan_present": true
+        },
+        {
+          "kind": "accepted_without_structured_plan",
+          "source": {
+            "offset": 1719993102,
+            "length": 55124,
+            "sha256": "c12a3150b1507f6966f9663491023be2b881f38c68d1730fe8a6598408f11158"
+          },
+          "question": "mvnh5x5p-532733-7",
+          "accepted": true,
+          "run_plan_present": false,
+          "plan_reuse": true,
+          "current_plan_present": true
+        },
+        {
+          "kind": "accepted_without_structured_plan",
+          "source": {
+            "offset": 1720048226,
+            "length": 82247,
+            "sha256": "d36a8aeff4065a023cd9d6c8ac25dbca7ba27a4d839cd2c8bec1a87016b8d7cf"
+          },
+          "question": "mvnh5x5p-532733-8",
+          "accepted": true,
+          "run_plan_present": false,
+          "plan_reuse": true,
+          "current_plan_present": true
+        },
+        {
+          "kind": "accepted_without_structured_plan",
+          "source": {
+            "offset": 1720130473,
+            "length": 129509,
+            "sha256": "eb65ba2e77e910f6ccb4c697688b3480b25765f45dd6975280e312c271ba0c96"
+          },
+          "question": "mvnh5x5p-532733-9",
+          "accepted": true,
+          "run_plan_present": false,
+          "plan_reuse": true,
+          "current_plan_present": true
+        }
+      ],
+      "verified_DPR_failure_rows": [],
+      "DPR_delivery": {
+        "observed_questions": 8,
+        "questions_with_dpr": 8,
+        "accepted_with_dpr": 8,
+        "decision_use": "unknown; delivery is not evidence of reasoning or a fixed DPR weight"
+      },
+      "owner": "original58/H1 module-monitor compatibility +64 deployed route/reuse runtime; current4Q6 brain budget/cut issue already handed to original brain-adapter chain via51/6399132155",
+      "limits": "300 requested/minimum gate and calibration unknown preserved; adaptive actual work counts not automatic full300 or calibration passed. DPR payload delivery is separate from accepted brain/plans; no restart/relearning/threshold change."
+    },
+    {
+      "events": [
+        50
+      ],
+      "run": "71GBHB0QTGXL",
+      "alert_source": {
+        "path": "ops/codex-ops/module-health/71GBHB0QTGXL-alert.json",
+        "bytes": 20573,
+        "sha256": "1dfd9817c0c3f9e0bdee7f1e105611be545d414fe6a570ed16c02f1c4bf85d70"
+      },
+      "coverage": {
+        "decisions_complete": true,
+        "decisions": {
+          "path": "/home/dw/Projects/agent-sts2/logs/decisions.jsonl",
+          "start": 4994886323,
+          "end": 5028423429,
+          "complete": false,
+          "malformed": 0,
+          "first_ts": "2026-10-25T06:11:51.025Z"
+        },
+        "brain": {
+          "path": "/home/dw/Projects/agent-sts2/logs/brain.jsonl",
+          "start": 1690817332,
+          "end": 1724295806,
+          "complete": false,
+          "malformed": 0,
+          "first_ts": "2026-10-25T01:35:13.466Z"
+        },
+        "plans": {
+          "path": "/home/dw/Projects/agent-sts2/logs/run-plans.jsonl",
+          "start": 13381326,
+          "end": 17575016,
+          "complete": false,
+          "malformed": 0,
+          "first_ts": "2026-10-24T04:17:33.926Z"
+        },
+        "config": {
+          "path": "/home/dw/Projects/agent-sts2/logs/run-config.jsonl",
+          "start": 0,
+          "end": 3696386,
+          "complete": true,
+          "malformed": 0,
+          "first_ts": "2026-09-30T00:10:45.685Z"
+        }
+      },
+      "computation": {
+        "attempts": 9,
+        "failures": 0,
+        "degraded": 0,
+        "evidence": [],
+        "alert": false,
+        "scope": "B2/B3 computation service failures; degradation permits continuation, not fault resolution."
+      },
+      "shadow_adaptive": {
+        "mode": "on",
+        "observed": 8,
+        "produced": 8,
+        "errors": 0,
+        "evaluable": 0,
+        "matched": 0,
+        "unknown": 0,
+        "complete_adaptive": 8,
+        "budgeted_partial": 0,
+        "production_evaluable": 0,
+        "production_matched": 0,
+        "agreement": null,
+        "production_agreement": null,
+        "saved_fraction": {
+          "p50": null,
+          "p90": null
+        },
+        "actual_saved_fraction": {
+          "p50": 0.5833333333333333,
+          "p90": 0.6666666666666666
+        },
+        "stop_counts": {
+          "leader": 8,
+          "eliminated": 33,
+          "max": 17,
+          "indifferent": 3
+        },
+        "alert": false,
+        "admission_state": "accepted",
+        "admission": "accepted source; runtime mode=on; never auto-enable",
+        "limits": "Shadow estimates and actual on-mode sample work are separate. On-mode cannot observe full-run agreement; no elapsed-time saving or game benefit inferred."
+      },
+      "sampling": {
+        "minimumShown_values": [
+          300
+        ],
+        "actual_sample_counts": {
+          "300": 4,
+          "100": 4,
+          "200": 1
+        },
+        "sim_ms": [
+          917,
+          929,
+          734,
+          4146,
+          7779,
+          1070,
+          1785,
+          6354,
+          909
+        ],
+        "timed_out_count": 0,
+        "stage_pool": [
+          {
+            "samples": 300,
+            "elapsedMs": 902,
+            "timedOut": false,
+            "workers": 24,
+            "deadlineMs": 10904.086832,
+            "pool": {
+              "queueMs": 0,
+              "coldStart": true,
+              "preparationMs": 7,
+              "firstReplyMs": 398,
+              "chunksPlanned": 38,
+              "chunksDispatched": 38,
+              "chunksCompleted": 38,
+              "outcomesCompleted": 300
+            }
+          },
+          {
+            "samples": 100,
+            "elapsedMs": 900,
+            "timedOut": false,
+            "workers": 24,
+            "deadlineMs": 10991.970483000012,
+            "pool": {
+              "queueMs": 0,
+              "coldStart": false,
+              "preparationMs": 0,
+              "firstReplyMs": 36,
+              "chunksPlanned": 52,
+              "chunksDispatched": 52,
+              "chunksCompleted": 52,
+              "outcomesCompleted": 400
+            }
+          },
+          {
+            "samples": 100,
+            "elapsedMs": 729,
+            "timedOut": false,
+            "workers": 13,
+            "deadlineMs": 10992.17906699999,
+            "pool": {
+              "queueMs": 0,
+              "coldStart": true,
+              "preparationMs": 11,
+              "firstReplyMs": 433,
+              "chunksPlanned": 13,
+              "chunksDispatched": 13,
+              "chunksCompleted": 13,
+              "outcomesCompleted": 100
+            }
+          },
+          {
+            "samples": 300,
+            "elapsedMs": 4054,
+            "timedOut": false,
+            "workers": 24,
+            "deadlineMs": 10986.587054000003,
+            "pool": {
+              "queueMs": 0,
+              "coldStart": false,
+              "preparationMs": 0,
+              "firstReplyMs": 43,
+              "chunksPlanned": 273,
+              "chunksDispatched": 273,
+              "chunksCompleted": 273,
+              "outcomesCompleted": 2100
+            }
+          },
+          {
+            "samples": 300,
+            "elapsedMs": 7557,
+            "timedOut": false,
+            "workers": 24,
+            "deadlineMs": 10950.62924400001,
+            "pool": {
+              "queueMs": 0,
+              "coldStart": false,
+              "preparationMs": 1,
+              "firstReplyMs": 43,
+              "chunksPlanned": 494,
+              "chunksDispatched": 494,
+              "chunksCompleted": 494,
+              "outcomesCompleted": 3800
+            }
+          },
+          {
+            "samples": 100,
+            "elapsedMs": 1041,
+            "timedOut": false,
+            "workers": 24,
+            "deadlineMs": 10992.408529999957,
+            "pool": {
+              "queueMs": 0,
+              "coldStart": false,
+              "preparationMs": 0,
+              "firstReplyMs": 41,
+              "chunksPlanned": 52,
+              "chunksDispatched": 52,
+              "chunksCompleted": 52,
+              "outcomesCompleted": 400
+            }
+          },
+          {
+            "samples": 200,
+            "elapsedMs": 1733,
+            "timedOut": false,
+            "workers": 24,
+            "deadlineMs": 10956.51778200001,
+            "pool": {
+              "queueMs": 0,
+              "coldStart": false,
+              "preparationMs": 0,
+              "firstReplyMs": 61,
+              "chunksPlanned": 78,
+              "chunksDispatched": 78,
+              "chunksCompleted": 78,
+              "outcomesCompleted": 600
+            }
+          },
+          {
+            "samples": 300,
+            "elapsedMs": 6219,
+            "timedOut": false,
+            "workers": 24,
+            "deadlineMs": 10970.237135000061,
+            "pool": {
+              "queueMs": 0,
+              "coldStart": true,
+              "preparationMs": 11,
+              "firstReplyMs": 398,
+              "chunksPlanned": 338,
+              "chunksDispatched": 338,
+              "chunksCompleted": 338,
+              "outcomesCompleted": 2600
+            }
+          },
+          {
+            "samples": 100,
+            "elapsedMs": 896,
+            "timedOut": false,
+            "workers": 24,
+            "deadlineMs": 10977.296458999976,
+            "pool": {
+              "queueMs": 0,
+              "coldStart": true,
+              "preparationMs": 10,
+              "firstReplyMs": 392,
+              "chunksPlanned": 26,
+              "chunksDispatched": 26,
+              "chunksCompleted": 26,
+              "outcomesCompleted": 200
+            }
+          }
+        ]
+      },
+      "construction_pipeline": {
+        "enabled": true,
+        "evaluation_expected": 10,
+        "evaluation_attached": 10,
+        "evaluation_missing": 0,
+        "brain_evaluation": 10,
+        "accepted_evaluation": 10,
+        "accepted_choice_with_evaluation": 9,
+        "plan_due": 11,
+        "accepted_structured_plan": 1,
+        "missing_structured_plan": 10,
+        "saved_structured_plan": 11,
+        "plan_readback": 10,
+        "checkpoint_review_due": 5,
+        "probability_delivered": 0,
+        "admission": {
+          "missing_or_mismatched_prospective_calibration": 8
+        },
+        "alert": true,
+        "limits": "Payload delivery, accepted output and saved/read-back plans are distinct observations, not causal win-rate evidence. Missing calibration is pending, not a service failure."
+      },
+      "verified_pipeline_evidence": [
+        {
+          "kind": "accepted_without_structured_plan",
+          "source": {
+            "offset": 1723051551,
+            "length": 52917,
+            "sha256": "ea689a3b22e5cd7706f70413491109296fea93261fbbb05b6ce62b7f0eee14b9"
+          },
+          "question": "mvnk6n5z-774651-2",
+          "accepted": true,
+          "run_plan_present": false,
+          "plan_reuse": true,
+          "current_plan_present": true
+        },
+        {
+          "kind": "accepted_without_structured_plan",
+          "source": {
+            "offset": 1723104468,
+            "length": 28154,
+            "sha256": "8561272dc28832c2db63daf5089dbbc7f2166ec18d0f663767ff53690bce4284"
+          },
+          "question": "mvnk6n5z-774651-3",
+          "accepted": true,
+          "run_plan_present": false,
+          "plan_reuse": true,
+          "current_plan_present": true
+        },
+        {
+          "kind": "accepted_without_structured_plan",
+          "source": {
+            "offset": 1723132622,
+            "length": 81684,
+            "sha256": "8108fd6d09fa151e259234eb3c2cd971937b792e764105b4e0e37bc77cd89470"
+          },
+          "question": "mvnk6n5z-774651-4",
+          "accepted": true,
+          "run_plan_present": false,
+          "plan_reuse": true,
+          "current_plan_present": true
+        },
+        {
+          "kind": "accepted_without_structured_plan",
+          "source": {
+            "offset": 1723214306,
+            "length": 51668,
+            "sha256": "24fa01bf84659600f525cdf465748d5027c19371b182f8b9d47b53eecccc99b8"
+          },
+          "question": "mvnk6n5z-774651-5",
+          "accepted": true,
+          "run_plan_present": false,
+          "plan_reuse": true,
+          "current_plan_present": true
+        },
+        {
+          "kind": "accepted_without_structured_plan",
+          "source": {
+            "offset": 1723265974,
+            "length": 194092,
+            "sha256": "f9ab72999e1b7fcaa582503c496ea6711d36364e3e491f94e746adf972b34a96"
+          },
+          "question": "mvnk6n5z-774651-6",
+          "accepted": true,
+          "run_plan_present": false,
+          "plan_reuse": true,
+          "current_plan_present": true
+        },
+        {
+          "kind": "accepted_without_structured_plan",
+          "source": {
+            "offset": 1723460066,
+            "length": 358642,
+            "sha256": "17fac3c5a5b683732e01169b4ee4b437c74f11c883ac2b01fa6f9265e3d47a87"
+          },
+          "question": "mvnk6n5z-774651-7",
+          "accepted": true,
+          "run_plan_present": false,
+          "plan_reuse": true,
+          "current_plan_present": true
+        },
+        {
+          "kind": "accepted_without_structured_plan",
+          "source": {
+            "offset": 1723818708,
+            "length": 84230,
+            "sha256": "be259c81179d56b81dac86a7c30a55ca8b6a8bc83da880aa8ada5297783a101d"
+          },
+          "question": "mvnk6n5z-774651-8",
+          "accepted": true,
+          "run_plan_present": false,
+          "plan_reuse": true,
+          "current_plan_present": true
+        },
+        {
+          "kind": "accepted_without_structured_plan",
+          "source": {
+            "offset": 1723902938,
+            "length": 80377,
+            "sha256": "c51a01c36a6c2117a76e3a8defed5ae49f63b665a71b2a5bf25a4a1062c2241f"
+          },
+          "question": "mvnk6n5z-774651-9",
+          "accepted": true,
+          "run_plan_present": false,
+          "plan_reuse": true,
+          "current_plan_present": true
+        },
+        {
+          "kind": "accepted_without_structured_plan",
+          "source": {
+            "offset": 1723983315,
+            "length": 255854,
+            "sha256": "8e386115c2bfe4b528302bab3c8c313474b40a6812dee6e16ca0a3cc53b382d2"
+          },
+          "question": "mvnk6n5z-774651-10",
+          "accepted": true,
+          "run_plan_present": false,
+          "plan_reuse": true,
+          "current_plan_present": true
+        },
+        {
+          "kind": "accepted_without_structured_plan",
+          "source": {
+            "offset": 1724239169,
+            "length": 56637,
+            "sha256": "e440369e5d2924b0c0e27f5599345f813de7dbfc22d1a3a097fb454048cae5c3"
+          },
+          "question": "mvnk6n5z-774651-11",
+          "accepted": true,
+          "run_plan_present": false,
+          "plan_reuse": true,
+          "current_plan_present": true
+        }
+      ],
+      "verified_DPR_failure_rows": [],
+      "DPR_delivery": {
+        "observed_questions": 9,
+        "questions_with_dpr": 8,
+        "accepted_with_dpr": 8,
+        "decision_use": "unknown; delivery is not evidence of reasoning or a fixed DPR weight"
+      },
+      "owner": "original58/H1 module-monitor compatibility +64 deployed route/reuse runtime; current4Q6 brain budget/cut issue already handed to original brain-adapter chain via51/6399132155",
+      "limits": "300 requested/minimum gate and calibration unknown preserved; adaptive actual work counts not automatic full300 or calibration passed. DPR payload delivery is separate from accepted brain/plans; no restart/relearning/threshold change."
+    },
+    {
+      "events": [
+        75
+      ],
+      "run": "5K4J50PX84SM",
+      "alert_source": {
+        "path": "ops/codex-ops/module-health/5K4J50PX84SM-alert.json",
+        "bytes": 17558,
+        "sha256": "acea8b8fdf796285a4c7166a676b6b2dd7204bc1ccb3b157ba463bb7930f8aaa"
+      },
+      "coverage": {
+        "decisions_complete": true,
+        "decisions": {
+          "path": "/home/dw/Projects/agent-sts2/logs/decisions.jsonl",
+          "start": 5011918462,
+          "end": 5045472227,
+          "complete": false,
+          "malformed": 0,
+          "first_ts": "2026-10-25T07:01:36.460Z"
+        },
+        "brain": {
+          "path": "/home/dw/Projects/agent-sts2/logs/brain.jsonl",
+          "start": 1696677464,
+          "end": 1730197718,
+          "complete": false,
+          "malformed": 0,
+          "first_ts": "2026-10-25T02:50:04.335Z"
+        },
+        "plans": {
+          "path": "/home/dw/Projects/agent-sts2/logs/run-plans.jsonl",
+          "start": 13709163,
+          "end": 17899501,
+          "complete": false,
+          "malformed": 0,
+          "first_ts": "2026-10-24T05:57:28.872Z"
+        },
+        "config": {
+          "path": "/home/dw/Projects/agent-sts2/logs/run-config.jsonl",
+          "start": 0,
+          "end": 3709570,
+          "complete": true,
+          "malformed": 0,
+          "first_ts": "2026-09-30T00:10:45.685Z"
+        }
+      },
+      "computation": {
+        "attempts": 8,
+        "failures": 0,
+        "degraded": 0,
+        "evidence": [],
+        "alert": false,
+        "scope": "B2/B3 computation service failures; degradation permits continuation, not fault resolution."
+      },
+      "shadow_adaptive": {
+        "mode": "on",
+        "observed": 8,
+        "produced": 8,
+        "errors": 0,
+        "evaluable": 0,
+        "matched": 0,
+        "unknown": 0,
+        "complete_adaptive": 8,
+        "budgeted_partial": 0,
+        "production_evaluable": 0,
+        "production_matched": 0,
+        "agreement": null,
+        "production_agreement": null,
+        "saved_fraction": {
+          "p50": null,
+          "p90": null
+        },
+        "actual_saved_fraction": {
+          "p50": 0.6666666666666666,
+          "p90": 0.6666666666666666
+        },
+        "stop_counts": {
+          "leader": 12,
+          "eliminated": 7,
+          "indifferent": 7
+        },
+        "alert": false,
+        "admission_state": "accepted",
+        "admission": "accepted source; runtime mode=on; never auto-enable",
+        "limits": "Shadow estimates and actual on-mode sample work are separate. On-mode cannot observe full-run agreement; no elapsed-time saving or game benefit inferred."
+      },
+      "sampling": {
+        "minimumShown_values": [
+          300
+        ],
+        "actual_sample_counts": {
+          "100": 8
+        },
+        "sim_ms": [
+          1500,
+          1197,
+          627,
+          983,
+          1094,
+          1211,
+          1465,
+          1064
+        ],
+        "timed_out_count": 0,
+        "stage_pool": [
+          {
+            "samples": 100,
+            "elapsedMs": 1461,
+            "timedOut": false,
+            "workers": 24,
+            "deadlineMs": 10897.191235999999,
+            "pool": {
+              "queueMs": 0,
+              "coldStart": true,
+              "preparationMs": 10,
+              "firstReplyMs": 472,
+              "chunksPlanned": 317,
+              "chunksDispatched": 317,
+              "chunksCompleted": 317,
+              "outcomesCompleted": 500
+            }
+          },
+          {
+            "samples": 100,
+            "elapsedMs": 1154,
+            "timedOut": false,
+            "workers": 24,
+            "deadlineMs": 10991.336019999988,
+            "pool": {
+              "queueMs": 0,
+              "coldStart": false,
+              "preparationMs": 0,
+              "firstReplyMs": 58,
+              "chunksPlanned": 52,
+              "chunksDispatched": 52,
+              "chunksCompleted": 52,
+              "outcomesCompleted": 400
+            }
+          },
+          {
+            "samples": 100,
+            "elapsedMs": 619,
+            "timedOut": false,
+            "workers": 24,
+            "deadlineMs": 10993.60102999999,
+            "pool": {
+              "queueMs": 0,
+              "coldStart": false,
+              "preparationMs": 0,
+              "firstReplyMs": 63,
+              "chunksPlanned": 26,
+              "chunksDispatched": 26,
+              "chunksCompleted": 26,
+              "outcomesCompleted": 200
+            }
+          },
+          {
+            "samples": 100,
+            "elapsedMs": 976,
+            "timedOut": false,
+            "workers": 24,
+            "deadlineMs": 10993.073263000028,
+            "pool": {
+              "queueMs": 0,
+              "coldStart": true,
+              "preparationMs": 12,
+              "firstReplyMs": 441,
+              "chunksPlanned": 26,
+              "chunksDispatched": 26,
+              "chunksCompleted": 26,
+              "outcomesCompleted": 200
+            }
+          },
+          {
+            "samples": 100,
+            "elapsedMs": 1081,
+            "timedOut": false,
+            "workers": 24,
+            "deadlineMs": 10991.644838000007,
+            "pool": {
+              "queueMs": 0,
+              "coldStart": true,
+              "preparationMs": 11,
+              "firstReplyMs": 460,
+              "chunksPlanned": 26,
+              "chunksDispatched": 26,
+              "chunksCompleted": 26,
+              "outcomesCompleted": 200
+            }
+          },
+          {
+            "samples": 100,
+            "elapsedMs": 1202,
+            "timedOut": false,
+            "workers": 24,
+            "deadlineMs": 10990.733009000076,
+            "pool": {
+              "queueMs": 0,
+              "coldStart": true,
+              "preparationMs": 12,
+              "firstReplyMs": 537,
+              "chunksPlanned": 26,
+              "chunksDispatched": 26,
+              "chunksCompleted": 26,
+              "outcomesCompleted": 200
+            }
+          },
+          {
+            "samples": 100,
+            "elapsedMs": 1427,
+            "timedOut": false,
+            "workers": 24,
+            "deadlineMs": 10985.522620000003,
+            "pool": {
+              "queueMs": 0,
+              "coldStart": false,
+              "preparationMs": 0,
+              "firstReplyMs": 57,
+              "chunksPlanned": 52,
+              "chunksDispatched": 52,
+              "chunksCompleted": 52,
+              "outcomesCompleted": 400
+            }
+          },
+          {
+            "samples": 100,
+            "elapsedMs": 1050,
+            "timedOut": false,
+            "workers": 24,
+            "deadlineMs": 10986.905585,
+            "pool": {
+              "queueMs": 0,
+              "coldStart": true,
+              "preparationMs": 11,
+              "firstReplyMs": 419,
+              "chunksPlanned": 26,
+              "chunksDispatched": 26,
+              "chunksCompleted": 26,
+              "outcomesCompleted": 200
+            }
+          }
+        ]
+      },
+      "construction_pipeline": {
+        "enabled": true,
+        "evaluation_expected": 9,
+        "evaluation_attached": 9,
+        "evaluation_missing": 0,
+        "brain_evaluation": 9,
+        "accepted_evaluation": 9,
+        "accepted_choice_with_evaluation": 8,
+        "plan_due": 9,
+        "accepted_structured_plan": 1,
+        "missing_structured_plan": 8,
+        "saved_structured_plan": 9,
+        "plan_readback": 8,
+        "checkpoint_review_due": 0,
+        "probability_delivered": 0,
+        "admission": {
+          "missing_or_mismatched_prospective_calibration": 7
+        },
+        "alert": true,
+        "limits": "Payload delivery, accepted output and saved/read-back plans are distinct observations, not causal win-rate evidence. Missing calibration is pending, not a service failure."
+      },
+      "verified_pipeline_evidence": [
+        {
+          "kind": "accepted_without_structured_plan",
+          "source": {
+            "offset": 1729739693,
+            "length": 27895,
+            "sha256": "94b8fdeb31a8d66cc2ed8c906dcf8a615bbfe43e9f57212ffdeb13836317ea1d"
+          },
+          "question": "mvnlvf4q-994964-2",
+          "accepted": true,
+          "run_plan_present": false,
+          "plan_reuse": true,
+          "current_plan_present": true
+        },
+        {
+          "kind": "accepted_without_structured_plan",
+          "source": {
+            "offset": 1729767588,
+            "length": 78561,
+            "sha256": "a24a80005b37078a1aee6be8cf68a144c5786b1beff5274e57833788bea06f95"
+          },
+          "question": "mvnlvf4q-994964-3",
+          "accepted": true,
+          "run_plan_present": false,
+          "plan_reuse": true,
+          "current_plan_present": true
+        },
+        {
+          "kind": "accepted_without_structured_plan",
+          "source": {
+            "offset": 1729846149,
+            "length": 65477,
+            "sha256": "6077fbbace15d86e0757199ea20e17179a71d03819ec4872bca977c279b6b357"
+          },
+          "question": "mvnlvf4q-994964-4",
+          "accepted": true,
+          "run_plan_present": false,
+          "plan_reuse": true,
+          "current_plan_present": true
+        },
+        {
+          "kind": "accepted_without_structured_plan",
+          "source": {
+            "offset": 1729911626,
+            "length": 47896,
+            "sha256": "69e650f908e53c4eb48c0176efaaa1bebd461ab48d3822437497930aec172d42"
+          },
+          "question": "mvnlvf4q-994964-5",
+          "accepted": true,
+          "run_plan_present": false,
+          "plan_reuse": true,
+          "current_plan_present": true
+        },
+        {
+          "kind": "accepted_without_structured_plan",
+          "source": {
+            "offset": 1729959522,
+            "length": 47544,
+            "sha256": "e653c57fc1f699c0bfb61f6ac75ade349abffbd99dfde8e1775f3d8300529118"
+          },
+          "question": "mvnlvf4q-994964-6",
+          "accepted": true,
+          "run_plan_present": false,
+          "plan_reuse": true,
+          "current_plan_present": true
+        },
+        {
+          "kind": "accepted_without_structured_plan",
+          "source": {
+            "offset": 1730007066,
+            "length": 47752,
+            "sha256": "80a74233eadcd87691c1767aac9d0b7a310e70973f67c80bc1967883f5e7776f"
+          },
+          "question": "mvnlvf4q-994964-7",
+          "accepted": true,
+          "run_plan_present": false,
+          "plan_reuse": true,
+          "current_plan_present": true
+        },
+        {
+          "kind": "accepted_without_structured_plan",
+          "source": {
+            "offset": 1730054818,
+            "length": 79446,
+            "sha256": "941ecc52cdc0b825ed63a47484eb3174fd5cddbe2617515337c0b86ef119f567"
+          },
+          "question": "mvnlvf4q-994964-8",
+          "accepted": true,
+          "run_plan_present": false,
+          "plan_reuse": true,
+          "current_plan_present": true
+        },
+        {
+          "kind": "accepted_without_structured_plan",
+          "source": {
+            "offset": 1730134264,
+            "length": 63454,
+            "sha256": "390ef9fb2fdbb648a10651d937561f855f934429ead3d723614051d5003c800f"
+          },
+          "question": "mvnlvf4q-994964-9",
+          "accepted": true,
+          "run_plan_present": false,
+          "plan_reuse": true,
+          "current_plan_present": true
+        }
+      ],
+      "verified_DPR_failure_rows": [],
+      "DPR_delivery": {
+        "observed_questions": 8,
+        "questions_with_dpr": 8,
+        "accepted_with_dpr": 8,
+        "decision_use": "unknown; delivery is not evidence of reasoning or a fixed DPR weight"
+      },
+      "owner": "original58/H1 module-monitor compatibility +64 deployed route/reuse runtime; current4Q6 brain budget/cut issue already handed to original brain-adapter chain via51/6399132155",
+      "limits": "300 requested/minimum gate and calibration unknown preserved; adaptive actual work counts not automatic full300 or calibration passed. DPR payload delivery is separate from accepted brain/plans; no restart/relearning/threshold change."
+    },
+    {
+      "events": [
+        93
+      ],
+      "run": "GKEJ8UQYAQGA",
+      "alert_source": {
+        "path": "ops/codex-ops/module-health/GKEJ8UQYAQGA-alert.json",
+        "bytes": 16219,
+        "sha256": "e94884b08955eb8dbef1614c9751a38a1abec1388cde4e6ae74d38091f7e1870"
+      },
+      "coverage": {
+        "decisions_complete": true,
+        "decisions": {
+          "path": "/home/dw/Projects/agent-sts2/logs/decisions.jsonl",
+          "start": 5019494054,
+          "end": 5053010449,
+          "complete": false,
+          "malformed": 0,
+          "first_ts": "2026-10-25T07:19:21.636Z"
+        },
+        "brain": {
+          "path": "/home/dw/Projects/agent-sts2/logs/brain.jsonl",
+          "start": 1699078504,
+          "end": 1732468015,
+          "complete": false,
+          "malformed": 0,
+          "first_ts": "2026-10-25T03:36:25.202Z"
+        },
+        "plans": {
+          "path": "/home/dw/Projects/agent-sts2/logs/run-plans.jsonl",
+          "start": 13764921,
+          "end": 17958768,
+          "complete": false,
+          "malformed": 0,
+          "first_ts": "2026-10-24T06:12:08.919Z"
+        },
+        "config": {
+          "path": "/home/dw/Projects/agent-sts2/logs/run-config.jsonl",
+          "start": 0,
+          "end": 3722757,
+          "complete": true,
+          "malformed": 0,
+          "first_ts": "2026-09-30T00:10:45.685Z"
+        }
+      },
+      "computation": {
+        "attempts": 5,
+        "failures": 0,
+        "degraded": 0,
+        "evidence": [],
+        "alert": false,
+        "scope": "B2/B3 computation service failures; degradation permits continuation, not fault resolution."
+      },
+      "shadow_adaptive": {
+        "mode": "on",
+        "observed": 5,
+        "produced": 5,
+        "errors": 0,
+        "evaluable": 0,
+        "matched": 0,
+        "unknown": 0,
+        "complete_adaptive": 5,
+        "budgeted_partial": 0,
+        "production_evaluable": 0,
+        "production_matched": 0,
+        "agreement": null,
+        "production_agreement": null,
+        "saved_fraction": {
+          "p50": null,
+          "p90": null
+        },
+        "actual_saved_fraction": {
+          "p50": 0.6666666666666666,
+          "p90": 0.6666666666666666
+        },
+        "stop_counts": {
+          "leader": 8,
+          "eliminated": 9,
+          "indifferent": 5
+        },
+        "alert": false,
+        "admission_state": "accepted",
+        "admission": "accepted source; runtime mode=on; never auto-enable",
+        "limits": "Shadow estimates and actual on-mode sample work are separate. On-mode cannot observe full-run agreement; no elapsed-time saving or game benefit inferred."
+      },
+      "sampling": {
+        "minimumShown_values": [
+          300
+        ],
+        "actual_sample_counts": {
+          "100": 5
+        },
+        "sim_ms": [
+          653,
+          395,
+          672,
+          659,
+          518
+        ],
+        "timed_out_count": 0,
+        "stage_pool": [
+          {
+            "samples": 100,
+            "elapsedMs": 639,
+            "timedOut": false,
+            "workers": 24,
+            "deadlineMs": 10907.102763,
+            "pool": {
+              "queueMs": 0,
+              "coldStart": true,
+              "preparationMs": 9,
+              "firstReplyMs": 385,
+              "chunksPlanned": 26,
+              "chunksDispatched": 26,
+              "chunksCompleted": 26,
+              "outcomesCompleted": 200
+            }
+          },
+          {
+            "samples": 100,
+            "elapsedMs": 379,
+            "timedOut": false,
+            "workers": 24,
+            "deadlineMs": 10990.465786000015,
+            "pool": {
+              "queueMs": 0,
+              "coldStart": false,
+              "preparationMs": 0,
+              "firstReplyMs": 20,
+              "chunksPlanned": 52,
+              "chunksDispatched": 52,
+              "chunksCompleted": 52,
+              "outcomesCompleted": 400
+            }
+          },
+          {
+            "samples": 100,
+            "elapsedMs": 654,
+            "timedOut": false,
+            "workers": 24,
+            "deadlineMs": 10989.855411000084,
+            "pool": {
+              "queueMs": 0,
+              "coldStart": false,
+              "preparationMs": 0,
+              "firstReplyMs": 33,
+              "chunksPlanned": 52,
+              "chunksDispatched": 52,
+              "chunksCompleted": 52,
+              "outcomesCompleted": 400
+            }
+          },
+          {
+            "samples": 100,
+            "elapsedMs": 636,
+            "timedOut": false,
+            "workers": 24,
+            "deadlineMs": 10986.09500399977,
+            "pool": {
+              "queueMs": 0,
+              "coldStart": false,
+              "preparationMs": 0,
+              "firstReplyMs": 28,
+              "chunksPlanned": 52,
+              "chunksDispatched": 52,
+              "chunksCompleted": 52,
+              "outcomesCompleted": 400
+            }
+          },
+          {
+            "samples": 100,
+            "elapsedMs": 501,
+            "timedOut": false,
+            "workers": 24,
+            "deadlineMs": 10990.242552000098,
+            "pool": {
+              "queueMs": 0,
+              "coldStart": false,
+              "preparationMs": 0,
+              "firstReplyMs": 23,
+              "chunksPlanned": 52,
+              "chunksDispatched": 52,
+              "chunksCompleted": 52,
+              "outcomesCompleted": 400
+            }
+          }
+        ]
+      },
+      "construction_pipeline": {
+        "enabled": true,
+        "evaluation_expected": 7,
+        "evaluation_attached": 7,
+        "evaluation_missing": 0,
+        "brain_evaluation": 7,
+        "accepted_evaluation": 4,
+        "accepted_choice_with_evaluation": 3,
+        "plan_due": 7,
+        "accepted_structured_plan": 1,
+        "missing_structured_plan": 3,
+        "saved_structured_plan": 4,
+        "plan_readback": 3,
+        "checkpoint_review_due": 0,
+        "probability_delivered": 0,
+        "admission": {
+          "missing_or_mismatched_prospective_calibration": 3
+        },
+        "alert": true,
+        "limits": "Payload delivery, accepted output and saved/read-back plans are distinct observations, not causal win-rate evidence. Missing calibration is pending, not a service failure."
+      },
+      "verified_pipeline_evidence": [
+        {
+          "kind": "accepted_without_structured_plan",
+          "source": {
+            "offset": 1732231755,
+            "length": 78952,
+            "sha256": "fedec6f197d19270917632f8f1113f3af6fea752c17560bce3ab121339adb125"
+          },
+          "question": "mvnmqj8m-1093467-5",
+          "accepted": true,
+          "run_plan_present": false,
+          "plan_reuse": true,
+          "current_plan_present": true
+        },
+        {
+          "kind": "accepted_without_structured_plan",
+          "source": {
+            "offset": 1732310707,
+            "length": 79137,
+            "sha256": "1fbbb9102c5a9287bf00bd70059e109b340a556c802a7b155a50e8789b722a71"
+          },
+          "question": "mvnmqj8m-1093467-6",
+          "accepted": true,
+          "run_plan_present": false,
+          "plan_reuse": true,
+          "current_plan_present": true
+        },
+        {
+          "kind": "accepted_without_structured_plan",
+          "source": {
+            "offset": 1732389844,
+            "length": 78171,
+            "sha256": "e2f72482cddcb148b94473b2593490a176d0b7567fc30bd52c3a3b897bba9917"
+          },
+          "question": "mvnmqj8m-1093467-7",
+          "accepted": true,
+          "run_plan_present": false,
+          "plan_reuse": true,
+          "current_plan_present": true
+        }
+      ],
+      "verified_DPR_failure_rows": [
+        {
+          "source": {
+            "offset": 5051679107,
+            "length": 56923,
+            "sha256": "a2a027092ab1c2c33b2c841a8543b8b55ebe1d5905ed2a2b86b76877a708a074"
+          },
+          "reason": "no_complete_dpr",
+          "decision": "b2d1fdfc-1508-4823-a96c-dc61dc0d15d5",
+          "floor": 1,
+          "label": "event/choose",
+          "candidates": {
+            "observed": 3,
+            "unsupported": 2,
+            "with_dpr": 0,
+            "missing_dpr": 1
+          },
+          "decider": "jev",
+          "fallback": false,
+          "brain_error": null,
+          "raw_diagnostics_status": "produced"
+        },
+        {
+          "source": {
+            "offset": 5051848181,
+            "length": 99192,
+            "sha256": "e1576ab10bf991673d6146dd5e4ab2ae123192b5b686118617f24cf4a31c2b69"
+          },
+          "reason": "no_complete_dpr",
+          "decision": "ab57713a-fa7a-4974-aa9d-d34715eb7bcb",
+          "floor": 2,
+          "label": "reward/card",
+          "candidates": {
+            "observed": 4,
+            "unsupported": 0,
+            "with_dpr": 0,
+            "missing_dpr": 4
+          },
+          "decider": "jev",
+          "fallback": false,
+          "brain_error": null,
+          "raw_diagnostics_status": "produced"
+        }
+      ],
+      "DPR_delivery": {
+        "observed_questions": 5,
+        "questions_with_dpr": 5,
+        "accepted_with_dpr": 3,
+        "decision_use": "unknown; delivery is not evidence of reasoning or a fixed DPR weight"
+      },
+      "owner": "original58/H1 module-monitor compatibility +64 deployed route/reuse runtime; current4Q6 brain budget/cut issue already handed to original brain-adapter chain via51/6399132155",
+      "limits": "300 requested/minimum gate and calibration unknown preserved; adaptive actual work counts not automatic full300 or calibration passed. DPR payload delivery is separate from accepted brain/plans; no restart/relearning/threshold change."
+    },
+    {
+      "events": [
+        113
+      ],
+      "run": "KVQ623A25Q9M",
+      "alert_source": {
+        "path": "ops/codex-ops/module-health/KVQ623A25Q9M-alert.json",
+        "bytes": 18785,
+        "sha256": "a6a58bad5096ecb48a45614dd9dccfd05e3bd5a2bd469a132988c6163cb274ab"
+      },
+      "coverage": {
+        "decisions_complete": true,
+        "decisions": {
+          "path": "/home/dw/Projects/agent-sts2/logs/decisions.jsonl",
+          "start": 5038199708,
+          "end": 5071232606,
+          "complete": false,
+          "malformed": 0,
+          "first_ts": "2026-10-25T08:51:31.985Z"
+        },
+        "brain": {
+          "path": "/home/dw/Projects/agent-sts2/logs/brain.jsonl",
+          "start": 1704153186,
+          "end": 1737668574,
+          "complete": false,
+          "malformed": 0,
+          "first_ts": "2026-10-25T04:22:18.729Z"
+        },
+        "plans": {
+          "path": "/home/dw/Projects/agent-sts2/logs/run-plans.jsonl",
+          "start": 13862856,
+          "end": 18056760,
+          "complete": false,
+          "malformed": 0,
+          "first_ts": "2026-10-24T06:41:48.106Z"
+        },
+        "config": {
+          "path": "/home/dw/Projects/agent-sts2/logs/run-config.jsonl",
+          "start": 0,
+          "end": 3735944,
+          "complete": true,
+          "malformed": 0,
+          "first_ts": "2026-09-30T00:10:45.685Z"
+        }
+      },
+      "computation": {
+        "attempts": 6,
+        "failures": 0,
+        "degraded": 0,
+        "evidence": [],
+        "alert": false,
+        "scope": "B2/B3 computation service failures; degradation permits continuation, not fault resolution."
+      },
+      "shadow_adaptive": {
+        "mode": "on",
+        "observed": 5,
+        "produced": 5,
+        "errors": 0,
+        "evaluable": 0,
+        "matched": 0,
+        "unknown": 0,
+        "complete_adaptive": 5,
+        "budgeted_partial": 0,
+        "production_evaluable": 0,
+        "production_matched": 0,
+        "agreement": null,
+        "production_agreement": null,
+        "saved_fraction": {
+          "p50": null,
+          "p90": null
+        },
+        "actual_saved_fraction": {
+          "p50": 0.5333333333333333,
+          "p90": 0.5466666666666666
+        },
+        "stop_counts": {
+          "indifferent": 6,
+          "eliminated": 10,
+          "leader": 6
+        },
+        "alert": false,
+        "admission_state": "accepted",
+        "admission": "accepted source; runtime mode=on; never auto-enable",
+        "limits": "Shadow estimates and actual on-mode sample work are separate. On-mode cannot observe full-run agreement; no elapsed-time saving or game benefit inferred."
+      },
+      "sampling": {
+        "minimumShown_values": [
+          300
+        ],
+        "actual_sample_counts": {
+          "100": 5,
+          "300": 1
+        },
+        "sim_ms": [
+          4520,
+          4038,
+          4508,
+          3555,
+          5523,
+          6093
+        ],
+        "timed_out_count": 0,
+        "stage_pool": [
+          {
+            "samples": 100,
+            "elapsedMs": 2478,
+            "timedOut": false,
+            "workers": 24,
+            "deadlineMs": 8870.985605,
+            "pool": {
+              "queueMs": 0,
+              "coldStart": false,
+              "preparationMs": 0,
+              "firstReplyMs": 43,
+              "chunksPlanned": 317,
+              "chunksDispatched": 317,
+              "chunksCompleted": 317,
+              "outcomesCompleted": 500
+            }
+          },
+          {
+            "samples": 100,
+            "elapsedMs": 2090,
+            "timedOut": false,
+            "workers": 24,
+            "deadlineMs": 9054.038981999998,
+            "pool": {
+              "queueMs": 0,
+              "coldStart": false,
+              "preparationMs": 0,
+              "firstReplyMs": 86,
+              "chunksPlanned": 52,
+              "chunksDispatched": 52,
+              "chunksCompleted": 52,
+              "outcomesCompleted": 400
+            }
+          },
+          {
+            "samples": 100,
+            "elapsedMs": 2500,
+            "timedOut": false,
+            "workers": 24,
+            "deadlineMs": 9013.77026000002,
+            "pool": {
+              "queueMs": 0,
+              "coldStart": false,
+              "preparationMs": 0,
+              "firstReplyMs": 87,
+              "chunksPlanned": 52,
+              "chunksDispatched": 52,
+              "chunksCompleted": 52,
+              "outcomesCompleted": 400
+            }
+          },
+          {
+            "samples": 100,
+            "elapsedMs": 841,
+            "timedOut": false,
+            "workers": 13,
+            "deadlineMs": 8276.403215000057,
+            "pool": {
+              "queueMs": 0,
+              "coldStart": false,
+              "preparationMs": 0,
+              "firstReplyMs": 86,
+              "chunksPlanned": 13,
+              "chunksDispatched": 13,
+              "chunksCompleted": 13,
+              "outcomesCompleted": 100
+            }
+          },
+          {
+            "samples": 100,
+            "elapsedMs": 3080,
+            "timedOut": false,
+            "workers": 24,
+            "deadlineMs": 8542.660371000005,
+            "pool": {
+              "queueMs": 0,
+              "coldStart": false,
+              "preparationMs": 0,
+              "firstReplyMs": 80,
+              "chunksPlanned": 52,
+              "chunksDispatched": 52,
+              "chunksCompleted": 52,
+              "outcomesCompleted": 400
+            }
+          },
+          {
+            "samples": 300,
+            "elapsedMs": 3338,
+            "timedOut": false,
+            "workers": 24,
+            "deadlineMs": 8227.696802999999,
+            "pool": {
+              "queueMs": 0,
+              "coldStart": true,
+              "preparationMs": 189,
+              "firstReplyMs": 778,
+              "chunksPlanned": 38,
+              "chunksDispatched": 38,
+              "chunksCompleted": 38,
+              "outcomesCompleted": 300
+            }
+          }
+        ]
+      },
+      "construction_pipeline": {
+        "enabled": true,
+        "evaluation_expected": 7,
+        "evaluation_attached": 7,
+        "evaluation_missing": 0,
+        "brain_evaluation": 7,
+        "accepted_evaluation": 7,
+        "accepted_choice_with_evaluation": 6,
+        "plan_due": 7,
+        "accepted_structured_plan": 1,
+        "missing_structured_plan": 6,
+        "saved_structured_plan": 7,
+        "plan_readback": 6,
+        "checkpoint_review_due": 1,
+        "probability_delivered": 0,
+        "admission": {
+          "missing_or_mismatched_prospective_calibration": 5
+        },
+        "alert": true,
+        "limits": "Payload delivery, accepted output and saved/read-back plans are distinct observations, not causal win-rate evidence. Missing calibration is pending, not a service failure."
+      },
+      "verified_pipeline_evidence": [
+        {
+          "kind": "accepted_without_structured_plan",
+          "source": {
+            "offset": 1737304104,
+            "length": 29624,
+            "sha256": "edfc9907c0d2c51b150512f190efd2c3df48c3ad8e1a0887b7c04ee6deb7fdc3"
+          },
+          "question": "mvnopplo-1318149-2",
+          "accepted": true,
+          "run_plan_present": false,
+          "plan_reuse": true,
+          "current_plan_present": true
+        },
+        {
+          "kind": "accepted_without_structured_plan",
+          "source": {
+            "offset": 1737333728,
+            "length": 74147,
+            "sha256": "998c889a7caabf44b4903f705146d1027ffaedf912568ff890d250d0d89d7f3b"
+          },
+          "question": "mvnopplo-1318149-3",
+          "accepted": true,
+          "run_plan_present": false,
+          "plan_reuse": true,
+          "current_plan_present": true
+        },
+        {
+          "kind": "accepted_without_structured_plan",
+          "source": {
+            "offset": 1737407875,
+            "length": 79013,
+            "sha256": "3648052d7d74a80d6a71fd1ed60588f9eef2112ffc49d62975c2f3a18cc50691"
+          },
+          "question": "mvnopplo-1318149-4",
+          "accepted": true,
+          "run_plan_present": false,
+          "plan_reuse": true,
+          "current_plan_present": true
+        },
+        {
+          "kind": "accepted_without_structured_plan",
+          "source": {
+            "offset": 1737486888,
+            "length": 55247,
+            "sha256": "f402fff300f7515f34653847f226ab392f3c35f114ed32bd92ee9503f272edf6"
+          },
+          "question": "mvnopplo-1318149-5",
+          "accepted": true,
+          "run_plan_present": false,
+          "plan_reuse": true,
+          "current_plan_present": true
+        },
+        {
+          "kind": "accepted_without_structured_plan",
+          "source": {
+            "offset": 1737542135,
+            "length": 75168,
+            "sha256": "df7641bd5f63eff48ba69f1b1670edf2ac912f5d4702c9e262d5f747615fa696"
+          },
+          "question": "mvnopplo-1318149-6",
+          "accepted": true,
+          "run_plan_present": false,
+          "plan_reuse": true,
+          "current_plan_present": true
+        },
+        {
+          "kind": "accepted_without_structured_plan",
+          "source": {
+            "offset": 1737617303,
+            "length": 51271,
+            "sha256": "2a0f41602c40462b0d82fbeb1216de09e2697e9c176a68715f2f3b3733b83efa"
+          },
+          "question": "mvnopplo-1318149-7",
+          "accepted": true,
+          "run_plan_present": false,
+          "plan_reuse": true,
+          "current_plan_present": true
+        }
+      ],
+      "verified_DPR_failure_rows": [],
+      "DPR_delivery": {
+        "observed_questions": 6,
+        "questions_with_dpr": 5,
+        "accepted_with_dpr": 5,
+        "decision_use": "unknown; delivery is not evidence of reasoning or a fixed DPR weight"
+      },
+      "owner": "original58/H1 module-monitor compatibility +64 deployed route/reuse runtime; current4Q6 brain budget/cut issue already handed to original brain-adapter chain via51/6399132155",
+      "limits": "300 requested/minimum gate and calibration unknown preserved; adaptive actual work counts not automatic full300 or calibration passed. DPR payload delivery is separate from accepted brain/plans; no restart/relearning/threshold change."
+    },
+    {
+      "events": [
+        132
+      ],
+      "run": "7HTRZEE5NDAG",
+      "alert_source": {
+        "path": "ops/codex-ops/module-health/7HTRZEE5NDAG-alert.json",
+        "bytes": 18462,
+        "sha256": "82b12d75fbd2efc75db18e1b8a459727dbcbad2891af1669e2cc66ba057f992e"
+      },
+      "coverage": {
+        "decisions_complete": true,
+        "decisions": {
+          "path": "/home/dw/Projects/agent-sts2/logs/decisions.jsonl",
+          "start": 5053463843,
+          "end": 5086967786,
+          "complete": false,
+          "malformed": 0,
+          "first_ts": "2026-10-25T09:55:06.234Z"
+        },
+        "brain": {
+          "path": "/home/dw/Projects/agent-sts2/logs/brain.jsonl",
+          "start": 1708230436,
+          "end": 1741751612,
+          "complete": false,
+          "malformed": 0,
+          "first_ts": "2026-10-25T04:51:14.431Z"
+        },
+        "plans": {
+          "path": "/home/dw/Projects/agent-sts2/logs/run-plans.jsonl",
+          "start": 13977172,
+          "end": 18166588,
+          "complete": false,
+          "malformed": 0,
+          "first_ts": "2026-10-24T07:12:04.795Z"
+        },
+        "config": {
+          "path": "/home/dw/Projects/agent-sts2/logs/run-config.jsonl",
+          "start": 0,
+          "end": 3749131,
+          "complete": true,
+          "malformed": 0,
+          "first_ts": "2026-09-30T00:10:45.685Z"
+        }
+      },
+      "computation": {
+        "attempts": 6,
+        "failures": 0,
+        "degraded": 0,
+        "evidence": [],
+        "alert": false,
+        "scope": "B2/B3 computation service failures; degradation permits continuation, not fault resolution."
+      },
+      "shadow_adaptive": {
+        "mode": "on",
+        "observed": 6,
+        "produced": 6,
+        "errors": 0,
+        "evaluable": 0,
+        "matched": 0,
+        "unknown": 4,
+        "complete_adaptive": 2,
+        "budgeted_partial": 4,
+        "production_evaluable": 0,
+        "production_matched": 0,
+        "agreement": null,
+        "production_agreement": null,
+        "saved_fraction": {
+          "p50": null,
+          "p90": null
+        },
+        "actual_saved_fraction": {
+          "p50": 0.4888888888888889,
+          "p90": 0.5244444444444445
+        },
+        "stop_counts": {
+          "leader": 2,
+          "indifferent": 4,
+          "eliminated": 1,
+          "budget": 39
+        },
+        "alert": false,
+        "admission_state": "accepted",
+        "admission": "accepted source; runtime mode=on; never auto-enable",
+        "limits": "Shadow estimates and actual on-mode sample work are separate. On-mode cannot observe full-run agreement; no elapsed-time saving or game benefit inferred."
+      },
+      "sampling": {
+        "minimumShown_values": [
+          300
+        ],
+        "actual_sample_counts": {
+          "100": 2,
+          "15": 1,
+          "55": 1,
+          "52": 1,
+          "106": 1
+        },
+        "sim_ms": [
+          2921,
+          8851,
+          10483,
+          11010,
+          10920,
+          11019
+        ],
+        "timed_out_count": 4,
+        "stage_pool": [
+          {
+            "samples": 100,
+            "elapsedMs": 913,
+            "timedOut": false,
+            "workers": 24,
+            "deadlineMs": 8870.430445,
+            "pool": {
+              "queueMs": 0,
+              "coldStart": false,
+              "preparationMs": 0,
+              "firstReplyMs": 66,
+              "chunksPlanned": 26,
+              "chunksDispatched": 26,
+              "chunksCompleted": 26,
+              "outcomesCompleted": 200
+            }
+          },
+          {
+            "samples": 100,
+            "elapsedMs": 6083,
+            "timedOut": false,
+            "workers": 24,
+            "deadlineMs": 8227.820230000012,
+            "pool": {
+              "queueMs": 0,
+              "coldStart": true,
+              "preparationMs": 80,
+              "firstReplyMs": 941,
+              "chunksPlanned": 52,
+              "chunksDispatched": 52,
+              "chunksCompleted": 52,
+              "outcomesCompleted": 400
+            }
+          },
+          {
+            "samples": 15,
+            "elapsedMs": 7840,
+            "timedOut": true,
+            "workers": 24,
+            "deadlineMs": 7838.7386920000135,
+            "pool": {
+              "queueMs": 0,
+              "coldStart": true,
+              "preparationMs": 136,
+              "firstReplyMs": 891,
+              "chunksPlanned": 234,
+              "chunksDispatched": 82,
+              "chunksCompleted": 58,
+              "outcomesCompleted": 542
+            }
+          },
+          {
+            "samples": 55,
+            "elapsedMs": 8232,
+            "timedOut": true,
+            "workers": 24,
+            "deadlineMs": 8229.10284300003,
+            "pool": {
+              "queueMs": 0,
+              "coldStart": true,
+              "preparationMs": 227,
+              "firstReplyMs": 835,
+              "chunksPlanned": 130,
+              "chunksDispatched": 93,
+              "chunksCompleted": 69,
+              "outcomesCompleted": 609
+            }
+          },
+          {
+            "samples": 52,
+            "elapsedMs": 8175,
+            "timedOut": true,
+            "workers": 24,
+            "deadlineMs": 8173.301697000046,
+            "pool": {
+              "queueMs": 0,
+              "coldStart": true,
+              "preparationMs": 183,
+              "firstReplyMs": 1660,
+              "chunksPlanned": 52,
+              "chunksDispatched": 48,
+              "chunksCompleted": 24,
+              "outcomesCompleted": 308
+            }
+          },
+          {
+            "samples": 106,
+            "elapsedMs": 8225,
+            "timedOut": true,
+            "workers": 24,
+            "deadlineMs": 8226.376196999976,
+            "pool": {
+              "queueMs": 0,
+              "coldStart": true,
+              "preparationMs": 119,
+              "firstReplyMs": 854,
+              "chunksPlanned": 104,
+              "chunksDispatched": 83,
+              "chunksCompleted": 59,
+              "outcomesCompleted": 564
+            }
+          }
+        ]
+      },
+      "construction_pipeline": {
+        "enabled": true,
+        "evaluation_expected": 7,
+        "evaluation_attached": 7,
+        "evaluation_missing": 0,
+        "brain_evaluation": 7,
+        "accepted_evaluation": 7,
+        "accepted_choice_with_evaluation": 6,
+        "plan_due": 8,
+        "accepted_structured_plan": 2,
+        "missing_structured_plan": 6,
+        "saved_structured_plan": 8,
+        "plan_readback": 7,
+        "checkpoint_review_due": 2,
+        "probability_delivered": 0,
+        "admission": {
+          "missing_or_mismatched_prospective_calibration": 5
+        },
+        "alert": true,
+        "limits": "Payload delivery, accepted output and saved/read-back plans are distinct observations, not causal win-rate evidence. Missing calibration is pending, not a service failure."
+      },
+      "verified_pipeline_evidence": [
+        {
+          "kind": "accepted_without_structured_plan",
+          "source": {
+            "offset": 1741172590,
+            "length": 28377,
+            "sha256": "5a5aaf9425bffdf3f0a49a3adc2af8a196991c95b869b9c7163613726ecbd383"
+          },
+          "question": "mvnq4htd-1481307-3",
+          "accepted": true,
+          "run_plan_present": false,
+          "plan_reuse": true,
+          "current_plan_present": true
+        },
+        {
+          "kind": "accepted_without_structured_plan",
+          "source": {
+            "offset": 1741200967,
+            "length": 82729,
+            "sha256": "c4d6e0abc0fe9b3f94728a6cc4b86d5c289c7819434e132ebdea662ae03dff09"
+          },
+          "question": "mvnq4htd-1481307-4",
+          "accepted": true,
+          "run_plan_present": false,
+          "plan_reuse": true,
+          "current_plan_present": true
+        },
+        {
+          "kind": "accepted_without_structured_plan",
+          "source": {
+            "offset": 1741283696,
+            "length": 180501,
+            "sha256": "fa5da15fe259f170e13741cd64759b5a1122ca1a3b84713877f95ee5614a3471"
+          },
+          "question": "mvnq4htd-1481307-5",
+          "accepted": true,
+          "run_plan_present": false,
+          "plan_reuse": true,
+          "current_plan_present": true
+        },
+        {
+          "kind": "accepted_without_structured_plan",
+          "source": {
+            "offset": 1741464197,
+            "length": 132317,
+            "sha256": "c991cc09a85cfaace0cfcbd3ce917e6abe7559e8e7e256385743969f70a43573"
+          },
+          "question": "mvnq4htd-1481307-6",
+          "accepted": true,
+          "run_plan_present": false,
+          "plan_reuse": true,
+          "current_plan_present": true
+        },
+        {
+          "kind": "accepted_without_structured_plan",
+          "source": {
+            "offset": 1741596514,
+            "length": 77029,
+            "sha256": "1e2c73b306eb21bee2a42be2c2af9f7802a90916dffaac61c2af6e775e2aa856"
+          },
+          "question": "mvnq4htd-1481307-7",
+          "accepted": true,
+          "run_plan_present": false,
+          "plan_reuse": true,
+          "current_plan_present": true
+        },
+        {
+          "kind": "accepted_without_structured_plan",
+          "source": {
+            "offset": 1741673543,
+            "length": 78069,
+            "sha256": "4a9a7d335ae7ef22d3d2adbef683839a05ef9c0a84865e5a6faedc4d3af605b7"
+          },
+          "question": "mvnq4htd-1481307-8",
+          "accepted": true,
+          "run_plan_present": false,
+          "plan_reuse": true,
+          "current_plan_present": true
+        }
+      ],
+      "verified_DPR_failure_rows": [],
+      "DPR_delivery": {
+        "observed_questions": 6,
+        "questions_with_dpr": 6,
+        "accepted_with_dpr": 6,
+        "decision_use": "unknown; delivery is not evidence of reasoning or a fixed DPR weight"
+      },
+      "owner": "original58/H1 module-monitor compatibility +64 deployed route/reuse runtime; current4Q6 brain budget/cut issue already handed to original brain-adapter chain via51/6399132155",
+      "limits": "300 requested/minimum gate and calibration unknown preserved; adaptive actual work counts not automatic full300 or calibration passed. DPR payload delivery is separate from accepted brain/plans; no restart/relearning/threshold change."
+    },
+    {
+      "events": [
+        152
+      ],
+      "run": "W29C3NRU128Y",
+      "alert_source": {
+        "path": "ops/codex-ops/module-health/W29C3NRU128Y-alert.json",
+        "bytes": 15419,
+        "sha256": "7ff4bf9f10aa797863f2c31ea95daab244943770d1aa308de33b99ad024c6ace"
+      },
+      "coverage": {
+        "decisions_complete": true,
+        "decisions": {
+          "path": "/home/dw/Projects/agent-sts2/logs/decisions.jsonl",
+          "start": 5076760664,
+          "end": 5110283314,
+          "complete": false,
+          "malformed": 0,
+          "first_ts": "2026-10-25T10:49:34.025Z"
+        },
+        "brain": {
+          "path": "/home/dw/Projects/agent-sts2/logs/brain.jsonl",
+          "start": 1714459433,
+          "end": 1747985244,
+          "complete": false,
+          "malformed": 0,
+          "first_ts": "2026-10-25T06:09:39.498Z"
+        },
+        "plans": {
+          "path": "/home/dw/Projects/agent-sts2/logs/run-plans.jsonl",
+          "start": 14111894,
+          "end": 18304795,
+          "complete": false,
+          "malformed": 0,
+          "first_ts": "2026-10-24T07:54:08.881Z"
+        },
+        "config": {
+          "path": "/home/dw/Projects/agent-sts2/logs/run-config.jsonl",
+          "start": 0,
+          "end": 3762318,
+          "complete": true,
+          "malformed": 0,
+          "first_ts": "2026-09-30T00:10:45.685Z"
+        }
+      },
+      "computation": {
+        "attempts": 6,
+        "failures": 0,
+        "degraded": 0,
+        "evidence": [],
+        "alert": false,
+        "scope": "B2/B3 computation service failures; degradation permits continuation, not fault resolution."
+      },
+      "shadow_adaptive": {
+        "mode": "on",
+        "observed": 6,
+        "produced": 6,
+        "errors": 0,
+        "evaluable": 0,
+        "matched": 0,
+        "unknown": 0,
+        "complete_adaptive": 6,
+        "budgeted_partial": 0,
+        "production_evaluable": 0,
+        "production_matched": 0,
+        "agreement": null,
+        "production_agreement": null,
+        "saved_fraction": {
+          "p50": null,
+          "p90": null
+        },
+        "actual_saved_fraction": {
+          "p50": 0.6666666666666666,
+          "p90": 0.6666666666666666
+        },
+        "stop_counts": {
+          "leader": 10,
+          "eliminated": 26,
+          "indifferent": 3
+        },
+        "alert": false,
+        "admission_state": "accepted",
+        "admission": "accepted source; runtime mode=on; never auto-enable",
+        "limits": "Shadow estimates and actual on-mode sample work are separate. On-mode cannot observe full-run agreement; no elapsed-time saving or game benefit inferred."
+      },
+      "sampling": {
+        "minimumShown_values": [
+          300
+        ],
+        "actual_sample_counts": {
+          "100": 6
+        },
+        "sim_ms": [
+          944,
+          797,
+          1031,
+          4797,
+          1218,
+          1339
+        ],
+        "timed_out_count": 0,
+        "stage_pool": [
+          {
+            "samples": 100,
+            "elapsedMs": 903,
+            "timedOut": false,
+            "workers": 24,
+            "deadlineMs": 10909.288023000001,
+            "pool": {
+              "queueMs": 0,
+              "coldStart": true,
+              "preparationMs": 8,
+              "firstReplyMs": 441,
+              "chunksPlanned": 26,
+              "chunksDispatched": 26,
+              "chunksCompleted": 26,
+              "outcomesCompleted": 200
+            }
+          },
+          {
+            "samples": 100,
+            "elapsedMs": 770,
+            "timedOut": false,
+            "workers": 24,
+            "deadlineMs": 10993.003355000023,
+            "pool": {
+              "queueMs": 0,
+              "coldStart": false,
+              "preparationMs": 0,
+              "firstReplyMs": 26,
+              "chunksPlanned": 52,
+              "chunksDispatched": 52,
+              "chunksCompleted": 52,
+              "outcomesCompleted": 400
+            }
+          },
+          {
+            "samples": 100,
+            "elapsedMs": 1008,
+            "timedOut": false,
+            "workers": 24,
+            "deadlineMs": 10993.421392999997,
+            "pool": {
+              "queueMs": 0,
+              "coldStart": false,
+              "preparationMs": 0,
+              "firstReplyMs": 43,
+              "chunksPlanned": 52,
+              "chunksDispatched": 52,
+              "chunksCompleted": 52,
+              "outcomesCompleted": 400
+            }
+          },
+          {
+            "samples": 100,
+            "elapsedMs": 4711,
+            "timedOut": false,
+            "workers": 24,
+            "deadlineMs": 10946.513075000024,
+            "pool": {
+              "queueMs": 0,
+              "coldStart": true,
+              "preparationMs": 15,
+              "firstReplyMs": 432,
+              "chunksPlanned": 208,
+              "chunksDispatched": 208,
+              "chunksCompleted": 208,
+              "outcomesCompleted": 1600
+            }
+          },
+          {
+            "samples": 100,
+            "elapsedMs": 1199,
+            "timedOut": false,
+            "workers": 24,
+            "deadlineMs": 10994.172417999944,
+            "pool": {
+              "queueMs": 0,
+              "coldStart": false,
+              "preparationMs": 0,
+              "firstReplyMs": 49,
+              "chunksPlanned": 52,
+              "chunksDispatched": 52,
+              "chunksCompleted": 52,
+              "outcomesCompleted": 400
+            }
+          },
+          {
+            "samples": 100,
+            "elapsedMs": 1313,
+            "timedOut": false,
+            "workers": 24,
+            "deadlineMs": 10993.27495900006,
+            "pool": {
+              "queueMs": 0,
+              "coldStart": false,
+              "preparationMs": 0,
+              "firstReplyMs": 41,
+              "chunksPlanned": 52,
+              "chunksDispatched": 52,
+              "chunksCompleted": 52,
+              "outcomesCompleted": 400
+            }
+          }
+        ]
+      },
+      "construction_pipeline": {
+        "enabled": true,
+        "evaluation_expected": 7,
+        "evaluation_attached": 7,
+        "evaluation_missing": 0,
+        "brain_evaluation": 7,
+        "accepted_evaluation": 7,
+        "accepted_choice_with_evaluation": 6,
+        "plan_due": 7,
+        "accepted_structured_plan": 1,
+        "missing_structured_plan": 6,
+        "saved_structured_plan": 7,
+        "plan_readback": 6,
+        "checkpoint_review_due": 0,
+        "probability_delivered": 0,
+        "admission": {
+          "missing_or_mismatched_prospective_calibration": 5
+        },
+        "alert": true,
+        "limits": "Payload delivery, accepted output and saved/read-back plans are distinct observations, not causal win-rate evidence. Missing calibration is pending, not a service failure."
+      },
+      "verified_pipeline_evidence": [
+        {
+          "kind": "accepted_without_structured_plan",
+          "source": {
+            "offset": 1747410926,
+            "length": 46150,
+            "sha256": "a45cd76df41c3b0c2a7031fdd8126f7ad44a4483bee0c75415e8fbbec1e3726a"
+          },
+          "question": "mvnrwg0v-1766197-2",
+          "accepted": true,
+          "run_plan_present": false,
+          "plan_reuse": true,
+          "current_plan_present": true
+        },
+        {
+          "kind": "accepted_without_structured_plan",
+          "source": {
+            "offset": 1747457076,
+            "length": 77518,
+            "sha256": "9fbbdb815f5a416ce5d195cc6e85650a775a7a7ac168f158d832f173c126843e"
+          },
+          "question": "mvnrwg0v-1766197-3",
+          "accepted": true,
+          "run_plan_present": false,
+          "plan_reuse": true,
+          "current_plan_present": true
+        },
+        {
+          "kind": "accepted_without_structured_plan",
+          "source": {
+            "offset": 1747534594,
+            "length": 77904,
+            "sha256": "b237c936d0e128d96d249b50c4a759377b929fd9ea554352edfd51cb59cec79f"
+          },
+          "question": "mvnrwg0v-1766197-4",
+          "accepted": true,
+          "run_plan_present": false,
+          "plan_reuse": true,
+          "current_plan_present": true
+        },
+        {
+          "kind": "accepted_without_structured_plan",
+          "source": {
+            "offset": 1747612498,
+            "length": 207750,
+            "sha256": "7b78ee7ffacce968ff96f0741cb582243ea8744f208b60f6fdc5f80fa7ba1199"
+          },
+          "question": "mvnrwg0v-1766197-5",
+          "accepted": true,
+          "run_plan_present": false,
+          "plan_reuse": true,
+          "current_plan_present": true
+        },
+        {
+          "kind": "accepted_without_structured_plan",
+          "source": {
+            "offset": 1747820248,
+            "length": 80080,
+            "sha256": "2641ac4b41031f0db6b8a784b8266c21ee1ea6b8496b6002a432421ffb7eaa24"
+          },
+          "question": "mvnrwg0v-1766197-6",
+          "accepted": true,
+          "run_plan_present": false,
+          "plan_reuse": true,
+          "current_plan_present": true
+        },
+        {
+          "kind": "accepted_without_structured_plan",
+          "source": {
+            "offset": 1747900328,
+            "length": 84916,
+            "sha256": "51d56bc33a32b97b11de5459b1a26fadff711208d934dd8e915edc6e39bd17b2"
+          },
+          "question": "mvnrwg0v-1766197-7",
+          "accepted": true,
+          "run_plan_present": false,
+          "plan_reuse": true,
+          "current_plan_present": true
+        }
+      ],
+      "verified_DPR_failure_rows": [],
+      "DPR_delivery": {
+        "observed_questions": 6,
+        "questions_with_dpr": 6,
+        "accepted_with_dpr": 6,
+        "decision_use": "unknown; delivery is not evidence of reasoning or a fixed DPR weight"
+      },
+      "owner": "original58/H1 module-monitor compatibility +64 deployed route/reuse runtime; current4Q6 brain budget/cut issue already handed to original brain-adapter chain via51/6399132155",
+      "limits": "300 requested/minimum gate and calibration unknown preserved; adaptive actual work counts not automatic full300 or calibration passed. DPR payload delivery is separate from accepted brain/plans; no restart/relearning/threshold change."
+    },
+    {
+      "events": [
+        176
+      ],
+      "run": "TGY1UKFMAT8A",
+      "alert_source": {
+        "path": "ops/codex-ops/module-health/TGY1UKFMAT8A-alert.json",
+        "bytes": 10981,
+        "sha256": "20e161cee0a6df02b51519703b21239b65ff3bc633aa16855a5b5903e20295c6"
+      },
+      "coverage": {
+        "decisions_complete": true,
+        "decisions": {
+          "path": "/home/dw/Projects/agent-sts2/logs/decisions.jsonl",
+          "start": 5094847267,
+          "end": 5128349986,
+          "complete": false,
+          "malformed": 0,
+          "first_ts": "2026-10-25T11:33:53.960Z"
+        },
+        "brain": {
+          "path": "/home/dw/Projects/agent-sts2/logs/brain.jsonl",
+          "start": 1719748502,
+          "end": 1753213949,
+          "complete": false,
+          "malformed": 0,
+          "first_ts": "2026-10-25T07:01:28.702Z"
+        },
+        "plans": {
+          "path": "/home/dw/Projects/agent-sts2/logs/run-plans.jsonl",
+          "start": 14229774,
+          "end": 18422920,
+          "complete": false,
+          "malformed": 0,
+          "first_ts": "2026-10-24T08:25:20.329Z"
+        },
+        "config": {
+          "path": "/home/dw/Projects/agent-sts2/logs/run-config.jsonl",
+          "start": 0,
+          "end": 3776043,
+          "complete": true,
+          "malformed": 0,
+          "first_ts": "2026-09-30T00:10:45.685Z"
+        }
+      },
+      "computation": {
+        "attempts": 3,
+        "failures": 0,
+        "degraded": 0,
+        "evidence": [],
+        "alert": false,
+        "scope": "B2/B3 computation service failures; degradation permits continuation, not fault resolution."
+      },
+      "shadow_adaptive": {
+        "mode": "on",
+        "observed": 3,
+        "produced": 3,
+        "errors": 0,
+        "evaluable": 0,
+        "matched": 0,
+        "unknown": 0,
+        "complete_adaptive": 3,
+        "budgeted_partial": 0,
+        "production_evaluable": 0,
+        "production_matched": 0,
+        "agreement": null,
+        "production_agreement": null,
+        "saved_fraction": {
+          "p50": null,
+          "p90": null
+        },
+        "actual_saved_fraction": {
+          "p50": 0.6666666666666666,
+          "p90": 0.6666666666666666
+        },
+        "stop_counts": {
+          "leader": 4,
+          "eliminated": 6,
+          "max": 2
+        },
+        "alert": false,
+        "admission_state": "accepted",
+        "admission": "accepted source; runtime mode=on; never auto-enable",
+        "limits": "Shadow estimates and actual on-mode sample work are separate. On-mode cannot observe full-run agreement; no elapsed-time saving or game benefit inferred."
+      },
+      "sampling": {
+        "minimumShown_values": [
+          300
+        ],
+        "actual_sample_counts": {
+          "100": 2,
+          "300": 1
+        },
+        "sim_ms": [
+          881,
+          1156,
+          2966
+        ],
+        "timed_out_count": 0,
+        "stage_pool": [
+          {
+            "samples": 100,
+            "elapsedMs": 860,
+            "timedOut": false,
+            "workers": 24,
+            "deadlineMs": 10899.080753999999,
+            "pool": {
+              "queueMs": 0,
+              "coldStart": true,
+              "preparationMs": 19,
+              "firstReplyMs": 389,
+              "chunksPlanned": 26,
+              "chunksDispatched": 26,
+              "chunksCompleted": 26,
+              "outcomesCompleted": 200
+            }
+          },
+          {
+            "samples": 100,
+            "elapsedMs": 1112,
+            "timedOut": false,
+            "workers": 24,
+            "deadlineMs": 10984.16420900001,
+            "pool": {
+              "queueMs": 0,
+              "coldStart": false,
+              "preparationMs": 1,
+              "firstReplyMs": 51,
+              "chunksPlanned": 52,
+              "chunksDispatched": 52,
+              "chunksCompleted": 52,
+              "outcomesCompleted": 400
+            }
+          },
+          {
+            "samples": 300,
+            "elapsedMs": 2850,
+            "timedOut": false,
+            "workers": 24,
+            "deadlineMs": 10988.609589999978,
+            "pool": {
+              "queueMs": 0,
+              "coldStart": false,
+              "preparationMs": 0,
+              "firstReplyMs": 53,
+              "chunksPlanned": 143,
+              "chunksDispatched": 143,
+              "chunksCompleted": 143,
+              "outcomesCompleted": 1100
+            }
+          }
+        ]
+      },
+      "construction_pipeline": {
+        "enabled": true,
+        "evaluation_expected": 4,
+        "evaluation_attached": 4,
+        "evaluation_missing": 0,
+        "brain_evaluation": 4,
+        "accepted_evaluation": 4,
+        "accepted_choice_with_evaluation": 3,
+        "plan_due": 4,
+        "accepted_structured_plan": 1,
+        "missing_structured_plan": 3,
+        "saved_structured_plan": 4,
+        "plan_readback": 3,
+        "checkpoint_review_due": 0,
+        "probability_delivered": 0,
+        "admission": {
+          "missing_or_mismatched_prospective_calibration": 2
+        },
+        "alert": true,
+        "limits": "Payload delivery, accepted output and saved/read-back plans are distinct observations, not causal win-rate evidence. Missing calibration is pending, not a service failure."
+      },
+      "verified_pipeline_evidence": [
+        {
+          "kind": "accepted_without_structured_plan",
+          "source": {
+            "offset": 1752975444,
+            "length": 46731,
+            "sha256": "2e01361d7a05afe85e37d673dd567cdd6b0b0fa50c48d68b6b4f1b65611a3936"
+          },
+          "question": "mvnuouax-2013720-2",
+          "accepted": true,
+          "run_plan_present": false,
+          "plan_reuse": true,
+          "current_plan_present": true
+        },
+        {
+          "kind": "accepted_without_structured_plan",
+          "source": {
+            "offset": 1753022175,
+            "length": 79096,
+            "sha256": "e98d706c42089db3c0911c20ea299a36a0d72ca9fbef090ac8dc0882d82151a4"
+          },
+          "question": "mvnuouax-2013720-3",
+          "accepted": true,
+          "run_plan_present": false,
+          "plan_reuse": true,
+          "current_plan_present": true
+        },
+        {
+          "kind": "accepted_without_structured_plan",
+          "source": {
+            "offset": 1753101271,
+            "length": 112678,
+            "sha256": "43dac1e202991120c97a0bb9117e6c129eaa2b180ef7cc68f54f607c6d32e7dc"
+          },
+          "question": "mvnuouax-2013720-4",
+          "accepted": true,
+          "run_plan_present": false,
+          "plan_reuse": true,
+          "current_plan_present": true
+        }
+      ],
+      "verified_DPR_failure_rows": [],
+      "DPR_delivery": {
+        "observed_questions": 3,
+        "questions_with_dpr": 3,
+        "accepted_with_dpr": 3,
+        "decision_use": "unknown; delivery is not evidence of reasoning or a fixed DPR weight"
+      },
+      "owner": "original58/H1 module-monitor compatibility +64 deployed route/reuse runtime; current4Q6 brain budget/cut issue already handed to original brain-adapter chain via51/6399132155",
+      "limits": "300 requested/minimum gate and calibration unknown preserved; adaptive actual work counts not automatic full300 or calibration passed. DPR payload delivery is separate from accepted brain/plans; no restart/relearning/threshold change."
+    },
+    {
+      "events": [
+        196
+      ],
+      "run": "4Q6S5ZUKHJH7",
+      "alert_source": {
+        "path": "ops/codex-ops/module-health/4Q6S5ZUKHJH7-alert.json",
+        "bytes": 14712,
+        "sha256": "874b9ec81f5c338ffacfedb0cb68392b4a156534e07c0e0668d685af4a582989"
+      },
+      "coverage": {
+        "decisions_complete": true,
+        "decisions": {
+          "path": "/home/dw/Projects/agent-sts2/logs/decisions.jsonl",
+          "start": 5099861278,
+          "end": 5132906939,
+          "complete": false,
+          "malformed": 0,
+          "first_ts": "2026-10-25T11:43:46.764Z"
+        },
+        "brain": {
+          "path": "/home/dw/Projects/agent-sts2/logs/brain.jsonl",
+          "start": 1721434404,
+          "end": 1754889081,
+          "complete": false,
+          "malformed": 0,
+          "first_ts": "2026-10-25T07:12:04.285Z"
+        },
+        "plans": {
+          "path": "/home/dw/Projects/agent-sts2/logs/run-plans.jsonl",
+          "start": 14239216,
+          "end": 18433206,
+          "complete": false,
+          "malformed": 0,
+          "first_ts": "2026-10-24T08:27:20.165Z"
+        },
+        "config": {
+          "path": "/home/dw/Projects/agent-sts2/logs/run-config.jsonl",
+          "start": 0,
+          "end": 3782743,
+          "complete": true,
+          "malformed": 0,
+          "first_ts": "2026-09-30T00:10:45.685Z"
+        }
+      },
+      "computation": {
+        "attempts": 3,
+        "failures": 0,
+        "degraded": 0,
+        "evidence": [],
+        "alert": false,
+        "scope": "B2/B3 computation service failures; degradation permits continuation, not fault resolution."
+      },
+      "shadow_adaptive": {
+        "mode": "on",
+        "observed": 3,
+        "produced": 3,
+        "errors": 0,
+        "evaluable": 0,
+        "matched": 0,
+        "unknown": 0,
+        "complete_adaptive": 3,
+        "budgeted_partial": 0,
+        "production_evaluable": 0,
+        "production_matched": 0,
+        "agreement": null,
+        "production_agreement": null,
+        "saved_fraction": {
+          "p50": null,
+          "p90": null
+        },
+        "actual_saved_fraction": {
+          "p50": 0.6666666666666666,
+          "p90": 0.6666666666666666
+        },
+        "stop_counts": {
+          "leader": 4,
+          "indifferent": 3,
+          "eliminated": 5
+        },
+        "alert": false,
+        "admission_state": "accepted",
+        "admission": "accepted source; runtime mode=on; never auto-enable",
+        "limits": "Shadow estimates and actual on-mode sample work are separate. On-mode cannot observe full-run agreement; no elapsed-time saving or game benefit inferred."
+      },
+      "sampling": {
+        "minimumShown_values": [
+          300
+        ],
+        "actual_sample_counts": {
+          "100": 3
+        },
+        "sim_ms": [
+          841,
+          1001,
+          1378
+        ],
+        "timed_out_count": 0,
+        "stage_pool": [
+          {
+            "samples": 100,
+            "elapsedMs": 826,
+            "timedOut": false,
+            "workers": 24,
+            "deadlineMs": 10892.838103,
+            "pool": {
+              "queueMs": 0,
+              "coldStart": true,
+              "preparationMs": 10,
+              "firstReplyMs": 392,
+              "chunksPlanned": 26,
+              "chunksDispatched": 26,
+              "chunksCompleted": 26,
+              "outcomesCompleted": 200
+            }
+          },
+          {
+            "samples": 100,
+            "elapsedMs": 978,
+            "timedOut": false,
+            "workers": 24,
+            "deadlineMs": 10985.565173999988,
+            "pool": {
+              "queueMs": 0,
+              "coldStart": false,
+              "preparationMs": 0,
+              "firstReplyMs": 35,
+              "chunksPlanned": 52,
+              "chunksDispatched": 52,
+              "chunksCompleted": 52,
+              "outcomesCompleted": 400
+            }
+          },
+          {
+            "samples": 100,
+            "elapsedMs": 1349,
+            "timedOut": false,
+            "workers": 24,
+            "deadlineMs": 10978.016310999868,
+            "pool": {
+              "queueMs": 0,
+              "coldStart": false,
+              "preparationMs": 0,
+              "firstReplyMs": 58,
+              "chunksPlanned": 52,
+              "chunksDispatched": 52,
+              "chunksCompleted": 52,
+              "outcomesCompleted": 400
+            }
+          }
+        ]
+      },
+      "construction_pipeline": {
+        "enabled": true,
+        "evaluation_expected": 5,
+        "evaluation_attached": 5,
+        "evaluation_missing": 0,
+        "brain_evaluation": 5,
+        "accepted_evaluation": 0,
+        "accepted_choice_with_evaluation": 0,
+        "plan_due": 5,
+        "accepted_structured_plan": 0,
+        "missing_structured_plan": 0,
+        "saved_structured_plan": 0,
+        "plan_readback": 0,
+        "checkpoint_review_due": 0,
+        "probability_delivered": 0,
+        "admission": {},
+        "alert": false,
+        "limits": "Payload delivery, accepted output and saved/read-back plans are distinct observations, not causal win-rate evidence. Missing calibration is pending, not a service failure."
+      },
+      "verified_pipeline_evidence": [],
+      "verified_DPR_failure_rows": [
+        {
+          "source": {
+            "offset": 5132361774,
+            "length": 56388,
+            "sha256": "c6231720c1b61e5d88fc8b1d9fd54e8776bb879bc65d7b0ddb2e46fb2feb3dfb"
+          },
+          "reason": "no_complete_dpr",
+          "decision": "52353c04-9b4b-428a-b62d-99fe5c83be94",
+          "floor": 1,
+          "label": "event/choose",
+          "candidates": {
+            "observed": 3,
+            "unsupported": 2,
+            "with_dpr": 0,
+            "missing_dpr": 1
+          },
+          "decider": "jev",
+          "fallback": false,
+          "brain_error": null,
+          "raw_diagnostics_status": "produced"
+        },
+        {
+          "source": {
+            "offset": 5132563704,
+            "length": 99817,
+            "sha256": "931ac8da1bd2148f22c465e9cc322da433d21005da55813f50f1e62220cb431c"
+          },
+          "reason": "no_complete_dpr",
+          "decision": "0668e03f-f01a-4d4f-9a11-c91486823d60",
+          "floor": 2,
+          "label": "reward/card",
+          "candidates": {
+            "observed": 4,
+            "unsupported": 0,
+            "with_dpr": 0,
+            "missing_dpr": 4
+          },
+          "decider": "jev",
+          "fallback": false,
+          "brain_error": null,
+          "raw_diagnostics_status": "produced"
+        },
+        {
+          "source": {
+            "offset": 5132798212,
+            "length": 106690,
+            "sha256": "5db4330e20c3229fab7a90ad3613e7d8bf3108016c793323d7f94fbd024ffbd5"
+          },
+          "reason": "no_complete_dpr",
+          "decision": "ccd4245f-648d-4213-8261-70c69ee6f9b3",
+          "floor": 3,
+          "label": "reward/card",
+          "candidates": {
+            "observed": 4,
+            "unsupported": 0,
+            "with_dpr": 0,
+            "missing_dpr": 4
+          },
+          "decider": "jev",
+          "fallback": false,
+          "brain_error": null,
+          "raw_diagnostics_status": "produced"
+        }
+      ],
+      "DPR_delivery": {
+        "observed_questions": 3,
+        "questions_with_dpr": 3,
+        "accepted_with_dpr": 0,
+        "decision_use": "unknown; delivery is not evidence of reasoning or a fixed DPR weight"
+      },
+      "owner": "original58/H1 module-monitor compatibility +64 deployed route/reuse runtime; current4Q6 brain budget/cut issue already handed to original brain-adapter chain via51/6399132155",
+      "limits": "300 requested/minimum gate and calibration unknown preserved; adaptive actual work counts not automatic full300 or calibration passed. DPR payload delivery is separate from accepted brain/plans; no restart/relearning/threshold change."
+    }
+  ],
+  "routine_Roy_watcher_report": false
+}

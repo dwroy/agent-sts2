@@ -1,0 +1,20 @@
+{
+  "at": "2026-10-24T22:34:53+08:00",
+  "source57": "ce3e9b86092a3050e91dd51eab9d1bfd08f0b995",
+  "exact_new_admission_block": "if [ \"$audit_ready\" = 1 ] && [ \"$check_admission\" = 1 ]; then\n  if ! (flock -w 120 8 && nice -n 19 python3 \"$OPS/publication_gate.py\" --root \"$ROOT\" --state-dir \"$DIR\" \\\n    check-learner --batch \"$batch\" --cwd \"$worktree\" --merge \"$learner_merge\") 8> \"$DIR/learn.lock\" >> \"$out\" 2>> \"$err\"; then\n    audit_ready=0\n  fi\nfi",
+  "released_batch_barrier": true,
+  "parent_global_lock_retained": true,
+  "before_parent_release": {
+    "child_running": true,
+    "helper_called": false,
+    "elapsed": 0.30077682802220806
+  },
+  "after_parent_release": {
+    "rc": 0,
+    "helper_called": true
+  },
+  "finding": "New #57 admission check still waits for global learn.lock even after the #56 per-batch registration barrier is released. A parent validating subsequent sources can again hold this wrapper until the original 120-second timeout.",
+  "scope": "fixed real lock and exact submitted shell block with helper observation stub; no model or production state",
+  "full_runs": 0,
+  "model_calls": 0
+}

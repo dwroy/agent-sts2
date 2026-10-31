@@ -1,0 +1,77 @@
+{
+  "scope": "synthetic result; real exec/FD/receipt, not STS2 full or shadow",
+  "rows": [
+    {
+      "locator": "finalizer-pass-tmp9d201577-locator.json",
+      "mode": "pass",
+      "fixture_only": true,
+      "outcome": "passed",
+      "failure_kind": null,
+      "original_exit": 0,
+      "error": null,
+      "same_pid_start_boot": true,
+      "source_modules_match": {
+        "ops/board_queue_checks.py": false,
+        "ops/board_queue_pin.py": true,
+        "ops/issue_session_support.py": true,
+        "ops/shared_tools.py": true,
+        "ops/worktree_checkout.py": true,
+        "ops/disk_capacity.py": true,
+        "ops/learner_retention.py": true,
+        "ops/learner_checks.py": true,
+        "ops/board_queue_finalize.mjs": true,
+        "ops/board_queue_leases.mjs": true
+      },
+      "full_lock_released": true,
+      "result_sha256": "490f2292a3c287498cd62ca591db01b724281b4afd4039ed1aea8c41d436b338"
+    },
+    {
+      "locator": "finalizer-nonzero-tmph0_y6w7b-locator.json",
+      "mode": "nonzero",
+      "fixture_only": true,
+      "outcome": "failed",
+      "failure_kind": "unknown",
+      "original_exit": 7,
+      "error": "RuntimeError: full regression failed; original output retained",
+      "same_pid_start_boot": false,
+      "source_modules_match": {
+        "ops/board_queue_checks.py": false,
+        "ops/board_queue_pin.py": true,
+        "ops/issue_session_support.py": true,
+        "ops/shared_tools.py": true,
+        "ops/worktree_checkout.py": true,
+        "ops/disk_capacity.py": true,
+        "ops/learner_retention.py": true,
+        "ops/learner_checks.py": true,
+        "ops/board_queue_finalize.mjs": true,
+        "ops/board_queue_leases.mjs": true
+      },
+      "full_lock_released": true,
+      "result_sha256": "fc2f8dc3c341bdcbedfab4e1918d803d54635eba203c8581494ceace3a844d90"
+    },
+    {
+      "locator": "finalizer-drift-tmpuxtravm4-locator.json",
+      "mode": "drift",
+      "fixture_only": true,
+      "outcome": "failed",
+      "failure_kind": "environment",
+      "original_exit": 0,
+      "error": "ValueError: frozen tree/input/index drift: root",
+      "same_pid_start_boot": false,
+      "source_modules_match": {
+        "ops/board_queue_checks.py": false,
+        "ops/board_queue_pin.py": true,
+        "ops/issue_session_support.py": true,
+        "ops/shared_tools.py": true,
+        "ops/worktree_checkout.py": true,
+        "ops/disk_capacity.py": true,
+        "ops/learner_retention.py": true,
+        "ops/learner_checks.py": true,
+        "ops/board_queue_finalize.mjs": true,
+        "ops/board_queue_leases.mjs": true
+      },
+      "full_lock_released": true,
+      "result_sha256": "6bb261088a33d7ea920b80a57e58090cd6d4464b910e1660e5a49b91c91aae35"
+    }
+  ]
+}

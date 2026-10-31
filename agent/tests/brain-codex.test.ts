@@ -212,7 +212,7 @@ describe("codex engine", () => {
     const answer = await engine(fake.bin, codexHome("models"), { BRAIN_CODEX_MODEL: "gpt-6-astra", BRAIN_CODEX_MODEL_REST: "gpt-6.1-sol", BRAIN_CODEX_EFFORT: "max", BRAIN_CODEX_SERVICE_TIER: "priority", BRAIN_CODEX_SUMMARY: "detailed" }).decide(request());
     const argv = fake.seen()[0]!.argv;
     expect(argv[argv.indexOf("--model") + 1]).toBe("gpt-6.1-sol");
-    expect(argv).toEqual(expect.arrayContaining(['model_reasoning_effort="max"', 'service_tier="default"', 'model_reasoning_summary="detailed"']));
+    expect(argv).toEqual(expect.arrayContaining(['model_reasoning_effort="max"', 'service_tier="priority"', 'model_reasoning_summary="detailed"']));
     expect(answer).toMatchObject({ model: "gpt-6.1-sol", effort: "max" });
   });
 

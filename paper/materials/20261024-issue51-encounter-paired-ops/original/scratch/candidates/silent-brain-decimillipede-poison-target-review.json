@@ -1,0 +1,70 @@
+{
+  "schema": "brain-strategies-v1",
+  "character": "silent",
+  "entries": [
+    {
+      "id": "silent-brain-decimillipede-poison-target-review",
+      "version": "1.0.0",
+      "trigger": {
+        "question_types": [
+          "fight_plan"
+        ],
+        "acts": [
+          2
+        ]
+      },
+      "evidence": [
+        {
+          "type": "own",
+          "run": "FZT053H9PSC5",
+          "floor": 31,
+          "ref": "learner/runs/20261024-182410-9392a61c-9554-4f9d-ac41-209aa6052d76-strategy-proposal/scratch/raw/decisions-3405985844-51517.json; fingerprint-matched original state; completed receipts and observed successors",
+          "role": "support"
+        },
+        {
+          "type": "own",
+          "run": "1913SE84AXQF",
+          "floor": 31,
+          "ref": "learner/runs/20261024-182410-9392a61c-9554-4f9d-ac41-209aa6052d76-strategy-proposal/scratch/own-fight-pages/millipede-limitation.json; generalization limitation; exact action predicate unverified; retries kept separate",
+          "role": "contradict"
+        },
+        {
+          "type": "external_aggregate",
+          "source": "external:sts2fun",
+          "url": "https://sts2.fun/static/sts2_public.db.zst",
+          "version": "v0.111",
+          "dataset_sha256": "1f7c0c3d441aedb5c85f04bcd4d8d6a1039b438a8b6fda2d96cfa5c27580cbf5",
+          "downloaded_at": "2026-10-21",
+          "filters": {
+            "character": "silent",
+            "ascension": 10,
+            "criteria": "character='SILENT' AND ascension=10 AND n_players=1 AND is_valid=1 AND was_abandoned=0 AND has_modifiers=0; patch_major in v0.107-v0.111; selected c3 pair0; recorded ENCOUNTER.DECIMILLIPEDE_ELITE nodes only; not population representative"
+          },
+          "statistic": {
+            "name": "selected_representative_node_gross_damage_mean_context_only",
+            "value": 38.5,
+            "unit": "hp"
+          },
+          "denominator": {
+            "unit": "fights",
+            "n": 2
+          },
+          "design": "observational",
+          "limitations": [
+            "挑选的匿名完整代表，非随机样本；不估总体效果。",
+            "无逐回合动作/真实入场牌组；节点前末HP只作代理。",
+            "终局簇不作当前触发；自有版本unknown分账；外部反例/未到达不当作同遭遇动作反证。"
+          ],
+          "license": "No explicit dataset redistribution license found on public FAQ; aggregate statistics with attribution only; no raw redistribution.",
+          "ref": "knowledge/external/sts2fun/builds-v1/representative-timelines.json#v0.111,c3,pair0,ENCOUNTER.DECIMILLIPEDE_ELITE"
+        }
+      ],
+      "strategy": "残杀千足虫三段均在且两张施毒牌可打时，比较前段集中与前/中分配目标，并合计全部仍活实体的来袭与防护。FZT053H9PSC5 F31 T2一次机会，实打偏折+、致命毒药+到中段、防御+、带毒刺击+到前段：毒分别0→7、0→4，合21挡；显示总来袭28，T3玩家70→63。这是实选分配线，未证优于集中线；1913SE84AXQF也持施毒牌却46血进场实际败。\n范围：Silent/A10/版本unknown，1局1窗口；按当前实体索引核目标，不能按部位名字推固定杀序、重连机制或免伤保证。",
+      "source": "mixed",
+      "confidence": 0.3,
+      "evidence_status": "conflict",
+      "formal_publication": "pending",
+      "consumer_readback": "pending"
+    }
+  ]
+}

@@ -1596,3 +1596,9 @@ Roy：「上线后进 F48 反而降低一半，这才是关键，要找问题。
 - 2026-10-24T11:21:39+08:00 [ops/104301候选续接] silent-0581/原silent-proposal-146784d761377d66已有三叶候选，未提交/未发布：原版负控1败3过、候选定向2文件9过；原full只见11失败且无终态退出码，22处整分支合并冲突保持。按最新live精确集成须待37原唯一窗实际释放，勿重复派提案或借其full。CLI注册仍pending，学习者报告waiting不冒正式处置。原件paper/materials/20261024-strategy-104301-ops/verification.json、commit-candidate.patch。
 
 - 2026-10-24T17:16:12+08:00 [ops/postmortem 164302，非阻塞] P4ZBYNW92PPK A10：agent/src/knowledge/relic-values.ts:44 将显式数字1与energyPrefix:energyIcons(1)再次拼接，带刺手甲费用文字显示“增加11点能量”；原固定复现成立，实际费用/胜负影响另账。复用silent-0617、silent-proposal-4976c043ffdcd610原链，不重复登记/派模型；只修显示边界，不按渲染错误改机制。历史源码/release未知，现live复现不回填旧局版本，原tsx IPC EPERM保留。证据：learner/runs/20261024-164319-824e21ec-27a8-4473-98cd-03d4077a0d50-postmortem/relic-render-repro.json、bugs.json。
+
+- 2026-10-24T23:42:50+08:00 **ops-postmortem-exit3-cause-display（#56，非阻塞，待原fix）**：214311因registration lock timeout未启动模型，6385924090已授权not-started；原finish rc3事件仍套“codex不可用/key隔离自检失败”，掩盖真实前置拒绝。应优先读取经核验处置/原失败原因，保留rc与历史事件；未核原因不能写key失败。一小时重试文案是原时刻快照，需与后续授权retry_at=0区分，不能据旧通知回写冷却。固定复现、源码SHA/行及原回执见paper/materials/20261024-214311-not-started-return-ops/verification.json；仅显示问题，旧批不重放，不绕任何预检/权限或热改在途。
+
+- 2026-10-25T00:59:14+08:00 [ops] 原infra-run-config-git-status-enobufs-20261023 / silent-0617两候选接231317-fix：原base520a2b7，两源码补丁及2新增固定测试保留，tsc0/定向6过/各撤码2败；完整沙箱无最终rc且已多失败，现树内原测试进程0，不能继续称in-flight或全绿。原failed/rc0与retry不改，无提交/合live/编号。沿原唯一宿主检查及精确集成门接最终候选，复用现补丁，不另派同题/降测试或扩大沙箱。原件paper/materials/20261025-wake-0043-ops/source-candidate-handoff.json及fix-*.patch。
+
+- 2026-10-25T00:59:14+08:00 [ops] 原v5-dpr-health/H1→001302六叶监控兼容链续证UVEXNP9HCMAY：四原决策offset/length/SHA及诊断核同。8必需计算零失败/降级，F6/7/8三no_complete_dpr均samples100/requested与minimumShown300、未超时，1541/3655/1623ms；adaptive on7/7完整与满300门分账。构筑9/9附加、10脑送达/6接收/5choice、6结构计划/9读回/零missing；7校准缺口pending。保原alert/300门和V6适用性负控，不凭开关豁免；当前231317-fix明确将该宽项留原owner，未新派/重启/常规通知Roy或watcher。原件paper/materials/20261025-wake-0043-ops/module-original-byte-verification.json。

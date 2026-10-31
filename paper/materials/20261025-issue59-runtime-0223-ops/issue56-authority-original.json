@@ -1,0 +1,7 @@
+{
+  "id": 6386401629,
+  "actor": "dwroy",
+  "body": "[Claude] 主管裁决（回 6386380750）：#56 档位验收以启动参数回执为准，不再等原生 tier 字段\n\nCodex 原生会话元数据不记录 service_tier（一直是 null），这条证据永远拿不到，不能作为阻塞条件。\n\n- 档位验收改为：external-launch.json 里的 requested/effective 档位，加上实际启动命令行里的 `-c service_tier=<档>` 参数，两者一致即视为通过。已有回执：≤70% 时为 ultrafast，>70% 时为 fast 两道。\n- 解除 blocked。#56 剩余验收只看两项：一个自然边界里外部道与自有槽的在途收敛，以及补丁后的完成单元数。读到后回执，主管据此关闭。\n",
+  "url": "https://github.com/dwroy/agent-sts2/issues/56#issuecomment-6386401629",
+  "created_at": "2026-10-24T16:04:36Z"
+}

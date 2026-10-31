@@ -1,0 +1,50 @@
+import {readFileSync,writeFileSync} from 'node:fs';
+import {pathToFileURL} from 'node:url';
+import {join,resolve} from 'node:path';
+import {createHash} from 'node:crypto';
+import assert from 'node:assert/strict';
+const [contentArg,consumerArg,output,assemblyPath]=process.argv.slice(2);
+const content=resolve(contentArg),consumer=resolve(consumerArg),A=JSON.parse(readFileSync(assemblyPath,'utf8'));
+const load=(p:string)=>import(pathToFileURL(join(consumer,p)).href),read=(p:string)=>JSON.parse(readFileSync(p,'utf8'));
+const {parseStrategyLibrary}=await load('agent/src/knowledge/strategy-entries.ts');
+const {setKnowledgeCharacter}=await load('agent/src/knowledge/files.ts');
+const {loadV6Knowledge}=await load('agent/src/v6/knowledge.ts');
+const {evaluatePredicate}=await load('agent/src/v6/predicate.ts');
+const {combatPredicateFacts}=await load('agent/src/reflex/jev/predicate-context.ts');
+const {parseGameState}=await load('agent/src/hand/mod/schema.ts');
+const {buildKnowledgeTools}=await load('agent/src/brain/tools/agent-knowledge.ts');
+const {ToolHost}=await load('agent/src/brain/tools/mcp-server.ts');
+const knowledgeDir=join(content,'knowledge'),library=parseStrategyLibrary(read(join(knowledgeDir,'characters/silent/strategy-entries.json'))),loaded=loadV6Knowledge(knowledgeDir,'silent');
+assert.equal(loaded.reflex.status,'loaded');assert.equal(loaded.vocab.status,'loaded');assert.equal(loaded.reflex.value.length,A.snapshots.live.after_reflex_count);
+const sourceStrategy=read(resolve(A.source_files.strategy.path)),sourceRk=read(resolve(A.source_files.rk.path));
+const before=read(resolve(assemblyPath,'../preimages/live/knowledge/characters/silent/reflex.json'));
+assert.deepEqual(loaded.reflex.value.filter((e:any)=>before.entries.some((o:any)=>o.id===e.id)),before.entries);
+const beforeStrategy=read(resolve(assemblyPath,'../preimages/live/knowledge/characters/silent/strategy-entries.json'));
+for(const old of beforeStrategy.entries)assert.deepEqual(library.entries.find((e:any)=>e.id===old.id),old);
+const beforeVocab=read(resolve(assemblyPath,'../preimages/live/knowledge/characters/silent/reflex-vocab.json'));
+for(const [dim,old] of Object.entries(beforeVocab.dimensions) as any)assert.deepEqual(loaded.vocab.value.dimensions[dim].slice(0,old.length),old);
+setKnowledgeCharacter('silent');const strategies=[],rows=[];
+for(const id of A.selected_strategy_ids){
+ const pair=A.selected_pairs.find((x:any)=>x.strategy_id===id)??A.selected_pairs[0],raw=read(pair.original_case.state.path).state,state=parseGameState(raw);
+ const wanted=sourceStrategy.entries.find((e:any)=>e.id===id);const label=wanted.trigger.question_types.includes('card_reward')?'reward/card':'fight-plan';
+ const ctx={ascension:10,knowledgeDir,logsDir:'/unused',label,payload:{facts:{act:Number(state.run.act_id)+1,floor:state.run.floor}},state};
+ const result=await new ToolHost(buildKnowledgeTools(ctx),ctx).call('kb_strategies',{query:id});assert(!result.isError,result.text);
+ const entry=JSON.parse(result.text).entries.find((e:any)=>e.id===id);assert(entry,id);
+ for(const key of ['id','version','trigger','strategy','evidence','source','confidence','evidence_status'])assert.deepEqual(entry[key],wanted[key],key);strategies.push(entry);
+}
+for(const pair of A.selected_pairs){
+ const bytes=readFileSync(pair.original_case.state.path);assert.equal(createHash('sha256').update(bytes).digest('hex'),pair.original_case.state.sha256);
+ const original=JSON.parse(bytes.toString()).state,state=parseGameState(original),payload={facts:{act:Number(state.run.act_id)+1,floor:state.run.floor}};
+ const ctx={ascension:10,knowledgeDir,logsDir:'/unused',label:'reward/card',payload,state};
+ const result=await new ToolHost(buildKnowledgeTools(ctx),ctx).call('kb_reflex',{query:pair.rk_id,applies_to:'combat_line'});assert(!result.isError,result.text);
+ const body=JSON.parse(result.text);assert.equal(body.representation,'construction_summary');assert.equal(body.predicate_evaluation,'not_evaluated');assert.equal(body.entries.length,0);
+ const fullCtx={...ctx,label:'fight-plan'},full=await new ToolHost(buildKnowledgeTools(fullCtx),fullCtx).call('kb_reflex',{query:pair.rk_id,applies_to:'combat_line'});assert(!full.isError,full.text);
+ const fullBody=JSON.parse(full.text),expected=sourceRk.entries.find((e:any)=>e.id===pair.rk_id);assert.equal(fullBody.entries.length,1);assert.deepEqual(fullBody.entries[0],expected);assert.equal(expected.signal.kind,'tag');
+ const facts=combatPredicateFacts(state),currentOnly={op:'and',args:expected.predicate.args.filter((p:any)=>p.field!=='option.actions')};
+ assert.equal(evaluatePredicate(currentOnly,facts.context),true);assert.equal(evaluatePredicate(expected.predicate,facts.context),null);
+ const wrong={...ctx,ascension:11},no=await new ToolHost(buildKnowledgeTools(wrong),wrong).call('kb_reflex',{query:pair.rk_id,applies_to:'combat_line'});assert(!no.isError);assert.equal(JSON.parse(no.text).entries.length,0);
+ rows.push({strategy_id:pair.strategy_id,rk_id:pair.rk_id,rk:fullBody.entries[0],construction_negative_entries:body.entries.length,current_state_conditions:true,full_predicate_without_original_plan:null,actual_fixed_production_tools:true,executable_replay:false});
+}
+for(const character of ['ironclad','regent']){setKnowledgeCharacter(character);const ctx={ascension:10,knowledgeDir,logsDir:'/unused',label:'reward/card',payload:{},state:{}};const host=new ToolHost(buildKnowledgeTools(ctx),ctx);for(const name of ['kb_strategies','kb_reflex']){const r=await host.call(name,{query:A.selected_strategy_ids[0]});if(name==='kb_reflex'){assert.equal(host.has(name),false);assert.equal(r.isError,true);}else{assert(!r.isError,r.text);assert.equal(JSON.parse(r.text).entries.length,0);}}}setKnowledgeCharacter('silent');
+writeFileSync(output,JSON.stringify({passed:true,content_root:content,consumer_root:consumer,strategy_count:library.entries.length,reflex_count:loaded.reflex.value.length,fixed_strategy_queries:strategies.length,fixed_rk_construction_negative_queries:rows.length,fixed_rk_construction_queries:0,fixed_rk_full_queries:rows.length,fixed_original_state_conditions:rows.length,full_predicates_unknown_without_original_plan:rows.length,wrong_ascension_cases:rows.length,other_role_cases:4,new_executable_combat_comparisons:0,new_executable_card_pick_advice:0,natural_queries:0,model_or_jev_calls:0,strategies,rows},null,2)+'\n');
+console.log(JSON.stringify({passed:true,strategy:library.entries.length,rk:loaded.reflex.value.length,full_predicates_unknown_without_original_plan:rows.length}));

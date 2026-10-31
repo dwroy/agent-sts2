@@ -1,0 +1,49 @@
+{
+  "at": "2026-10-25T08:02:33+08:00",
+  "original_report_files": [
+    {
+      "path": "learner/runs/20261025-021346-adc84f6c-d991-4f2c-8eb5-ee01d934785f-postmortem/report.md",
+      "bytes": 18763,
+      "sha256": "e518d723fb1d5134b3329050a397143d0bd11a92b025252383517f9672b4fa0e"
+    },
+    {
+      "path": "learner/runs/20261025-021346-adc84f6c-d991-4f2c-8eb5-ee01d934785f-postmortem/whole-run-summary.json",
+      "bytes": 4528427,
+      "sha256": "227c697b9d814ba8312d6c612ba973a0751b4079bb94595ad551482b66f16412"
+    },
+    {
+      "path": "learner/runs/20261025-021346-adc84f6c-d991-4f2c-8eb5-ee01d934785f-postmortem/playbook-rk-candidates.json",
+      "bytes": 45824,
+      "sha256": "66c376deb2e4ae69d1a43bba1e8f341d24df0eeb265a96ef82f2820dd3d96e35"
+    }
+  ],
+  "dataset_verification": {
+    "path": "paper/data/verification.json",
+    "bytes": 588,
+    "sha256": "82b2ea6e794b1c567119f9be07ad006f73b482dbbef493ce93f3a907f874cc72"
+  },
+  "current_dataset_checks": {
+    "checks": {
+      "decisions attributed + unattributed == play records": true,
+      "decisions_by_label sum == attributed decisions": true,
+      "escalations rows == records with escalation": true,
+      "every runs.jsonl id present in runs.csv": true,
+      "commits == git rev-list --all --count": true,
+      "runs.jsonl decision-count mismatches": [
+        [
+          "KF9HMZKTFC3V",
+          879,
+          880
+        ]
+      ]
+    },
+    "row_counts": {
+      "runs.csv": 1014,
+      "decisions_by_label.csv": 33767,
+      "escalations.csv": 3600,
+      "fight_plans.csv": 1461,
+      "commits.csv": 8991
+    }
+  },
+  "scope": "Read existing output and dataset verification only; no dataset rebuild, new game evidence, publication, consumer adoption or benefit validation."
+}

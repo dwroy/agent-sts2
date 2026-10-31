@@ -1,0 +1,93 @@
+
+ RUN  v4.1.11 /home/dw/Projects/agent-sts2/.worktrees/issue-69-a10-learning-web/agent
+
+ ❯ tests/learner-wrapper-scripts.test.ts (3 tests | 3 failed) 10ms
+     × ships every literal repo script referenced by the wrapper, including both task routes 7ms
+     × publishes the paired wrapper seal and stall recycler with its project scripts 1ms
+     × rejects the exact old unpublished seal reference and any omitted required script 1ms
+(node:2316012) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:2316012) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:2316012) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:2316012) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:2316012) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:2316012) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:2316012) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 3 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/learner-wrapper-scripts.test.ts > learner wrapper published script closure > ships every literal repo script referenced by the wrapper, including both task routes
+AssertionError: expected [ 'ops/public_web_jobs.py' ] to deeply equal []
+
+- Expected
++ Received
+
+- []
++ [
++   "ops/public_web_jobs.py",
++ ]
+
+ ❯ tests/learner-wrapper-scripts.test.ts:31:41
+     29|     expect(required).toEqual(expect.arrayContaining(["ops/paths.sh", "…
+     30|       "ops/codex-learner.sh", "ops/codex-fast.sh", "ops/codex-ops-lear…
+     31|     expect(missing(wrapper, published)).toEqual([]);
+       |                                         ^
+     32|     for (const path of required) expect(statSync(resolve(root, path)).…
+     33|   });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/3]⎯
+
+ FAIL  tests/learner-wrapper-scripts.test.ts > learner wrapper published script closure > publishes the paired wrapper seal and stall recycler with its project scripts
+AssertionError: expected [ 'ops/public_web_jobs.py' ] to deeply equal []
+
+- Expected
++ Received
+
+- []
++ [
++   "ops/public_web_jobs.py",
++ ]
+
+ ❯ tests/learner-wrapper-scripts.test.ts:39:41
+     37|     expect(wrapper).toMatch(/\$OPS\/learner_tabs\.py" seal --root/);
+     38|     expect(scheduler).toMatch(/\$OPS\/learner_tabs\.py" tick --root/);
+     39|     expect(missing(wrapper, published)).toEqual([]);
+       |                                         ^
+     40|     for (const path of ["ops/learner_tabs.py", "ops/learner_tui.py", "…
+     41|       expect(published.has(path), path).toBe(true);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/3]⎯
+
+ FAIL  tests/learner-wrapper-scripts.test.ts > learner wrapper published script closure > rejects the exact old unpublished seal reference and any omitted required script
+AssertionError: expected [ 'ops/learner_tabs.py', …(1) ] to deeply equal [ 'ops/learner_tabs.py' ]
+
+- Expected
++ Received
+
+  [
+    "ops/learner_tabs.py",
++   "ops/public_web_jobs.py",
+  ]
+
+ ❯ tests/learner-wrapper-scripts.test.ts:52:91
+     50|     const withoutRecycler = new Set(published);
+     51|     withoutRecycler.delete("ops/learner_tabs.py");
+     52|     expect(missing(`${wrapper}\npython3 "$OPS/learner_tabs.py" seal\n`…
+       |                                                                                           ^
+     53|     for (const path of scripts(wrapper)) {
+     54|       const incomplete = new Set(published);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/3]⎯
+
+
+ Test Files  1 failed | 7 passed (8)
+      Tests  3 failed | 156 passed (159)
+   Start at  22:55:45
+   Duration  15.35s (transform 1.19s, setup 609ms, import 1.78s, tests 12.05s, environment 1ms)
+

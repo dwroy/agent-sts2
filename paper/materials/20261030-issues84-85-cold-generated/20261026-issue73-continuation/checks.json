@@ -1,0 +1,83 @@
+{
+  "schema": "issue73-checks-v1",
+  "base": "16f66e76ad49e65df75a2efd88685b56fb86294d",
+  "nice": 19,
+  "max_processes": 2,
+  "tsc_production": {
+    "exit": 0,
+    "log": "tsc-final.log"
+  },
+  "tsc_runtime_cli": {
+    "exit": 0,
+    "log": "tsc-cli-final.log"
+  },
+  "sandbox_first": {
+    "exit": 1,
+    "files": 644,
+    "passed": 5945,
+    "failed": 2,
+    "log": "sandbox-first.log",
+    "failures": [
+      {
+        "test": "knowledge-classification CLI completion",
+        "cause": "new code-SHA restriction broke existing fixture-code CLI input",
+        "repair": "restore nonempty legacy CLI code identifiers; production callback SHA validation retained",
+        "verified_by": "targeted-final.log"
+      },
+      {
+        "test": "check-imports",
+        "cause": "cold issue29 fixed input missing from sparse checkout",
+        "repair": "materialized original HEAD blob b84d95c5185941eec143cbcf2966d5770309cca5",
+        "verified_by": "fixture-recovery.json and targeted-final.log"
+      }
+    ]
+  },
+  "final_vitest": [
+    {
+      "files": 4,
+      "passed": 30,
+      "failed": 0,
+      "log": "targeted-final.log"
+    },
+    {
+      "files": 1,
+      "passed": 16,
+      "failed": 0,
+      "log": "typed-tools-final.log"
+    },
+    {
+      "files": 1,
+      "passed": 11,
+      "failed": 0,
+      "log": "paths-final.log"
+    }
+  ],
+  "host_python": {
+    "passed": 32,
+    "failed": 0,
+    "log": "python-final.log",
+    "modules": [
+      "test_knowledge_runtime",
+      "test_knowledge_completion_events",
+      "test_knowledge_runtime_env",
+      "test_knowledge_classification",
+      "test_public_web"
+    ]
+  },
+  "frozen_original": {
+    "result": "original-replay.json",
+    "lineage_releases": 9,
+    "delta_objects": 8,
+    "publications": 1,
+    "complete_events": 1,
+    "original_candidate_unchanged": true
+  },
+  "real_callback": {
+    "result": "callback-readback.json",
+    "state": "done",
+    "queue_events": 1,
+    "source_proof": "fixed previously independently audited artifact return; lookup substituted; actual callback/CLI/proposal/binding/publication/queue code"
+  },
+  "actual_root_live_full": "pending original integrator final combination; no repeated developer broad run after localized legacy-input repair",
+  "production_publication": "not performed; ops original batch retains ownership"
+}

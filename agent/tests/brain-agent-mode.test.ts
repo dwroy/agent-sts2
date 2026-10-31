@@ -3,6 +3,7 @@ import { afterEach, expect, it, vi } from "vitest";
 import { chmodSync, mkdirSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from "node:fs";
 import { join } from "node:path";
 import { tmpdir } from "node:os";
+import { toolCapabilities } from "../src/brain/tools/capabilities.js";
 import { buildKnowledgeTools } from "../src/brain/tools/agent-knowledge.js";
 import { KnowledgeMcp } from "../src/brain/tools/knowledge-mcp.js";
 import { ToolHost } from "../src/brain/tools/mcp-server.js";
@@ -96,9 +97,10 @@ it.each(["calls", "time"] as const)("uses the same engine and exact acquired res
     throw new Error("phase cancelled");
   } })); cleanup.push(() => engine.close());
   if (reason === "time") cfg.agent.codexTotalMs = 40;
-  const result = await engine.decide({ ...request(), tools: [fixture], toolContext: { ascension: 0, knowledgeDir: "", logsDir: "" } });
+  const result = await engine.decide({ ...request(), system: "fixed rules" + toolCapabilities([fixture]), tools: [fixture], toolContext: { ascension: 0, knowledgeDir: "", logsDir: "" } });
   expect(result.answer).toMatchObject({ choice: "a" }); expect(result.agent?.fallback).toBe(reason);
   expect(finalRequest!.tools).toEqual([]);
+  expect(finalRequest!.system).not.toContain(`${fixture.name} —`); expect(finalRequest!.system).toContain("知识工具已关闭");
   if (reason === "calls") { expect(finalRequest!.question).toContain("fixed"); expect(result.toolCalls).toHaveLength(1); }
 });
 

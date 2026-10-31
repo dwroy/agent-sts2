@@ -29,15 +29,16 @@ import { DEFAULT_KNOWLEDGE_DIR } from "../../agent/src/knowledge/render/data.js"
 import { DEFAULT_CHARACTER, characterKey } from "../../agent/src/knowledge/files.js";
 import { mcpLaunchSpec, type McpLaunchSpec } from "../../agent/src/brain/tools/mcp-launch.js";
 import { readCodexUsage, type CodexUsage } from "../../agent/src/brain/engines/codex-usage.js";
-import { externalRegistration, registeredExternalTier, type ExternalTier, type ExternalTierDecision } from "./external-source.js";
+import { candidateMode, externalRegistration, registeredExternalTier, type ExternalTier, type ExternalTierDecision } from "./external-source.js";
 import { checkCodex, type CodexCheck } from "../../agent/src/brain/engines/codex.js";
 import { AUTH_ERROR, refreshCodexAuth } from "../../agent/src/brain/engines/codex-usage.js";
 import { ENGINES, EngineUnavailableError, childEnv, codexChildEnv, codexKeyCheck, learnerInteractiveArgs, withCodexKeys, type KeyCheck, engineBinary, engineCommand, engineDefaults, learnerCodexHome, mainCheckout, shellQuote, strippedEnvNames, unavailableMessage, type EngineName, type EngineRequest } from "./engines.js";
 import { SummaryTracker, findRollout, formatSummary, progressLine, rolloutStats } from "./summary.js";
+import { publicWebEvent, publicWebPermission } from "./public-web.js";
 import { highestAscension, runCharacters } from "./runs.js";
 import { LearnerUsageError, characterBuiltins, loadTask, parseSets, renderTask } from "./task.js";
 import { captureStartupLease, StartupEvidence } from "./startup-recovery.js";
-import { runLearnerTui, type TuiResult } from "./herdr.js";
+import { NativeRows, runLearnerTui, type TuiResult } from "./herdr.js";
 
 /** This checkout (the launcher's own repository: core/paths.ts PROJECT_ROOT). */
 export const REPO = REPO_ROOT;
@@ -113,7 +114,7 @@ export function defaultDeps(): LauncherDeps {
 const LEARNER_CODEX_STATE = join(tmpdir(), "jev-learner-codex-state");
 
 export const USAGE = `usage: agent/node_modules/.bin/tsx learner/run.ts --engine claude|codex --task <name|path.md> --cwd <dir> [--set name=value ...]
-         [--model M] [--effort E] [--service-tier ultrafast|fast|default（仅外部来源）] [--max-turns N] [--timeout-min N] [--dry-run] [--character ID] [--with-tools [--ascension N] [--knowledge-dir D]]
+         [--model M] [--effort E] [--service-tier default（仅外部来源）] [--max-turns N] [--timeout-min N] [--dry-run] [--character ID] [--with-tools [--ascension N] [--knowledge-dir D]]
 tasks: learner/tasks/*.md (postmortem, experience-update, fix-batch, smoke)`;
 
 export interface LauncherOptions {
@@ -165,7 +166,7 @@ export function parseArgs(argv: string[]): LauncherOptions {
       case "--effort": options.effort = value(); break;
       case "--service-tier": {
         const tier = value();
-        if (!["ultrafast", "fast", "default"].includes(tier)) throw new LearnerUsageError("--service-tier 只能为 ultrafast/fast/default");
+        if (tier !== "default") throw new LearnerUsageError("--service-tier 只能为 default");
         options.serviceTier = tier as ExternalTier;
         break;
       }
@@ -372,7 +373,7 @@ export function checkRunCharacters(sets: Record<string, string>, character: stri
 export async function main(argv: string[], overrides: Partial<LauncherDeps> = {}): Promise<number> {
   const deps = { ...defaultDeps(), ...overrides };
   let options: LauncherOptions;
-  let prepared: { request: EngineRequest; prompt: string; values: Record<string, string>; taskName: string; timeoutMin?: number; logPath: string; scratch: string };
+  let prepared: { request: EngineRequest; prompt: string; values: Record<string, string>; taskName: string; timeoutMin?: number; logPath: string; scratch: string; operationalRuntime?: Record<string, unknown> };
   try {
     options = parseArgs(argv);
     if (options.help) {
@@ -386,8 +387,10 @@ export async function main(argv: string[], overrides: Partial<LauncherDeps> = {}
     // Parallel workers can launch the same task within one second, including manual runs without a lease.
     const stem = `${stamp(deps.now())}-${randomUUID()}-${spec.name}`;
     // No-change strategy reports must belong to the batch's worktree; event logs remain centralized.
-    const scratch = spec.name === "strategy-proposal" ? join(cwd, "learner", "runs", stem) : join(deps.runsDir, stem);
-    if (spec.name === "strategy-proposal") {
+    const operationalModule = await import("./operational-runtime.js");
+    const localScratch = spec.name === "strategy-proposal" || operationalModule.hasOperationalContract(deps.env, spec.name) || !!deps.env.STS2_KNOWLEDGE_RUNTIME && spec.name === "experience-update";
+    const scratch = localScratch ? join(cwd, "learner", "runs", stem) : join(deps.runsDir, stem);
+    if (localScratch) {
       for (const dir of [join(cwd, "learner"), join(cwd, "learner", "runs")]) {
         if (existsSync(dir) && !inside(realpathSync(cwd), realpathSync(dir))) {
           throw new LearnerUsageError(`策略任务临时目录 ${dir} 不在工作树 ${cwd} 里`);
@@ -408,6 +411,10 @@ export async function main(argv: string[], overrides: Partial<LauncherDeps> = {}
       sets.code_dir = resolve(deps.env.STS2_LIVE);
     }
     checkRunCharacters(sets, character, join(deps.projectRoot, "logs", "runs.jsonl"));
+    const runtimeInstructions = deps.env.STS2_KNOWLEDGE_RUNTIME
+      ? (await import("./knowledge-runtime.js")).runtimeLearningInstructions(deps.env, spec.name, character, scratch, deps.projectRoot) : "";
+    const operationalInstructions = operationalModule.operationalInstructions(deps.env, spec.name, character, scratch, cwd, deps.projectRoot);
+    if ((runtimeInstructions || operationalInstructions) && spec.defaults.merge !== undefined) sets.merge = "no";
     const rendered = renderTask(spec, sets, builtins);
     const model = options.model ?? spec.models[options.engine] ?? engineDefaults(options.engine).model;
     const effort = options.effort ?? spec.efforts[options.engine] ?? engineDefaults(options.engine).effort;
@@ -417,6 +424,7 @@ export async function main(argv: string[], overrides: Partial<LauncherDeps> = {}
       cwd,
       projectRoot: deps.projectRoot,
       tools: spec.tools,
+      ...(spec.publicWeb ? { publicWeb: publicWebPermission(spec, options.engine, character, cwd, deps.projectRoot, deps.env) } : {}),
       // Commits need the main checkout's git directory (a worktree's metadata lives there): writable, its hooks and
       // config read-only, as the ops session's profile (2026-10-04: fix-batch could not merge main, ORIG_HEAD.lock).
       extraRules: learnerGitRules(deps.projectRoot, cwd),
@@ -428,16 +436,17 @@ export async function main(argv: string[], overrides: Partial<LauncherDeps> = {}
     }, deps.env);
     if (options.serviceTier || deps.env.LEARNER_EXTERNAL_SOURCE) {
       const lease = captureStartupLease(deps.env, deps.projectRoot, cwd);
-      if (options.engine !== "codex" || character !== "silent" || model !== "gpt-6.1-sol" || effort !== "high" || options.resumeThread || !externalRegistration(deps.env, lease, spec.name)) {
+      if (options.engine !== "codex" || character !== "silent" || model !== "gpt-6.1-sol" || effort !== "high" || options.resumeThread || rendered.values.merge !== "no" || !externalRegistration(deps.env, lease, spec.name)) {
         throw new LearnerUsageError("外部档位参数必须绑定原外部批次租约，不能用于普通任务或另开续跑");
       }
-      request.serviceTier = options.dryRun ? "default" : options.serviceTier ?? "ultrafast";
+      request.serviceTier = options.serviceTier ?? "default";
     }
     const timeoutMin = options.timeoutMin ?? spec.timeoutMin;
     const storageRules = existsSync(join(deps.projectRoot, "ops/worktree_storage.py"))
       ? `\n\n工作树存储：历史 paper/materials、paper/raw、experiments 与 paper/data/history 的干净副本可能按需展开，当前交接和学习账本保留。缺文件不代表证据不存在；用 git ls-tree HEAD -- <路径> 核基线，再运行 python3 ${join(deps.projectRoot, "ops/worktree_storage.py")} materialize --root ${deps.projectRoot} --workspace ${cwd.split("/").at(-1)} --path <精确文件路径> 恢复，检查返回的提交及 blob。只恢复任务需要的文件，每棵树历史输入缓存最多256 MiB，空闲时由原调度器回收；修改过的材料不回收。原日志仍从 logs_dir 读取。固定源码对照记录 Git 提交、git diff --binary 和必要输入，禁止把整个仓库归档后再完整展开成 source-checkout/before-checkout；避免同时保存完整 tar 和展开副本。已有过程副本如需恢复，按 docs/learner-retention.md 的 restore-copies 流程操作，不更改任务状态、原线程或账号。`
       : "";
-    prepared = { request, prompt: rendered.prompt + storageRules, values: rendered.values, taskName: spec.name, ...(timeoutMin !== undefined ? { timeoutMin } : {}), logPath: join(deps.runsDir, `${stem}.jsonl`), scratch };
+    const operationalReads = operationalModule.operationalReadInstructions(deps.env, character, scratch, deps.projectRoot);
+    prepared = { request, prompt: rendered.prompt + storageRules + operationalReads + runtimeInstructions + operationalInstructions, values: rendered.values, taskName: spec.name, ...(timeoutMin !== undefined ? { timeoutMin } : {}), logPath: join(deps.runsDir, `${stem}.jsonl`), scratch, operationalRuntime: operationalModule.operationalLaunchRecord(deps.env) };
   } catch (error) {
     if (error instanceof LearnerUsageError) {
       deps.err(`${error.message}\n${USAGE}\n`);
@@ -492,11 +501,11 @@ export async function main(argv: string[], overrides: Partial<LauncherDeps> = {}
 
   let externalDecision: ExternalTierDecision | undefined;
   if (deps.env.LEARNER_EXTERNAL_SOURCE) {
-    const selected = registeredExternalTier(deps.env, learnerCodexHome(deps.env), deps.now(), options.serviceTier ?? "ultrafast");
+    const selected = registeredExternalTier(deps.env, learnerCodexHome(deps.env), deps.now(), options.serviceTier ?? "default");
     if (!selected) return unavailable("外部学习统一额度快照缺失、已过期、账号不符或达到90%；保留原租约，不启动模型\n");
     externalDecision = selected;
     const lease = captureStartupLease(deps.env, deps.projectRoot, request.cwd);
-    if (!externalRegistration(deps.env, lease, prepared.taskName)) return unavailable("外部来源在额度读取期间失去原租约，不启动模型\n");
+    if (prepared.values.merge !== "no" || !externalRegistration(deps.env, lease, prepared.taskName)) return unavailable("外部来源在额度读取期间失去原租约或候选模式，不启动模型\n");
     request.serviceTier = externalDecision.effective;
     command = engineCommand(request, prompt, binary);
   }
@@ -504,10 +513,25 @@ export async function main(argv: string[], overrides: Partial<LauncherDeps> = {}
   mkdirSync(scratch, { recursive: true });
   mkdirSync(deps.runsDir, { recursive: true });
   const started = deps.now();
-  const log = (event: Record<string, unknown>): void => appendFileSync(logPath, `${JSON.stringify(event)}\n`);
+  const log = (event: Record<string, unknown>): void => {
+    appendFileSync(logPath, `${JSON.stringify(event)}\n`);
+    captureWeb(event);
+  };
+  const captureWeb = (event: Record<string, unknown>): void => {
+    const web = request.publicWeb ? publicWebEvent(event) : undefined;
+    if (web) {
+      appendFileSync(join(scratch, "public-web-events.jsonl"), `${JSON.stringify(web)}\n`);
+      if (deps.env.LEARNER_HERDR_PANE) tracker.feed(JSON.stringify(event));
+    }
+  };
   log({
     type: "learner_launch",
-    ...(externalDecision ? { external_source: deps.env.LEARNER_EXTERNAL_SOURCE, external_tier: externalDecision } : {}),
+    ...(request.publicWeb ? { public_web: { schema: "public-web-research-v1", requested: "live", observed: null,
+      shell_network: false, native_events: join(scratch, "public-web-events.jsonl"), sources: join(scratch, "public-web-sources.json") } } : {}),
+    ...(prepared.operationalRuntime ? { operational_runtime: prepared.operationalRuntime } : {}),
+    ...(deps.env.STS2_KNOWLEDGE_RUNTIME ? { knowledge_runtime: { directory: deps.env.STS2_KNOWLEDGE_RUNTIME,
+      control_sha256: /^[a-f0-9]{64}$/.test(deps.env.STS2_KNOWLEDGE_RUNTIME_CONTROL_SHA256 ?? "") ? deps.env.STS2_KNOWLEDGE_RUNTIME_CONTROL_SHA256 : null } } : {}),
+    ...(externalDecision ? { external_source: deps.env.LEARNER_EXTERNAL_SOURCE, external_tier: externalDecision, candidate_mode: candidateMode(deps.env) } : {}),
     ts: started.toISOString(),
     engine: request.engine,
     task: prepared.taskName,
@@ -535,7 +559,7 @@ export async function main(argv: string[], overrides: Partial<LauncherDeps> = {}
     const kind = externalDecision ? "external" : "backfill";
     const receipt = join(dirname(deps.env.LEARNER_STATE_FILE), "learner", `${lease.batch}.${kind}-launch.json`);
     writeFileSync(receipt, JSON.stringify({ batch: lease.batch, source: externalDecision ? deps.env.LEARNER_EXTERNAL_SOURCE : deps.env.LEARNER_BACKFILL_SOURCE,
-      ...(externalDecision ? { external_tier: externalDecision } : {}),
+      ...(externalDecision ? { external_tier: externalDecision, candidate_mode: candidateMode(deps.env) } : {}),
       cwd: request.cwd, log: logPath, codex_home: learnerCodexHome(deps.env),
       input_sha256: inputSha, prompt_sha256: createHash("sha256").update(command.stdin.replace(/\r\n/g, "\n").trimEnd()).digest("hex"),
       command_sha256: commandSha, lease: lease.identity }) + "\n", { flag: "wx", mode: 0o600 });
@@ -562,6 +586,27 @@ export async function main(argv: string[], overrides: Partial<LauncherDeps> = {}
   let signal: NodeJS.Signals | null = null;
   let tui: TuiResult | undefined;
   const interactive = request.engine === "codex" && !!deps.env.LEARNER_HERDR_PANE;
+  const nativeWebRows = request.publicWeb && !interactive ? new NativeRows() : undefined;
+  let nativeWebPath: string | undefined, nativeWebSession = false, nativeWebPrompt = false, nativeWebFailed = false;
+  const drainNativeWeb = (): void => {
+    if (!nativeWebRows || nativeWebFailed || !tracker.summary.sessionId) return;
+    nativeWebPath ??= findRollout(learnerCodexHome(deps.env), tracker.summary.sessionId);
+    if (!nativeWebPath) return;
+    try {
+      while (!nativeWebRows.atEnd(nativeWebPath)) for (const row of nativeWebRows.read(nativeWebPath)) {
+        const p = row.payload ?? {};
+        if (row.type === "session_meta") nativeWebSession = p.id === tracker.summary.sessionId && p.cwd === request.cwd;
+        const text = row.type === "event_msg" && p.type === "user_message" ? String(p.message ?? "")
+          : row.type === "response_item" && p.type === "message" && p.role === "user" && Array.isArray(p.content)
+            ? p.content.map((part: { text?: unknown }) => String(part.text ?? "")).join("\n") : undefined;
+        if (text !== undefined) nativeWebPrompt = text.replace(/\r\n/g, "\n").trimEnd() === command.stdin.replace(/\r\n/g, "\n").trimEnd();
+        if (nativeWebSession && nativeWebPrompt && publicWebEvent(row as Record<string, unknown>)) log(row as Record<string, unknown>);
+      }
+    } catch {
+      nativeWebFailed = true;
+      log({ type: "public_web_native_unavailable", reason: "original native web stream unavailable; preserve pending provenance" });
+    }
+  };
   if (interactive) {
     const receipt = deps.env.LEARNER_TUI_RECEIPT;
     const label = deps.env.LEARNER_HERDR_LABEL;
@@ -635,6 +680,10 @@ export async function main(argv: string[], overrides: Partial<LauncherDeps> = {}
             } catch { /* Preserve the original stream; non-JSON lines cannot acknowledge a resume. */ }
           }
           const event = tracker.feed(line, ms());
+          if (event && request.publicWeb) {
+            captureWeb(event);
+            drainNativeWeb();
+          }
           const progress = event && progressLine(request.engine, event);
           if (progress) deps.err(`${progress.split("\n").map((text) => `[${elapsed()}] ${text}`).join("\n")}\n`);
         });
@@ -660,6 +709,7 @@ export async function main(argv: string[], overrides: Partial<LauncherDeps> = {}
         attemptChild.on("close", (code, sig) => done([code, sig]));
       });
       await Promise.all([stdoutDone, stderrDone]);
+      drainNativeWeb();
       child = undefined;
       const retryable = request.engine === "codex" && exitCode === 1 && signal === null && evidence.transientBeforeSession();
       log({ type: "learner_startup_exit", ts: deps.now().toISOString(), pid: attemptChild.pid ?? null,

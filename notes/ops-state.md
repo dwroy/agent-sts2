@@ -1,8 +1,7 @@
-state: in-flight
+state: clear-ok
 issue: 51
-updated: 2026-10-24T18:09:26+08:00
+updated: 2026-10-25T02:43:04+08:00
 
-进行中的事：174311产物核毕；6对文字/rk描述候选组合工具通过，唯一publisher3367426/26092500阻塞原knowledge-refresh.lock，未写live。8新账本accepted、4原修订目标，未报shipped。
-在等谁：原锁owner3361736自然释放及同一publisher终态回调；随后核真实发布/工具/账本。原#51八叶源补丁source_commit=null，仍等原集成员唯一完整窗/宿主部署。
-下一步：沿paper/materials/20261024-issue51-poison-paired-ops/publication-state.json实际阶段接，不重发/模型/full/tick。6 rk仅描述tag，比较建议0；1副本谓词/完整剧本/科学父保持。实际原生tier未知，只有fast请求。
-#48首普通native/映射与后置0/244保持；164302 dataset2fbf8be6已核，回收deferred/原门不改。源与数据事务尚未结，不清会话。
+进行中的事：021345实投6388068959已核、非Roy阅读/ACK；route-hp两稿原字节/旧附件及串行增量/CAS约束保留。无ops在途写事务，60原full和58原RR2保持。
+在等谁：60新28780925b原唯一full2026370/birth29104679终态与集成员核回；58原RR2用量门及下一自然xhigh合同待原runtime，原运行保留。
+下一步：56/57实据交主管及原释放执行者，仍按原四停止分工；60复用原full后接自然发布/迁移与三端controlSHA、原batch恢复验证，不夹135夹具，不热切RR2/重检查。

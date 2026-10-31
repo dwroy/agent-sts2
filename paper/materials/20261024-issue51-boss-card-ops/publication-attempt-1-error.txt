@@ -1,0 +1,5 @@
+Traceback (most recent call last):
+  File "/home/dw/Projects/agent-sts2/.artifacts/ops-issue51-boss-card-20261024/publish.py", line 16, in <module>
+    a=json.loads((M/'assembly.json').read_bytes());commands=json.loads((M/'ledger-commands.json').read_bytes());assert len(commands)==32 and json.loads((M/'ledger-check.json').read_bytes())['rc']==0 and json.loads((M/'candidate-consumers.json').read_bytes())['passed']
+                                                                                                                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError

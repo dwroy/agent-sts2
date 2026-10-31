@@ -1,0 +1,397 @@
+{
+  "schema": "brain-strategies-v1",
+  "character": "silent",
+  "entries": [
+    {
+      "id": "silent-brain-c3-no-confirmed-shiv-source",
+      "version": "2026-10-25-c3-pending",
+      "trigger": {
+        "question_types": [
+          "card_reward"
+        ],
+        "acts": [
+          1
+        ],
+        "deck_cards": [
+          {
+            "name": "ECHOING_SLASH",
+            "count": {
+              "min": 1
+            }
+          }
+        ]
+      },
+      "strategy": "已有回响斩击、尚未核到可靠刀源，且奖励同屏为幻影之刃/精准/背刺时，先比较刀增益的启动条件与背刺即时用途，不由终局簇预支未来小刀。1913 F4原文：幻影1费使刀保留、每回合首刀加9伤；精准1费每刀加4伤；背刺0费固有11伤并消耗。1局1次选背刺，整局仍败。外部v0.111精准+幻影终局配对胜22/38、负23/38，差-2.63pp、q=1，保留反向。\n范围：Silent A10；自有版本unknown、此前已记牌组代理，须核本题全部牌文及刀源；没有无刀源时必跳能力牌的收益结论。",
+      "evidence": [
+        {
+          "type": "own",
+          "run": "1913SE84AXQF",
+          "floor": 4,
+          "ref": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261025-004756/learner/runs/20261025-004846-81d42fb3-8560-4b93-9a36-eee613e26039-strategy-proposal/scratch/1913-F4-reward.raw.json",
+          "role": "support"
+        },
+        {
+          "type": "external_aggregate",
+          "source": "external:sts2fun",
+          "url": "https://sts2.fun/static/sts2_public.db.zst",
+          "version": "v0.111",
+          "dataset_sha256": "1f7c0c3d441aedb5c85f04bcd4d8d6a1039b438a8b6fda2d96cfa5c27580cbf5",
+          "downloaded_at": "2026-10-21",
+          "license": "No explicit dataset redistribution license found on public FAQ; aggregate attribution only; no raw database redistribution.",
+          "filters": {
+            "character": "silent",
+            "ascension": 10,
+            "criteria": "簇3；终止深度近邻1:1配对的负例臂；精准+幻影；赢家22/38，负例23/38；差-2.6316pp,q=1。"
+          },
+          "statistic": {
+            "name": "matched_loser_accuracy_phantom_present",
+            "value": 23,
+            "unit": "count"
+          },
+          "denominator": {
+            "unit": "runs",
+            "n": 38
+          },
+          "design": "observational",
+          "limitations": [
+            "观察性、自选上传、SL/玩家水平/路线/遗物/存活深度混杂；独立玩家与重复上传未知，不作因果收益或固定拿牌命令。",
+            "外部仅匿名派生节点；初始值/前节点HP/奖励前缀是代理，不是原子入场或完整决策快照；终局聚类/胜负仅定位与结果，禁止作触发。",
+            "外部v0.107—v0.111及自有unknown逐项分账；没有机改对照，不把未知写成未改，不合池。",
+            "自有A10无重试证据不证明无SL；本批两完整投影均败；牌文、实选与结果不证明替代选择更优。"
+          ],
+          "ref": "knowledge/external/sts2fun/builds-v1/combinations.json#version=v0.111,cluster=3,items=ACCURACY+PHANTOM_BLADES",
+          "role": "contradict"
+        }
+      ],
+      "confidence": 0.25,
+      "evidence_status": "conflict",
+      "source": "mixed",
+      "formal_publication": "pending",
+      "consumer_readback": "pending",
+      "playbook_parent": "silent-mixed-knife-defense-c3-r56",
+      "context_id": "C3-G1",
+      "disposition": "new"
+    },
+    {
+      "id": "silent-brain-lane-b-block-time-and-shiv",
+      "version": "2026-10-24-b001-c3-pending",
+      "trigger": {
+        "question_types": [
+          "card_reward"
+        ],
+        "acts": [
+          1,
+          2,
+          3
+        ]
+      },
+      "strategy": "奖励比较斗篷与匕首、偏折、闪躲翻滚时，按当前牌文分别记1费6挡加1刀、0费4挡、1费本回合4挡及下回合4挡；后者不能全算即时挡，生成刀也仍需实际打出。CRK2HNYKSCZC在39/70血拿斗篷；U8K28UUGYP3U已持1张、52/70血时同屏选偏折。\n自有A10/版本unknown首次同牌奖励，重试/判死组拿0/64、不拿2/160终胜，差-1.25pp；样本稀疏，未达双方100局。\n范围：仅Silent A10奖励且现场牌文吻合；牌组为此前快照代理，SL与无重试、版本及外部取得统计分账，无固定拿牌命令。\n补证：1913 F11在已持毒雾/猎杀者/回响时同屏选斗篷（1局1次），原题1费6挡加1刀；F17仍58→14胜，F31终败。兼顾刀源不等于防御已足；该局版本unknown。",
+      "evidence": [
+        {
+          "type": "own",
+          "run": "CRK2HNYKSCZC",
+          "floor": 6,
+          "ref": "paper/materials/20261024-issue51-two-card-batches-ops/original/20261024-211311-strategy-proposal/scratch/scenario-examples.json#CLOAK_AND_DAGGER/chosen_example",
+          "role": "support"
+        },
+        {
+          "type": "own",
+          "run": "U8K28UUGYP3U",
+          "floor": 5,
+          "ref": "paper/materials/20261024-issue51-two-card-batches-ops/original/20261024-211311-strategy-proposal/scratch/scenario-examples.json#CLOAK_AND_DAGGER/alternative_example",
+          "role": "support"
+        },
+        {
+          "type": "external_aggregate",
+          "source": "external:sts2fun",
+          "url": "https://sts2.fun/static/sts2_public.db.zst",
+          "version": "v0.111",
+          "dataset_sha256": "1f7c0c3d441aedb5c85f04bcd4d8d6a1039b438a8b6fda2d96cfa5c27580cbf5",
+          "downloaded_at": "2026-10-21",
+          "license": "No explicit dataset redistribution license found on public FAQ; aggregate statistics with attribution only; no raw redistribution.",
+          "filters": {
+            "character": "silent",
+            "ascension": 10,
+            "criteria": "单人有效上传；CLOAK_AND_DAGGER cards_gained；幕2 vs 幕1的earlier组；所有来源房间、按牌次；input_sha256=4cf36c85eee760ed8e74495c1758e0228bbe1214789d3d0bd97052d5ca6a1f9d"
+          },
+          "statistic": {
+            "name": "whole_run_winning_acquisition_occurrences_rate",
+            "value": 0.30337078651685395,
+            "unit": "proportion"
+          },
+          "denominator": {
+            "unit": "cards",
+            "n": 534
+          },
+          "design": "observational",
+          "limitations": [
+            "观察性、自选上传且无法核独立玩家；非因果，不代表拿牌收益。",
+            "分母为取得牌次，可含同局多次；不累加distinct_uploaded_runs；组间局重叠未知。",
+            "cards_gained含奖励、商店、事件等来源；不是奖励备选拿/不拿对照。",
+            "按幕比较受生存、到达深度与资源混杂；未来终局胜负仅作结果，不作触发。",
+            "版本机制对照未知；每个版本分账，未合池；自有版本unknown，单独计数。"
+          ],
+          "ref": "paper/materials/20261024-issue51-two-card-batches-ops/original/20261024-211311-strategy-proposal/scratch/external-directional-comparisons.json#/CLOAK_AND_DAGGER/earlier",
+          "role": "support"
+        },
+        {
+          "type": "external_aggregate",
+          "source": "external:sts2fun",
+          "url": "https://sts2.fun/static/sts2_public.db.zst",
+          "version": "v0.111",
+          "dataset_sha256": "1f7c0c3d441aedb5c85f04bcd4d8d6a1039b438a8b6fda2d96cfa5c27580cbf5",
+          "downloaded_at": "2026-10-21",
+          "license": "No explicit dataset redistribution license found on public FAQ; aggregate statistics with attribution only; no raw redistribution.",
+          "filters": {
+            "character": "silent",
+            "ascension": 10,
+            "criteria": "单人有效上传；CLOAK_AND_DAGGER cards_gained；幕2 vs 幕1的later组；所有来源房间、按牌次；input_sha256=4cf36c85eee760ed8e74495c1758e0228bbe1214789d3d0bd97052d5ca6a1f9d"
+          },
+          "statistic": {
+            "name": "whole_run_winning_acquisition_occurrences_rate",
+            "value": 0.39285714285714285,
+            "unit": "proportion"
+          },
+          "denominator": {
+            "unit": "cards",
+            "n": 224
+          },
+          "design": "observational",
+          "limitations": [
+            "观察性、自选上传且无法核独立玩家；非因果，不代表拿牌收益。",
+            "分母为取得牌次，可含同局多次；不累加distinct_uploaded_runs；组间局重叠未知。",
+            "cards_gained含奖励、商店、事件等来源；不是奖励备选拿/不拿对照。",
+            "按幕比较受生存、到达深度与资源混杂；未来终局胜负仅作结果，不作触发。",
+            "版本机制对照未知；每个版本分账，未合池；自有版本unknown，单独计数。"
+          ],
+          "ref": "paper/materials/20261024-issue51-two-card-batches-ops/original/20261024-211311-strategy-proposal/scratch/external-directional-comparisons.json#/CLOAK_AND_DAGGER/later",
+          "role": "support"
+        },
+        {
+          "type": "own",
+          "run": "1913SE84AXQF",
+          "floor": 11,
+          "ref": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261025-004756/learner/runs/20261025-004846-81d42fb3-8560-4b93-9a36-eee613e26039-strategy-proposal/scratch/1913-F11-reward.raw.json",
+          "role": "support"
+        }
+      ],
+      "source": "mixed",
+      "evidence_status": "unassessed",
+      "confidence": 0.25,
+      "formal_publication": "pending",
+      "consumer_readback": "pending",
+      "candidate_role": "descriptive comparison; not numeric pick effect",
+      "external_direction": "外部v0.111 幕2 vs 幕1取得牌次的终胜关联+8.95pp（88/224 vs 162/534牌次）；不是拿/不拿收益。",
+      "own_sample_gate": false,
+      "knowledge_candidate_id": "silent-lane-b-block-time-and-shiv",
+      "playbook_parent": "silent-mixed-knife-defense-c3-r56",
+      "context_id": "C3-G2",
+      "disposition": "update"
+    },
+    {
+      "id": "silent-brain-c3-random-power-realized-rest",
+      "version": "2026-10-25-c3-pending",
+      "trigger": {
+        "question_types": [
+          "rest"
+        ],
+        "acts": [
+          2
+        ],
+        "deck_cards": [
+          {
+            "name": "INFINITE_BLADES",
+            "count": {
+              "min": 1
+            }
+          },
+          {
+            "name": "CLOAK_AND_DAGGER",
+            "count": {
+              "min": 1
+            }
+          }
+        ]
+      },
+      "strategy": "事件随机给能力牌后，在下一营火以实际已拿到的无尽刀刃重审刀源与当前血量，不把随机奖励提前当精准或余像。1913 F27选随机能力后实际得无尽；F28以40/70血休息到61（1局1次该衔接）。已核无尽原文是1费、每回合开始加1刀，与斗篷1费即时6挡加1刀分时核算；不能把未来逐回合刀或下一营火计作当前防护。F29仍损15，F31带药46→0。\n范围：Silent A10、自有版本unknown；新得牌的历史条件须正文核，不能按终局簇触发。外部选定一对同有斗篷+无尽仍1胜1败，非拿牌/回血因果收益或安全血线。",
+      "evidence": [
+        {
+          "type": "own",
+          "run": "1913SE84AXQF",
+          "floor": 27,
+          "ref": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261025-004756/learner/runs/20261025-004846-81d42fb3-8560-4b93-9a36-eee613e26039-strategy-proposal/scratch/1913-F27-event.raw.json",
+          "role": "support"
+        },
+        {
+          "type": "own",
+          "run": "1913SE84AXQF",
+          "floor": 28,
+          "ref": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261025-004756/learner/runs/20261025-004846-81d42fb3-8560-4b93-9a36-eee613e26039-strategy-proposal/scratch/own-pages/1913SE84AXQF/questions-135.json",
+          "role": "support"
+        },
+        {
+          "type": "external_aggregate",
+          "source": "external:sts2fun",
+          "url": "https://sts2.fun/static/sts2_public.db.zst",
+          "version": "v0.111",
+          "dataset_sha256": "1f7c0c3d441aedb5c85f04bcd4d8d6a1039b438a8b6fda2d96cfa5c27580cbf5",
+          "downloaded_at": "2026-10-21",
+          "license": "No explicit dataset redistribution license found on public FAQ; aggregate attribution only; no raw database redistribution.",
+          "filters": {
+            "character": "silent",
+            "ascension": 10,
+            "criteria": "固定选择前5对中的pair0，两匿名上传均在幕2取得无尽刀刃与斗篷，1胜1败；代表选择非随机，不能当全体胜率。"
+          },
+          "statistic": {
+            "name": "selected_pair_both_have_cloak_and_infinite",
+            "value": 2,
+            "unit": "count"
+          },
+          "denominator": {
+            "unit": "runs",
+            "n": 2
+          },
+          "design": "observational",
+          "limitations": [
+            "观察性、自选上传、SL/玩家水平/路线/遗物/存活深度混杂；独立玩家与重复上传未知，不作因果收益或固定拿牌命令。",
+            "外部仅匿名派生节点；初始值/前节点HP/奖励前缀是代理，不是原子入场或完整决策快照；终局聚类/胜负仅定位与结果，禁止作触发。",
+            "外部v0.107—v0.111及自有unknown逐项分账；没有机改对照，不把未知写成未改，不合池。",
+            "自有A10无重试证据不证明无SL；本批两完整投影均败；牌文、实选与结果不证明替代选择更优。"
+          ],
+          "ref": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261025-004756/learner/runs/20261025-004846-81d42fb3-8560-4b93-9a36-eee613e26039-strategy-proposal/scratch/representative-timelines-0.json#/rows/0/examples",
+          "role": "support"
+        }
+      ],
+      "confidence": 0.25,
+      "evidence_status": "unassessed",
+      "source": "mixed",
+      "formal_publication": "pending",
+      "consumer_readback": "pending",
+      "playbook_parent": "silent-mixed-knife-defense-c3-r56",
+      "context_id": "C3-G3",
+      "disposition": "new"
+    },
+    {
+      "id": "silent-brain-c3-corrupted-echo-resource-cost",
+      "version": "2026-10-25-c3-pending",
+      "trigger": {
+        "question_types": [
+          "event"
+        ],
+        "acts": [
+          2
+        ],
+        "deck_cards": [
+          {
+            "name": "ECHOING_SLASH",
+            "count": {
+              "min": 1
+            }
+          },
+          {
+            "name": "CLOAK_AND_DAGGER",
+            "count": {
+              "min": 1
+            }
+          }
+        ]
+      },
+      "strategy": "已有回响斩击与斗篷，事件允许给攻击附腐化或变化牌时，把每次打出失去2血与增伤一起比较，不把输出提升当免费防护。1913 F20原选项明示伤害加50%和打出耗2HP，选回响（1局1次）；F31实牌文为群体15伤，较原10伤加5，并失去2血。这是牌文幅度，不是战斗收益；重复击杀链的另扣血次数未知。\n范围：Silent A10、自有版本unknown，必须核现场附魔说明和备选；不得从后来的牌文倒填当前未知效果。该局F23赢战44→40，F31终败，多资源混杂，不能归因附魔或推固定变化优先。",
+      "evidence": [
+        {
+          "type": "own",
+          "run": "1913SE84AXQF",
+          "floor": 20,
+          "ref": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261025-004756/learner/runs/20261025-004846-81d42fb3-8560-4b93-9a36-eee613e26039-strategy-proposal/scratch/1913-F20-event.raw.json",
+          "role": "support"
+        },
+        {
+          "type": "own",
+          "run": "1913SE84AXQF",
+          "floor": 31,
+          "ref": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261025-004756/learner/runs/20261025-004846-81d42fb3-8560-4b93-9a36-eee613e26039-strategy-proposal/scratch/1913-F31-entry.raw.json",
+          "role": "support"
+        }
+      ],
+      "confidence": 0.25,
+      "evidence_status": "unassessed",
+      "source": "own",
+      "formal_publication": "pending",
+      "consumer_readback": "pending",
+      "playbook_parent": "silent-mixed-knife-defense-c3-r56",
+      "context_id": "C3-G4",
+      "disposition": "new"
+    },
+    {
+      "id": "silent-route-hp-observation",
+      "version": "2026-10-24-own-rest-route-002-c3-pending",
+      "trigger": {
+        "question_types": [
+          "act_plan",
+          "rest",
+          "event"
+        ]
+      },
+      "strategy": "核路线时先确认当前合法分支及到火前资源，不把未来营火预支为现有HP。Silent A10、版本unknown：精英/火同为备选524次/280局；走火475次平均后继净增14.50血，走精英15次中14次有后继、平均净减25血，另1次缺失；题前HP均37.32/63.27，非同状态对照。每局每幕首次多备选的960个窗口中90未观测到下火；831个已到火且地图标记战斗≥2的段均净减23.26，亦见净增。适用：幕初/带路线复核题；标记战斗数及跨节点净变化是代理，含事件/SL混杂；不作战斗毛伤、绕路收益或安全线。\n补证：02HB F7休息4→25，随后两事件25→18→15；F11再回36仍F12骇鳗败。1913 F28回40→61后，F29赢战已损15，F31精英败。两局/3次休息衔接，胜战与事件耗血都纳入火前预算；不把回血或已得刀源当精英安全线。",
+      "evidence": [
+        {
+          "type": "own",
+          "run": "JMH5C51RLN4E",
+          "floor": 8,
+          "ref": "logs/decisions.jsonl@566244311+1910;sha256=3104b2c4211645b1bc66c506e361675e54125a5ac05e1e0e5b359f967ad7bb41",
+          "role": "support"
+        },
+        {
+          "type": "own",
+          "run": "9ZERN492CSHX",
+          "floor": 7,
+          "ref": "logs/decisions.jsonl@3076195162+2618;sha256=9e34489fc627bb47c5672c17a0e5a515602054a72a5a36f8c059407a26fdf032",
+          "role": "support"
+        },
+        {
+          "type": "own",
+          "run": "MGA0CZDDKC0P",
+          "floor": 6,
+          "ref": "logs/decisions.jsonl@559694510+1745;sha256=1168bd0a2c8cbe6fe48c15ba02e3dabde31d6986a204b207d7b2668d07430e6a",
+          "role": "support"
+        },
+        {
+          "type": "own",
+          "run": "UJ0K3G10609Y",
+          "floor": 34,
+          "ref": "logs/decisions.jsonl@585043632+1972;sha256=156869b43b12d0a8f70764970e7eb406744672f6c2c9de357aa1d81006b6ec9f",
+          "role": "support"
+        },
+        {
+          "type": "own",
+          "run": "D4LJ9QMGFB8Q",
+          "floor": 1,
+          "ref": "logs/decisions.jsonl@590273768+5566;sha256=207a0a814550ae442deea952d8f009f0004a63495cf2e0aaa4386fad7c937483",
+          "role": "support"
+        },
+        {
+          "type": "own",
+          "run": "02HB4L0C3C67",
+          "floor": 7,
+          "ref": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261025-004756/learner/runs/20261025-004846-81d42fb3-8560-4b93-9a36-eee613e26039-strategy-proposal/scratch/own-pages/02HB4L0C3C67/snapshots-018.json",
+          "role": "support"
+        },
+        {
+          "type": "own",
+          "run": "1913SE84AXQF",
+          "floor": 28,
+          "ref": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261025-004756/learner/runs/20261025-004846-81d42fb3-8560-4b93-9a36-eee613e26039-strategy-proposal/scratch/own-pages/1913SE84AXQF/snapshots-084.json",
+          "role": "support"
+        }
+      ],
+      "source": "own",
+      "confidence": 0.4,
+      "evidence_status": "unassessed",
+      "formal_publication": "pending",
+      "consumer_readback": "pending",
+      "playbook_parent": "silent-mixed-knife-defense-c3-r56",
+      "context_id": "C3-G5",
+      "disposition": "update"
+    }
+  ]
+}

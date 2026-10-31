@@ -1,0 +1,69 @@
+{
+  "at": "2026-10-28T12:32:05.972274+08:00",
+  "source_unchanged": true,
+  "files": [
+    {
+      "path": "eval/spire_codex.py",
+      "bytes": 14438,
+      "sha256": "ff7cbff3b740670dce669d6785654956aa15a4652a8cf2d26beffc316deb9e93",
+      "blob": "535cc0855aec21849879c0e51cb75aea7c7daa46"
+    },
+    {
+      "path": "eval/spire_codex_download.py",
+      "bytes": 18268,
+      "sha256": "320367e6086327beec4d1b59eaf3984a28189b832090743e3233e77e6af0420e",
+      "blob": "db80266f418f664df4374c924babfab883ea949c"
+    },
+    {
+      "path": "eval/spire_codex_projection.py",
+      "bytes": 20211,
+      "sha256": "85a5a36d7d52e2c788fa5697c5875cc709534ce52d1afeea9f7df461f9e80d9d",
+      "blob": "97a1a430dec54a888afd1ca63837635315f3875b"
+    },
+    {
+      "path": "eval/tests/test_spire_codex.py",
+      "bytes": 28889,
+      "sha256": "0023a3def75330ee3ee21b143cf7771ec4c74b979c3441d523fef7fbe51109a0",
+      "blob": "d1efaaf4bad504c1b86ec60e6209d7e5f5154088"
+    },
+    {
+      "path": "agent/tests/spire-codex.test.ts",
+      "bytes": 636,
+      "sha256": "1a21bad3ebd0d12d1abc3cfe72ae60817dea0fc0615bd25c3e7276f98efb646b",
+      "blob": "9e7c8d9c5856e2554e2321ca0bd4e7302652062b"
+    }
+  ],
+  "scope": "final targeted checks after raw revision-retention delta; broader v3 sandbox kept as a separate fixed-source result",
+  "python_tests": 38,
+  "tsc_exit_code": 0,
+  "logs": {
+    "sandbox": {
+      "exit_code": 1,
+      "raw_sha256": "7da7c033d1cbb324d35e73bafe731a14d94531656c01eee0bf9a47bf33720c83",
+      "terminal": "sandbox-terminal.txt",
+      "terminal_sha256": "13ddedb5a7a5e6081d184fc77206ef218311f7b080d16bf8c2bf9722273ddf1c",
+      "normalization": "only trailing blank lines"
+    },
+    "sandbox-v3": {
+      "exit_code": 0,
+      "raw_sha256": "da42e1a81997fded1737f264ee01ef1097591364b8a492c8549a9ccf84396e09",
+      "terminal": "sandbox-v3-terminal.txt",
+      "terminal_sha256": "083471d43d479c2d3b37d5e8c6cfa22080bf431369c0a5c7e0423ed0f0144bda",
+      "normalization": "only trailing blank lines"
+    },
+    "targeted-final": {
+      "exit_code": 0,
+      "raw_sha256": "8acb02b18f6588a1513eab6dda141eacced03c44098df22ddbd85a2308527b22",
+      "terminal": "targeted-final-terminal.txt",
+      "terminal_sha256": "a59f2199389abb0520725fb622024a625b10686ed21b491fd43601b7635795e8",
+      "normalization": "only trailing blank lines"
+    },
+    "paths-final": {
+      "exit_code": 0,
+      "raw_sha256": "18ca3a1e06002fa00e8bd0630b33652893ec0c3a0c4e3120ccd75f1d918b00aa",
+      "terminal": "paths-final-terminal.txt",
+      "terminal_sha256": "dee1a8d3accf3b56edd7478066ac9a7976a68540a72bf5b1aa500f2675a64f9c",
+      "normalization": "only trailing blank lines"
+    }
+  }
+}

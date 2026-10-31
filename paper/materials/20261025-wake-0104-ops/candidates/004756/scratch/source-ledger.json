@@ -1,0 +1,326 @@
+[
+  {
+    "context_id": "C3-G1",
+    "disposition": "new",
+    "strategy_id": "silent-brain-c3-no-confirmed-shiv-source",
+    "rk_id": "silent-rk-c3-no-confirmed-shiv-source",
+    "rk_disposition": "new",
+    "strategy_path": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261025-004756/learner/runs/20261025-004846-81d42fb3-8560-4b93-9a36-eee613e26039-strategy-proposal/scratch/strategy-candidates.json",
+    "rk_path": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261025-004756/learner/runs/20261025-004846-81d42fb3-8560-4b93-9a36-eee613e26039-strategy-proposal/scratch/rk-candidates.json",
+    "formal_publication": "pending",
+    "consumer_readback": "pending",
+    "source": "mixed",
+    "opportunities": {
+      "own_runs": 1,
+      "own_decisions": 1,
+      "external_matched_pairs": 38
+    },
+    "counterexamples": "负关联不是幻影/精准有害的因果证明；赢家28dc早期先拿精准，后拿刀舞也能赢，且c26c同有精准+幻影仍在节点7败。",
+    "current_information": "仅题面已持牌/当前HP/实际已发生历史；事后簇号、终局牌组和后续胜负均非触发。",
+    "consumer_gaps": [
+      "正文的奖励候选/新得牌历史/附魔牌文条件不在完整机器trigger中；须读正文，不能因粗触发即执行。",
+      "rk为描述tag；新标签解释及相应题型消费者、固定回放未验收，不赋HP数值。"
+    ],
+    "source_refs": [
+      {
+        "type": "own",
+        "run": "1913SE84AXQF",
+        "floor": 4,
+        "ref": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261025-004756/learner/runs/20261025-004846-81d42fb3-8560-4b93-9a36-eee613e26039-strategy-proposal/scratch/1913-F4-reward.raw.json",
+        "role": "support"
+      },
+      {
+        "type": "external_aggregate",
+        "source": "external:sts2fun",
+        "url": "https://sts2.fun/static/sts2_public.db.zst",
+        "version": "v0.111",
+        "dataset_sha256": "1f7c0c3d441aedb5c85f04bcd4d8d6a1039b438a8b6fda2d96cfa5c27580cbf5",
+        "downloaded_at": "2026-10-21",
+        "license": "No explicit dataset redistribution license found on public FAQ; aggregate attribution only; no raw database redistribution.",
+        "filters": {
+          "character": "silent",
+          "ascension": 10,
+          "criteria": "簇3；终止深度近邻1:1配对的负例臂；精准+幻影；赢家22/38，负例23/38；差-2.6316pp,q=1。"
+        },
+        "statistic": {
+          "name": "matched_loser_accuracy_phantom_present",
+          "value": 23,
+          "unit": "count"
+        },
+        "denominator": {
+          "unit": "runs",
+          "n": 38
+        },
+        "design": "observational",
+        "limitations": [
+          "观察性、自选上传、SL/玩家水平/路线/遗物/存活深度混杂；独立玩家与重复上传未知，不作因果收益或固定拿牌命令。",
+          "外部仅匿名派生节点；初始值/前节点HP/奖励前缀是代理，不是原子入场或完整决策快照；终局聚类/胜负仅定位与结果，禁止作触发。",
+          "外部v0.107—v0.111及自有unknown逐项分账；没有机改对照，不把未知写成未改，不合池。",
+          "自有A10无重试证据不证明无SL；本批两完整投影均败；牌文、实选与结果不证明替代选择更优。"
+        ],
+        "ref": "knowledge/external/sts2fun/builds-v1/combinations.json#version=v0.111,cluster=3,items=ACCURACY+PHANTOM_BLADES",
+        "role": "contradict"
+      }
+    ],
+    "limitations": [
+      "观察性、自选上传、SL/玩家水平/路线/遗物/存活深度混杂；独立玩家与重复上传未知，不作因果收益或固定拿牌命令。",
+      "外部仅匿名派生节点；初始值/前节点HP/奖励前缀是代理，不是原子入场或完整决策快照；终局聚类/胜负仅定位与结果，禁止作触发。",
+      "外部v0.107—v0.111及自有unknown逐项分账；没有机改对照，不把未知写成未改，不合池。",
+      "自有A10无重试证据不证明无SL；本批两完整投影均败；牌文、实选与结果不证明替代选择更优。",
+      "正式发布/生产读回/自然查询/采用收益及科学父均pending；无模型、MC、Jev、游戏、A/B或开关变更。"
+    ],
+    "own_game_version": "unknown",
+    "own_ascension": 10,
+    "own_attempt_scope": "no_retry_evidence",
+    "external_downloaded_at": "2026-10-21",
+    "external_database_sha256": "1f7c0c3d441aedb5c85f04bcd4d8d6a1039b438a8b6fda2d96cfa5c27580cbf5",
+    "input_sha256": "39d9fc83ee0a9fcce845e62860ef6f893b572a7c10dc796cd90ace03198a0575",
+    "causal_effect": null,
+    "comparison_groups_at_least_100": false,
+    "ledger_status": "scratch-only; formal ledger registration pending"
+  },
+  {
+    "context_id": "C3-G2",
+    "disposition": "update",
+    "strategy_id": "silent-brain-lane-b-block-time-and-shiv",
+    "rk_id": "silent-rk-lane-b-block-time-and-shiv",
+    "rk_disposition": "update",
+    "strategy_path": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261025-004756/learner/runs/20261025-004846-81d42fb3-8560-4b93-9a36-eee613e26039-strategy-proposal/scratch/strategy-candidates.json",
+    "rk_path": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261025-004756/learner/runs/20261025-004846-81d42fb3-8560-4b93-9a36-eee613e26039-strategy-proposal/scratch/rk-candidates.json",
+    "formal_publication": "pending",
+    "consumer_readback": "pending",
+    "source": "mixed",
+    "opportunities": {
+      "own_runs": 1,
+      "own_decisions": 1
+    },
+    "counterexamples": "不能把F17掉44血归因斗篷；F12用敏捷药且净损0是同局反例，说明后继有多种资源影响。",
+    "current_information": "仅题面已持牌/当前HP/实际已发生历史；事后簇号、终局牌组和后续胜负均非触发。",
+    "consumer_gaps": [
+      "正文的奖励候选/新得牌历史/附魔牌文条件不在完整机器trigger中；须读正文，不能因粗触发即执行。",
+      "rk为描述tag；新标签解释及相应题型消费者、固定回放未验收，不赋HP数值。"
+    ],
+    "source_refs": [
+      {
+        "type": "own",
+        "run": "1913SE84AXQF",
+        "floor": 11,
+        "ref": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261025-004756/learner/runs/20261025-004846-81d42fb3-8560-4b93-9a36-eee613e26039-strategy-proposal/scratch/1913-F11-reward.raw.json",
+        "role": "support"
+      }
+    ],
+    "limitations": [
+      "观察性、自选上传、SL/玩家水平/路线/遗物/存活深度混杂；独立玩家与重复上传未知，不作因果收益或固定拿牌命令。",
+      "外部仅匿名派生节点；初始值/前节点HP/奖励前缀是代理，不是原子入场或完整决策快照；终局聚类/胜负仅定位与结果，禁止作触发。",
+      "外部v0.107—v0.111及自有unknown逐项分账；没有机改对照，不把未知写成未改，不合池。",
+      "自有A10无重试证据不证明无SL；本批两完整投影均败；牌文、实选与结果不证明替代选择更优。",
+      "正式发布/生产读回/自然查询/采用收益及科学父均pending；无模型、MC、Jev、游戏、A/B或开关变更。"
+    ],
+    "own_game_version": "unknown",
+    "own_ascension": 10,
+    "own_attempt_scope": "no_retry_evidence",
+    "external_downloaded_at": "2026-10-21",
+    "external_database_sha256": "1f7c0c3d441aedb5c85f04bcd4d8d6a1039b438a8b6fda2d96cfa5c27580cbf5",
+    "input_sha256": "39d9fc83ee0a9fcce845e62860ef6f893b572a7c10dc796cd90ace03198a0575",
+    "causal_effect": null,
+    "comparison_groups_at_least_100": false,
+    "ledger_status": "scratch-only; formal ledger registration pending"
+  },
+  {
+    "context_id": "C3-G3",
+    "disposition": "new",
+    "strategy_id": "silent-brain-c3-random-power-realized-rest",
+    "rk_id": "silent-rk-c3-random-power-realized-rest",
+    "rk_disposition": "new",
+    "strategy_path": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261025-004756/learner/runs/20261025-004846-81d42fb3-8560-4b93-9a36-eee613e26039-strategy-proposal/scratch/strategy-candidates.json",
+    "rk_path": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261025-004756/learner/runs/20261025-004846-81d42fb3-8560-4b93-9a36-eee613e26039-strategy-proposal/scratch/rk-candidates.json",
+    "formal_publication": "pending",
+    "consumer_readback": "pending",
+    "source": "mixed",
+    "opportunities": {
+      "own_runs": 1,
+      "own_realized_power_to_rest_sequences": 1,
+      "external_selected_uploads": 2
+    },
+    "counterexamples": "休息到61仍败，不声称选择锻造或其他能力会赢；赢家/失败代表均可含同一刀源，不能外推固定排序。",
+    "current_information": "仅题面已持牌/当前HP/实际已发生历史；事后簇号、终局牌组和后续胜负均非触发。",
+    "consumer_gaps": [
+      "正文的奖励候选/新得牌历史/附魔牌文条件不在完整机器trigger中；须读正文，不能因粗触发即执行。",
+      "rk为描述tag；新标签解释及相应题型消费者、固定回放未验收，不赋HP数值。"
+    ],
+    "source_refs": [
+      {
+        "type": "own",
+        "run": "1913SE84AXQF",
+        "floor": 27,
+        "ref": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261025-004756/learner/runs/20261025-004846-81d42fb3-8560-4b93-9a36-eee613e26039-strategy-proposal/scratch/1913-F27-event.raw.json",
+        "role": "support"
+      },
+      {
+        "type": "own",
+        "run": "1913SE84AXQF",
+        "floor": 28,
+        "ref": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261025-004756/learner/runs/20261025-004846-81d42fb3-8560-4b93-9a36-eee613e26039-strategy-proposal/scratch/own-pages/1913SE84AXQF/questions-135.json",
+        "role": "support"
+      },
+      {
+        "type": "external_aggregate",
+        "source": "external:sts2fun",
+        "url": "https://sts2.fun/static/sts2_public.db.zst",
+        "version": "v0.111",
+        "dataset_sha256": "1f7c0c3d441aedb5c85f04bcd4d8d6a1039b438a8b6fda2d96cfa5c27580cbf5",
+        "downloaded_at": "2026-10-21",
+        "license": "No explicit dataset redistribution license found on public FAQ; aggregate attribution only; no raw database redistribution.",
+        "filters": {
+          "character": "silent",
+          "ascension": 10,
+          "criteria": "固定选择前5对中的pair0，两匿名上传均在幕2取得无尽刀刃与斗篷，1胜1败；代表选择非随机，不能当全体胜率。"
+        },
+        "statistic": {
+          "name": "selected_pair_both_have_cloak_and_infinite",
+          "value": 2,
+          "unit": "count"
+        },
+        "denominator": {
+          "unit": "runs",
+          "n": 2
+        },
+        "design": "observational",
+        "limitations": [
+          "观察性、自选上传、SL/玩家水平/路线/遗物/存活深度混杂；独立玩家与重复上传未知，不作因果收益或固定拿牌命令。",
+          "外部仅匿名派生节点；初始值/前节点HP/奖励前缀是代理，不是原子入场或完整决策快照；终局聚类/胜负仅定位与结果，禁止作触发。",
+          "外部v0.107—v0.111及自有unknown逐项分账；没有机改对照，不把未知写成未改，不合池。",
+          "自有A10无重试证据不证明无SL；本批两完整投影均败；牌文、实选与结果不证明替代选择更优。"
+        ],
+        "ref": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261025-004756/learner/runs/20261025-004846-81d42fb3-8560-4b93-9a36-eee613e26039-strategy-proposal/scratch/representative-timelines-0.json#/rows/0/examples",
+        "role": "support"
+      }
+    ],
+    "limitations": [
+      "观察性、自选上传、SL/玩家水平/路线/遗物/存活深度混杂；独立玩家与重复上传未知，不作因果收益或固定拿牌命令。",
+      "外部仅匿名派生节点；初始值/前节点HP/奖励前缀是代理，不是原子入场或完整决策快照；终局聚类/胜负仅定位与结果，禁止作触发。",
+      "外部v0.107—v0.111及自有unknown逐项分账；没有机改对照，不把未知写成未改，不合池。",
+      "自有A10无重试证据不证明无SL；本批两完整投影均败；牌文、实选与结果不证明替代选择更优。",
+      "正式发布/生产读回/自然查询/采用收益及科学父均pending；无模型、MC、Jev、游戏、A/B或开关变更。"
+    ],
+    "own_game_version": "unknown",
+    "own_ascension": 10,
+    "own_attempt_scope": "no_retry_evidence",
+    "external_downloaded_at": "2026-10-21",
+    "external_database_sha256": "1f7c0c3d441aedb5c85f04bcd4d8d6a1039b438a8b6fda2d96cfa5c27580cbf5",
+    "input_sha256": "39d9fc83ee0a9fcce845e62860ef6f893b572a7c10dc796cd90ace03198a0575",
+    "causal_effect": null,
+    "comparison_groups_at_least_100": false,
+    "ledger_status": "scratch-only; formal ledger registration pending"
+  },
+  {
+    "context_id": "C3-G4",
+    "disposition": "new",
+    "strategy_id": "silent-brain-c3-corrupted-echo-resource-cost",
+    "rk_id": "silent-rk-c3-corrupted-echo-resource-cost",
+    "rk_disposition": "new",
+    "strategy_path": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261025-004756/learner/runs/20261025-004846-81d42fb3-8560-4b93-9a36-eee613e26039-strategy-proposal/scratch/strategy-candidates.json",
+    "rk_path": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261025-004756/learner/runs/20261025-004846-81d42fb3-8560-4b93-9a36-eee613e26039-strategy-proposal/scratch/rk-candidates.json",
+    "formal_publication": "pending",
+    "consumer_readback": "pending",
+    "source": "own",
+    "opportunities": {
+      "own_runs": 1,
+      "own_enchantment_decisions": 1
+    },
+    "counterexamples": "没有未附魔/改选变化的同状态对照；44→40包含战斗与自损，不能反推正好打两次。",
+    "current_information": "仅题面已持牌/当前HP/实际已发生历史；事后簇号、终局牌组和后续胜负均非触发。",
+    "consumer_gaps": [
+      "正文的奖励候选/新得牌历史/附魔牌文条件不在完整机器trigger中；须读正文，不能因粗触发即执行。",
+      "rk为描述tag；新标签解释及相应题型消费者、固定回放未验收，不赋HP数值。",
+      "reflex schema没有event类型：对应rk只挂当前回响combat_line复核；不能宣称已覆盖事件附魔消费者。附魔标记不在predicate白名单。"
+    ],
+    "source_refs": [
+      {
+        "type": "own",
+        "run": "1913SE84AXQF",
+        "floor": 20,
+        "ref": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261025-004756/learner/runs/20261025-004846-81d42fb3-8560-4b93-9a36-eee613e26039-strategy-proposal/scratch/1913-F20-event.raw.json",
+        "role": "support"
+      },
+      {
+        "type": "own",
+        "run": "1913SE84AXQF",
+        "floor": 31,
+        "ref": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261025-004756/learner/runs/20261025-004846-81d42fb3-8560-4b93-9a36-eee613e26039-strategy-proposal/scratch/1913-F31-entry.raw.json",
+        "role": "support"
+      }
+    ],
+    "limitations": [
+      "观察性、自选上传、SL/玩家水平/路线/遗物/存活深度混杂；独立玩家与重复上传未知，不作因果收益或固定拿牌命令。",
+      "外部仅匿名派生节点；初始值/前节点HP/奖励前缀是代理，不是原子入场或完整决策快照；终局聚类/胜负仅定位与结果，禁止作触发。",
+      "外部v0.107—v0.111及自有unknown逐项分账；没有机改对照，不把未知写成未改，不合池。",
+      "自有A10无重试证据不证明无SL；本批两完整投影均败；牌文、实选与结果不证明替代选择更优。",
+      "正式发布/生产读回/自然查询/采用收益及科学父均pending；无模型、MC、Jev、游戏、A/B或开关变更。"
+    ],
+    "own_game_version": "unknown",
+    "own_ascension": 10,
+    "own_attempt_scope": "no_retry_evidence",
+    "external_downloaded_at": "2026-10-21",
+    "external_database_sha256": "1f7c0c3d441aedb5c85f04bcd4d8d6a1039b438a8b6fda2d96cfa5c27580cbf5",
+    "input_sha256": "39d9fc83ee0a9fcce845e62860ef6f893b572a7c10dc796cd90ace03198a0575",
+    "causal_effect": null,
+    "comparison_groups_at_least_100": false,
+    "ledger_status": "scratch-only; formal ledger registration pending"
+  },
+  {
+    "context_id": "C3-G5",
+    "disposition": "update",
+    "strategy_id": "silent-route-hp-observation",
+    "rk_id": "silent-rk-c3-rest-followup-hp-budget",
+    "rk_disposition": "new",
+    "strategy_path": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261025-004756/learner/runs/20261025-004846-81d42fb3-8560-4b93-9a36-eee613e26039-strategy-proposal/scratch/strategy-candidates.json",
+    "rk_path": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261025-004756/learner/runs/20261025-004846-81d42fb3-8560-4b93-9a36-eee613e26039-strategy-proposal/scratch/rk-candidates.json",
+    "formal_publication": "pending",
+    "consumer_readback": "pending",
+    "source": "own",
+    "opportunities": {
+      "own_runs": 2,
+      "own_rest_followup_sequences": 3
+    },
+    "counterexamples": "两局都已选择回血，失败不能证明回血无效；没有替代路线可赢的反事实。",
+    "current_information": "仅题面已持牌/当前HP/实际已发生历史；事后簇号、终局牌组和后续胜负均非触发。",
+    "consumer_gaps": [
+      "正文的奖励候选/新得牌历史/附魔牌文条件不在完整机器trigger中；须读正文，不能因粗触发即执行。",
+      "rk为描述tag；新标签解释及相应题型消费者、固定回放未验收，不赋HP数值。",
+      "rest版rk只作衔接预算的描述链接；路线/事件未来节点没有现成reflex题型。"
+    ],
+    "source_refs": [
+      {
+        "type": "own",
+        "run": "02HB4L0C3C67",
+        "floor": 7,
+        "ref": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261025-004756/learner/runs/20261025-004846-81d42fb3-8560-4b93-9a36-eee613e26039-strategy-proposal/scratch/own-pages/02HB4L0C3C67/snapshots-018.json",
+        "role": "support"
+      },
+      {
+        "type": "own",
+        "run": "1913SE84AXQF",
+        "floor": 28,
+        "ref": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261025-004756/learner/runs/20261025-004846-81d42fb3-8560-4b93-9a36-eee613e26039-strategy-proposal/scratch/own-pages/1913SE84AXQF/snapshots-084.json",
+        "role": "support"
+      }
+    ],
+    "limitations": [
+      "观察性、自选上传、SL/玩家水平/路线/遗物/存活深度混杂；独立玩家与重复上传未知，不作因果收益或固定拿牌命令。",
+      "外部仅匿名派生节点；初始值/前节点HP/奖励前缀是代理，不是原子入场或完整决策快照；终局聚类/胜负仅定位与结果，禁止作触发。",
+      "外部v0.107—v0.111及自有unknown逐项分账；没有机改对照，不把未知写成未改，不合池。",
+      "自有A10无重试证据不证明无SL；本批两完整投影均败；牌文、实选与结果不证明替代选择更优。",
+      "正式发布/生产读回/自然查询/采用收益及科学父均pending；无模型、MC、Jev、游戏、A/B或开关变更。"
+    ],
+    "own_game_version": "unknown",
+    "own_ascension": 10,
+    "own_attempt_scope": "no_retry_evidence",
+    "external_downloaded_at": "2026-10-21",
+    "external_database_sha256": "1f7c0c3d441aedb5c85f04bcd4d8d6a1039b438a8b6fda2d96cfa5c27580cbf5",
+    "input_sha256": "39d9fc83ee0a9fcce845e62860ef6f893b572a7c10dc796cd90ace03198a0575",
+    "causal_effect": null,
+    "comparison_groups_at_least_100": false,
+    "ledger_status": "scratch-only; formal ledger registration pending"
+  }
+]

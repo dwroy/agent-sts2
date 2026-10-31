@@ -1,0 +1,6 @@
+首轮policy测试4项：1过3败；新夹具相对路径依赖cwd且codexConfig夹具缺stateDir，后改为import.meta路径及完整参数，4过。
+首轮Python6项：5过1败；真实CLI拒绝合成夹具denominator.unit=fixture，第二轮诊断同一失败；改为既有schema支持的runs后原链通过。
+定向first：8文件156过3败；wrapper发布闭包按git ls-files读取，新helper尚未stage。second在agent/误用根相对git add失败，原三败保持；正确stage新helper后闭包过。
+定向third：root使用--root agent不会改变测试进程cwd，原relative fixtures导致4败（155过）；回agent/用原入口，8文件159过。新增exec真实子进程原生匹配/非匹配探针后8文件161过。
+已捕获的失败日志及首轮policy的本会话原生工具输出保存在本材料目录；未改旧schema/门槛、未删失败、未把这些失败记为最终组合结果。
+沙箱首轮642文件641过1败、5923项过1败：旧issue29历史results.jsonl缺稀疏展开。仅在worker退出后恢复固定HEAD原blob b84d95c5185941eec143cbcf2966d5770309cca5，原件SHA与恢复证明保留；导入+paths12过，原CLI47过，未改源码或冒单轮全绿full。

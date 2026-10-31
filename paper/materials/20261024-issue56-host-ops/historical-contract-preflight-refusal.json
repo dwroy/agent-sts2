@@ -1,0 +1,9 @@
+{
+  "stage": "read-only preflight before any queue/state write",
+  "plan": "issue51-build-playbook-poison-008",
+  "error": "backfill artifact fingerprint changed: knowledge/schemas/brain-strategies-v1.schema.json",
+  "meaning": "Consumed historical generation points at its old schema SHA; current source differs. Do not refresh old manifest or claim source-ready. Lane mapping needs immutable manifest/spec identity; full source validation remains only for a future eligible dispatch generation.",
+  "product_source_changed": false,
+  "models_started": 0,
+  "old_input_unchanged": true
+}

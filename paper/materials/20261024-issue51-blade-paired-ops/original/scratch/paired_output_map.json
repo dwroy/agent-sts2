@@ -1,0 +1,373 @@
+[
+  {
+    "context_id": "B1",
+    "strategy_id": "silent-brain-blade-flexible-formation-review",
+    "strategy_path": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261024-181311/learner/runs/20261024-181408-c699f2dc-5057-406c-90f0-e8f8dbf9c51f-strategy-proposal/scratch/strategy-candidates.json",
+    "rk_ids": [],
+    "rk_path": null,
+    "state": "waiting",
+    "reason": "整局/奖励的功能分工与成型判断没有对应的原combat_line候选动作；不能将统计簇或三牌缺口改造成可执行rk。待合法拿牌/规划消费者与原输入。",
+    "shared_evidence": [
+      {
+        "type": "own",
+        "run": "9R916WW0V65N",
+        "floor": 45,
+        "ref": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261024-181311/learner/runs/20261024-181408-c699f2dc-5057-406c-90f0-e8f8dbf9c51f-strategy-proposal/scratch/evidence-statistics.json#formation"
+      }
+    ],
+    "additional_text_only_evidence": [
+      {
+        "type": "external_aggregate",
+        "source": "external:sts2fun",
+        "url": "https://sts2.fun/static/sts2_public.db.zst",
+        "version": "v0.111",
+        "dataset_sha256": "1f7c0c3d441aedb5c85f04bcd4d8d6a1039b438a8b6fda2d96cfa5c27580cbf5",
+        "downloaded_at": "2026-10-21",
+        "license": "公开FAQ未发现明确再分发许可；署名聚合统计，原库不再分发。",
+        "filters": {
+          "character": "silent",
+          "ascension": 10,
+          "criteria": "SILENT, ascension=10,n_players=1,is_valid=1,was_abandoned=0,has_modifiers=0; frozen final-deck cluster6; winner_descriptive_bundle_observed"
+        },
+        "statistic": {
+          "name": "winner_descriptive_bundle_observed",
+          "value": 25,
+          "unit": "runs"
+        },
+        "denominator": {
+          "unit": "runs",
+          "n": 101
+        },
+        "design": "observational",
+        "limitations": [
+          "external:sts2fun，自选上传；独立玩家数未知。独立上传记录不是独立玩家，代表配对亦非随机样本。",
+          "外部仅v0.111作为当前方向参照；v0.107—v0.110逐项另列，机制变更对照未知，不合并版本。自有游戏版本unknown。",
+          "终局簇6只作离线定位。现有牌文、真实已持牌、当前能力与合法动作才可作在线条件；未使用archetype触发。",
+          "终局还原/赢家选择/深度匹配有混杂；非拿牌/启动顺序的因果收益。"
+        ],
+        "ref": "knowledge/external/sts2fun/builds-v1/timeline.json;sha256=d912b2fa6c729ac0bff769eb97e433d4fe072a2269a57f7f0e1ae1db86255621;cluster=6;version=v0.111",
+        "role": "support"
+      }
+    ],
+    "formal_publication": "pending",
+    "consumer_readback": "pending"
+  },
+  {
+    "context_id": "B2",
+    "strategy_id": "silent-fan-of-knives-capacity",
+    "strategy_path": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261024-181311/learner/runs/20261024-181408-c699f2dc-5057-406c-90f0-e8f8dbf9c51f-strategy-proposal/scratch/strategy-candidates.json",
+    "rk_ids": [
+      "silent-rk-blade-fan-setup-test-subject"
+    ],
+    "rk_path": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261024-181311/learner/runs/20261024-181408-c699f2dc-5057-406c-90f0-e8f8dbf9c51f-strategy-proposal/scratch/rk-draft.json",
+    "state": "candidate_pair",
+    "reason": null,
+    "shared_evidence": [
+      {
+        "type": "own",
+        "run": "9R916WW0V65N",
+        "floor": 48,
+        "ref": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261024-181311/learner/runs/20261024-181408-c699f2dc-5057-406c-90f0-e8f8dbf9c51f-strategy-proposal/scratch/evidence-statistics.json#fan_setup"
+      }
+    ],
+    "additional_text_only_evidence": [
+      {
+        "type": "external_aggregate",
+        "source": "external:sts2fun",
+        "url": "https://sts2.fun/static/sts2_public.db.zst",
+        "version": "v0.111",
+        "dataset_sha256": "1f7c0c3d441aedb5c85f04bcd4d8d6a1039b438a8b6fda2d96cfa5c27580cbf5",
+        "downloaded_at": "2026-10-21",
+        "license": "公开FAQ未发现明确再分发许可；署名聚合统计，原库不再分发。",
+        "filters": {
+          "character": "silent",
+          "ascension": 10,
+          "criteria": "SILENT, ascension=10,n_players=1,is_valid=1,was_abandoned=0,has_modifiers=0; frozen final-deck cluster6; selected_winner_terminal_fan"
+        },
+        "statistic": {
+          "name": "selected_winner_terminal_fan",
+          "value": 6,
+          "unit": "runs"
+        },
+        "denominator": {
+          "unit": "runs",
+          "n": 10
+        },
+        "design": "observational",
+        "limitations": [
+          "external:sts2fun，自选上传；独立玩家数未知。独立上传记录不是独立玩家，代表配对亦非随机样本。",
+          "外部仅v0.111作为当前方向参照；v0.107—v0.110逐项另列，机制变更对照未知，不合并版本。自有游戏版本unknown。",
+          "终局簇6只作离线定位。现有牌文、真实已持牌、当前能力与合法动作才可作在线条件；未使用archetype触发。",
+          "终局还原/赢家选择/深度匹配有混杂；非拿牌/启动顺序的因果收益。"
+        ],
+        "ref": "knowledge/external/sts2fun/builds-v1/representative-timelines.json;sha256=dfde8d6ec66f58fca63ca30d45d86d47c2d822e807e9f77f65cb3c4c65268eda;cluster=6;version=v0.111",
+        "role": "support"
+      },
+      {
+        "type": "external_aggregate",
+        "source": "external:sts2fun",
+        "url": "https://sts2.fun/static/sts2_public.db.zst",
+        "version": "v0.111",
+        "dataset_sha256": "1f7c0c3d441aedb5c85f04bcd4d8d6a1039b438a8b6fda2d96cfa5c27580cbf5",
+        "downloaded_at": "2026-10-21",
+        "license": "公开FAQ未发现明确再分发许可；署名聚合统计，原库不再分发。",
+        "filters": {
+          "character": "silent",
+          "ascension": 10,
+          "criteria": "SILENT, ascension=10,n_players=1,is_valid=1,was_abandoned=0,has_modifiers=0; frozen final-deck cluster6; selected_loser_terminal_fan"
+        },
+        "statistic": {
+          "name": "selected_loser_terminal_fan",
+          "value": 1,
+          "unit": "runs"
+        },
+        "denominator": {
+          "unit": "runs",
+          "n": 10
+        },
+        "design": "observational",
+        "limitations": [
+          "external:sts2fun，自选上传；独立玩家数未知。独立上传记录不是独立玩家，代表配对亦非随机样本。",
+          "外部仅v0.111作为当前方向参照；v0.107—v0.110逐项另列，机制变更对照未知，不合并版本。自有游戏版本unknown。",
+          "终局簇6只作离线定位。现有牌文、真实已持牌、当前能力与合法动作才可作在线条件；未使用archetype触发。",
+          "终局还原/赢家选择/深度匹配有混杂；非拿牌/启动顺序的因果收益。"
+        ],
+        "ref": "knowledge/external/sts2fun/builds-v1/representative-timelines.json;sha256=dfde8d6ec66f58fca63ca30d45d86d47c2d822e807e9f77f65cb3c4c65268eda;cluster=6;version=v0.111",
+        "role": "support"
+      }
+    ],
+    "formal_publication": "pending",
+    "consumer_readback": "pending"
+  },
+  {
+    "context_id": "B3",
+    "strategy_id": "silent-accuracy-shiv-scaling",
+    "strategy_path": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261024-181311/learner/runs/20261024-181408-c699f2dc-5057-406c-90f0-e8f8dbf9c51f-strategy-proposal/scratch/strategy-candidates.json",
+    "rk_ids": [
+      "silent-rk-blade-accuracy-held-shivs",
+      "silent-rk-blade-intangible-shivs"
+    ],
+    "rk_path": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261024-181311/learner/runs/20261024-181408-c699f2dc-5057-406c-90f0-e8f8dbf9c51f-strategy-proposal/scratch/rk-draft.json",
+    "state": "candidate_pair",
+    "reason": null,
+    "shared_evidence": [
+      {
+        "type": "own",
+        "run": "9R916WW0V65N",
+        "floor": 42,
+        "ref": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261024-181311/learner/runs/20261024-181408-c699f2dc-5057-406c-90f0-e8f8dbf9c51f-strategy-proposal/scratch/evidence-statistics.json#accuracy"
+      },
+      {
+        "type": "own",
+        "run": "9R916WW0V65N",
+        "floor": 48,
+        "ref": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261024-181311/learner/runs/20261024-181408-c699f2dc-5057-406c-90f0-e8f8dbf9c51f-strategy-proposal/scratch/evidence-statistics.json#intangible"
+      }
+    ],
+    "additional_text_only_evidence": [
+      {
+        "type": "external_aggregate",
+        "source": "external:sts2fun",
+        "url": "https://sts2.fun/static/sts2_public.db.zst",
+        "version": "v0.111",
+        "dataset_sha256": "1f7c0c3d441aedb5c85f04bcd4d8d6a1039b438a8b6fda2d96cfa5c27580cbf5",
+        "downloaded_at": "2026-10-21",
+        "license": "公开FAQ未发现明确再分发许可；署名聚合统计，原库不再分发。",
+        "filters": {
+          "character": "silent",
+          "ascension": 10,
+          "criteria": "SILENT, ascension=10,n_players=1,is_valid=1,was_abandoned=0,has_modifiers=0; frozen final-deck cluster6; matched_winner_accuracy_fan_terminal"
+        },
+        "statistic": {
+          "name": "matched_winner_accuracy_fan_terminal",
+          "value": 24,
+          "unit": "runs"
+        },
+        "denominator": {
+          "unit": "runs",
+          "n": 63
+        },
+        "design": "observational",
+        "limitations": [
+          "external:sts2fun，自选上传；独立玩家数未知。独立上传记录不是独立玩家，代表配对亦非随机样本。",
+          "外部仅v0.111作为当前方向参照；v0.107—v0.110逐项另列，机制变更对照未知，不合并版本。自有游戏版本unknown。",
+          "终局簇6只作离线定位。现有牌文、真实已持牌、当前能力与合法动作才可作在线条件；未使用archetype触发。",
+          "终局还原/赢家选择/深度匹配有混杂；非拿牌/启动顺序的因果收益。"
+        ],
+        "ref": "knowledge/external/sts2fun/builds-v1/combinations.json;sha256=e4683eb038d4859cdc95618303c19c57881b3237b5d23adc7e896426d12ce586;cluster=6;version=v0.111",
+        "role": "support"
+      },
+      {
+        "type": "external_aggregate",
+        "source": "external:sts2fun",
+        "url": "https://sts2.fun/static/sts2_public.db.zst",
+        "version": "v0.111",
+        "dataset_sha256": "1f7c0c3d441aedb5c85f04bcd4d8d6a1039b438a8b6fda2d96cfa5c27580cbf5",
+        "downloaded_at": "2026-10-21",
+        "license": "公开FAQ未发现明确再分发许可；署名聚合统计，原库不再分发。",
+        "filters": {
+          "character": "silent",
+          "ascension": 10,
+          "criteria": "SILENT, ascension=10,n_players=1,is_valid=1,was_abandoned=0,has_modifiers=0; frozen final-deck cluster6; matched_loser_accuracy_fan_terminal"
+        },
+        "statistic": {
+          "name": "matched_loser_accuracy_fan_terminal",
+          "value": 27,
+          "unit": "runs"
+        },
+        "denominator": {
+          "unit": "runs",
+          "n": 63
+        },
+        "design": "observational",
+        "limitations": [
+          "external:sts2fun，自选上传；独立玩家数未知。独立上传记录不是独立玩家，代表配对亦非随机样本。",
+          "外部仅v0.111作为当前方向参照；v0.107—v0.110逐项另列，机制变更对照未知，不合并版本。自有游戏版本unknown。",
+          "终局簇6只作离线定位。现有牌文、真实已持牌、当前能力与合法动作才可作在线条件；未使用archetype触发。",
+          "终局还原/赢家选择/深度匹配有混杂；非拿牌/启动顺序的因果收益。"
+        ],
+        "ref": "knowledge/external/sts2fun/builds-v1/combinations.json;sha256=e4683eb038d4859cdc95618303c19c57881b3237b5d23adc7e896426d12ce586;cluster=6;version=v0.111",
+        "role": "support"
+      }
+    ],
+    "formal_publication": "pending",
+    "consumer_readback": "pending"
+  },
+  {
+    "context_id": "B4",
+    "strategy_id": "silent-core-shiv-defense-observation",
+    "strategy_path": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261024-181311/learner/runs/20261024-181408-c699f2dc-5057-406c-90f0-e8f8dbf9c51f-strategy-proposal/scratch/strategy-candidates.json",
+    "rk_ids": [
+      "silent-rk-blade-cloak-mecha-defense"
+    ],
+    "rk_path": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261024-181311/learner/runs/20261024-181408-c699f2dc-5057-406c-90f0-e8f8dbf9c51f-strategy-proposal/scratch/rk-draft.json",
+    "state": "candidate_pair",
+    "reason": null,
+    "shared_evidence": [
+      {
+        "type": "own",
+        "run": "9R916WW0V65N",
+        "floor": 42,
+        "ref": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261024-181311/learner/runs/20261024-181408-c699f2dc-5057-406c-90f0-e8f8dbf9c51f-strategy-proposal/scratch/evidence-statistics.json#cloak_defense"
+      }
+    ],
+    "additional_text_only_evidence": [
+      {
+        "type": "external_aggregate",
+        "source": "external:sts2fun",
+        "url": "https://sts2.fun/static/sts2_public.db.zst",
+        "version": "v0.111",
+        "dataset_sha256": "1f7c0c3d441aedb5c85f04bcd4d8d6a1039b438a8b6fda2d96cfa5c27580cbf5",
+        "downloaded_at": "2026-10-21",
+        "license": "公开FAQ未发现明确再分发许可；署名聚合统计，原库不再分发。",
+        "filters": {
+          "character": "silent",
+          "ascension": 10,
+          "criteria": "SILENT, ascension=10,n_players=1,is_valid=1,was_abandoned=0,has_modifiers=0; frozen final-deck cluster6; winner_checkpoint1_positive_block_card_copies_proxy_mean"
+        },
+        "statistic": {
+          "name": "winner_checkpoint1_positive_block_card_copies_proxy_mean",
+          "value": 8.089108910891088,
+          "unit": "cards"
+        },
+        "denominator": {
+          "unit": "runs",
+          "n": 101
+        },
+        "design": "observational",
+        "limitations": [
+          "external:sts2fun，自选上传；独立玩家数未知。独立上传记录不是独立玩家，代表配对亦非随机样本。",
+          "外部仅v0.111作为当前方向参照；v0.107—v0.110逐项另列，机制变更对照未知，不合并版本。自有游戏版本unknown。",
+          "终局簇6只作离线定位。现有牌文、真实已持牌、当前能力与合法动作才可作在线条件；未使用archetype触发。",
+          "终局还原/赢家选择/深度匹配有混杂；非拿牌/启动顺序的因果收益。"
+        ],
+        "ref": "knowledge/external/sts2fun/builds-v1/timeline.json;sha256=d912b2fa6c729ac0bff769eb97e433d4fe072a2269a57f7f0e1ae1db86255621;cluster=6;version=v0.111",
+        "role": "support"
+      },
+      {
+        "type": "external_aggregate",
+        "source": "external:sts2fun",
+        "url": "https://sts2.fun/static/sts2_public.db.zst",
+        "version": "v0.111",
+        "dataset_sha256": "1f7c0c3d441aedb5c85f04bcd4d8d6a1039b438a8b6fda2d96cfa5c27580cbf5",
+        "downloaded_at": "2026-10-21",
+        "license": "公开FAQ未发现明确再分发许可；署名聚合统计，原库不再分发。",
+        "filters": {
+          "character": "silent",
+          "ascension": 10,
+          "criteria": "SILENT, ascension=10,n_players=1,is_valid=1,was_abandoned=0,has_modifiers=0; frozen final-deck cluster6; winner_checkpoint2_positive_block_card_copies_proxy_mean"
+        },
+        "statistic": {
+          "name": "winner_checkpoint2_positive_block_card_copies_proxy_mean",
+          "value": 9.633663366336634,
+          "unit": "cards"
+        },
+        "denominator": {
+          "unit": "runs",
+          "n": 101
+        },
+        "design": "observational",
+        "limitations": [
+          "external:sts2fun，自选上传；独立玩家数未知。独立上传记录不是独立玩家，代表配对亦非随机样本。",
+          "外部仅v0.111作为当前方向参照；v0.107—v0.110逐项另列，机制变更对照未知，不合并版本。自有游戏版本unknown。",
+          "终局簇6只作离线定位。现有牌文、真实已持牌、当前能力与合法动作才可作在线条件；未使用archetype触发。",
+          "终局还原/赢家选择/深度匹配有混杂；非拿牌/启动顺序的因果收益。"
+        ],
+        "ref": "knowledge/external/sts2fun/builds-v1/timeline.json;sha256=d912b2fa6c729ac0bff769eb97e433d4fe072a2269a57f7f0e1ae1db86255621;cluster=6;version=v0.111",
+        "role": "support"
+      }
+    ],
+    "formal_publication": "pending",
+    "consumer_readback": "pending"
+  },
+  {
+    "context_id": "B5",
+    "strategy_id": "silent-afterimage-per-card-block",
+    "strategy_path": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261024-181311/learner/runs/20261024-181408-c699f2dc-5057-406c-90f0-e8f8dbf9c51f-strategy-proposal/scratch/strategy-candidates.json",
+    "rk_ids": [
+      "silent-rk-blade-afterimage-generation"
+    ],
+    "rk_path": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261024-181311/learner/runs/20261024-181408-c699f2dc-5057-406c-90f0-e8f8dbf9c51f-strategy-proposal/scratch/rk-draft.json",
+    "state": "candidate_pair",
+    "reason": null,
+    "shared_evidence": [
+      {
+        "type": "own",
+        "run": "9R916WW0V65N",
+        "floor": 48,
+        "ref": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261024-181311/learner/runs/20261024-181408-c699f2dc-5057-406c-90f0-e8f8dbf9c51f-strategy-proposal/scratch/evidence-statistics.json#afterimage_generation"
+      },
+      {
+        "type": "own",
+        "run": "9R916WW0V65N",
+        "floor": 49,
+        "ref": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261024-181311/learner/runs/20261024-181408-c699f2dc-5057-406c-90f0-e8f8dbf9c51f-strategy-proposal/scratch/evidence-statistics.json#afterimage_generation"
+      }
+    ],
+    "additional_text_only_evidence": [],
+    "formal_publication": "pending",
+    "consumer_readback": "pending"
+  },
+  {
+    "context_id": "B6",
+    "strategy_id": "silent-brain-blade-no-draw-backflip-review",
+    "strategy_path": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261024-181311/learner/runs/20261024-181408-c699f2dc-5057-406c-90f0-e8f8dbf9c51f-strategy-proposal/scratch/strategy-candidates.json",
+    "rk_ids": [
+      "silent-rk-blade-no-draw-backflip"
+    ],
+    "rk_path": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261024-181311/learner/runs/20261024-181408-c699f2dc-5057-406c-90f0-e8f8dbf9c51f-strategy-proposal/scratch/rk-draft.json",
+    "state": "candidate_pair",
+    "reason": null,
+    "shared_evidence": [
+      {
+        "type": "own",
+        "run": "9R916WW0V65N",
+        "floor": 48,
+        "ref": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261024-181311/learner/runs/20261024-181408-c699f2dc-5057-406c-90f0-e8f8dbf9c51f-strategy-proposal/scratch/evidence-statistics.json#no_draw"
+      }
+    ],
+    "additional_text_only_evidence": [],
+    "formal_publication": "pending",
+    "consumer_readback": "pending"
+  }
+]

@@ -3,7 +3,7 @@ import { existsSync } from "node:fs";
 import { join } from "node:path";
 import type { DecisionEnv } from "../memory/types.js";
 import { asArray, asRecord, bool, numOrNull, str } from "../core/util/json.js";
-import { KNOWLEDGE_DIR } from "../knowledge/files.js";
+import { KNOWLEDGE_DIR, knowledgeFile } from "../knowledge/files.js";
 import { loadV6Knowledge } from "./knowledge.js";
 import { v6Config } from "./config.js";
 import { loadConstructionData } from "../construction/data.js";
@@ -39,7 +39,7 @@ export function v6ProjectionInputs(dir = KNOWLEDGE_DIR, now = () => new Date().t
     } : { run_id: run, character, status: history.status, loaded_at: asOf, policy: "last_completed_packet" };
     try { onSnapshot(freshness); } catch { /* Telemetry cannot invalidate a completed packet. */ }
     // The legacy loader can fall back. Only character-owned adapter inputs are admitted here.
-    const construction = ["construction-templates.json", "construction-opportunities.json"].every(f => existsSync(join(own, f)))
+    const construction = ["construction-templates.json", "construction-opportunities.json"].every(f => existsSync(knowledgeFile(dir, f, character)))
       ? loadConstructionData(character, dir) : null;
     const templates = construction?.templates ?? [];
     const support = construction && existsSync(join(own, "construction-support.json")) ? loadConstructionSupport(character, templates, dir) : null;
@@ -48,7 +48,7 @@ export function v6ProjectionInputs(dir = KNOWLEDGE_DIR, now = () => new Date().t
     const candidate = loadDoubleBossModel();
     const doubleBoss = candidate?.character === character && candidate.ascension === ascension
       && asArray(asRecord(env.state.run?.raw).ascension_effects).some(e => asRecord(e).id === candidate.effect) ? structuredClone(candidate) : null;
-    const trust = loadBossTrust(join(own, "boss-trust.json"));
+    const trust = loadBossTrust(knowledgeFile(dir, "boss-trust.json", character));
     const signature = v6Digest({ history: history.status === "loaded" && [history.value.generated_at, history.value.content_sha256],
       directions, trust, doubleBoss, catalog: env.knowledge.catalog ?? null });
     const factory = createV6ProjectionFactory({ config, character, history, knowledge: env.knowledge,

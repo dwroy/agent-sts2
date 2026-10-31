@@ -1,0 +1,143 @@
+{
+  "scope": "development checks on fixed f2d8e742 + #84 revised declaration + #85 50d8c223 owned snapshot; not publication terminal/full",
+  "production_tsc": {
+    "exit_code": 0,
+    "command": [
+      "node",
+      "node_modules/typescript/bin/tsc",
+      "-p",
+      "tsconfig.json",
+      "--noEmit"
+    ],
+    "seconds": 1.076
+  },
+  "knowledge_runtime_tsc": {
+    "exit_code": 0,
+    "command": [
+      "node",
+      "node_modules/typescript/bin/tsc",
+      "-p",
+      "tsconfig.knowledge-runtime.json",
+      "--noEmit"
+    ],
+    "seconds": 1.046
+  },
+  "core": {
+    "exit_code": 0,
+    "seconds": 28.617,
+    "command": [
+      "/home/dw/Projects/agent-sts2/.worktrees/issue-84-fixed-producer-admission/data/logdb-venv/bin/python",
+      "-m",
+      "unittest",
+      "ops.tests.test_fixed_producer_admission",
+      "ops.tests.test_learning_runtime",
+      "ops.tests.test_outcome_logdb",
+      "ops.tests.test_refresh_health",
+      "ops.tests.test_publication_gate"
+    ],
+    "tests": 70
+  },
+  "core_first": {
+    "exit_code": 1,
+    "errors": 5,
+    "tests": 70,
+    "reason": "Validation launcher resolved venv/python symlink to system interpreter, losing duckdb. Kept original venv path on recheck; no install/source/test change."
+  },
+  "vitest_first": {
+    "exit_code": 1,
+    "files_passed": 10,
+    "files_failed": 2,
+    "tests_passed": 143,
+    "tests_failed": 2,
+    "reason": "Owned extraction omitted fixed external aggregate and opening-value JSON and empty .cache directory; no code/test/assertion failure after restoring original fixed blobs."
+  },
+  "vitest_recheck": {
+    "exit_code": 0,
+    "seconds": 3.488,
+    "command": [
+      "node",
+      "node_modules/vitest/vitest.mjs",
+      "run",
+      "tests/brain-agent-mode.test.ts",
+      "tests/check-imports.test.ts",
+      "--pool=threads",
+      "--maxWorkers=1",
+      "--reporter=default",
+      "--reporter=json",
+      "--outputFile=/home/dw/Projects/agent-sts2/.worktrees/issue-84-fixed-producer-admission/.cache/issue84-r2/vitest-recheck-results.json"
+    ],
+    "files_passed": 2,
+    "tests_passed": 16,
+    "files": [
+      "brain-agent-mode.test.ts",
+      "check-imports.test.ts"
+    ]
+  },
+  "effective_targeted_scope": {
+    "files": 12,
+    "tests": 145,
+    "all_covered_by_passing_results": true,
+    "note": "10 first-pass green files (129 tests) plus the two complete rechecked files (16 tests). Not a second all12 run."
+  },
+  "commands": {
+    "vitest_first": [
+      "node",
+      "node_modules/vitest/vitest.mjs",
+      "run",
+      "tests/strategy-grading.test.ts",
+      "tests/decision-knowledge.test.ts",
+      "tests/knowledge-runtime.test.ts",
+      "tests/decision-observations.test.ts",
+      "tests/brain-budget-evidence.test.ts",
+      "tests/brain-agent-mode.test.ts",
+      "tests/knowledge-consumer-projection.test.ts",
+      "tests/knowledge-typed-tools.test.ts",
+      "tests/strategy-entries.test.ts",
+      "tests/strategy-priority.test.ts",
+      "tests/build-research.test.ts",
+      "tests/check-imports.test.ts",
+      "--pool=threads",
+      "--maxWorkers=1",
+      "--reporter=default",
+      "--reporter=json",
+      "--outputFile=/home/dw/Projects/agent-sts2/.worktrees/issue-84-fixed-producer-admission/.cache/issue84-r2/vitest-results.json"
+    ]
+  },
+  "source_drift": [],
+  "logs": {
+    "production-tsc.log": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "gzip_sha256": "9ceffb7310338057cfe71a4ae1e2c98d2c485d81cdef906532a801f457a38d64"
+    },
+    "knowledge-runtime-tsc.log": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "gzip_sha256": "9ceffb7310338057cfe71a4ae1e2c98d2c485d81cdef906532a801f457a38d64"
+    },
+    "core-first.log": {
+      "bytes": 9018,
+      "sha256": "89d10c3c5d2794a85daecca5b8a17bade6d2854505be61a27310161a2c9b5419",
+      "gzip_sha256": "a2247734c740ff51da0e9e434adca0943766ce8bc90a106cc282a7bffe9b4229"
+    },
+    "core.log": {
+      "bytes": 1105,
+      "sha256": "631ad9dca848044197674301b97b42835a96fc9f69c257ff7a41cfa740a82813",
+      "gzip_sha256": "860ed7f0b9a39c052569716c0a5ce6beb5e4b2434f7241efeb7d3247037ec5c1"
+    },
+    "vitest.log": {
+      "bytes": 7064,
+      "sha256": "3ae89d159ccb1051333c7b9530d292af5070aee072b0dd045aaaa78dc0479a73",
+      "gzip_sha256": "f03a0a4bc56ae55d47dbfa51bb06fe13898a8763afd8176d233ce3d310fbed03"
+    },
+    "vitest-recheck.log": {
+      "bytes": 713,
+      "sha256": "1fa3c001ecf2d90504c903ba707533361edaa0066f971c37c65f6031f63de6cb",
+      "gzip_sha256": "7da9d77f277dc0ea6f54b90d91d54d476b156236390c781d1245ca1aa39b84e1"
+    }
+  },
+  "combination_full": "pending original integrator",
+  "production_admission": false,
+  "production_backfill": false,
+  "natural_acceptance": false
+}

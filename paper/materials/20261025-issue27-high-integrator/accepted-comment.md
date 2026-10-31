@@ -1,0 +1,5 @@
+[watcher] #27 high三叶已核收并合入main：21e8bb09def1f59129b3646a9d6d07be05e2d177，已推origin/main。来源9f25e8b2d7c816ad5f4b83abe794a75762cd8250，三叶SHA与原件/基线逐字匹配。
+
+必需sandbox重跑rc0、tsc通过，主阶段635文件5869测试及独立paths阶段1文件11测试全过；沿原固定排除，不冒无排除full。原首轮两失败、原fixture恢复及定向重验原件保留，不新增行为发布编号。证据paper/materials/20261025-issue27-high-integrator/accepted-terminal.json。
+
+检查窗已交#60，本角色现冻结实际ROOT/LIVE组合并补适用检查。10:13首真实codex1 learner及发布/运行由原ops跟进，旧LEARNER_CODEX_HOME优先级仍按主管要求核；历史通知兼容/#61、000402原log与真实角色ACK门保持，不以本次high补丁关闭父要求。

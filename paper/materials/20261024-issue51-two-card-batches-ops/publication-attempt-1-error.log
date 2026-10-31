@@ -1,0 +1,5 @@
+Traceback (most recent call last):
+  File "/home/dw/Projects/agent-sts2/.artifacts/ops-issue51-two-card-batches-20261024/publish.py", line 18, in <module>
+    s.update(at=now(),phase='acquiring-original-publication-lock',waiting_lock=n);save('publication-state.json',s);f=(R/n).open('a');fcntl.flock(f,fcntl.LOCK_EX|fcntl.LOCK_NB);locks.append(f);s['held_locks'].append(n)
+                                                                                                                                     ~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+BlockingIOError: [Errno 11] Resource temporarily unavailable

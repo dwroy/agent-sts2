@@ -1,0 +1,1433 @@
+{
+  "at": "2026-10-25T12:40:00+08:00",
+  "head": "ce5f425ee708a5cce72c6dbc588318cd9cda7d7e",
+  "sources": [
+    {
+      "path": "paper/materials/20261025-issue59-learning-ui-ops/six-ui-handoff.json",
+      "bytes": 83118,
+      "sha256": "20c242c59a6f06d93f214d77098ff1e803d688d9a89b815484b1349c5470536a"
+    },
+    {
+      "path": "paper/materials/20261025-issue59-learning-ui-ops/close-readback.json",
+      "bytes": 2180,
+      "sha256": "4983eda3aea11da8de12d4a7ba7e4be6e0841333859c5da77ed845e2d2cfc4bc"
+    },
+    {
+      "path": "paper/materials/20261025-issue59-learning-ui-ops/ui-control.json",
+      "bytes": 3868,
+      "sha256": "2908a96d45423d0a94f14c80003ea07ce2d46862a05fb8c330b9a22999a3ddec"
+    },
+    {
+      "path": "paper/materials/20261025-issue59-learning-ui-ops/lifecycle-ui-receipt.json",
+      "bytes": 369,
+      "sha256": "693646b7e6ca9154c9c3082ae33ca1baa3514593e7d4b80d6d33050a2e6d47d1"
+    },
+    {
+      "path": "paper/materials/20261025-issue59-learning-ui-ops/old-test-interruption.json",
+      "bytes": 1289,
+      "sha256": "246f637642603efd282f1b38db8bd24f75791848655be3b7039aa8033c7b4740"
+    }
+  ],
+  "rows": [
+    {
+      "batch": "20261025-024302-fix-batch",
+      "files": [
+        {
+          "snapshot": {
+            "path": ".artifacts/issue59-learning-ui-20261025/20261025-024302-fix-batch/original.tui.json",
+            "bytes": 6859,
+            "sha256": "ebd4da4c1aeb97c7239a45e632c7c4919490a5c861d87395c030104b3afd3124"
+          },
+          "snapshot_exact": true,
+          "original": {
+            "path": "ops/codex-ops/learner/learner-20261025-024302-fix-batch.tui.json",
+            "bytes": 6859,
+            "sha256": "ebd4da4c1aeb97c7239a45e632c7c4919490a5c861d87395c030104b3afd3124"
+          },
+          "original_exact": true
+        },
+        {
+          "snapshot": {
+            "path": ".artifacts/issue59-learning-ui-20261025/20261025-024302-fix-batch/original.native.jsonl",
+            "bytes": 2792569,
+            "sha256": "0d7d47acdd7e9abb46a6237eed944a05b32b4b1cd9434fb74a148fd19efb308c"
+          },
+          "snapshot_exact": true,
+          "original": {
+            "path": "ops/codex-ops/accounts/codex3/learner/sessions/2026/10/25/rollout-2026-10-25T02-43-56-01a16f3a-0635-7792-b8b2-be68791e531a.jsonl",
+            "bytes": 2796239,
+            "sha256": "335cce8f50076b9cb7554465f5d76d87fca3441e0288c70c2f1e1ffec660c050"
+          },
+          "original_exact": false,
+          "original_append_only": true,
+          "appended_bytes": 3670,
+          "append_sha256": "876a0f27a5424c8b8e37a30e6d3699537c317b2b8036118386e4875ad8bbb345",
+          "appended_events": [
+            {
+              "timestamp": "2026-10-25T02:47:38.657Z",
+              "type": "event_msg",
+              "payload_type": "item_completed",
+              "turn_id": "01a16f3a-a813-7eb2-8bd9-4c4f802ae0ba",
+              "item_type": "CommandExecution",
+              "item_status": "failed",
+              "exit_code": 130
+            }
+          ]
+        },
+        {
+          "snapshot": {
+            "path": ".artifacts/issue59-learning-ui-20261025/20261025-024302-fix-batch/original.learner.jsonl",
+            "bytes": 2700555,
+            "sha256": "a9b76c61417d41b47894c26e968f98e44c18509daa211191e8b62dfd0acd0da1"
+          },
+          "snapshot_exact": true,
+          "original": {
+            "path": "learner/runs/20261025-024329-dae6a77a-4514-45fd-ad79-7b8730278914-fix-batch.jsonl",
+            "bytes": 2700555,
+            "sha256": "a9b76c61417d41b47894c26e968f98e44c18509daa211191e8b62dfd0acd0da1"
+          },
+          "original_exact": true
+        },
+        {
+          "snapshot": {
+            "path": ".artifacts/issue59-learning-ui-20261025/20261025-024302-fix-batch/original.out",
+            "bytes": 4813,
+            "sha256": "578445fe294152d26537965afc8d5dce11fce8e56ec771c8de644eca19aaf549"
+          },
+          "snapshot_exact": true,
+          "original": {
+            "path": "ops/codex-ops/learner/20261025-024302-fix-batch.out",
+            "bytes": 4813,
+            "sha256": "578445fe294152d26537965afc8d5dce11fce8e56ec771c8de644eca19aaf549"
+          },
+          "original_exact": true
+        },
+        {
+          "snapshot": {
+            "path": ".artifacts/issue59-learning-ui-20261025/20261025-024302-fix-batch/original.err",
+            "bytes": 79,
+            "sha256": "fd92f8dadd0b5a78325f03cccc8b0197b2e569aedf996e3f802410000ae7dd6c"
+          },
+          "snapshot_exact": true,
+          "original": {
+            "path": "ops/codex-ops/learner/20261025-024302-fix-batch.err",
+            "bytes": 79,
+            "sha256": "fd92f8dadd0b5a78325f03cccc8b0197b2e569aedf996e3f802410000ae7dd6c"
+          },
+          "original_exact": true
+        },
+        {
+          "snapshot": {
+            "path": ".artifacts/issue59-learning-ui-20261025/20261025-024302-fix-batch/original.verification-deferred.json",
+            "bytes": 1063,
+            "sha256": "5151c4195ca8dc88cdad8ac9ed4a1a8d509a15f5d6808a4486ffb8caa6b01904"
+          },
+          "snapshot_exact": true,
+          "original": {
+            "path": "ops/codex-ops/learner/20261025-024302-fix-batch.verification-deferred.json",
+            "bytes": 1063,
+            "sha256": "5151c4195ca8dc88cdad8ac9ed4a1a8d509a15f5d6808a4486ffb8caa6b01904"
+          },
+          "original_exact": true
+        },
+        {
+          "snapshot": {
+            "path": ".artifacts/issue59-learning-ui-20261025/20261025-024302-fix-batch/background-test-0.log",
+            "bytes": 7078,
+            "sha256": "7aa32695ed43601e1a0a2bef7bb6fa457115b07bd691d4d709eada060f0ecde1"
+          },
+          "snapshot_exact": true,
+          "original": {
+            "path": "learner/runs/20261025-024329-dae6a77a-4514-45fd-ad79-7b8730278914-fix-batch/sandbox-full.log",
+            "bytes": 7078,
+            "sha256": "7aa32695ed43601e1a0a2bef7bb6fa457115b07bd691d4d709eada060f0ecde1"
+          },
+          "original_exact": true
+        }
+      ],
+      "original_registration": {
+        "path": ".artifacts/issue59-learning-ui-20261025/20261025-024302-fix-batch/original.batch.json",
+        "bytes": 3928,
+        "sha256": "7504ea70abf4b3215bc893de3871d186dd4f1aba64fe5e299b56d01c3587e110"
+      },
+      "current_registration_deep_equal": true,
+      "state": "awaiting_review",
+      "processes": [
+        {
+          "pid": 2105388,
+          "expected_birth": "29194348",
+          "current": null,
+          "original_process_absent": true
+        },
+        {
+          "pid": 2105411,
+          "expected_birth": "29194358",
+          "current": null,
+          "original_process_absent": true
+        },
+        {
+          "pid": 2108652,
+          "expected_birth": "29196599",
+          "current": null,
+          "original_process_absent": true
+        },
+        {
+          "pid": 2118137,
+          "expected_birth": "29201307",
+          "current": null,
+          "original_process_absent": true
+        },
+        {
+          "pid": 2204542,
+          "expected_birth": "29249819",
+          "current": null,
+          "original_process_absent": true
+        },
+        {
+          "pid": 2204954,
+          "expected_birth": "29250162",
+          "current": null,
+          "original_process_absent": true
+        },
+        {
+          "pid": 2204955,
+          "expected_birth": "29250162",
+          "current": null,
+          "original_process_absent": true
+        },
+        {
+          "pid": 2204959,
+          "expected_birth": "29250166",
+          "current": null,
+          "original_process_absent": true
+        },
+        {
+          "pid": 2204964,
+          "expected_birth": "29250166",
+          "current": null,
+          "original_process_absent": true
+        },
+        {
+          "pid": 2205289,
+          "expected_birth": "29250408",
+          "current": null,
+          "original_process_absent": true
+        },
+        {
+          "pid": 2205327,
+          "expected_birth": "29250412",
+          "current": null,
+          "original_process_absent": true
+        },
+        {
+          "pid": 2241021,
+          "expected_birth": "29275142",
+          "current": null,
+          "original_process_absent": true
+        },
+        {
+          "pid": 2103377,
+          "expected_birth": null,
+          "current": null,
+          "original_process_absent": true
+        }
+      ],
+      "ui": [
+        {
+          "kind": "tab",
+          "id": "w1H:tF5",
+          "rc": 1,
+          "error": "tab_not_found",
+          "absent": true
+        },
+        {
+          "kind": "pane",
+          "id": "w1H:pF8",
+          "rc": 1,
+          "error": "pane_not_found",
+          "absent": true
+        }
+      ],
+      "refs": {
+        "branch": "codex-fix-silent-20261025-024302",
+        "original_head": "d7ca14905bdc68e84422b6434a884b82b905929a",
+        "worktree_present": true,
+        "current_head": "d7ca14905bdc68e84422b6434a884b82b905929a",
+        "branch_head": "d7ca14905bdc68e84422b6434a884b82b905929a"
+      },
+      "ui_activity": [
+        {
+          "at": "2026-10-25T10:52:23+08:00",
+          "kind": "ops-ui-closed-business-pending",
+          "key": "6392600890:20261025-024302-fix-batch",
+          "batch": "20261025-024302-fix-batch",
+          "tab": "w1H:tF5",
+          "authority": 6392600890,
+          "evidence": "paper/materials/20261025-issue59-learning-ui-ops/close-readback.json",
+          "no_batch_finish_retire_or_replay": true
+        }
+      ],
+      "retirement_event": null,
+      "source_session": "01a16f3a-0635-7792-b8b2-be68791e531a",
+      "source_turn": "01a16f3a-a813-7eb2-8bd9-4c4f802ae0ba",
+      "source_account": "codex3/learner"
+    },
+    {
+      "batch": "20261025-024302-s2-strategy-proposal",
+      "files": [
+        {
+          "snapshot": {
+            "path": ".artifacts/issue59-learning-ui-20261025/20261025-024302-s2-strategy-proposal/original.tui.json",
+            "bytes": 7997,
+            "sha256": "3d88f7a51259d3fd760f244f6b876833b14dd510655510ac47f0c5c5178fa018"
+          },
+          "snapshot_exact": true,
+          "original": {
+            "path": "ops/codex-ops/learner/learner-20261025-024302-s2-strategy-proposal.tui.json",
+            "bytes": 7997,
+            "sha256": "3d88f7a51259d3fd760f244f6b876833b14dd510655510ac47f0c5c5178fa018"
+          },
+          "original_exact": true
+        },
+        {
+          "snapshot": {
+            "path": ".artifacts/issue59-learning-ui-20261025/20261025-024302-s2-strategy-proposal/original.native.jsonl",
+            "bytes": 1994176,
+            "sha256": "ee4595bed8d05552527234c4ef9804c34782d0b6044f7deb12c649cf96e316ea"
+          },
+          "snapshot_exact": true,
+          "original": {
+            "path": "ops/codex-ops/accounts/codex3/learner/sessions/2026/10/25/rollout-2026-10-25T02-43-33-01a16f39-af1b-7d53-a9ab-0005c52ce800.jsonl",
+            "bytes": 1994176,
+            "sha256": "ee4595bed8d05552527234c4ef9804c34782d0b6044f7deb12c649cf96e316ea"
+          },
+          "original_exact": true
+        },
+        {
+          "snapshot": {
+            "path": ".artifacts/issue59-learning-ui-20261025/20261025-024302-s2-strategy-proposal/original.learner.jsonl",
+            "bytes": 1919408,
+            "sha256": "cf9afd6dccd2f2bd4451ae5040328b9323df1ef07088f94475475c1a22e874e8"
+          },
+          "snapshot_exact": true,
+          "original": {
+            "path": "learner/runs/20261025-024327-35f49bd1-52a8-474e-994b-a29d8c00df2e-strategy-proposal.jsonl",
+            "bytes": 1919408,
+            "sha256": "cf9afd6dccd2f2bd4451ae5040328b9323df1ef07088f94475475c1a22e874e8"
+          },
+          "original_exact": true
+        },
+        {
+          "snapshot": {
+            "path": ".artifacts/issue59-learning-ui-20261025/20261025-024302-s2-strategy-proposal/original.out",
+            "bytes": 5811,
+            "sha256": "dd830e27eb097f32998892879fdd570f634948165f1d7850cb89db29c9c269a6"
+          },
+          "snapshot_exact": true,
+          "original": {
+            "path": "ops/codex-ops/learner/20261025-024302-s2-strategy-proposal.out",
+            "bytes": 5811,
+            "sha256": "dd830e27eb097f32998892879fdd570f634948165f1d7850cb89db29c9c269a6"
+          },
+          "original_exact": true
+        },
+        {
+          "snapshot": {
+            "path": ".artifacts/issue59-learning-ui-20261025/20261025-024302-s2-strategy-proposal/original.err",
+            "bytes": 79,
+            "sha256": "fd92f8dadd0b5a78325f03cccc8b0197b2e569aedf996e3f802410000ae7dd6c"
+          },
+          "snapshot_exact": true,
+          "original": {
+            "path": "ops/codex-ops/learner/20261025-024302-s2-strategy-proposal.err",
+            "bytes": 79,
+            "sha256": "fd92f8dadd0b5a78325f03cccc8b0197b2e569aedf996e3f802410000ae7dd6c"
+          },
+          "original_exact": true
+        },
+        {
+          "snapshot": {
+            "path": ".artifacts/issue59-learning-ui-20261025/20261025-024302-s2-strategy-proposal/original.verification-deferred.json",
+            "bytes": 1442,
+            "sha256": "ac4da9ae270d14ce5641cc59c5c9e562ab40008b9952b2da9ee1213941aea2f2"
+          },
+          "snapshot_exact": true,
+          "original": {
+            "path": "ops/codex-ops/learner/20261025-024302-s2-strategy-proposal.verification-deferred.json",
+            "bytes": 1442,
+            "sha256": "ac4da9ae270d14ce5641cc59c5c9e562ab40008b9952b2da9ee1213941aea2f2"
+          },
+          "original_exact": true
+        }
+      ],
+      "original_registration": {
+        "path": ".artifacts/issue59-learning-ui-20261025/20261025-024302-s2-strategy-proposal/original.batch.json",
+        "bytes": 4729,
+        "sha256": "d638a2e1f4a4539fdbb85230df2d79586ac962b54a2d090c78113a4ba9278d49"
+      },
+      "current_registration_deep_equal": true,
+      "state": "awaiting_review",
+      "processes": [
+        {
+          "pid": 2104918,
+          "expected_birth": "29194093",
+          "current": null,
+          "original_process_absent": true
+        },
+        {
+          "pid": 2104968,
+          "expected_birth": "29194099",
+          "current": null,
+          "original_process_absent": true
+        },
+        {
+          "pid": 2105470,
+          "expected_birth": "29194365",
+          "current": null,
+          "original_process_absent": true
+        },
+        {
+          "pid": 2117406,
+          "expected_birth": "29200938",
+          "current": null,
+          "original_process_absent": true
+        },
+        {
+          "pid": 2103129,
+          "expected_birth": null,
+          "current": null,
+          "original_process_absent": true
+        }
+      ],
+      "ui": [
+        {
+          "kind": "tab",
+          "id": "w1H:tF4",
+          "rc": 1,
+          "error": "tab_not_found",
+          "absent": true
+        },
+        {
+          "kind": "pane",
+          "id": "w1H:pF7",
+          "rc": 1,
+          "error": "pane_not_found",
+          "absent": true
+        }
+      ],
+      "refs": {
+        "branch": "codex-strategy-silent-20261025-024302-s2",
+        "original_head": "d7ca14905bdc68e84422b6434a884b82b905929a",
+        "worktree_present": true,
+        "current_head": "d7ca14905bdc68e84422b6434a884b82b905929a",
+        "branch_head": "d7ca14905bdc68e84422b6434a884b82b905929a"
+      },
+      "ui_activity": [
+        {
+          "at": "2026-10-25T10:52:23+08:00",
+          "kind": "ops-ui-closed-business-pending",
+          "key": "6392600890:20261025-024302-s2-strategy-proposal",
+          "batch": "20261025-024302-s2-strategy-proposal",
+          "tab": "w1H:tF4",
+          "authority": 6392600890,
+          "evidence": "paper/materials/20261025-issue59-learning-ui-ops/close-readback.json",
+          "no_batch_finish_retire_or_replay": true
+        }
+      ],
+      "retirement_event": null,
+      "source_session": "01a16f39-af1b-7d53-a9ab-0005c52ce800",
+      "source_turn": "01a16f3a-9257-73d0-9c51-9b2eb1cfc67b",
+      "source_account": "codex3/learner"
+    },
+    {
+      "batch": "20261025-024302-strategy-proposal",
+      "files": [
+        {
+          "snapshot": {
+            "path": ".artifacts/issue59-learning-ui-20261025/20261025-024302-strategy-proposal/original.tui.json",
+            "bytes": 7844,
+            "sha256": "a2c5e94a206a3e34d769261fabb67c1ff34d753225b7e96ac4a8d24a1290214b"
+          },
+          "snapshot_exact": true,
+          "original": {
+            "path": "ops/codex-ops/learner/learner-20261025-024302-strategy-proposal.tui.json",
+            "bytes": 7844,
+            "sha256": "a2c5e94a206a3e34d769261fabb67c1ff34d753225b7e96ac4a8d24a1290214b"
+          },
+          "original_exact": true
+        },
+        {
+          "snapshot": {
+            "path": ".artifacts/issue59-learning-ui-20261025/20261025-024302-strategy-proposal/original.native.jsonl",
+            "bytes": 1969732,
+            "sha256": "653b596f0c2e9c74e6febfbdcc85448949a2c0c00793189174b07ebb797d2986"
+          },
+          "snapshot_exact": true,
+          "original": {
+            "path": "ops/codex-ops/accounts/codex3/learner/sessions/2026/10/25/rollout-2026-10-25T02-43-32-01a16f39-a922-7203-b580-ecd034877494.jsonl",
+            "bytes": 1969732,
+            "sha256": "653b596f0c2e9c74e6febfbdcc85448949a2c0c00793189174b07ebb797d2986"
+          },
+          "original_exact": true
+        },
+        {
+          "snapshot": {
+            "path": ".artifacts/issue59-learning-ui-20261025/20261025-024302-strategy-proposal/original.learner.jsonl",
+            "bytes": 1895053,
+            "sha256": "bc81c1c0ee90235d501a34feb2cbab83ea589505ca8bebbff96762812e7f0bcb"
+          },
+          "snapshot_exact": true,
+          "original": {
+            "path": "learner/runs/20261025-024327-41796671-af8e-4be2-b14f-e96066ee7e17-strategy-proposal.jsonl",
+            "bytes": 1895053,
+            "sha256": "bc81c1c0ee90235d501a34feb2cbab83ea589505ca8bebbff96762812e7f0bcb"
+          },
+          "original_exact": true
+        },
+        {
+          "snapshot": {
+            "path": ".artifacts/issue59-learning-ui-20261025/20261025-024302-strategy-proposal/original.out",
+            "bytes": 5687,
+            "sha256": "c726d6ffc8bda96cdb6a67ca5b3c9093e3f07d7204142982c9a61625e76e5d49"
+          },
+          "snapshot_exact": true,
+          "original": {
+            "path": "ops/codex-ops/learner/20261025-024302-strategy-proposal.out",
+            "bytes": 5687,
+            "sha256": "c726d6ffc8bda96cdb6a67ca5b3c9093e3f07d7204142982c9a61625e76e5d49"
+          },
+          "original_exact": true
+        },
+        {
+          "snapshot": {
+            "path": ".artifacts/issue59-learning-ui-20261025/20261025-024302-strategy-proposal/original.err",
+            "bytes": 79,
+            "sha256": "fd92f8dadd0b5a78325f03cccc8b0197b2e569aedf996e3f802410000ae7dd6c"
+          },
+          "snapshot_exact": true,
+          "original": {
+            "path": "ops/codex-ops/learner/20261025-024302-strategy-proposal.err",
+            "bytes": 79,
+            "sha256": "fd92f8dadd0b5a78325f03cccc8b0197b2e569aedf996e3f802410000ae7dd6c"
+          },
+          "original_exact": true
+        },
+        {
+          "snapshot": {
+            "path": ".artifacts/issue59-learning-ui-20261025/20261025-024302-strategy-proposal/original.verification-deferred.json",
+            "bytes": 1526,
+            "sha256": "fa55103b30ed6ce4db62b218dba1630922058ea11a9047700502fb7b8cef457d"
+          },
+          "snapshot_exact": true,
+          "original": {
+            "path": "ops/codex-ops/learner/20261025-024302-strategy-proposal.verification-deferred.json",
+            "bytes": 1526,
+            "sha256": "fa55103b30ed6ce4db62b218dba1630922058ea11a9047700502fb7b8cef457d"
+          },
+          "original_exact": true
+        }
+      ],
+      "original_registration": {
+        "path": ".artifacts/issue59-learning-ui-20261025/20261025-024302-strategy-proposal/original.batch.json",
+        "bytes": 4843,
+        "sha256": "eb3193a58e530104c4d597a4ad9cbb783b74c76ebfd75159e1b6d3151e824228"
+      },
+      "current_registration_deep_equal": true,
+      "state": "awaiting_review",
+      "processes": [
+        {
+          "pid": 2104813,
+          "expected_birth": "29194075",
+          "current": null,
+          "original_process_absent": true
+        },
+        {
+          "pid": 2104840,
+          "expected_birth": "29194082",
+          "current": null,
+          "original_process_absent": true
+        },
+        {
+          "pid": 2105239,
+          "expected_birth": "29194213",
+          "current": null,
+          "original_process_absent": true
+        },
+        {
+          "pid": 2118053,
+          "expected_birth": "29201267",
+          "current": null,
+          "original_process_absent": true
+        },
+        {
+          "pid": 2102883,
+          "expected_birth": null,
+          "current": null,
+          "original_process_absent": true
+        }
+      ],
+      "ui": [
+        {
+          "kind": "tab",
+          "id": "w1H:tF3",
+          "rc": 1,
+          "error": "tab_not_found",
+          "absent": true
+        },
+        {
+          "kind": "pane",
+          "id": "w1H:pF6",
+          "rc": 1,
+          "error": "pane_not_found",
+          "absent": true
+        }
+      ],
+      "refs": {
+        "branch": "codex-strategy-silent-20261025-024302",
+        "original_head": "d7ca14905bdc68e84422b6434a884b82b905929a",
+        "worktree_present": true,
+        "current_head": "d7ca14905bdc68e84422b6434a884b82b905929a",
+        "branch_head": "d7ca14905bdc68e84422b6434a884b82b905929a"
+      },
+      "ui_activity": [
+        {
+          "at": "2026-10-25T10:52:23+08:00",
+          "kind": "ops-ui-closed-business-pending",
+          "key": "6392600890:20261025-024302-strategy-proposal",
+          "batch": "20261025-024302-strategy-proposal",
+          "tab": "w1H:tF3",
+          "authority": 6392600890,
+          "evidence": "paper/materials/20261025-issue59-learning-ui-ops/close-readback.json",
+          "no_batch_finish_retire_or_replay": true
+        }
+      ],
+      "retirement_event": null,
+      "source_session": "01a16f39-a922-7203-b580-ecd034877494",
+      "source_turn": "01a16f3a-97d5-7932-87c3-731f4be02f13",
+      "source_account": "codex3/learner"
+    },
+    {
+      "batch": "20261025-031302-strategy-proposal",
+      "files": [
+        {
+          "snapshot": {
+            "path": ".artifacts/issue59-learning-ui-20261025/20261025-031302-strategy-proposal/original.tui.json",
+            "bytes": 4898,
+            "sha256": "98e693e705a5698e443fa8a811b3a23d45ee37466da3efe2be93e581390c0578"
+          },
+          "snapshot_exact": true,
+          "original": {
+            "path": "ops/codex-ops/learner/learner-20261025-031302-strategy-proposal.tui.json",
+            "bytes": 4898,
+            "sha256": "98e693e705a5698e443fa8a811b3a23d45ee37466da3efe2be93e581390c0578"
+          },
+          "original_exact": true
+        },
+        {
+          "snapshot": {
+            "path": ".artifacts/issue59-learning-ui-20261025/20261025-031302-strategy-proposal/original.native.jsonl",
+            "bytes": 2285733,
+            "sha256": "97c4e6e70c8f7a04f7d627fd64204064cdf7970b70c83bc1920582e5d460a006"
+          },
+          "snapshot_exact": true,
+          "original": {
+            "path": "ops/codex-ops/accounts/codex3/learner/sessions/2026/10/25/rollout-2026-10-25T03-13-16-01a16f54-e2e2-70d3-a053-0fe3a03ffa0d.jsonl",
+            "bytes": 2285733,
+            "sha256": "97c4e6e70c8f7a04f7d627fd64204064cdf7970b70c83bc1920582e5d460a006"
+          },
+          "original_exact": true
+        },
+        {
+          "snapshot": {
+            "path": ".artifacts/issue59-learning-ui-20261025/20261025-031302-strategy-proposal/original.learner.jsonl",
+            "bytes": 2205156,
+            "sha256": "6d6b47505829d0671c62d7726bdfee26ec009fd080f9bb9642eca62726a573cc"
+          },
+          "snapshot_exact": true,
+          "original": {
+            "path": "learner/runs/20261025-031312-c9932e9f-c816-4345-b18b-0d36e9139c54-strategy-proposal.jsonl",
+            "bytes": 2205156,
+            "sha256": "6d6b47505829d0671c62d7726bdfee26ec009fd080f9bb9642eca62726a573cc"
+          },
+          "original_exact": true
+        },
+        {
+          "snapshot": {
+            "path": ".artifacts/issue59-learning-ui-20261025/20261025-031302-strategy-proposal/original.out",
+            "bytes": 2927,
+            "sha256": "f5db41bf592cade570f8c793c9ca70fa5461e84c123d189c3d67042887e14863"
+          },
+          "snapshot_exact": true,
+          "original": {
+            "path": "ops/codex-ops/learner/20261025-031302-strategy-proposal.out",
+            "bytes": 2927,
+            "sha256": "f5db41bf592cade570f8c793c9ca70fa5461e84c123d189c3d67042887e14863"
+          },
+          "original_exact": true
+        },
+        {
+          "snapshot": {
+            "path": ".artifacts/issue59-learning-ui-20261025/20261025-031302-strategy-proposal/original.err",
+            "bytes": 79,
+            "sha256": "fd92f8dadd0b5a78325f03cccc8b0197b2e569aedf996e3f802410000ae7dd6c"
+          },
+          "snapshot_exact": true,
+          "original": {
+            "path": "ops/codex-ops/learner/20261025-031302-strategy-proposal.err",
+            "bytes": 79,
+            "sha256": "fd92f8dadd0b5a78325f03cccc8b0197b2e569aedf996e3f802410000ae7dd6c"
+          },
+          "original_exact": true
+        },
+        {
+          "snapshot": {
+            "path": ".artifacts/issue59-learning-ui-20261025/20261025-031302-strategy-proposal/original.verification-deferred.json",
+            "bytes": 1208,
+            "sha256": "bb7073a12fb1d7aabcbd924bf3805377c983723db760c26220e3ee2b90d33f8a"
+          },
+          "snapshot_exact": true,
+          "original": {
+            "path": "ops/codex-ops/learner/20261025-031302-strategy-proposal.verification-deferred.json",
+            "bytes": 1208,
+            "sha256": "bb7073a12fb1d7aabcbd924bf3805377c983723db760c26220e3ee2b90d33f8a"
+          },
+          "original_exact": true
+        }
+      ],
+      "original_registration": {
+        "path": ".artifacts/issue59-learning-ui-20261025/20261025-031302-strategy-proposal/original.batch.json",
+        "bytes": 4168,
+        "sha256": "7eda4c3a6f5d1726e4da5563dabd95c96c878e7e1148b999d787e0466e41dd0e"
+      },
+      "current_registration_deep_equal": true,
+      "state": "awaiting_review",
+      "processes": [
+        {
+          "pid": 2334836,
+          "expected_birth": "29372513",
+          "current": null,
+          "original_process_absent": true
+        },
+        {
+          "pid": 2334861,
+          "expected_birth": "29372518",
+          "current": null,
+          "original_process_absent": true
+        },
+        {
+          "pid": 2335096,
+          "expected_birth": "29372638",
+          "current": null,
+          "original_process_absent": true
+        },
+        {
+          "pid": 2337553,
+          "expected_birth": "29375991",
+          "current": null,
+          "original_process_absent": true
+        },
+        {
+          "pid": 2334050,
+          "expected_birth": null,
+          "current": null,
+          "original_process_absent": true
+        }
+      ],
+      "ui": [
+        {
+          "kind": "tab",
+          "id": "w1H:tF6",
+          "rc": 1,
+          "error": "tab_not_found",
+          "absent": true
+        },
+        {
+          "kind": "pane",
+          "id": "w1H:pF9",
+          "rc": 1,
+          "error": "pane_not_found",
+          "absent": true
+        }
+      ],
+      "refs": {
+        "branch": "codex-strategy-silent-20261025-031302",
+        "original_head": "f117620781b6e8abd8e1a02ecac2be205a01c372",
+        "worktree_present": true,
+        "current_head": "f117620781b6e8abd8e1a02ecac2be205a01c372",
+        "branch_head": "f117620781b6e8abd8e1a02ecac2be205a01c372"
+      },
+      "ui_activity": [
+        {
+          "at": "2026-10-25T10:52:23+08:00",
+          "kind": "ops-ui-closed-business-pending",
+          "key": "6392600890:20261025-031302-strategy-proposal",
+          "batch": "20261025-031302-strategy-proposal",
+          "tab": "w1H:tF6",
+          "authority": 6392600890,
+          "evidence": "paper/materials/20261025-issue59-learning-ui-ops/close-readback.json",
+          "no_batch_finish_retire_or_replay": true
+        }
+      ],
+      "retirement_event": null,
+      "source_session": "01a16f54-e2e2-70d3-a053-0fe3a03ffa0d",
+      "source_turn": "01a16f55-51a0-7df2-9cb5-31b461004bcf",
+      "source_account": "codex3/learner"
+    },
+    {
+      "batch": "20261025-060422-strategy-proposal",
+      "files": [
+        {
+          "snapshot": {
+            "path": ".artifacts/issue59-learning-ui-20261025/20261025-060422-strategy-proposal/original.tui.json",
+            "bytes": 5889,
+            "sha256": "416e4b284576af0433a71446c98fe93f753fd5a8896837df16efea7e8623a28a"
+          },
+          "snapshot_exact": true,
+          "original": {
+            "path": "ops/codex-ops/learner/learner-20261025-060422-strategy-proposal.tui.json",
+            "bytes": 5889,
+            "sha256": "416e4b284576af0433a71446c98fe93f753fd5a8896837df16efea7e8623a28a"
+          },
+          "original_exact": true
+        },
+        {
+          "snapshot": {
+            "path": ".artifacts/issue59-learning-ui-20261025/20261025-060422-strategy-proposal/original.native.jsonl",
+            "bytes": 3132631,
+            "sha256": "c3e37d4e750bac7dc72bb9e3cce99392833d3fe2d247ecb239793a25b2eed00f"
+          },
+          "snapshot_exact": true,
+          "original": {
+            "path": "ops/codex-ops/accounts/codex3/learner/sessions/2026/10/25/rollout-2026-10-25T06-04-49-01a16ff1-f037-7581-a2bf-932c21d75a74.jsonl",
+            "bytes": 3134010,
+            "sha256": "300daccdfda357e72c1490fec4dc5293fff0e2b8a2e463a955a7fba47286aa56"
+          },
+          "original_exact": false,
+          "original_append_only": true,
+          "appended_bytes": 1379,
+          "append_sha256": "81cf8c298b4d4fc6f6df4086e3939d238fadb0f0d9d93a04437eeefb67998f3c",
+          "appended_events": [
+            {
+              "timestamp": "2026-10-25T02:47:38.562Z",
+              "type": "event_msg",
+              "payload_type": "item_completed",
+              "turn_id": "01a16ff2-597d-7fe0-90ff-d1bce16f801d",
+              "item_type": "CommandExecution",
+              "item_status": "failed",
+              "exit_code": 130
+            }
+          ]
+        },
+        {
+          "snapshot": {
+            "path": ".artifacts/issue59-learning-ui-20261025/20261025-060422-strategy-proposal/original.learner.jsonl",
+            "bytes": 3053935,
+            "sha256": "cc947a6583f9a62d2903556e6ec9341e92b2179e747c9ccfc262d701074ba7d4"
+          },
+          "snapshot_exact": true,
+          "original": {
+            "path": "learner/runs/20261025-060438-0cdfea1d-9ce7-460e-a4ef-5a7aa15d4444-strategy-proposal.jsonl",
+            "bytes": 3053935,
+            "sha256": "cc947a6583f9a62d2903556e6ec9341e92b2179e747c9ccfc262d701074ba7d4"
+          },
+          "original_exact": true
+        },
+        {
+          "snapshot": {
+            "path": ".artifacts/issue59-learning-ui-20261025/20261025-060422-strategy-proposal/original.out",
+            "bytes": 3835,
+            "sha256": "2b8e71754470735986d4b822368f87aa8d9a1f82a318106176cb7a3a9d138bf6"
+          },
+          "snapshot_exact": true,
+          "original": {
+            "path": "ops/codex-ops/learner/20261025-060422-strategy-proposal.out",
+            "bytes": 3835,
+            "sha256": "2b8e71754470735986d4b822368f87aa8d9a1f82a318106176cb7a3a9d138bf6"
+          },
+          "original_exact": true
+        },
+        {
+          "snapshot": {
+            "path": ".artifacts/issue59-learning-ui-20261025/20261025-060422-strategy-proposal/original.err",
+            "bytes": 79,
+            "sha256": "fd92f8dadd0b5a78325f03cccc8b0197b2e569aedf996e3f802410000ae7dd6c"
+          },
+          "snapshot_exact": true,
+          "original": {
+            "path": "ops/codex-ops/learner/20261025-060422-strategy-proposal.err",
+            "bytes": 79,
+            "sha256": "fd92f8dadd0b5a78325f03cccc8b0197b2e569aedf996e3f802410000ae7dd6c"
+          },
+          "original_exact": true
+        },
+        {
+          "snapshot": {
+            "path": ".artifacts/issue59-learning-ui-20261025/20261025-060422-strategy-proposal/original.verification-deferred.json",
+            "bytes": 1208,
+            "sha256": "4f36a024996ee413452cc83e1effc380fcfcc4a5e7c789a77590783ad4988eec"
+          },
+          "snapshot_exact": true,
+          "original": {
+            "path": "ops/codex-ops/learner/20261025-060422-strategy-proposal.verification-deferred.json",
+            "bytes": 1208,
+            "sha256": "4f36a024996ee413452cc83e1effc380fcfcc4a5e7c789a77590783ad4988eec"
+          },
+          "original_exact": true
+        },
+        {
+          "snapshot": {
+            "path": ".artifacts/issue59-learning-ui-20261025/20261025-060422-strategy-proposal/background-test-0.log",
+            "bytes": 8022,
+            "sha256": "3def05a4a3ae73f5de09a2c94cec393c4dfa293c3d0bb1e6b2e1cfaa6c116a29"
+          },
+          "snapshot_exact": true,
+          "original": {
+            "path": ".worktrees/codex-strategy-silent-20261025-060422/learner/runs/20261025-060438-0cdfea1d-9ce7-460e-a4ef-5a7aa15d4444-strategy-proposal/test-sandbox.log",
+            "bytes": 8022,
+            "sha256": "3def05a4a3ae73f5de09a2c94cec393c4dfa293c3d0bb1e6b2e1cfaa6c116a29"
+          },
+          "original_exact": true
+        }
+      ],
+      "original_registration": {
+        "path": ".artifacts/issue59-learning-ui-20261025/20261025-060422-strategy-proposal/original.batch.json",
+        "bytes": 4450,
+        "sha256": "80c1a37b9af0704692832d2d18b6448522b7c193ee99ed8453107154ade2398d"
+      },
+      "current_registration_deep_equal": true,
+      "state": "awaiting_review",
+      "processes": [
+        {
+          "pid": 2830408,
+          "expected_birth": "30401759",
+          "current": null,
+          "original_process_absent": true
+        },
+        {
+          "pid": 2830432,
+          "expected_birth": "30401763",
+          "current": null,
+          "original_process_absent": true
+        },
+        {
+          "pid": 2830558,
+          "expected_birth": "30401890",
+          "current": null,
+          "original_process_absent": true
+        },
+        {
+          "pid": 2833206,
+          "expected_birth": "30405098",
+          "current": null,
+          "original_process_absent": true
+        },
+        {
+          "pid": 2855312,
+          "expected_birth": "30446369",
+          "current": null,
+          "original_process_absent": true
+        },
+        {
+          "pid": 2855421,
+          "expected_birth": "30446668",
+          "current": null,
+          "original_process_absent": true
+        },
+        {
+          "pid": 2855422,
+          "expected_birth": "30446668",
+          "current": null,
+          "original_process_absent": true
+        },
+        {
+          "pid": 2855423,
+          "expected_birth": "30446671",
+          "current": null,
+          "original_process_absent": true
+        },
+        {
+          "pid": 2855424,
+          "expected_birth": "30446671",
+          "current": null,
+          "original_process_absent": true
+        },
+        {
+          "pid": 2855590,
+          "expected_birth": "30446866",
+          "current": null,
+          "original_process_absent": true
+        },
+        {
+          "pid": 2855598,
+          "expected_birth": "30446871",
+          "current": null,
+          "original_process_absent": true
+        },
+        {
+          "pid": 2904818,
+          "expected_birth": "30491410",
+          "current": null,
+          "original_process_absent": true
+        },
+        {
+          "pid": 2829855,
+          "expected_birth": null,
+          "current": null,
+          "original_process_absent": true
+        }
+      ],
+      "ui": [
+        {
+          "kind": "tab",
+          "id": "w1H:tF7",
+          "rc": 1,
+          "error": "tab_not_found",
+          "absent": true
+        },
+        {
+          "kind": "pane",
+          "id": "w1H:pFA",
+          "rc": 1,
+          "error": "pane_not_found",
+          "absent": true
+        }
+      ],
+      "refs": {
+        "branch": "codex-strategy-silent-20261025-060422",
+        "original_head": "1cc67c8b517502115249c12c36ea801b6b5e8179",
+        "worktree_present": true,
+        "current_head": "1cc67c8b517502115249c12c36ea801b6b5e8179",
+        "branch_head": "1cc67c8b517502115249c12c36ea801b6b5e8179"
+      },
+      "ui_activity": [
+        {
+          "at": "2026-10-25T10:52:23+08:00",
+          "kind": "ops-ui-closed-business-pending",
+          "key": "6392600890:20261025-060422-strategy-proposal",
+          "batch": "20261025-060422-strategy-proposal",
+          "tab": "w1H:tF7",
+          "authority": 6392600890,
+          "evidence": "paper/materials/20261025-issue59-learning-ui-ops/close-readback.json",
+          "no_batch_finish_retire_or_replay": true
+        }
+      ],
+      "retirement_event": null,
+      "source_session": "01a16ff1-f037-7581-a2bf-932c21d75a74",
+      "source_turn": "01a16ff2-597d-7fe0-90ff-d1bce16f801d",
+      "source_account": "codex3/learner"
+    },
+    {
+      "batch": "20261025-071302",
+      "files": [
+        {
+          "snapshot": {
+            "path": ".artifacts/issue59-learning-ui-20261025/20261025-071302/original.tui.json",
+            "bytes": 5134,
+            "sha256": "31f9f4784afb740a85724e558a79d17892956fc7b40602b40a03d4fc82d8394e"
+          },
+          "snapshot_exact": true,
+          "original": {
+            "path": "ops/codex-ops/learner/learner-20261025-071302-postmortem.tui.json",
+            "bytes": 5134,
+            "sha256": "31f9f4784afb740a85724e558a79d17892956fc7b40602b40a03d4fc82d8394e"
+          },
+          "original_exact": true
+        },
+        {
+          "snapshot": {
+            "path": ".artifacts/issue59-learning-ui-20261025/20261025-071302/original.native.jsonl",
+            "bytes": 2109223,
+            "sha256": "9a272d33c9f04e6f6ba14af116e76a56e11f3ef3074e374784d27eb7a6a5a02f"
+          },
+          "snapshot_exact": true,
+          "original": {
+            "path": "ops/codex-ops/accounts/codex3/learner/sessions/2026/10/25/rollout-2026-10-25T07-13-07-01a17030-7997-7b82-9070-b842eb8273c5.jsonl",
+            "bytes": 2109223,
+            "sha256": "9a272d33c9f04e6f6ba14af116e76a56e11f3ef3074e374784d27eb7a6a5a02f"
+          },
+          "original_exact": true
+        },
+        {
+          "snapshot": {
+            "path": ".artifacts/issue59-learning-ui-20261025/20261025-071302/original.learner.jsonl",
+            "bytes": 2026571,
+            "sha256": "fed82938f9ed01d239f8005f9a11283d902c8b817be68368e4ae66d86b51455c"
+          },
+          "snapshot_exact": true,
+          "original": {
+            "path": "learner/runs/20261025-071303-37a0129a-bb51-4ff7-a938-4f33b965b00b-postmortem.jsonl",
+            "bytes": 2026571,
+            "sha256": "fed82938f9ed01d239f8005f9a11283d902c8b817be68368e4ae66d86b51455c"
+          },
+          "original_exact": true
+        },
+        {
+          "snapshot": {
+            "path": ".artifacts/issue59-learning-ui-20261025/20261025-071302/original.out",
+            "bytes": 3243,
+            "sha256": "ae56dc6df50d8a163a6430dfcaa91b1a31b602d0b38573f8f957878569f5a821"
+          },
+          "snapshot_exact": true,
+          "original": {
+            "path": "ops/codex-ops/learner/20261025-071302.out",
+            "bytes": 3243,
+            "sha256": "ae56dc6df50d8a163a6430dfcaa91b1a31b602d0b38573f8f957878569f5a821"
+          },
+          "original_exact": true
+        },
+        {
+          "snapshot": {
+            "path": ".artifacts/issue59-learning-ui-20261025/20261025-071302/original.err",
+            "bytes": 79,
+            "sha256": "fd92f8dadd0b5a78325f03cccc8b0197b2e569aedf996e3f802410000ae7dd6c"
+          },
+          "snapshot_exact": true,
+          "original": {
+            "path": "ops/codex-ops/learner/20261025-071302.err",
+            "bytes": 79,
+            "sha256": "fd92f8dadd0b5a78325f03cccc8b0197b2e569aedf996e3f802410000ae7dd6c"
+          },
+          "original_exact": true
+        },
+        {
+          "snapshot": {
+            "path": ".artifacts/issue59-learning-ui-20261025/20261025-071302/original.verification-deferred.json",
+            "bytes": 949,
+            "sha256": "42708e089e98310fcfb8806af591e807683c1c1a0f40b5308bec38b561b6a7e5"
+          },
+          "snapshot_exact": true,
+          "original": {
+            "path": "ops/codex-ops/learner/20261025-071302.verification-deferred.json",
+            "bytes": 949,
+            "sha256": "42708e089e98310fcfb8806af591e807683c1c1a0f40b5308bec38b561b6a7e5"
+          },
+          "original_exact": true
+        }
+      ],
+      "original_registration": {
+        "path": ".artifacts/issue59-learning-ui-20261025/20261025-071302/original.batch.json",
+        "bytes": 4085,
+        "sha256": "6d0ca983e44e0582e5a84589125923444aae07f838982608b835ca8e315bc4bc"
+      },
+      "current_registration_deep_equal": true,
+      "state": "awaiting_review",
+      "processes": [
+        {
+          "pid": 3073267,
+          "expected_birth": "30811599",
+          "current": null,
+          "original_process_absent": true
+        },
+        {
+          "pid": 3072950,
+          "expected_birth": null,
+          "current": null,
+          "original_process_absent": true
+        }
+      ],
+      "ui": [
+        {
+          "kind": "tab",
+          "id": "w1H:tF8",
+          "rc": 1,
+          "error": "tab_not_found",
+          "absent": true
+        },
+        {
+          "kind": "pane",
+          "id": "w1H:pFB",
+          "rc": 1,
+          "error": "pane_not_found",
+          "absent": true
+        }
+      ],
+      "refs": {
+        "branch": "main",
+        "original_head": "915bd4727a0148b7bd9d3dbe2c6557a966ba38f2",
+        "worktree_present": true,
+        "current_head": "ce5f425ee708a5cce72c6dbc588318cd9cda7d7e",
+        "branch_head": "ce5f425ee708a5cce72c6dbc588318cd9cda7d7e"
+      },
+      "ui_activity": [
+        {
+          "at": "2026-10-25T10:52:23+08:00",
+          "kind": "ops-ui-closed-business-pending",
+          "key": "6392600890:20261025-071302",
+          "batch": "20261025-071302",
+          "tab": "w1H:tF8",
+          "authority": 6392600890,
+          "evidence": "paper/materials/20261025-issue59-learning-ui-ops/close-readback.json",
+          "no_batch_finish_retire_or_replay": true
+        }
+      ],
+      "retirement_event": null,
+      "source_session": "01a17030-7997-7b82-9070-b842eb8273c5",
+      "source_turn": "01a17030-da83-7443-ab02-4b83fc02b01b",
+      "source_account": "codex3/learner"
+    }
+  ],
+  "snapshot_count": 38,
+  "original_file_changes": [
+    {
+      "batch": "20261025-024302-fix-batch",
+      "snapshot": {
+        "path": ".artifacts/issue59-learning-ui-20261025/20261025-024302-fix-batch/original.native.jsonl",
+        "bytes": 2792569,
+        "sha256": "0d7d47acdd7e9abb46a6237eed944a05b32b4b1cd9434fb74a148fd19efb308c"
+      },
+      "snapshot_exact": true,
+      "original": {
+        "path": "ops/codex-ops/accounts/codex3/learner/sessions/2026/10/25/rollout-2026-10-25T02-43-56-01a16f3a-0635-7792-b8b2-be68791e531a.jsonl",
+        "bytes": 2796239,
+        "sha256": "335cce8f50076b9cb7554465f5d76d87fca3441e0288c70c2f1e1ffec660c050"
+      },
+      "original_exact": false,
+      "original_append_only": true,
+      "appended_bytes": 3670,
+      "append_sha256": "876a0f27a5424c8b8e37a30e6d3699537c317b2b8036118386e4875ad8bbb345",
+      "appended_events": [
+        {
+          "timestamp": "2026-10-25T02:47:38.657Z",
+          "type": "event_msg",
+          "payload_type": "item_completed",
+          "turn_id": "01a16f3a-a813-7eb2-8bd9-4c4f802ae0ba",
+          "item_type": "CommandExecution",
+          "item_status": "failed",
+          "exit_code": 130
+        }
+      ]
+    },
+    {
+      "batch": "20261025-060422-strategy-proposal",
+      "snapshot": {
+        "path": ".artifacts/issue59-learning-ui-20261025/20261025-060422-strategy-proposal/original.native.jsonl",
+        "bytes": 3132631,
+        "sha256": "c3e37d4e750bac7dc72bb9e3cce99392833d3fe2d247ecb239793a25b2eed00f"
+      },
+      "snapshot_exact": true,
+      "original": {
+        "path": "ops/codex-ops/accounts/codex3/learner/sessions/2026/10/25/rollout-2026-10-25T06-04-49-01a16ff1-f037-7581-a2bf-932c21d75a74.jsonl",
+        "bytes": 3134010,
+        "sha256": "300daccdfda357e72c1490fec4dc5293fff0e2b8a2e463a955a7fba47286aa56"
+      },
+      "original_exact": false,
+      "original_append_only": true,
+      "appended_bytes": 1379,
+      "append_sha256": "81cf8c298b4d4fc6f6df4086e3939d238fadb0f0d9d93a04437eeefb67998f3c",
+      "appended_events": [
+        {
+          "timestamp": "2026-10-25T02:47:38.562Z",
+          "type": "event_msg",
+          "payload_type": "item_completed",
+          "turn_id": "01a16ff2-597d-7fe0-90ff-d1bce16f801d",
+          "item_type": "CommandExecution",
+          "item_status": "failed",
+          "exit_code": 130
+        }
+      ]
+    }
+  ],
+  "applicable_coverage": [
+    {
+      "path": "learner/lib/herdr.ts",
+      "bytes": 48320,
+      "sha256": "508d1dbd780bae11c7ef624a28f0921626e2fc2ad8447d191329c58ddcffa48e",
+      "head_sha256": "508d1dbd780bae11c7ef624a28f0921626e2fc2ad8447d191329c58ddcffa48e",
+      "full_input_sha256": "508d1dbd780bae11c7ef624a28f0921626e2fc2ad8447d191329c58ddcffa48e",
+      "exact": true
+    },
+    {
+      "path": "ops/learner_tui.py",
+      "bytes": 46691,
+      "sha256": "c96480ca4679d406157db6b925af5068f02026be783fa3cabc2b2a7d52b08617",
+      "head_sha256": "c96480ca4679d406157db6b925af5068f02026be783fa3cabc2b2a7d52b08617",
+      "full_input_sha256": "c96480ca4679d406157db6b925af5068f02026be783fa3cabc2b2a7d52b08617",
+      "exact": true
+    },
+    {
+      "path": "ops/codex-ops-learner.sh",
+      "bytes": 19189,
+      "sha256": "6bf273d0cd95f8c2febb10b2c60bf60f4dafc5440759d32a5d64f7b657afd0b8",
+      "head_sha256": "6bf273d0cd95f8c2febb10b2c60bf60f4dafc5440759d32a5d64f7b657afd0b8",
+      "full_input_sha256": "6bf273d0cd95f8c2febb10b2c60bf60f4dafc5440759d32a5d64f7b657afd0b8",
+      "exact": true
+    },
+    {
+      "path": "agent/tests/learner-herdr.test.ts",
+      "bytes": 49237,
+      "sha256": "f3eddb0c873c7787410f27b3f4783597ee6ee325f69c1ac6dac07486e749089d",
+      "head_sha256": "f3eddb0c873c7787410f27b3f4783597ee6ee325f69c1ac6dac07486e749089d",
+      "full_input_sha256": "f3eddb0c873c7787410f27b3f4783597ee6ee325f69c1ac6dac07486e749089d",
+      "exact": true
+    },
+    {
+      "path": "agent/tests/learner-herdr-ownership.test.ts",
+      "bytes": 7998,
+      "sha256": "af57612bd0b6413b2cac926641e3d30820074e43391d4dc260ca7ddf783add6b",
+      "head_sha256": "af57612bd0b6413b2cac926641e3d30820074e43391d4dc260ca7ddf783add6b",
+      "full_input_sha256": "af57612bd0b6413b2cac926641e3d30820074e43391d4dc260ca7ddf783add6b",
+      "exact": true
+    },
+    {
+      "path": "agent/tests/learner-native-environment.test.ts",
+      "bytes": 5297,
+      "sha256": "b95551d08a859fed11ffb102e59a6eb0a9c7da3766480973fbe39c746c202258",
+      "head_sha256": "b95551d08a859fed11ffb102e59a6eb0a9c7da3766480973fbe39c746c202258",
+      "full_input_sha256": "b95551d08a859fed11ffb102e59a6eb0a9c7da3766480973fbe39c746c202258",
+      "exact": true
+    },
+    {
+      "path": "agent/tests/learner-native-prelude.test.ts",
+      "bytes": 7652,
+      "sha256": "cf17558ae5814590e7c6b9a9d5b038680f6fda80e452d3d52a1d22e79d920a27",
+      "head_sha256": "cf17558ae5814590e7c6b9a9d5b038680f6fda80e452d3d52a1d22e79d920a27",
+      "full_input_sha256": "cf17558ae5814590e7c6b9a9d5b038680f6fda80e452d3d52a1d22e79d920a27",
+      "exact": true
+    },
+    {
+      "path": "agent/tests/learner-tui-reconciliation.test.ts",
+      "bytes": 8512,
+      "sha256": "c18e3929c7561c07c65428b6819f8bcc7301f91bdcbf79d681e4b3bd52d0c9c6",
+      "head_sha256": "c18e3929c7561c07c65428b6819f8bcc7301f91bdcbf79d681e4b3bd52d0c9c6",
+      "full_input_sha256": "c18e3929c7561c07c65428b6819f8bcc7301f91bdcbf79d681e4b3bd52d0c9c6",
+      "exact": true
+    },
+    {
+      "path": "agent/tests/learner-herdr-launcher.test.ts",
+      "bytes": 6549,
+      "sha256": "e70899cecc4940d2bdba45dede41d11f7c6851c3b007d9cd9506edd0a7a2fc23",
+      "head_sha256": "e70899cecc4940d2bdba45dede41d11f7c6851c3b007d9cd9506edd0a7a2fc23",
+      "full_input_sha256": "e70899cecc4940d2bdba45dede41d11f7c6851c3b007d9cd9506edd0a7a2fc23",
+      "exact": true
+    },
+    {
+      "path": "agent/tests/learner-tui-observation.test.ts",
+      "bytes": 6928,
+      "sha256": "13a843eba50d086dfe2bdb071efce977c36c5b9c0ff1405cd38aa0e35eb32049",
+      "head_sha256": "13a843eba50d086dfe2bdb071efce977c36c5b9c0ff1405cd38aa0e35eb32049",
+      "full_input_sha256": "13a843eba50d086dfe2bdb071efce977c36c5b9c0ff1405cd38aa0e35eb32049",
+      "exact": true
+    },
+    {
+      "path": "agent/tests/learner-herdr-receipts.test.ts",
+      "bytes": 536,
+      "sha256": "c98590e9c7973edb1064fb358ed284034565eb1a06ea91bd5e8b352a4a574174",
+      "head_sha256": "c98590e9c7973edb1064fb358ed284034565eb1a06ea91bd5e8b352a4a574174",
+      "full_input_sha256": "c98590e9c7973edb1064fb358ed284034565eb1a06ea91bd5e8b352a4a574174",
+      "exact": true
+    },
+    {
+      "path": "ops/tests/test_learner_tui.py",
+      "bytes": 24150,
+      "sha256": "f7bb8b341fa48af5adff825605e4c34c0bd2ce6181963b5d7635bedf0426c39e",
+      "head_sha256": "f7bb8b341fa48af5adff825605e4c34c0bd2ce6181963b5d7635bedf0426c39e",
+      "full_input_sha256": "f7bb8b341fa48af5adff825605e4c34c0bd2ce6181963b5d7635bedf0426c39e",
+      "exact": true
+    },
+    {
+      "path": "ops/tests/test_learner_tui_recovery.py",
+      "bytes": 11181,
+      "sha256": "98d36dfdc3af85b01139cd7c4ee54ea29b85b4ca129ec63d38c5d457c4edb66b",
+      "head_sha256": "98d36dfdc3af85b01139cd7c4ee54ea29b85b4ca129ec63d38c5d457c4edb66b",
+      "full_input_sha256": "98d36dfdc3af85b01139cd7c4ee54ea29b85b4ca129ec63d38c5d457c4edb66b",
+      "exact": true
+    },
+    {
+      "path": "ops/tests/test_learner_environment.py",
+      "bytes": 4756,
+      "sha256": "cd40cdacc0e609b09a770b3d4ccb75e1f408af2a5b2f107081e2ed93afdb0b77",
+      "head_sha256": "cd40cdacc0e609b09a770b3d4ccb75e1f408af2a5b2f107081e2ed93afdb0b77",
+      "full_input_sha256": "cd40cdacc0e609b09a770b3d4ccb75e1f408af2a5b2f107081e2ed93afdb0b77",
+      "exact": true
+    },
+    {
+      "path": "ops/tests/test_learner_wrapper_completion.py",
+      "bytes": 23401,
+      "sha256": "bafeccbdb262c212d576051a2a33c7d73066a6aab8f56528ff5955ceec8f31c4",
+      "head_sha256": "bafeccbdb262c212d576051a2a33c7d73066a6aab8f56528ff5955ceec8f31c4",
+      "full_input_sha256": "bafeccbdb262c212d576051a2a33c7d73066a6aab8f56528ff5955ceec8f31c4",
+      "exact": true
+    },
+    {
+      "path": "ops/tests/test_strategy_external.py",
+      "bytes": 28543,
+      "sha256": "30ee086f1206b280d3989770774c454a6af8152c2a7cfcdf2b0670891758abd8",
+      "head_sha256": "30ee086f1206b280d3989770774c454a6af8152c2a7cfcdf2b0670891758abd8",
+      "full_input_sha256": "30ee086f1206b280d3989770774c454a6af8152c2a7cfcdf2b0670891758abd8",
+      "exact": true
+    },
+    {
+      "path": "ops/tests/test_learner_launch_failures.py",
+      "bytes": 14790,
+      "sha256": "485874d11a68cf21505ee65697a15e7726137de97d0350c956238049ce38a12f",
+      "head_sha256": "485874d11a68cf21505ee65697a15e7726137de97d0350c956238049ce38a12f",
+      "full_input_sha256": "485874d11a68cf21505ee65697a15e7726137de97d0350c956238049ce38a12f",
+      "exact": true
+    },
+    {
+      "path": "ops/brain_view.py",
+      "bytes": 17250,
+      "sha256": "7b8dc333fd6e1756192cdcf588b18e09b544ada186b60cefa5048bfdbe6ab2e0",
+      "head_sha256": "7b8dc333fd6e1756192cdcf588b18e09b544ada186b60cefa5048bfdbe6ab2e0",
+      "full_input_sha256": "7b8dc333fd6e1756192cdcf588b18e09b544ada186b60cefa5048bfdbe6ab2e0",
+      "exact": true
+    }
+  ],
+  "suites": [
+    {
+      "path": "/home/dw/Projects/agent-sts2/.worktrees/integrator59-candidates-20261025/agent/tests/learner-herdr-launcher.test.ts",
+      "status": "passed",
+      "assertions": 5
+    },
+    {
+      "path": "/home/dw/Projects/agent-sts2/.worktrees/integrator59-candidates-20261025/agent/tests/learner-herdr-ownership.test.ts",
+      "status": "passed",
+      "assertions": 4
+    },
+    {
+      "path": "/home/dw/Projects/agent-sts2/.worktrees/integrator59-candidates-20261025/agent/tests/learner-herdr-receipts.test.ts",
+      "status": "passed",
+      "assertions": 1
+    },
+    {
+      "path": "/home/dw/Projects/agent-sts2/.worktrees/integrator59-candidates-20261025/agent/tests/learner-herdr.test.ts",
+      "status": "passed",
+      "assertions": 88
+    },
+    {
+      "path": "/home/dw/Projects/agent-sts2/.worktrees/integrator59-candidates-20261025/agent/tests/learner-native-environment.test.ts",
+      "status": "passed",
+      "assertions": 55
+    },
+    {
+      "path": "/home/dw/Projects/agent-sts2/.worktrees/integrator59-candidates-20261025/agent/tests/learner-native-prelude.test.ts",
+      "status": "passed",
+      "assertions": 65
+    },
+    {
+      "path": "/home/dw/Projects/agent-sts2/.worktrees/integrator59-candidates-20261025/agent/tests/learner-tui-observation.test.ts",
+      "status": "passed",
+      "assertions": 11
+    },
+    {
+      "path": "/home/dw/Projects/agent-sts2/.worktrees/integrator59-candidates-20261025/agent/tests/learner-tui-reconciliation.test.ts",
+      "status": "passed",
+      "assertions": 52
+    }
+  ],
+  "full_result": {
+    "path": "paper/materials/20261025-issue59-production-trap-combination-integrator/full.json",
+    "bytes": 2580286,
+    "sha256": "68e3842192ca147375ca078d14f10df2cd85c2ed628ce16ff5023a2b59f5e445"
+  },
+  "full_state": {
+    "path": "paper/materials/20261025-issue59-production-trap-combination-integrator/full-state.json",
+    "bytes": 1643,
+    "sha256": "7b3b0ae7e2f100a2c2275a87d349faf5f9a8d2a54de4175cba85e9bb326ba954"
+  },
+  "no_new_full": true,
+  "no_business_or_ui_mutation": true,
+  "historical_ui_controls_not_independently_witnessed": true,
+  "manual_draft_identity_not_established": true,
+  "failures": []
+}

@@ -1,0 +1,66 @@
+{
+  "at": "2026-10-25T20:59:38+08:00",
+  "current_plans": 30,
+  "status_counts": {
+    "processed": 28,
+    "failed": 1,
+    "waiting": 1
+  },
+  "retired_plan_ids": [
+    "issue51-deck-outcomes-003",
+    "issue51-card-picks-004",
+    "issue51-encounter-rk-005",
+    "issue51-top25-card-picks-006",
+    "issue51-dual-boss-001",
+    "issue51-act-boss-002",
+    "issue51-improved-card-picks-007"
+  ],
+  "lane_A": {
+    "plans": 8,
+    "destination_links": 79,
+    "unique_destination_ids": 72,
+    "unique_current_formal_ids": 52,
+    "unique_absent_ids": 20,
+    "whole_playbook_absent_unique_ids": 7,
+    "missing_local_unique_ids": 13
+  },
+  "other_lane_unfinished": [
+    {
+      "plan": "issue51-single-card-lane-b-001-20261024",
+      "lane": "B",
+      "state": "failed",
+      "attempts": 1,
+      "batch": "20261024-211311-strategy-proposal",
+      "entries": [
+        {
+          "id": "external-single-card-lane-b-001",
+          "status": "failed",
+          "reason": null,
+          "destinations": []
+        }
+      ]
+    },
+    {
+      "plan": "issue51-single-card-004-final-20261024-r56-stock",
+      "lane": "B",
+      "state": "waiting",
+      "attempts": 1,
+      "batch": "20261024-233358-strategy-proposal",
+      "entries": [
+        {
+          "id": "external-single-card-004-final-r56-stock",
+          "status": "waiting",
+          "reason": "固定24张已逐张核查并跳过：v0.111取得次数代理1～11，最大单cell独立上传1～8；自有已持有代理每牌1～3局且决策命中均为战斗出牌，无至少100/比较组的拿牌证据。新增策略/rk为0；详见scratch/dispositions.json。需宿主转报#51并停B，通知草稿已落盘，送达与停道未确认。",
+          "destinations": []
+        }
+      ]
+    }
+  ],
+  "legacy_counts_not_current_coverage": {
+    "total": 41,
+    "processed": 28,
+    "remaining": 13
+  },
+  "processed_not_formal_or_scientific": true,
+  "no_ratio_of_dataset_coverage_claimed": true
+}

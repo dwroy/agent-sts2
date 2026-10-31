@@ -1,0 +1,44 @@
+{
+  "at": "2026-10-25T09:49:54+08:00",
+  "issue_comment": 6392128681,
+  "source_head": "c1d92481aa9d4250c99095e6c5e6135d7e938314",
+  "source_committed": false,
+  "leaves": [
+    {
+      "path": "agent/tests/account-drain.test.ts",
+      "sha256": "67a7d53b1421986a7c535422def090847e944caf04204f98a6c9c5cad759944e",
+      "main_equals_source_base": true
+    },
+    {
+      "path": "ops/llm_switch.py",
+      "sha256": "a991f11a078710e83c90799b5e49c809498f761d3772e9b56b956348f6366b5a",
+      "main_equals_source_base": true
+    },
+    {
+      "path": "ops/tests/test_llm_handoff.py",
+      "sha256": "11a84518c9299a11852bba03896bb54a4b41df3f3417730dbc23373627cb7d62",
+      "main_equals_source_base": true
+    }
+  ],
+  "fixture": {
+    "path": "paper/materials/issue29-brain-speed/results.jsonl",
+    "equals_baseline_git_bytes": true,
+    "sha256": "8d83deb7c85a8b7ceb92da9ffb195f13edf4fa2876f9be5692ec8d2ded1c23ef"
+  },
+  "targeted": {
+    "files_pass": 2,
+    "tests_pass": 3,
+    "log_sha256": "f8216483186c44a73972d928c6ad96cc8307bb8a502686fdb0cc383e2b01105b"
+  },
+  "required_recheck": {
+    "pid": 3434621,
+    "birth": 31747070,
+    "cwd": ".worktrees/ops-27-codex1-high/agent",
+    "nice": 19,
+    "workers": 2,
+    "terminal": false
+  },
+  "integration_performed": false,
+  "new_test_started_by_integrator": false,
+  "production_mutations": 0
+}

@@ -1,0 +1,85 @@
+{
+  "schema": "brain-strategies-v1",
+  "character": "silent",
+  "entries": [
+    {
+      "id": "silent-brain-act1-deadly-poison-prefix-context",
+      "version": "1.0.0",
+      "trigger": {
+        "question_types": [
+          "card_reward"
+        ],
+        "acts": [
+          1
+        ]
+      },
+      "strategy": "仅Silent A10/v0.111第一幕：出现DEADLY_POISON时保留拿、备选牌及不拿比较，别由历史频率认定必拿或禁拿。奖励拿牌前缀代理为0张时拿20/77局胜、不拿47/123；7个可配对前缀张数组差均负。但前缀含SNAKEBITE时拿13/35、不拿33/117，方向反转，故不能称普遍负收益。后者后续Boss到达34/35与140/146机会，非独立局率或Boss通过率。前缀遗漏初始/删改/商店/升级牌；未控制玩家/路径/状态，均非因果。不从牌名推断组合机制。",
+      "source": "external:sts2fun",
+      "confidence": 0.3,
+      "evidence": [
+        {
+          "type": "external_aggregate",
+          "source": "external:sts2fun",
+          "url": "https://sts2.fun/static/sts2_public.db.zst",
+          "version": "v0.111",
+          "dataset_sha256": "1f7c0c3d441aedb5c85f04bcd4d8d6a1039b438a8b6fda2d96cfa5c27580cbf5",
+          "downloaded_at": "2026-10-21",
+          "license": "许可未核；署名聚合，不分发原始数据。",
+          "filters": {
+            "character": "silent",
+            "ascension": 10,
+            "criteria": "singleplayer;valid;not abandoned;no modifiers;act=1;CARD.DEADLY_POISON;prior_reward_cards_n=0;pick win/offers=20/77;no=47/124;n=pick+no offers,not runs;cell runs>=10;upgrades unknown"
+          },
+          "statistic": {
+            "name": "offer_win_rate_difference",
+            "value": -0.11929199832425641,
+            "unit": "fraction_difference"
+          },
+          "denominator": {
+            "unit": "offers",
+            "n": 201
+          },
+          "design": "observational",
+          "limitations": [
+            "自选上传非因果；玩家未知，同局跨组；前缀非实牌组；Boss仅到达，无聚类区间。"
+          ],
+          "ref": "paper/materials/20261024-issue51-p0-0802-ops/aggregates/card-picks-v0.111.json#/prefix_size_groups/322;/prefix_size_groups/313",
+          "role": "support"
+        },
+        {
+          "type": "external_aggregate",
+          "source": "external:sts2fun",
+          "url": "https://sts2.fun/static/sts2_public.db.zst",
+          "version": "v0.111",
+          "dataset_sha256": "1f7c0c3d441aedb5c85f04bcd4d8d6a1039b438a8b6fda2d96cfa5c27580cbf5",
+          "downloaded_at": "2026-10-21",
+          "license": "许可未核；署名聚合，不分发原始数据。",
+          "filters": {
+            "character": "silent",
+            "ascension": 10,
+            "criteria": "singleplayer;valid;not abandoned;no modifiers;act=1;CARD.DEADLY_POISON;prior_reward_card_present=CARD.SNAKEBITE;pick win/offers=13/35;no=38/146;n=pick+no offers,not runs;cell runs>=10;upgrades unknown"
+          },
+          "statistic": {
+            "name": "offer_win_rate_difference",
+            "value": 0.11115459882583173,
+            "unit": "fraction_difference"
+          },
+          "denominator": {
+            "unit": "offers",
+            "n": 181
+          },
+          "design": "observational",
+          "limitations": [
+            "自选上传非因果；玩家未知，同局跨组；前缀非实牌组；Boss仅到达，无聚类区间。"
+          ],
+          "ref": "paper/materials/20261024-issue51-p0-0802-ops/aggregates/card-picks-v0.111.json#/prefix_card_presence_groups/1409;/prefix_card_presence_groups/1381",
+          "role": "contradict"
+        }
+      ],
+      "input_sha256": "3dd8a02855744c04304c24a0c59095723ab3432fe759cc8ac527c2320dd10bdd",
+      "evidence_status": "conflict",
+      "formal_publication": "pending",
+      "consumer_readback": "pending"
+    }
+  ]
+}

@@ -2,7 +2,8 @@
 import { createHash } from "node:crypto";
 import { existsSync, readFileSync, readdirSync, realpathSync } from "node:fs";
 import { extname, isAbsolute, join, relative, resolve, sep } from "node:path";
-import { characterKey, knowledgeCharacter, knowledgeFile } from "./files.js";
+import { characterKey, knowledgeCharacter, knowledgeFile, knowledgeSubdir } from "./files.js";
+import { runtimeDataFile } from "./runtime-data.js";
 
 type Obj = Record<string, unknown>;
 const object = (x: unknown): x is Obj => x !== null && typeof x === "object" && !Array.isArray(x);
@@ -51,6 +52,7 @@ function fragment(dir: string, catalog: KnowledgeCatalog, name: string): Obj {
 /** Public fragments can reconstruct a missing compatible common view; never borrow role statistics. */
 export function readCompatibleKnowledgeText(dir: string, name: string, character = knowledgeCharacter()): string {
   const legacy = knowledgeFile(dir, name, character);
+  if (runtimeDataFile(dir, relative(dir, join(knowledgeSubdir(name, dir, character), name)))) return readFileSync(legacy, "utf8");
   // No catalogue I/O or new default facts in a healthy existing game process.
   if (existsSync(legacy)) return readFileSync(legacy, "utf8");
   if (name !== "monster-db.json" && name !== "move-model.json") return readFileSync(legacy, "utf8");

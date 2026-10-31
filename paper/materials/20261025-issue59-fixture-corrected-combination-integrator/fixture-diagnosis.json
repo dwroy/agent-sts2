@@ -1,0 +1,22 @@
+{
+  "at": "2026-10-25T11:59:22+08:00",
+  "original_full": {
+    "material": "/home/dw/Projects/agent-sts2/paper/materials/20261025-issue59-final-combination-integrator",
+    "files": 687,
+    "passed": 6694,
+    "failed": 1,
+    "skipped": 2,
+    "result_sha256": "5525a65e8401dbde5f32de66fa53f85d2b011f175cc6490f7340236a1271c0ea"
+  },
+  "failure": "console rotation next run decision absent after fixed 2.2s; fixture and production script identical to main and prior issue60 passing full",
+  "diagnosis": "real tail -F polling and asynchronous viewer observation used fixed sleeps without readiness barriers; isolated unchanged script observes all lines and exits cleanly; no deployed source defect established",
+  "diagnostic_delay_ms": 791.669,
+  "diagnostic_limit": "isolated run did not reproduce a delay beyond 2.2s; timing-boundary diagnosis is an inference, not proof of a production failure",
+  "correction": "bounded 8-second actual-output barriers before append and rotation and after rotation, same four content/exit75/viewer-exited assertions; test-only timeout15s",
+  "targeted": {
+    "passed": 7,
+    "failed": 0
+  },
+  "original_six_unchanged": true,
+  "production_console_unchanged": true
+}

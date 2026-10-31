@@ -1,0 +1,142 @@
+[learner-batch:db548524-1c18-42c8-9b59-ea6dc400a946]
+【启动器说明（codex）】任务说明里的工具名是通用叫法，在这里这样对应：Read = 用只读的 shell 命令看文件（sed -n '起,止p'、head、tail；大文件不许整份输出），Grep = rg 或 grep，Glob = rg --files、ls 或 find，Bash = shell 命令，Edit / Write = apply_patch（或 shell 写文件）。
+本任务允许的工具：Read、Grep、Glob、Bash、Edit、Write。沙箱：工作目录、项目目录和临时目录可写，不联网；key 文件和 .env 读不到。
+
+# 外部来源专线
+
+本批角色 silent，真实调度ID 20261024-083104-strategy-proposal，工作树 /home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261024-083104，项目根 /home/dw/Projects/agent-sts2，临时产出 /home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261024-083104/learner/runs/20261024-083111-9056c6f6-91a0-424e-b9b4-97cd03107538-strategy-proposal。自行完成，不派下级模型。先读 README、最新 STATE、decision-log 末尾和 docs/learning-protocol.md 第9节。仅处理宿主附加的 external_binding 与冻结 work_spec；它优先于普通选题，没有旧四专题/旧批次身份。先核 learn.json 本批 external_source、绑定清单 SHA、实际 HEAD=dispatch_base；失配即停，不改请求或登记。
+
+只读冻结的、已脱敏聚合 JSON 与发布契约，不读原始数据库、逐玩家数据或玩家标识，不下载新数据。游戏知识只能来自这些证据，不从预训练知识补齐。来源统一 external:sts2fun；逐结论记录版本、采集日期、输入 SHA、独立样本分母、观察性限制、反例和缺口。v0.111 与 v0.107–v0.110 分 cohort 统计，不能混算；本系统 live 证据另账，runs=[]，不得补局号或把玩家聚合冒成本系统验证。
+
+按 work_spec 的有界单批主题提炼 knowledge/strategy/rk 候选。先核 #27/#28/#42 冻结契约，命中同场景就合并候选/指向既有ID，冲突保留本系统与外部两条证据和适用条件。rk 保留可复盘条件与缺口；#50 双Boss准备度要求照绑定规格交付。只在 scratch 保存真实候选和来源账本；每条写 formal_publication=pending、consumer_readback=pending。正式发布仍沿既有发布锁、学习账本、消费者读回和后续自然采用流程，候选完成不关闭科学父。不改源码/正式知识、不合入 main/live；HEAD 保持 dispatch_base。
+
+所有 unit_ids 逐项写具体处置和缺证理由，允许 waiting；不得捏造发布、读回、收益或样本。保存 /home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261024-083104/learner/runs/20261024-083111-9056c6f6-91a0-424e-b9b4-97cd03107538-strategy-proposal/report.md，最后输出同一 JSON：task=strategy-proposal、character=silent、batch=真实ID、base=dispatch_base、runs=[]、fixes=[]、merged=null、tests={tsc:null,vitest:null,cases:null}、report=报告绝对路径、external_source=绑定plan_id、input_sha256=冻结manifest SHA、external_results=[{id:unit_id,state:processed或waiting,destinations:[{kind:knowledge或strategy或rk或merged-into,id:目标ID,path:scratch中真实候选文件绝对路径}],reason:具体理由}]。processed 表示候选已落盘且至少一个去向；waiting 的 destinations=[]。不得把启动参数或请求档位当原生已采用档位，使用量/耗时以原启动回执与运行记录为准。
+
+
+本批冻结身份（路径相对 project_root）：
+{
+  "batch": "20261024-083104-strategy-proposal",
+  "worktree": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261024-083104",
+  "request_id": "github-issue-51-external-boss-learning-20261023",
+  "plan_id": "issue51-top25-card-picks-006",
+  "source": "external:sts2fun",
+  "input_manifest": {
+    "path": "paper/materials/20261024-51-wide/issue51-top25-card-picks-006.json",
+    "bytes": 5831,
+    "sha256": "d179ceb0c475e2d8a3372c7709672c6c99238e7f288a9c77666a4953eea69d2d"
+  },
+  "work_spec": {
+    "path": "paper/materials/20261024-51-wide/issue51-top25-card-picks-006.md",
+    "bytes": 1859,
+    "sha256": "0de9f7fb1a00e2cccebfda41b8c9c059045efcb5d838b38418e7618adbc60cca"
+  },
+  "topic": "card-picks",
+  "provenance": {
+    "url": "https://sts2.fun/static/sts2_public.db.zst",
+    "downloaded_at": "2026-10-21",
+    "database_sha256": "1f7c0c3d441aedb5c85f04bcd4d8d6a1039b438a8b6fda2d96cfa5c27580cbf5",
+    "query_version": "ops-safe-choices-combats-v1",
+    "query": {
+      "path": "paper/materials/20261024-issue51-p0-0802-ops/safe-choices-combats-projection.sql",
+      "bytes": 1044,
+      "sha256": "60caa508304589635eac8112782e2d89cb665d30aef8f90917e0dbf2e8f15bd2"
+    },
+    "export_receipt": {
+      "path": "paper/materials/20261024-issue51-p0-0802-ops/choices-combats-export-receipt.json",
+      "bytes": 6369,
+      "sha256": "280c236cc10817aa21664869349b4ea3bacaad8d721523e2fbd03d206df0fb20"
+    },
+    "design": "observational"
+  },
+  "entry_ids": [
+    "external-top25-card-pick-contexts-001"
+  ],
+  "all_entry_ids": [
+    "external-top25-card-pick-contexts-001"
+  ],
+  "dispatch_runs": [],
+  "cohorts": [
+    {
+      "version": "v0.107",
+      "sample_count": 2932,
+      "sample_denominator": 2932,
+      "collected_at": "2026-10-21",
+      "contains_player_identifiers": false,
+      "aggregates": [
+        {
+          "path": "paper/materials/20261024-issue51-p0-0802-ops/aggregates/card-picks-v0.107.json",
+          "bytes": 7638022,
+          "sha256": "1bc3d543ff2691b2e7771325f87480167672938bab8a716bae200f1b3a952529"
+        }
+      ]
+    },
+    {
+      "version": "v0.108",
+      "sample_count": 683,
+      "sample_denominator": 683,
+      "collected_at": "2026-10-21",
+      "contains_player_identifiers": false,
+      "aggregates": [
+        {
+          "path": "paper/materials/20261024-issue51-p0-0802-ops/aggregates/card-picks-v0.108.json",
+          "bytes": 2492693,
+          "sha256": "ec7a09cb63680f4be1d2463be0de4e673d429f3b4152f75354ce44874460a2a0"
+        }
+      ]
+    },
+    {
+      "version": "v0.109",
+      "sample_count": 583,
+      "sample_denominator": 583,
+      "collected_at": "2026-10-21",
+      "contains_player_identifiers": false,
+      "aggregates": [
+        {
+          "path": "paper/materials/20261024-issue51-p0-0802-ops/aggregates/card-picks-v0.109.json",
+          "bytes": 2295786,
+          "sha256": "a43265715505c242cf340ed276be4d94fb3d215637b5e884d9da7a04e5dc5c6a"
+        }
+      ]
+    },
+    {
+      "version": "v0.110",
+      "sample_count": 411,
+      "sample_denominator": 411,
+      "collected_at": "2026-10-21",
+      "contains_player_identifiers": false,
+      "aggregates": [
+        {
+          "path": "paper/materials/20261024-issue51-p0-0802-ops/aggregates/card-picks-v0.110.json",
+          "bytes": 1375529,
+          "sha256": "1a7186f9420cc5780c65d3159cbe3ca2af36705cfca1972c14551ce601eed765"
+        }
+      ]
+    },
+    {
+      "version": "v0.111",
+      "sample_count": 1739,
+      "sample_denominator": 1739,
+      "collected_at": "2026-10-21",
+      "contains_player_identifiers": false,
+      "aggregates": [
+        {
+          "path": "paper/materials/20261024-issue51-p0-0802-ops/aggregates/card-picks-v0.111.json",
+          "bytes": 6027552,
+          "sha256": "3dd8a02855744c04304c24a0c59095723ab3432fe759cc8ac527c2320dd10bdd"
+        }
+      ]
+    }
+  ],
+  "retry_generation": 0,
+  "dispatch_base": "5befa2c600bfc7e86c9c9e4d26ad903408c80d07"
+}
+# #51 Roy产出优先：一批覆盖25张分歧牌
+
+原指令6377403719：拿牌一批覆盖分歧最大的20–30张。本批覆盖priority25.json明确选出的25个独立卡ID，不再只交三个原型。每张卡分别给出可用幕/前缀代理情境、拿/不拿最终胜负及后续Boss到达的分母与不确定性，交具体strategy去向或精确缺证理由；低支持格缺失不是0，跳该子组，不整批waiting。共用输入的多个前缀cell重叠，不累加为独立局。优先提出能在题目当时用真实事实判断的条件；奖励前缀仅为代理，不能把终局/奖励前缀当实际完整牌组。
+
+priority25仅来自已冻结旧#24频率差作选题顺序；旧自有汇总没有本批逐局复核，不计mixed支持、不提confidence。新的统计只读绑定五版本安全聚合，source=external:sts2fun、Silent A10、design=observational，v0.111独立，旧四版也逐版分账；没有玩家级调整、无因果收益/必拿优先级或安全线。不得从预训练或卡名补游戏机制。上批081200三候选完整原文与证据在冻结合同081200.json；遇BLADE_DANCE/DEADLY_POISON/FOOTWORK的相同场景复用既有ID、保原来源和反证，不另造重复条目，不把其pending/failed状态当正式上线或科学完成。
+
+交付要求：25张卡逐卡disposition；新增策略条目数、复用/更新数、缺证数各自统计，candidate真实落scratch。每条保source/version/n/observational/代理/反例和证据SHA，完整证据另存可核附件，正式运行封包受现有检索预算限制，不丢反例和分母。所有去向先formal_publication=pending、consumer_readback=pending，实际大脑自然查询次数只能由原生产日志核，不能以固定读回或报告代填。不改源码/正式知识/main/live、不另起模型或读DB/下载。
+
+
+工作树存储：历史 paper/materials、paper/raw、experiments 与 paper/data/history 的干净副本可能按需展开，当前交接和学习账本保留。缺文件不代表证据不存在；用 git ls-tree HEAD -- <路径> 核基线，再运行 python3 /home/dw/Projects/agent-sts2/ops/worktree_storage.py materialize --root /home/dw/Projects/agent-sts2 --workspace codex-strategy-silent-20261024-083104 --path <精确文件路径> 恢复，检查返回的提交及 blob。只恢复任务需要的文件，每棵树历史输入缓存最多256 MiB，空闲时由原调度器回收；修改过的材料不回收。原日志仍从 logs_dir 读取。固定源码对照记录 Git 提交、git diff --binary 和必要输入，禁止把整个仓库归档后再完整展开成 source-checkout/before-checkout；避免同时保存完整 tar 和展开副本。已有过程副本如需恢复，按 docs/learner-retention.md 的 restore-copies 流程操作，不更改任务状态、原线程或账号。

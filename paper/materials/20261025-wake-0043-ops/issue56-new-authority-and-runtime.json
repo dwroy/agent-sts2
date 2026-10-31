@@ -1,0 +1,58 @@
+{
+  "authority": 6386401629,
+  "previous_native_tier_null_block_superseded": true,
+  "tier_launch_receipts": [
+    {
+      "batch": "20261024-233358-strategy-proposal",
+      "actual_saved_command_has_c_service_tier_fast": true,
+      "requested": "fast",
+      "effective": "fast",
+      "native_accepted_and_completed_proof": "paper/materials/20261024-issue56-resume-ops/acceptance-checkpoint.json",
+      "command_receipt": "paper/materials/20261025-wake-0043-ops/20261024-233358-strategy-proposal-launch-command.json"
+    },
+    {
+      "batch": "20261024-233359-strategy-proposal",
+      "actual_saved_command_has_c_service_tier_fast": true,
+      "requested": "fast",
+      "effective": "fast",
+      "native_accepted_and_completed_proof": "paper/materials/20261024-issue56-resume-ops/acceptance-checkpoint.json",
+      "command_receipt": "paper/materials/20261025-wake-0043-ops/20261024-233359-strategy-proposal-launch-command.json"
+    }
+  ],
+  "running_snapshot": [
+    {
+      "batch": "20261025-004302-strategy-proposal",
+      "task": "strategy-proposal",
+      "external_lane": "D",
+      "state": "running",
+      "native_state": "native-accepted",
+      "native_pid": 1368739,
+      "native_birth": "28479187",
+      "native_alive": true,
+      "receipt": "ops/codex-ops/learner/learner-20261025-004302-strategy-proposal.tui.json"
+    },
+    {
+      "batch": "20261025-004756-strategy-proposal",
+      "task": "strategy-proposal",
+      "external_lane": "A",
+      "state": "running",
+      "native_state": "native-accepted",
+      "native_pid": 1416112,
+      "native_birth": "28506084",
+      "native_alive": true,
+      "receipt": "ops/codex-ops/learner/learner-20261025-004756-strategy-proposal.tui.json"
+    }
+  ],
+  "natural_postpatch_external_completed": [
+    "20261024-233358-strategy-proposal",
+    "20261024-233359-strategy-proposal"
+  ],
+  "failed_new_C_launch": {
+    "batch": "20261025-004301-strategy-proposal",
+    "models_started": 0,
+    "rc": 1,
+    "reason": "EAGAIN before native launcher; exact contended lock not proven",
+    "retry_policy_changed": false
+  },
+  "original_throughput_window_reset": false
+}

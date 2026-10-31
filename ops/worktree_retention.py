@@ -21,6 +21,7 @@ from instance_env import binding_env
 NAME = re.compile(r"[a-z][a-z0-9-]{1,95}")
 PROTECTED = {"live", "exp", "regent-climb"}
 TERMINAL = {"done", "completed", "complete", "shipped"}
+PUBLICATION_HISTORY_LIMIT = 256
 
 
 def git(root, *args):
@@ -135,7 +136,7 @@ def instance_guard(root, tree):
     raise ValueError("unknown or conflicting instance identity retained")
 
 
-def allocation_base(root, directory, tree):
+def allocation_record(root, directory, tree):
     path = directory / "retention/allocations" / (tree.name + ".json")
     if not path.is_file():
         return None
@@ -144,7 +145,23 @@ def allocation_base(root, directory, tree):
             or record.get("worktree") != str(tree) or record.get("branch") != tree.name
             or record.get("state") != "allocated"):
         raise ValueError("original allocation receipt mismatch")
-    return record["base"]
+    return record
+
+
+def allocation_base(root, directory, tree):
+    record = allocation_record(root, directory, tree)
+    return record["base"] if record else None
+
+
+def snapshot_publications(root):
+    """Capture each real channel before allocation returns and a task can start."""
+    live = retention.safe_path(root, os.environ.get("STS2_LIVE") or root / ".worktrees/live")
+    snapshot = dict(schema="allocation-publication-boundaries-v1", root=str(root), phase="before-task-return",
+                    main=dict(worktree=".", commit=git(root, "rev-parse", "HEAD").decode().strip()), live=None)
+    if str(live) in {r["worktree"] for r in registered(root)}:
+        snapshot["live"] = dict(worktree=str(live.relative_to(root)),
+                                commit=git(live, "rev-parse", "HEAD").decode().strip())
+    return snapshot
 
 
 def source_admission(root, directory, tree, head, *, allow_leaf=False):
@@ -157,14 +174,77 @@ def source_admission(root, directory, tree, head, *, allow_leaf=False):
         raise ValueError("source branch reference not preserved")
     live = retention.safe_path(root, os.environ.get("STS2_LIVE") or root / ".worktrees/live")
     live_commit = git(live, "rev-parse", "HEAD").decode().strip()
+    record = allocation_record(root, directory, tree)
     proof = acceptance(root, tree, head, git(root, "rev-parse", "HEAD").decode().strip(),
-                       live_commit, allocation_base(root, directory, tree))
+                       live_commit, record["base"] if record else None,
+                       record.get("publication_boundaries") if record else None)
     if not in_main and not proof["live_required"]:
         raise ValueError("workspace source unpublished in main")
     return proof
 
 
-def acceptance(root, tree, source, main_commit, live_commit, allocation_base=None):
+def leaf_patch(root, before, after, name):
+    """Keep whitespace, modes, paths and context; only hunk line numbers may differ."""
+    raw = git(root, "diff", "--no-ext-diff", "--no-textconv", "--no-renames", "--no-color",
+              "--binary", "--full-index", "--unified=3", "--diff-algorithm=myers",
+              "--src-prefix=a/", "--dst-prefix=b/", before, after, "--", name)
+    if not raw or b"GIT binary patch" in raw or b"Binary files" in raw:
+        return None
+    result = subprocess.run(["git", "patch-id", "--verbatim"], input=raw, capture_output=True, timeout=20)
+    value = result.stdout.split()
+    if result.returncode or len(value) != 2 or not retention.SHA.fullmatch(value[0].decode("ascii")):
+        raise ValueError("source publication patch proof unavailable")
+    return value[0].decode("ascii")
+
+
+def channel_boundary(root, boundaries, channel, published):
+    live = retention.safe_path(root, os.environ.get("STS2_LIVE") or root / ".worktrees/live")
+    worktree = "." if channel == "main" else str(live.relative_to(root))
+    if (not isinstance(boundaries, dict) or boundaries.get("schema") != "allocation-publication-boundaries-v1"
+            or boundaries.get("root") != str(root) or boundaries.get("phase") != "before-task-return"):
+        raise ValueError("source publication allocation boundary unavailable: " + channel)
+    row = boundaries.get(channel)
+    if (not isinstance(row, dict) or row.get("worktree") != worktree
+            or not retention.SHA.fullmatch(row.get("commit") or "")):
+        raise ValueError("source publication allocation boundary unavailable: " + channel)
+    boundary = row["commit"]
+    if boundary != published:
+        # Excluding a forked commit does not establish a channel floor. Prove
+        # the walk actually ends at this channel's recorded first-parent edge.
+        chain = git(root, "rev-list", "--first-parent", published, "^" + boundary).decode().splitlines()
+        parents = git(root, "rev-list", "--parents", "-n", "1", chain[-1]).decode().split() if chain else []
+        if not chain or chain[0] != published or len(parents) < 2 or parents[1] != boundary:
+            raise ValueError("source publication boundary is not on channel first-parent: " + channel)
+    return boundary
+
+
+def historical_publication(root, base, source, published, name, expected, boundary, channel):
+    # Search only actual first-parent publication states after allocation. A blob
+    # on a discarded side branch or before this task's baseline is not adoption.
+    commits = git(root, "log", "--first-parent", "--full-history", "--format=%H",
+                  "--max-count=" + str(PUBLICATION_HISTORY_LIMIT + 1), published, "^" + boundary,
+                  "--", name).decode().splitlines()
+    candidates = commits[:PUBLICATION_HISTORY_LIMIT]
+    for commit in candidates:
+        if git(root, "ls-tree", commit, "--", name) == expected:
+            return dict(path=name, publication=published, commit=commit, kind="historical-leaf",
+                        source_leaf=expected.decode().strip(), boundary=boundary, channel=channel)
+    # Narrow integration can preserve unrelated runtime changes in the same file.
+    # Require the complete per-file task delta, never a fuzzy hunk/subsequence match.
+    patch = leaf_patch(root, base, source, name)
+    if patch:
+        for commit in candidates:
+            parents = git(root, "rev-list", "--parents", "-n", "1", commit).decode().split()
+            if len(parents) > 1 and leaf_patch(root, parents[1], commit, name) == patch:
+                return dict(path=name, publication=published, commit=commit, parent=parents[1],
+                            kind="verbatim-leaf-patch", patch_id=patch, source_leaf=expected.decode().strip(),
+                            boundary=boundary, channel=channel)
+    if len(commits) > PUBLICATION_HISTORY_LIMIT:
+        raise ValueError("source publication history scan limit reached: " + name)
+    raise ValueError("source leaf not in recorded publication: " + name)
+
+
+def acceptance(root, tree, source, main_commit, live_commit, allocation_base=None, publication_boundaries=None):
     if not all(retention.SHA.fullmatch(x or "") for x in (source, main_commit, live_commit)):
         raise ValueError("full source and publication SHAs required")
     live = retention.safe_path(root, os.environ.get("STS2_LIVE") or root / ".worktrees/live")
@@ -182,29 +262,41 @@ def acceptance(root, tree, source, main_commit, live_commit, allocation_base=Non
         ["git", "-C", str(root), "merge-base", "--is-ancestor", source, published],
         capture_output=True).returncode == 0 for published in (main_commit, live_commit)}
     checked = []
+    witnesses = []
+    boundaries = {}
     for name in changed:
         if retention.secret_name(name) and not name.endswith(".env.example"):
             raise ValueError("protected source change retained")
         if not executable(name):
             continue
-        for published in (main_commit, live_commit):
+        for channel, published in (("main", main_commit), ("live", live_commit)):
             if includes_source[published]:
                 continue
             # Compare object IDs, not executable source contents or a caller-provided passed flag.
             expected = git(root, "ls-tree", source, "--", name)
             actual = git(root, "ls-tree", published, "--", name)
             if actual != expected:
-                raise ValueError("source leaf not in recorded publication: " + name)
+                if channel not in boundaries:
+                    try:
+                        boundaries[channel] = channel_boundary(root, publication_boundaries, channel, published)
+                    except ValueError as error:
+                        raise ValueError("source leaf not in recorded publication: " + name + "; " + str(error)) from None
+                witnesses.append(historical_publication(root, base, source, published, name, expected,
+                                                         boundaries[channel], channel))
         checked.append(name)
-    return {"source": source, "base": base, "main_commit": main_commit, "live_commit": live_commit,
+    proof = {"source": source, "base": base, "main_commit": main_commit, "live_commit": live_commit,
             "verified_source_paths": checked, "live_required": bool(checked),
             "scope": "workspace-only; no parent request or gameplay claim closed"}
+    if witnesses:
+        proof["publication_witnesses"] = witnesses
+    return proof
 
 
 def complete(root, directory, name, source, main_commit, live_commit):
     tree = checked_tree(root, name)
     allocation = directory / "retention/allocations" / (name + ".json")
     base = None
+    boundaries = None
     if allocation.is_file():
         record = retention.load(retention.safe_path(root, allocation))
         if (record.get("schema") != "workspace-allocation-v1" or record.get("root") != str(root)
@@ -212,7 +304,8 @@ def complete(root, directory, name, source, main_commit, live_commit):
                 or record.get("state") != "allocated"):
             raise ValueError("original allocation receipt mismatch")
         base = record["base"]
-    proof = acceptance(root, tree, source, main_commit, live_commit, base)
+        boundaries = record.get("publication_boundaries")
+    proof = acceptance(root, tree, source, main_commit, live_commit, base, boundaries)
     if base is not None:
         proof.update(allocation_receipt=str(allocation.relative_to(root)), allocation_sha256=retention.sha_file(allocation))
     record = {"schema": "workspace-lifecycle-v1", "root": str(root), "worktree": str(tree),
@@ -286,6 +379,7 @@ def admission(root, directory, tree):
             raise ValueError("workspace acceptance incomplete")
         p = record["acceptance"]
         base = None
+        boundaries = None
         if p.get("allocation_receipt"):
             allocation = retention.safe_path(root, p["allocation_receipt"])
             expected = directory / "retention/allocations" / (tree.name + ".json")
@@ -293,7 +387,8 @@ def admission(root, directory, tree):
                     or retention.load(allocation).get("base") != p["base"]):
                 raise ValueError("accepted allocation receipt changed")
             base = p["base"]
-        source_proof = acceptance(root, tree, p["source"], p["main_commit"], p["live_commit"], base)
+            boundaries = retention.load(allocation).get("publication_boundaries")
+        source_proof = acceptance(root, tree, p["source"], p["main_commit"], p["live_commit"], base, boundaries)
     elif (directory / "retention/allocations" / (tree.name + ".json")).exists() and tree.name.startswith("ops-"):
         # An untouched allocation is not completion. A changed source must independently
         # satisfy the existing real main/live publication and original baseline checks.

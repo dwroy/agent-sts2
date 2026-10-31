@@ -13,6 +13,8 @@ from unittest.mock import patch
 
 ROOT = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(ROOT / 'learner'))
+sys.path.insert(0, str(ROOT / 'ops'))
+import refresh_retention
 sys.path.insert(0, str(ROOT / 'knowledge/builders'))
 from evidence_identity import decision_index, associate
 from extract_evidence import extract
@@ -260,7 +262,9 @@ class RefreshTest(unittest.TestCase):
             finally:
                 index.close()
 
-    def test_terminal_rows_share_inclusive_boundary_and_exact_source_exclusions(self):
+    # Freeze auditing holds the temporary evidence until its byte assertions finish.
+    @patch.object(refresh_retention, 'sweep', return_value={'state': 'deferred-for-fixed-audit'})
+    def test_terminal_rows_share_inclusive_boundary_and_exact_source_exclusions(self, _retention):
         with tempfile.TemporaryDirectory() as d:
             root = Path(d)
             target = fixture(root)
@@ -357,7 +361,9 @@ class RefreshTest(unittest.TestCase):
                 self.assertEqual(len(list((root / 'ops/codex-ops/queue').glob('*-knowledge-refresh-failed.md'))), 1)
                 retain(fail + '-failure', call_evidence(receipt))
 
-    def test_real_generators_publish_only_own_ended_cut_and_keep_future_appends_out(self):
+    # Freeze auditing holds the temporary evidence until its byte assertions finish.
+    @patch.object(refresh_retention, 'sweep', return_value={'state': 'deferred-for-fixed-audit'})
+    def test_real_generators_publish_only_own_ended_cut_and_keep_future_appends_out(self, _retention):
         with tempfile.TemporaryDirectory() as d:
             root = Path(d)
             target = fixture(root)
@@ -387,7 +393,9 @@ class RefreshTest(unittest.TestCase):
             self.assertEqual(refresh.refresh(root, root, 'regent')[0]['status'], 'unchanged_other_character')
             self.assertEqual(target.read_bytes(), before)
 
-    def test_malformed_rows_are_fully_excluded_without_changing_original_logs(self):
+    # Freeze auditing holds the temporary evidence until its byte assertions finish.
+    @patch.object(refresh_retention, 'sweep', return_value={'state': 'deferred-for-fixed-audit'})
+    def test_malformed_rows_are_fully_excluded_without_changing_original_logs(self, _retention):
         with tempfile.TemporaryDirectory() as d:
             root = Path(d)
             target = fixture(root)
@@ -531,6 +539,8 @@ class RefreshTest(unittest.TestCase):
         with tempfile.TemporaryDirectory() as d:
             root = Path(d)
             target = fixture(root)
+            for name in ('refresh_health.py', 'learning_runtime.py', 'learning_runtime_store.py', 'learning_runtime_data.py'):
+                shutil.copyfile(ROOT / 'ops' / name, root / 'ops' / name)
             # Stub unrelated historical refresh steps; execute the real shell and V6 helper/CLIs.
             b = root / 'knowledge/builders'
             for name in ('build-monster-db.py', 'monster-db-check.py', 'build-card-upgrades.py', 'build-outcome-stats.py',
@@ -565,7 +575,7 @@ class RefreshTest(unittest.TestCase):
                 wait = Mock(side_effect=AssertionError('admission waited for refresh'))
                 waits.append(wait)
                 return SimpleNamespace(pid=child.pid, wait=wait)
-            with patch.dict(os.environ, {'REFRESH_WAIT': '1', 'REFRESH_WAIT_S': '60'}), patch.object(subprocess, 'Popen', popen):
+            with patch.dict(os.environ, {'REFRESH_WAIT': '1', 'REFRESH_WAIT_S': '60', 'CODEX_OPS_DIR': str(root / 'ops/codex-ops')}), patch.object(subprocess, 'Popen', popen):
                 result = namespace['refresh_knowledge']('silent')
             self.assertTrue(all(wait.call_count == 0 for wait in waits))
             for child in spawned:
@@ -587,6 +597,20 @@ class RefreshTest(unittest.TestCase):
             self.assertEqual([s['exit_code'] for s in json.loads(receipts[0].read_text())['steps']], [0, 0, 0, 0])
             retain('report-shell-entry', dict(report_result=result, refresh_log=(root / 'ops/refresh.log').read_text(),
                 **call_evidence(json.loads(receipts[0].read_text()))))
+
+
+    def test_real_refresh_compacts_published_intermediates_and_preserves_logs(self):
+        with tempfile.TemporaryDirectory() as d:
+            root = Path(d)
+            target = fixture(root)
+            receipt, code = refresh.refresh(root, root, 'silent')
+            self.assertEqual(code, 0, receipt)
+            directory = Path(receipt['directory'])
+            self.assertTrue(receipt['retention']['results'])
+            self.assertEqual(receipt['storage_cleanup']['state'], 'completed')
+            self.assertTrue(all(p.name == 'receipt.json' or p.suffix in ('.stdout', '.stderr') for p in directory.iterdir()))
+            self.assertEqual(hashlib.sha256(target.read_bytes()).hexdigest(), receipt['output']['sha256'])
+            self.assertTrue(call_evidence(receipt)['fixed_inputs'])
 
 
 if __name__ == '__main__':

@@ -1,0 +1,74 @@
+{
+  "schema": "workspace-allocation-v1",
+  "root": "/home/dw/Projects/agent-sts2",
+  "worktree": "/home/dw/Projects/agent-sts2/.worktrees/integrator69-combination-20261025",
+  "branch": "integrator69-combination-20261025",
+  "base": "b6547982a3f78bfd4465dbd17dc31011e46aa1c2",
+  "at": "2026-10-25T23:44:22+08:00",
+  "state": "allocated",
+  "require_node": true,
+  "excluded_generated_snapshots": [
+    "paper/data/history/",
+    "paper/raw/",
+    "paper/materials/",
+    "experiments/"
+  ],
+  "canonical_history_kept_in_main_and_git": true,
+  "shared_tools": {
+    "schema": "shared-readonly-tools-v1",
+    "root": "/home/dw/Projects/agent-sts2",
+    "worktree": "/home/dw/Projects/agent-sts2/.worktrees/integrator69-combination-20261025",
+    "source_permissions_unchanged": true,
+    "install_or_dependency_copy": false,
+    "tools": {
+      "node": {
+        "state": "linked",
+        "source": "/home/dw/Projects/agent-sts2/agent/node_modules",
+        "manifests": {
+          "agent/package.json": "3fbb4fa484314e53df83b4b1338872be4e72b24d4ee250e47b9af96c38265ae2",
+          "agent/package-lock.json": "0ed7b860e8085eb62d354df0825d7af6f7fc7e6a610284469de8c29ef5f5d676"
+        },
+        "installed_lock_sha256": "5eb24c8e6b6bd7b2a4f363372a0d8b98885c317c284709c81be8e2fa4a6d4c4a",
+        "runtime": {
+          "node": "v22.23.3",
+          "abi": "127",
+          "platform": "linux",
+          "arch": "x64"
+        },
+        "consumer_cache": "/home/dw/Projects/agent-sts2/.worktrees/integrator69-combination-20261025/.cache/vitest",
+        "usage": "read-only"
+      },
+      "python": {
+        "state": "linked",
+        "source": "/home/dw/Projects/agent-sts2/data/logdb-venv",
+        "manifests": {
+          "agent/tools/logdb/requirements.txt": "e9c02b7acc611bd2acbaa41fef6b8db7313aa045bf15ef6e1b6653c2d2f237c1"
+        },
+        "runtime": {
+          "python": [
+            3,
+            14,
+            4
+          ],
+          "cache_tag": "cpython-314",
+          "duckdb": "1.5.6"
+        },
+        "usage": "read-only"
+      }
+    }
+  },
+  "publication_boundaries": {
+    "schema": "allocation-publication-boundaries-v1",
+    "root": "/home/dw/Projects/agent-sts2",
+    "phase": "before-task-return",
+    "main": {
+      "worktree": ".",
+      "commit": "b6547982a3f78bfd4465dbd17dc31011e46aa1c2"
+    },
+    "live": {
+      "worktree": ".worktrees/live",
+      "commit": "5ba38052a814bfe960e3f5429b55ddfc3251eb78"
+    }
+  },
+  "finished_at": "2026-10-25T23:44:24+08:00"
+}

@@ -43,7 +43,8 @@ MARK="agent-sts2 codex-ops"
 mkdir -p "$DIR" "$QUEUE"
 
 log() { echo "$(date '+%F %H:%M') $*" >> "$LOG"; }
-paused() { [ -f "$DIR/PAUSE" ] || [ -f "$DIR/LLM_DRAIN" ]; }
+# Publication admission is independent; ACCOUNT_DRAIN keeps its learner-only scope.
+paused() { [ -e "$DIR/PAUSE" ] || [ -e "$DIR/LLM_DRAIN" ]; }
 
 # enqueue <kind> <text>: one event file, <epoch ns>-<kind>.md (ops/codex/lib.ts readQueue).
 enqueue() {
@@ -229,6 +230,11 @@ case "$cmd" in
   tick)
     job="${1:-}"
     paused && exit 0
+    # A dataset snapshot is a shared writer, not candidate computation.
+    if [ "$job" = snapshot ] && { [ -e "$DIR/PUBLICATION_ADMISSION.json" ] || [ -L "$DIR/PUBLICATION_ADMISSION.json" ]; }; then
+      log "snapshot deferred by publication admission"
+      exit 0
+    fi
     exec 7> "$DIR/tick-$job.lock"
     flock -n 7 || exit 0
     # Sample on the existing five-minute job, under a separate lock and time bound. Never delay a stall check/wake.
@@ -243,6 +249,8 @@ case "$cmd" in
       stall)
         # Repair only the read-only log viewer at the existing cadence; never signal the controller.
         nice -n 19 python3 "$OPS/brain_view.py" --root "$ROOT" --logs "${CODEX_OPS_LOGS:-$LOGS}" --state-dir "$DIR" ensure > /dev/null 2>&1 &
+        # Check stale fixed-data publications even when no new refresh cycle starts.
+        nice -n 19 python3 "$OPS/refresh_health.py" --root "$ROOT" >> "$DIR/refresh-health.log" 2>&1 || log "refresh health observation failed (see refresh-health.log)"
         tick_stall
         # Learner tabs are a project reclamation class, independent of model wakes and board/GitHub availability.
         if [ "${CODEX_OPS_RETENTION:-on}" != off ]; then

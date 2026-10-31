@@ -1,0 +1,87 @@
+2026-10-30T14:04:10.218449+08:00 project start
+2026-10-30T14:04:58.004931+08:00 project rc 0
+2026-10-30T14:04:58.004980+08:00 build-db start
+2026-10-30T14:08:28.738041+08:00 build-db rc 0
+2026-10-30T14:08:28.738450+08:00 audit start
+2026-10-30T14:09:25.411143+08:00 audit rc 0
+2026-10-30T14:09:25.411199+08:00 report start
+2026-10-30T14:09:25.631249+08:00 report rc 0
+{
+  "steps": [
+    {
+      "step": "project",
+      "rc": 0,
+      "stdout_sha256": "5626aa6ea46a70d24a6eff3d4a9be2c2f40f3c45b7a170f4d881f940e865718a",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "step": "build-db",
+      "rc": 0,
+      "stdout_sha256": "c3bd671dfcff631842c098bbebd75a1888a011af3b7d50858439b080edc99ac5",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "step": "audit",
+      "rc": 0,
+      "stdout_sha256": "b1e8307e79b44c15e7ff416018c91076ca3993c7682d4f73a663f8c0c5492a08",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "step": "report",
+      "rc": 0,
+      "stdout_sha256": "2f99e5f3fbabca76b069553b773e43154ca3430f3dc613310e83e7ab1fe91f64",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    }
+  ],
+  "source_sha256": {
+    "eval/spire_codex.py": "6469aadb2906df772f6b25756f72ce6f2b5fa49f9a3ca1ac8b51cfd01f203276",
+    "eval/spire_codex_download.py": "950edc520a0b67337e1e399b693fe8bab9020093934bdd2e8af575f3b2b6aaac",
+    "eval/spire_codex_projection.py": "f090b784842df3c32a2991e896b32c4580d17f5ec4b99d7ac3218e9670fccdf0"
+  },
+  "input_index_sha256": "ab91d0a709aee70b7c1eeae9d6a2de9ac2c17d15e6ec1a9ec6d02c34e0a55632",
+  "originals_unchanged": true,
+  "no_network": true,
+  "isolated_output": "/home/dw/Projects/agent-sts2/.worktrees/issue-82-spire-codex-replays/.artifacts/issue82-partial1208-validation-r4",
+  "production_writes": false,
+  "partial": true,
+  "replay_count": 1003,
+  "raw_replay_count": 1208,
+  "exclusions": {
+    "active_tombstone": 13,
+    "multiplayer_not_projected": 134,
+    "replay_index_build_mismatch": 71
+  },
+  "cutoff_cursor": {
+    "page": 13,
+    "shard": 1,
+    "shards": 40
+  },
+  "database_counts": {
+    "combats": 16660,
+    "decisions": 50150,
+    "events": 4216098,
+    "export_runs": 972,
+    "plays": 399174,
+    "potions": 20073,
+    "runs": 1003,
+    "turns": 88366
+  },
+  "audit": {
+    "contains_player_identifiers": false,
+    "cutoff_cursor": {
+      "page": 13,
+      "shard": 1,
+      "shards": 40
+    },
+    "documents_audited": 1976,
+    "exclusions": {
+      "active_tombstone": 13,
+      "multiplayer_not_projected": 134,
+      "replay_index_build_mismatch": 71
+    },
+    "partial": true,
+    "replay_count": 1003
+  },
+  "safe_cache": "/home/dw/Projects/agent-sts2/.worktrees/issue-82-spire-codex-replays/.artifacts/issue82-partial1208-validation-r4/root/cache",
+  "database_sha256": "0e720292b23bd197f6badd10314ffc1bdbbc2f40a851c3ec025afd4cef2c2ce4"
+}

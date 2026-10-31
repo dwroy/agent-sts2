@@ -1,0 +1,51 @@
+{
+  "id": "silent-brain-c3-corrupted-echo-resource-cost",
+  "version": "2026-10-25-c3-pending",
+  "trigger": {
+    "question_types": [
+      "event"
+    ],
+    "acts": [
+      2
+    ],
+    "deck_cards": [
+      {
+        "name": "ECHOING_SLASH",
+        "count": {
+          "min": 1
+        }
+      },
+      {
+        "name": "CLOAK_AND_DAGGER",
+        "count": {
+          "min": 1
+        }
+      }
+    ]
+  },
+  "strategy": "已有回响斩击与斗篷，事件允许给攻击附腐化或变化牌时，把每次打出失去2血与增伤一起比较，不把输出提升当免费防护。1913 F20原选项明示伤害加50%和打出耗2HP，选回响（1局1次）；F31实牌文为群体15伤，较原10伤加5，并失去2血。这是牌文幅度，不是战斗收益；重复击杀链的另扣血次数未知。\n范围：Silent A10、自有版本unknown，必须核现场附魔说明和备选；不得从后来的牌文倒填当前未知效果。该局F23赢战44→40，F31终败，多资源混杂，不能归因附魔或推固定变化优先。",
+  "evidence": [
+    {
+      "type": "own",
+      "run": "1913SE84AXQF",
+      "floor": 20,
+      "ref": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261025-004756/learner/runs/20261025-004846-81d42fb3-8560-4b93-9a36-eee613e26039-strategy-proposal/scratch/1913-F20-event.raw.json",
+      "role": "support"
+    },
+    {
+      "type": "own",
+      "run": "1913SE84AXQF",
+      "floor": 31,
+      "ref": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261025-004756/learner/runs/20261025-004846-81d42fb3-8560-4b93-9a36-eee613e26039-strategy-proposal/scratch/1913-F31-entry.raw.json",
+      "role": "support"
+    }
+  ],
+  "confidence": 0.25,
+  "evidence_status": "unassessed",
+  "source": "own",
+  "formal_publication": "pending",
+  "consumer_readback": "pending",
+  "playbook_parent": "silent-mixed-knife-defense-c3-r56",
+  "context_id": "C3-G4",
+  "disposition": "new"
+}

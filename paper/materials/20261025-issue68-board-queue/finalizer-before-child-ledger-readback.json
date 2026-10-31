@@ -1,0 +1,41 @@
+{
+  "scope": "synthetic result; real exec/FD/receipt, not STS2 full or shadow",
+  "rows": [
+    {
+      "locator": "finalizer-pass-tmpykgeqjkn-locator.json",
+      "mode": "pass",
+      "fixture_only": true,
+      "outcome": "passed",
+      "failure_kind": null,
+      "original_exit": 0,
+      "error": null,
+      "same_pid_start_boot": true,
+      "full_lock_released": true,
+      "result_sha256": "532aeb9798badb3a1873981a4ff55a928386d1d21aeb957d6a52043249c03f2c"
+    },
+    {
+      "locator": "finalizer-nonzero-tmptj3d12i6-locator.json",
+      "mode": "nonzero",
+      "fixture_only": true,
+      "outcome": "failed",
+      "failure_kind": "unknown",
+      "original_exit": 7,
+      "error": "RuntimeError: full regression failed; original output retained",
+      "same_pid_start_boot": null,
+      "full_lock_released": true,
+      "result_sha256": "ca01651cd8becba3350a2e10980f604be219076d84ab5bf1bf706325040040ae"
+    },
+    {
+      "locator": "finalizer-drift-tmpoibpy79i-locator.json",
+      "mode": "drift",
+      "fixture_only": true,
+      "outcome": "failed",
+      "failure_kind": "environment",
+      "original_exit": 0,
+      "error": "ValueError: frozen tree/input/index drift: root",
+      "same_pid_start_boot": null,
+      "full_lock_released": true,
+      "result_sha256": "88dd91db343c88c64b2539cd2bf4c0ac470938439ccd81a71dfdfcc45aa5c8ff"
+    }
+  ]
+}

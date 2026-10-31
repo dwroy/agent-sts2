@@ -1,0 +1,41 @@
+{
+  "at": "2026-10-25T13:26:19+08:00",
+  "classification": "preflight import assertion failed; exact missing specifiers unavailable from original JSON; cause unresolved, not labelled code or deployment failure",
+  "original": {
+    "root_tests_passed": 36,
+    "root_tests_failed": 1,
+    "production_tsc_rc": 0,
+    "runtime_tsc_rc": 0,
+    "live_production_tsc_rc": 0,
+    "live_targeted_rc": 0,
+    "new_full_runs": 0
+  },
+  "diagnostics": [
+    {
+      "command": "tsx unresolvedImports(explicit worktree)",
+      "rc": 0,
+      "unresolved": []
+    },
+    {
+      "command": "vitest single failed check-imports test, same env, verbose",
+      "rc": 0,
+      "passed": 1,
+      "duration_ms": 649,
+      "started": "13:25:03"
+    },
+    {
+      "command": "vitest --expand diagnostic startup",
+      "rc": 1,
+      "tests_started": 0,
+      "reason": "unsupported CLI option; no product changes"
+    }
+  ],
+  "frozen_inputs_unchanged": 2850,
+  "source_fixture_changes": 0,
+  "production_actions": 0,
+  "next": "Continue only unique full with original green preflight checks retained, independent failed-test recheck; default plus JSON reporters preserve any subsequent assertion diff",
+  "hypotheses_not_verified": [
+    "temporary filesystem state",
+    "Vite transformation/cache path state"
+  ]
+}

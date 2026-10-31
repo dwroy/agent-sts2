@@ -1,0 +1,51 @@
+{
+  "base": "062cd855366bd0a8d3f4f8b61286e98990db4058",
+  "suite": "sandbox",
+  "command": "SANDBOX_WORKERS=1 bash agent/tools/test-sandbox.sh",
+  "status": "finished",
+  "processes": [
+    {
+      "pid": 4103254,
+      "ppid": 4080824,
+      "start_ticks": "32752442",
+      "nice": 19,
+      "comm": "bash"
+    },
+    {
+      "pid": 4103255,
+      "ppid": 4103254,
+      "start_ticks": "32752443",
+      "nice": 19,
+      "comm": "bash"
+    },
+    {
+      "pid": 4103357,
+      "ppid": 4103255,
+      "start_ticks": "32752562",
+      "nice": 19,
+      "comm": "node"
+    },
+    {
+      "pid": 4103365,
+      "ppid": 4103357,
+      "start_ticks": "32752566",
+      "nice": 19,
+      "comm": "node"
+    }
+  ],
+  "source_sha256": {
+    "ops/learner_tabs.py": "a02c4d755b7df92087694e002a8e18c9dd2b9b890bd726756b6d5bda076864e2",
+    "ops/learner_tui.py": "ea2399426f1a31f6dee0a3e266606b6c99d8cf6ff7de5ec35de1fc790139cc1c",
+    "ops/tests/test_learner_tabs.py": "65e276a35f00daa7ffd055216ec3e0b683d77908905ca82c99ec4f4f53497080",
+    "ops/tests/test_learner_wrapper_completion.py": "aff08103eab22506b712c4a2a536b1504ae02c1b61f1da4554b145ae67bc4403",
+    "ops/tests/fixtures/issue63-seal-failures.json": "39f39163dd763c8855de4d9dada8284140bd6d6fcc4939a8c3d8a930e8ba53b3"
+  },
+  "exit_code": 1,
+  "production_tsc_exit_code": 0,
+  "test_files_passed": 634,
+  "test_files_failed": 1,
+  "tests_passed": 5874,
+  "tests_failed": 1,
+  "duration_seconds": 1267.27,
+  "source_unchanged": true
+}

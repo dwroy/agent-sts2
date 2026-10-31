@@ -5,6 +5,7 @@ import type { DecisionEnv } from "../memory/types.js";
 import type { Brain, BrainMetaUsage } from "../brain/brain.js";
 import { actOf, hpFraction, loadRunPlan, logRunPlan, runPlanInput } from "../memory/run-plan.js";
 import { KNOWLEDGE_DIR } from "../knowledge/files.js";
+import { runtimeDataRoot } from "../knowledge/runtime-data.js";
 import { parsePotionEquivalents } from "../knowledge/potion-equivalents.js";
 import { loadConstructionData } from "../construction/data.js";
 import { loadConstructionSupport } from "../construction/support.js";
@@ -156,9 +157,10 @@ export async function ensureDirectionPlan(env: DecisionEnv, brain: Pick<Brain, "
   let tableIds: string[] = [];
   try {
     if (!data.character) throw new Error("Unknown character");
-    const root = realpathSync(join(dir, "characters", data.character));
+    const dataDir = runtimeDataRoot(dir, `characters/${data.character}/potion-equivalents.json`);
+    const root = realpathSync(join(dataDir, "characters", data.character));
     const path = realpathSync(join(root, "potion-equivalents.json")), rel = relative(root, path);
-    if (root === join(realpathSync(dir), "characters", data.character) && !rel.startsWith("..") && !isAbsolute(rel)) {
+    if (root === join(realpathSync(dataDir), "characters", data.character) && !rel.startsWith("..") && !isAbsolute(rel)) {
       tableIds = Object.keys(parsePotionEquivalents(readFileSync(path, "utf8"), path, true).potions).filter(id => env.knowledge.potion(id));
     }
   } catch { /* Missing character-owned values stay unknown. */ }

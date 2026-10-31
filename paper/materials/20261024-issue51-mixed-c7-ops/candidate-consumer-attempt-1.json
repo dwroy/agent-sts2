@@ -1,0 +1,8 @@
+{
+  "passed": false,
+  "cause": "fixed tool probe supplied parsed GameState to ToolContext.state, whose contract expects original raw mod state; raw deck unavailable for deck_cards filter",
+  "production_changed": false,
+  "correction": "use exact original envelope.state in ToolContext, keep parsed state only for existing fact helpers",
+  "original_card_pick_replay_still_pending": true,
+  "ledger_writes_before_fix": 0
+}

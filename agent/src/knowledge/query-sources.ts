@@ -4,7 +4,9 @@ import { createHash } from "node:crypto";
 import { readFileSync } from "node:fs";
 import { join, relative, resolve } from "node:path";
 import { readCompatibleKnowledgeText } from "./catalog.js";
-import { knowledgeCharacter, knowledgeFile } from "./files.js";
+import { knowledgeCharacter, knowledgeFile, knowledgeSubdir } from "./files.js";
+import { runtimeKnowledgeIdentity, runtimeKnowledgeRoot } from "./runtime-paths.js";
+import { runtimeDataFile, runtimeDataIdentity } from "./runtime-data.js";
 
 type Row = Record<string, unknown>;
 const object = (v: unknown): v is Row => !!v && typeof v === "object" && !Array.isArray(v);
@@ -20,12 +22,19 @@ function input(query: Query, name: string): Input {
   if (hit) return hit;
   const path = knowledgeFile(query.dir, name, query.character);
   const source: Row = { source: "own", character: query.character, file: name, path: relative(query.dir, path).split("\\").join("/") };
+  const fixed = runtimeDataFile(query.dir, relative(query.dir, join(knowledgeSubdir(name, query.dir, query.character), name)));
+  if (fixed) source["data_version"] = runtimeDataIdentity()?.version;
+  const snapshot = runtimeKnowledgeRoot(query.dir);
+  if (snapshot !== query.dir && path.startsWith(snapshot + "/")) {
+    source["knowledge_version"] = runtimeKnowledgeIdentity()?.version;
+    source["path"] = relative(snapshot, path).split("\\").join("/");
+  }
   const result: Input = { source };
   try {
     let text: string, bytes: string | Buffer;
     try { bytes = readFileSync(path); text = bytes.toString("utf8"); }
     catch (error) {
-      if ((error as NodeJS.ErrnoException).code !== "ENOENT" || name !== "monster-db.json") throw error;
+      if ((error as NodeJS.ErrnoException).code !== "ENOENT" || name !== "monster-db.json" || fixed) throw error;
       text = readCompatibleKnowledgeText(query.dir, name, query.character);
       bytes = text;
       // This is a reconstructed logical view, not the SHA of a nonexistent legacy file.

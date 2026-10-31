@@ -1,0 +1,70 @@
+{
+  "id": "silent-brain-c3-no-confirmed-shiv-source",
+  "version": "2026-10-25-c3-pending",
+  "trigger": {
+    "question_types": [
+      "card_reward"
+    ],
+    "acts": [
+      1
+    ],
+    "deck_cards": [
+      {
+        "name": "ECHOING_SLASH",
+        "count": {
+          "min": 1
+        }
+      }
+    ]
+  },
+  "strategy": "已有回响斩击、尚未核到可靠刀源，且奖励同屏为幻影之刃/精准/背刺时，先比较刀增益的启动条件与背刺即时用途，不由终局簇预支未来小刀。1913 F4原文：幻影1费使刀保留、每回合首刀加9伤；精准1费每刀加4伤；背刺0费固有11伤并消耗。1局1次选背刺，整局仍败。外部v0.111精准+幻影终局配对胜22/38、负23/38，差-2.63pp、q=1，保留反向。\n范围：Silent A10；自有版本unknown、此前已记牌组代理，须核本题全部牌文及刀源；没有无刀源时必跳能力牌的收益结论。",
+  "evidence": [
+    {
+      "type": "own",
+      "run": "1913SE84AXQF",
+      "floor": 4,
+      "ref": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261025-004756/learner/runs/20261025-004846-81d42fb3-8560-4b93-9a36-eee613e26039-strategy-proposal/scratch/1913-F4-reward.raw.json",
+      "role": "support"
+    },
+    {
+      "type": "external_aggregate",
+      "source": "external:sts2fun",
+      "url": "https://sts2.fun/static/sts2_public.db.zst",
+      "version": "v0.111",
+      "dataset_sha256": "1f7c0c3d441aedb5c85f04bcd4d8d6a1039b438a8b6fda2d96cfa5c27580cbf5",
+      "downloaded_at": "2026-10-21",
+      "license": "No explicit dataset redistribution license found on public FAQ; aggregate attribution only; no raw database redistribution.",
+      "filters": {
+        "character": "silent",
+        "ascension": 10,
+        "criteria": "簇3；终止深度近邻1:1配对的负例臂；精准+幻影；赢家22/38，负例23/38；差-2.6316pp,q=1。"
+      },
+      "statistic": {
+        "name": "matched_loser_accuracy_phantom_present",
+        "value": 23,
+        "unit": "count"
+      },
+      "denominator": {
+        "unit": "runs",
+        "n": 38
+      },
+      "design": "observational",
+      "limitations": [
+        "观察性、自选上传、SL/玩家水平/路线/遗物/存活深度混杂；独立玩家与重复上传未知，不作因果收益或固定拿牌命令。",
+        "外部仅匿名派生节点；初始值/前节点HP/奖励前缀是代理，不是原子入场或完整决策快照；终局聚类/胜负仅定位与结果，禁止作触发。",
+        "外部v0.107—v0.111及自有unknown逐项分账；没有机改对照，不把未知写成未改，不合池。",
+        "自有A10无重试证据不证明无SL；本批两完整投影均败；牌文、实选与结果不证明替代选择更优。"
+      ],
+      "ref": "knowledge/external/sts2fun/builds-v1/combinations.json#version=v0.111,cluster=3,items=ACCURACY+PHANTOM_BLADES",
+      "role": "contradict"
+    }
+  ],
+  "confidence": 0.25,
+  "evidence_status": "conflict",
+  "source": "mixed",
+  "formal_publication": "pending",
+  "consumer_readback": "pending",
+  "playbook_parent": "silent-mixed-knife-defense-c3-r56",
+  "context_id": "C3-G1",
+  "disposition": "new"
+}

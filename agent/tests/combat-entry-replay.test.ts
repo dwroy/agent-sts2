@@ -80,10 +80,10 @@ function outcomes(keys: string[], gain = 2): ReplayOutcomes {
   return { schema: "combat-entry-outcomes-v1", kind: "model", model_sha256: "b".repeat(64), scope: "whole_fight",
     rows: keys.flatMap((candidate, i) => ["seed1", "seed2"].map(seed => ({ candidate, seed, hp_loss: i ? 10 - gain : 10, win: i > 0 }))) };
 }
-it("captures original frozen plans against an isolated candidate library without solving or simulating", () => {
+it.each([1, 2, 3])("captures act %s original frozen plans without solving or simulating", act => {
   const { request, keys } = pairFixture(), state = fixedState();
   const observed = structuredClone(state.raw) as Record<string, any>;
-  observed.run.act_id = "0";
+  observed.run.act_id = String(act - 1);
   delete request.state.v6_combat_entries;
   (request.state.run_brief as Record<string, unknown>).floor = state.run!.floor;
   (request.state.situation as Record<string, unknown>).turn = state.turn;
@@ -99,6 +99,12 @@ it("captures original frozen plans against an isolated candidate library without
   expect(() => captureCombatEntryReplay({ ...input, plans: {} }, dir)).toThrow(/coverage/);
   const bad = structuredClone(input); (bad.request.state.situation as Record<string, unknown>).turn = 999;
   expect(() => captureCombatEntryReplay(bad, dir)).toThrow(/mismatch/);
+  const badAct = structuredClone(input); badAct.state.run.act_id = "3";
+  expect(() => captureCombatEntryReplay(badAct, dir)).toThrow(/act/);
+  if (act === 3) {
+    const elite = structuredClone(input); elite.request.state.fight = "elite";
+    expect(() => captureCombatEntryReplay(elite, dir)).toThrow(/act 3 Boss/);
+  }
 });
 it("changes only combat_memory, strips audit payloads, and re-evaluates unknown/scope via the production matcher", () => {
   const { pair, request, keys } = pairFixture();
@@ -156,16 +162,16 @@ it("averages seeds and repeated boards within run; keeps independent-run uncerta
   expect(() => summarizeCombatEntryReplay([a, a])).toThrow(/duplicate/);
 });
 
-it("CLI prepares and reports without calls, verifies byte SHA and refuses uncertain call replay", async () => {
+it.each([1, 2, 3])("act %s CLI prepares without calls and refuses invalid cohorts and uncertain call replay", async act => {
   const { request, pair } = pairFixture();
   mkdirSync(join(PROJECT_ROOT, ".cache"), { recursive: true });
   const dir = temp(join(PROJECT_ROOT, ".cache"));
   const local = (name: string) => join(dir, name);
-  (request.state.v6_combat_entries as Record<string, any>).context.act = 1;
+  (request.state.v6_combat_entries as Record<string, any>).context.act = act;
   const bytes = JSON.stringify(request);
   writeFileSync(local("request.json"), bytes);
   const manifest = { schema: "combat-entry-replay-manifest-v1", character: "silent", game_version: "TEST", ascension: 0,
-    selection: "synthetic format smoke only", exclusions: [], cases: [{ id: "testcase", run_id: "TEST_RUN", act: 1,
+    selection: "synthetic format smoke only", exclusions: [], cases: [{ id: "testcase", run_id: "TEST_RUN", act,
       encounter: "TEST_ENEMY", attempt: "test", request: { path: relative(PROJECT_ROOT, local("request.json")), sha256: createHash("sha256").update(bytes).digest("hex") }, outcomes: null }] };
   writeFileSync(local("manifest.json"), JSON.stringify(manifest));
   const argv = ["--manifest", local("manifest.json"), "--out", local("output")];
@@ -176,6 +182,13 @@ it("CLI prepares and reports without calls, verifies byte SHA and refuses uncert
   expect(report.strata[0].hp_saved.mean).toBeNull();
   const prepared = JSON.parse(readFileSync(local("output/testcase-baseline-request.json"), "utf8"));
   expect(replayHash(prepared)).toBe(replayHash(pair.baseline));
+  for (const invalidAct of [0, 4, 1.5]) {
+    writeFileSync(local("manifest.json"), JSON.stringify({ ...manifest, cases: [{ ...manifest.cases[0], act: invalidAct }] }));
+    await expect(main(argv)).rejects.toThrow();
+  }
+  writeFileSync(local("manifest.json"), JSON.stringify({ ...manifest, cases: [{ ...manifest.cases[0], act: act === 3 ? 1 : 3 }] }));
+  await expect(main(argv)).rejects.toThrow(/cohort/);
+  writeFileSync(local("manifest.json"), JSON.stringify(manifest));
   writeFileSync(local("output/claims/testcase-baseline.json"), "{}");
   await expect(main([...argv, "--ask", "--max-calls", "2"])).rejects.toThrow(/uncertain/);
   writeFileSync(local("request.json"), bytes + " ");

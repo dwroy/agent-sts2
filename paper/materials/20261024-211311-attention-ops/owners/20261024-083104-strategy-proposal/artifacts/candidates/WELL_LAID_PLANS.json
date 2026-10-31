@@ -1,0 +1,443 @@
+{
+  "schema": "brain-strategies-v1",
+  "character": "silent",
+  "entries": [
+    {
+      "id": "silent-brain-well-laid-plans-external-prefix-context",
+      "version": "1.0.0",
+      "trigger": {
+        "question_types": [
+          "card_reward"
+        ],
+        "acts": [
+          1
+        ]
+      },
+      "strategy": "仅Silent A10/v0.111，幕1出现WELL_LAID_PLANS时，比较现场牌文、真实牌组、备选与跳过，不把历史频率当拿牌规则。幕1/奖励前缀含BLADE_DANCE：拿20/35胜，Boss到达32/35机会；不拿5/17胜，Boss到达11/17机会。幕1/奖励前缀含SNAKEBITE：拿11/28胜，Boss到达23/28机会；不拿6/14胜，Boss到达12/14机会，差值反向。前缀只是此前奖励获取记录，不是完整牌组；同局跨格，玩家未知。以上为观察关联，Boss到达非通过或双Boss准备度；其他幕/版本另账。",
+      "evidence": [
+        {
+          "type": "external_aggregate",
+          "source": "external:sts2fun",
+          "url": "https://sts2.fun/static/sts2_public.db.zst",
+          "version": "v0.111",
+          "dataset_sha256": "1f7c0c3d441aedb5c85f04bcd4d8d6a1039b438a8b6fda2d96cfa5c27580cbf5",
+          "downloaded_at": "2026-10-21",
+          "license": "冻结材料未核实再分发许可；署名聚合候选，不再分发原始数据。",
+          "filters": {
+            "character": "silent",
+            "ascension": 10,
+            "criteria": "single-player;valid;not abandoned;no modifiers;patch_major=v0.111;act_index=0;card_id=CARD.WELL_LAID_PLANS;picked=true;prior_reward_card_present=CARD.BLADE_DANCE;cell uploaded runs>=10;upgrades unresolved"
+          },
+          "statistic": {
+            "name": "eventual_win_per_uploaded_run",
+            "value": 0.5714285714285714,
+            "unit": "fraction"
+          },
+          "denominator": {
+            "unit": "runs",
+            "n": 35
+          },
+          "design": "observational",
+          "limitations": [
+            "外部自选上传、观察性；玩家/技术/SL/路线/备选牌/决策时状态未调整，不能推因果收益或必拿顺序。",
+            "每格distinct_uploaded_runs仅格内去重；同局可跨拿/不拿及多个前缀格，玩家独立数未知，不求和。",
+            "前缀只含此前奖励拿牌；漏初始、删改、事件/商店及升级，同节点选择不互作前缀，不是完整牌组。",
+            "每格至少10上传局是数据量过滤；缺失低支持格未知，不填0；多房间节点未归因，覆盖不全。",
+            "Boss仅后续同幕或更晚幕的到达机会；不是通过率、指定Boss、双Boss顺序或战前准备度。",
+            "版本逐版分账；探索多个重叠格有多重比较，不据符号数投票、外推或升级可信度。"
+          ],
+          "ref": "paper/materials/20261024-issue51-p0-0802-ops/aggregates/card-picks-v0.111.json#/prefix_card_presence_groups/4456",
+          "role": "support"
+        },
+        {
+          "type": "external_aggregate",
+          "source": "external:sts2fun",
+          "url": "https://sts2.fun/static/sts2_public.db.zst",
+          "version": "v0.111",
+          "dataset_sha256": "1f7c0c3d441aedb5c85f04bcd4d8d6a1039b438a8b6fda2d96cfa5c27580cbf5",
+          "downloaded_at": "2026-10-21",
+          "license": "冻结材料未核实再分发许可；署名聚合候选，不再分发原始数据。",
+          "filters": {
+            "character": "silent",
+            "ascension": 10,
+            "criteria": "single-player;valid;not abandoned;no modifiers;patch_major=v0.111;act_index=0;card_id=CARD.WELL_LAID_PLANS;picked=true;prior_reward_card_present=CARD.BLADE_DANCE;cell uploaded runs>=10;upgrades unresolved"
+          },
+          "statistic": {
+            "name": "eventual_win_per_choice_opportunity",
+            "value": 0.5714285714285714,
+            "unit": "fraction"
+          },
+          "denominator": {
+            "unit": "offers",
+            "n": 35
+          },
+          "design": "observational",
+          "limitations": [
+            "外部自选上传、观察性；玩家/技术/SL/路线/备选牌/决策时状态未调整，不能推因果收益或必拿顺序。",
+            "每格distinct_uploaded_runs仅格内去重；同局可跨拿/不拿及多个前缀格，玩家独立数未知，不求和。",
+            "前缀只含此前奖励拿牌；漏初始、删改、事件/商店及升级，同节点选择不互作前缀，不是完整牌组。",
+            "每格至少10上传局是数据量过滤；缺失低支持格未知，不填0；多房间节点未归因，覆盖不全。",
+            "Boss仅后续同幕或更晚幕的到达机会；不是通过率、指定Boss、双Boss顺序或战前准备度。",
+            "版本逐版分账；探索多个重叠格有多重比较，不据符号数投票、外推或升级可信度。"
+          ],
+          "ref": "paper/materials/20261024-issue51-p0-0802-ops/aggregates/card-picks-v0.111.json#/prefix_card_presence_groups/4456",
+          "role": "support"
+        },
+        {
+          "type": "external_aggregate",
+          "source": "external:sts2fun",
+          "url": "https://sts2.fun/static/sts2_public.db.zst",
+          "version": "v0.111",
+          "dataset_sha256": "1f7c0c3d441aedb5c85f04bcd4d8d6a1039b438a8b6fda2d96cfa5c27580cbf5",
+          "downloaded_at": "2026-10-21",
+          "license": "冻结材料未核实再分发许可；署名聚合候选，不再分发原始数据。",
+          "filters": {
+            "character": "silent",
+            "ascension": 10,
+            "criteria": "single-player;valid;not abandoned;no modifiers;patch_major=v0.111;act_index=0;card_id=CARD.WELL_LAID_PLANS;picked=true;prior_reward_card_present=CARD.BLADE_DANCE;cell uploaded runs>=10;upgrades unresolved"
+          },
+          "statistic": {
+            "name": "later_boss_arrival_per_choice_opportunity_same_or_later_act",
+            "value": 0.9142857142857143,
+            "unit": "fraction"
+          },
+          "denominator": {
+            "unit": "offers",
+            "n": 35
+          },
+          "design": "observational",
+          "limitations": [
+            "外部自选上传、观察性；玩家/技术/SL/路线/备选牌/决策时状态未调整，不能推因果收益或必拿顺序。",
+            "每格distinct_uploaded_runs仅格内去重；同局可跨拿/不拿及多个前缀格，玩家独立数未知，不求和。",
+            "前缀只含此前奖励拿牌；漏初始、删改、事件/商店及升级，同节点选择不互作前缀，不是完整牌组。",
+            "每格至少10上传局是数据量过滤；缺失低支持格未知，不填0；多房间节点未归因，覆盖不全。",
+            "Boss仅后续同幕或更晚幕的到达机会；不是通过率、指定Boss、双Boss顺序或战前准备度。",
+            "版本逐版分账；探索多个重叠格有多重比较，不据符号数投票、外推或升级可信度。"
+          ],
+          "ref": "paper/materials/20261024-issue51-p0-0802-ops/aggregates/card-picks-v0.111.json#/prefix_card_presence_groups/4456",
+          "role": "support"
+        },
+        {
+          "type": "external_aggregate",
+          "source": "external:sts2fun",
+          "url": "https://sts2.fun/static/sts2_public.db.zst",
+          "version": "v0.111",
+          "dataset_sha256": "1f7c0c3d441aedb5c85f04bcd4d8d6a1039b438a8b6fda2d96cfa5c27580cbf5",
+          "downloaded_at": "2026-10-21",
+          "license": "冻结材料未核实再分发许可；署名聚合候选，不再分发原始数据。",
+          "filters": {
+            "character": "silent",
+            "ascension": 10,
+            "criteria": "single-player;valid;not abandoned;no modifiers;patch_major=v0.111;act_index=0;card_id=CARD.WELL_LAID_PLANS;picked=false;prior_reward_card_present=CARD.BLADE_DANCE;cell uploaded runs>=10;upgrades unresolved"
+          },
+          "statistic": {
+            "name": "eventual_win_per_uploaded_run",
+            "value": 0.29411764705882354,
+            "unit": "fraction"
+          },
+          "denominator": {
+            "unit": "runs",
+            "n": 17
+          },
+          "design": "observational",
+          "limitations": [
+            "外部自选上传、观察性；玩家/技术/SL/路线/备选牌/决策时状态未调整，不能推因果收益或必拿顺序。",
+            "每格distinct_uploaded_runs仅格内去重；同局可跨拿/不拿及多个前缀格，玩家独立数未知，不求和。",
+            "前缀只含此前奖励拿牌；漏初始、删改、事件/商店及升级，同节点选择不互作前缀，不是完整牌组。",
+            "每格至少10上传局是数据量过滤；缺失低支持格未知，不填0；多房间节点未归因，覆盖不全。",
+            "Boss仅后续同幕或更晚幕的到达机会；不是通过率、指定Boss、双Boss顺序或战前准备度。",
+            "版本逐版分账；探索多个重叠格有多重比较，不据符号数投票、外推或升级可信度。"
+          ],
+          "ref": "paper/materials/20261024-issue51-p0-0802-ops/aggregates/card-picks-v0.111.json#/prefix_card_presence_groups/4446",
+          "role": "support"
+        },
+        {
+          "type": "external_aggregate",
+          "source": "external:sts2fun",
+          "url": "https://sts2.fun/static/sts2_public.db.zst",
+          "version": "v0.111",
+          "dataset_sha256": "1f7c0c3d441aedb5c85f04bcd4d8d6a1039b438a8b6fda2d96cfa5c27580cbf5",
+          "downloaded_at": "2026-10-21",
+          "license": "冻结材料未核实再分发许可；署名聚合候选，不再分发原始数据。",
+          "filters": {
+            "character": "silent",
+            "ascension": 10,
+            "criteria": "single-player;valid;not abandoned;no modifiers;patch_major=v0.111;act_index=0;card_id=CARD.WELL_LAID_PLANS;picked=false;prior_reward_card_present=CARD.BLADE_DANCE;cell uploaded runs>=10;upgrades unresolved"
+          },
+          "statistic": {
+            "name": "eventual_win_per_choice_opportunity",
+            "value": 0.29411764705882354,
+            "unit": "fraction"
+          },
+          "denominator": {
+            "unit": "offers",
+            "n": 17
+          },
+          "design": "observational",
+          "limitations": [
+            "外部自选上传、观察性；玩家/技术/SL/路线/备选牌/决策时状态未调整，不能推因果收益或必拿顺序。",
+            "每格distinct_uploaded_runs仅格内去重；同局可跨拿/不拿及多个前缀格，玩家独立数未知，不求和。",
+            "前缀只含此前奖励拿牌；漏初始、删改、事件/商店及升级，同节点选择不互作前缀，不是完整牌组。",
+            "每格至少10上传局是数据量过滤；缺失低支持格未知，不填0；多房间节点未归因，覆盖不全。",
+            "Boss仅后续同幕或更晚幕的到达机会；不是通过率、指定Boss、双Boss顺序或战前准备度。",
+            "版本逐版分账；探索多个重叠格有多重比较，不据符号数投票、外推或升级可信度。"
+          ],
+          "ref": "paper/materials/20261024-issue51-p0-0802-ops/aggregates/card-picks-v0.111.json#/prefix_card_presence_groups/4446",
+          "role": "support"
+        },
+        {
+          "type": "external_aggregate",
+          "source": "external:sts2fun",
+          "url": "https://sts2.fun/static/sts2_public.db.zst",
+          "version": "v0.111",
+          "dataset_sha256": "1f7c0c3d441aedb5c85f04bcd4d8d6a1039b438a8b6fda2d96cfa5c27580cbf5",
+          "downloaded_at": "2026-10-21",
+          "license": "冻结材料未核实再分发许可；署名聚合候选，不再分发原始数据。",
+          "filters": {
+            "character": "silent",
+            "ascension": 10,
+            "criteria": "single-player;valid;not abandoned;no modifiers;patch_major=v0.111;act_index=0;card_id=CARD.WELL_LAID_PLANS;picked=false;prior_reward_card_present=CARD.BLADE_DANCE;cell uploaded runs>=10;upgrades unresolved"
+          },
+          "statistic": {
+            "name": "later_boss_arrival_per_choice_opportunity_same_or_later_act",
+            "value": 0.6470588235294118,
+            "unit": "fraction"
+          },
+          "denominator": {
+            "unit": "offers",
+            "n": 17
+          },
+          "design": "observational",
+          "limitations": [
+            "外部自选上传、观察性；玩家/技术/SL/路线/备选牌/决策时状态未调整，不能推因果收益或必拿顺序。",
+            "每格distinct_uploaded_runs仅格内去重；同局可跨拿/不拿及多个前缀格，玩家独立数未知，不求和。",
+            "前缀只含此前奖励拿牌；漏初始、删改、事件/商店及升级，同节点选择不互作前缀，不是完整牌组。",
+            "每格至少10上传局是数据量过滤；缺失低支持格未知，不填0；多房间节点未归因，覆盖不全。",
+            "Boss仅后续同幕或更晚幕的到达机会；不是通过率、指定Boss、双Boss顺序或战前准备度。",
+            "版本逐版分账；探索多个重叠格有多重比较，不据符号数投票、外推或升级可信度。"
+          ],
+          "ref": "paper/materials/20261024-issue51-p0-0802-ops/aggregates/card-picks-v0.111.json#/prefix_card_presence_groups/4446",
+          "role": "support"
+        },
+        {
+          "type": "external_aggregate",
+          "source": "external:sts2fun",
+          "url": "https://sts2.fun/static/sts2_public.db.zst",
+          "version": "v0.111",
+          "dataset_sha256": "1f7c0c3d441aedb5c85f04bcd4d8d6a1039b438a8b6fda2d96cfa5c27580cbf5",
+          "downloaded_at": "2026-10-21",
+          "license": "冻结材料未核实再分发许可；署名聚合候选，不再分发原始数据。",
+          "filters": {
+            "character": "silent",
+            "ascension": 10,
+            "criteria": "single-player;valid;not abandoned;no modifiers;patch_major=v0.111;act_index=0;card_id=CARD.WELL_LAID_PLANS;picked=true;prior_reward_card_present=CARD.SNAKEBITE;cell uploaded runs>=10;upgrades unresolved"
+          },
+          "statistic": {
+            "name": "eventual_win_per_uploaded_run",
+            "value": 0.39285714285714285,
+            "unit": "fraction"
+          },
+          "denominator": {
+            "unit": "runs",
+            "n": 28
+          },
+          "design": "observational",
+          "limitations": [
+            "外部自选上传、观察性；玩家/技术/SL/路线/备选牌/决策时状态未调整，不能推因果收益或必拿顺序。",
+            "每格distinct_uploaded_runs仅格内去重；同局可跨拿/不拿及多个前缀格，玩家独立数未知，不求和。",
+            "前缀只含此前奖励拿牌；漏初始、删改、事件/商店及升级，同节点选择不互作前缀，不是完整牌组。",
+            "每格至少10上传局是数据量过滤；缺失低支持格未知，不填0；多房间节点未归因，覆盖不全。",
+            "Boss仅后续同幕或更晚幕的到达机会；不是通过率、指定Boss、双Boss顺序或战前准备度。",
+            "版本逐版分账；探索多个重叠格有多重比较，不据符号数投票、外推或升级可信度。"
+          ],
+          "ref": "paper/materials/20261024-issue51-p0-0802-ops/aggregates/card-picks-v0.111.json#/prefix_card_presence_groups/4487",
+          "role": "contradict"
+        },
+        {
+          "type": "external_aggregate",
+          "source": "external:sts2fun",
+          "url": "https://sts2.fun/static/sts2_public.db.zst",
+          "version": "v0.111",
+          "dataset_sha256": "1f7c0c3d441aedb5c85f04bcd4d8d6a1039b438a8b6fda2d96cfa5c27580cbf5",
+          "downloaded_at": "2026-10-21",
+          "license": "冻结材料未核实再分发许可；署名聚合候选，不再分发原始数据。",
+          "filters": {
+            "character": "silent",
+            "ascension": 10,
+            "criteria": "single-player;valid;not abandoned;no modifiers;patch_major=v0.111;act_index=0;card_id=CARD.WELL_LAID_PLANS;picked=true;prior_reward_card_present=CARD.SNAKEBITE;cell uploaded runs>=10;upgrades unresolved"
+          },
+          "statistic": {
+            "name": "eventual_win_per_choice_opportunity",
+            "value": 0.39285714285714285,
+            "unit": "fraction"
+          },
+          "denominator": {
+            "unit": "offers",
+            "n": 28
+          },
+          "design": "observational",
+          "limitations": [
+            "外部自选上传、观察性；玩家/技术/SL/路线/备选牌/决策时状态未调整，不能推因果收益或必拿顺序。",
+            "每格distinct_uploaded_runs仅格内去重；同局可跨拿/不拿及多个前缀格，玩家独立数未知，不求和。",
+            "前缀只含此前奖励拿牌；漏初始、删改、事件/商店及升级，同节点选择不互作前缀，不是完整牌组。",
+            "每格至少10上传局是数据量过滤；缺失低支持格未知，不填0；多房间节点未归因，覆盖不全。",
+            "Boss仅后续同幕或更晚幕的到达机会；不是通过率、指定Boss、双Boss顺序或战前准备度。",
+            "版本逐版分账；探索多个重叠格有多重比较，不据符号数投票、外推或升级可信度。"
+          ],
+          "ref": "paper/materials/20261024-issue51-p0-0802-ops/aggregates/card-picks-v0.111.json#/prefix_card_presence_groups/4487",
+          "role": "contradict"
+        },
+        {
+          "type": "external_aggregate",
+          "source": "external:sts2fun",
+          "url": "https://sts2.fun/static/sts2_public.db.zst",
+          "version": "v0.111",
+          "dataset_sha256": "1f7c0c3d441aedb5c85f04bcd4d8d6a1039b438a8b6fda2d96cfa5c27580cbf5",
+          "downloaded_at": "2026-10-21",
+          "license": "冻结材料未核实再分发许可；署名聚合候选，不再分发原始数据。",
+          "filters": {
+            "character": "silent",
+            "ascension": 10,
+            "criteria": "single-player;valid;not abandoned;no modifiers;patch_major=v0.111;act_index=0;card_id=CARD.WELL_LAID_PLANS;picked=true;prior_reward_card_present=CARD.SNAKEBITE;cell uploaded runs>=10;upgrades unresolved"
+          },
+          "statistic": {
+            "name": "later_boss_arrival_per_choice_opportunity_same_or_later_act",
+            "value": 0.8214285714285714,
+            "unit": "fraction"
+          },
+          "denominator": {
+            "unit": "offers",
+            "n": 28
+          },
+          "design": "observational",
+          "limitations": [
+            "外部自选上传、观察性；玩家/技术/SL/路线/备选牌/决策时状态未调整，不能推因果收益或必拿顺序。",
+            "每格distinct_uploaded_runs仅格内去重；同局可跨拿/不拿及多个前缀格，玩家独立数未知，不求和。",
+            "前缀只含此前奖励拿牌；漏初始、删改、事件/商店及升级，同节点选择不互作前缀，不是完整牌组。",
+            "每格至少10上传局是数据量过滤；缺失低支持格未知，不填0；多房间节点未归因，覆盖不全。",
+            "Boss仅后续同幕或更晚幕的到达机会；不是通过率、指定Boss、双Boss顺序或战前准备度。",
+            "版本逐版分账；探索多个重叠格有多重比较，不据符号数投票、外推或升级可信度。"
+          ],
+          "ref": "paper/materials/20261024-issue51-p0-0802-ops/aggregates/card-picks-v0.111.json#/prefix_card_presence_groups/4487",
+          "role": "contradict"
+        },
+        {
+          "type": "external_aggregate",
+          "source": "external:sts2fun",
+          "url": "https://sts2.fun/static/sts2_public.db.zst",
+          "version": "v0.111",
+          "dataset_sha256": "1f7c0c3d441aedb5c85f04bcd4d8d6a1039b438a8b6fda2d96cfa5c27580cbf5",
+          "downloaded_at": "2026-10-21",
+          "license": "冻结材料未核实再分发许可；署名聚合候选，不再分发原始数据。",
+          "filters": {
+            "character": "silent",
+            "ascension": 10,
+            "criteria": "single-player;valid;not abandoned;no modifiers;patch_major=v0.111;act_index=0;card_id=CARD.WELL_LAID_PLANS;picked=false;prior_reward_card_present=CARD.SNAKEBITE;cell uploaded runs>=10;upgrades unresolved"
+          },
+          "statistic": {
+            "name": "eventual_win_per_uploaded_run",
+            "value": 0.42857142857142855,
+            "unit": "fraction"
+          },
+          "denominator": {
+            "unit": "runs",
+            "n": 14
+          },
+          "design": "observational",
+          "limitations": [
+            "外部自选上传、观察性；玩家/技术/SL/路线/备选牌/决策时状态未调整，不能推因果收益或必拿顺序。",
+            "每格distinct_uploaded_runs仅格内去重；同局可跨拿/不拿及多个前缀格，玩家独立数未知，不求和。",
+            "前缀只含此前奖励拿牌；漏初始、删改、事件/商店及升级，同节点选择不互作前缀，不是完整牌组。",
+            "每格至少10上传局是数据量过滤；缺失低支持格未知，不填0；多房间节点未归因，覆盖不全。",
+            "Boss仅后续同幕或更晚幕的到达机会；不是通过率、指定Boss、双Boss顺序或战前准备度。",
+            "版本逐版分账；探索多个重叠格有多重比较，不据符号数投票、外推或升级可信度。"
+          ],
+          "ref": "paper/materials/20261024-issue51-p0-0802-ops/aggregates/card-picks-v0.111.json#/prefix_card_presence_groups/4452",
+          "role": "contradict"
+        },
+        {
+          "type": "external_aggregate",
+          "source": "external:sts2fun",
+          "url": "https://sts2.fun/static/sts2_public.db.zst",
+          "version": "v0.111",
+          "dataset_sha256": "1f7c0c3d441aedb5c85f04bcd4d8d6a1039b438a8b6fda2d96cfa5c27580cbf5",
+          "downloaded_at": "2026-10-21",
+          "license": "冻结材料未核实再分发许可；署名聚合候选，不再分发原始数据。",
+          "filters": {
+            "character": "silent",
+            "ascension": 10,
+            "criteria": "single-player;valid;not abandoned;no modifiers;patch_major=v0.111;act_index=0;card_id=CARD.WELL_LAID_PLANS;picked=false;prior_reward_card_present=CARD.SNAKEBITE;cell uploaded runs>=10;upgrades unresolved"
+          },
+          "statistic": {
+            "name": "eventual_win_per_choice_opportunity",
+            "value": 0.42857142857142855,
+            "unit": "fraction"
+          },
+          "denominator": {
+            "unit": "offers",
+            "n": 14
+          },
+          "design": "observational",
+          "limitations": [
+            "外部自选上传、观察性；玩家/技术/SL/路线/备选牌/决策时状态未调整，不能推因果收益或必拿顺序。",
+            "每格distinct_uploaded_runs仅格内去重；同局可跨拿/不拿及多个前缀格，玩家独立数未知，不求和。",
+            "前缀只含此前奖励拿牌；漏初始、删改、事件/商店及升级，同节点选择不互作前缀，不是完整牌组。",
+            "每格至少10上传局是数据量过滤；缺失低支持格未知，不填0；多房间节点未归因，覆盖不全。",
+            "Boss仅后续同幕或更晚幕的到达机会；不是通过率、指定Boss、双Boss顺序或战前准备度。",
+            "版本逐版分账；探索多个重叠格有多重比较，不据符号数投票、外推或升级可信度。"
+          ],
+          "ref": "paper/materials/20261024-issue51-p0-0802-ops/aggregates/card-picks-v0.111.json#/prefix_card_presence_groups/4452",
+          "role": "contradict"
+        },
+        {
+          "type": "external_aggregate",
+          "source": "external:sts2fun",
+          "url": "https://sts2.fun/static/sts2_public.db.zst",
+          "version": "v0.111",
+          "dataset_sha256": "1f7c0c3d441aedb5c85f04bcd4d8d6a1039b438a8b6fda2d96cfa5c27580cbf5",
+          "downloaded_at": "2026-10-21",
+          "license": "冻结材料未核实再分发许可；署名聚合候选，不再分发原始数据。",
+          "filters": {
+            "character": "silent",
+            "ascension": 10,
+            "criteria": "single-player;valid;not abandoned;no modifiers;patch_major=v0.111;act_index=0;card_id=CARD.WELL_LAID_PLANS;picked=false;prior_reward_card_present=CARD.SNAKEBITE;cell uploaded runs>=10;upgrades unresolved"
+          },
+          "statistic": {
+            "name": "later_boss_arrival_per_choice_opportunity_same_or_later_act",
+            "value": 0.8571428571428571,
+            "unit": "fraction"
+          },
+          "denominator": {
+            "unit": "offers",
+            "n": 14
+          },
+          "design": "observational",
+          "limitations": [
+            "外部自选上传、观察性；玩家/技术/SL/路线/备选牌/决策时状态未调整，不能推因果收益或必拿顺序。",
+            "每格distinct_uploaded_runs仅格内去重；同局可跨拿/不拿及多个前缀格，玩家独立数未知，不求和。",
+            "前缀只含此前奖励拿牌；漏初始、删改、事件/商店及升级，同节点选择不互作前缀，不是完整牌组。",
+            "每格至少10上传局是数据量过滤；缺失低支持格未知，不填0；多房间节点未归因，覆盖不全。",
+            "Boss仅后续同幕或更晚幕的到达机会；不是通过率、指定Boss、双Boss顺序或战前准备度。",
+            "版本逐版分账；探索多个重叠格有多重比较，不据符号数投票、外推或升级可信度。"
+          ],
+          "ref": "paper/materials/20261024-issue51-p0-0802-ops/aggregates/card-picks-v0.111.json#/prefix_card_presence_groups/4452",
+          "role": "contradict"
+        }
+      ],
+      "source": "external:sts2fun",
+      "confidence": 0.3,
+      "confidence_basis": "沿冻结候选低可信编辑档，仅外部观察；不是概率，不按频率差/格数/样本量提升。",
+      "evidence_status": "conflict",
+      "formal_publication": "pending",
+      "consumer_readback": "pending",
+      "audit": {
+        "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261024-083104/learner/runs/20261024-083111-9056c6f6-91a0-424e-b9b4-97cd03107538-strategy-proposal/evidence/WELL_LAID_PLANS.json",
+        "sha256": "050c622c6f1780696b160d83340e4a85d476cb647ab4456e2d6179b77e702c38"
+      },
+      "applicability": "card_reward且该卡确实出现在当前选项；前缀条件只在真实奖励获取历史可核时描述，不映射为deck_size/deck_cards。缺失历史不能假定匹配。",
+      "natural_query_count": null,
+      "runs": [],
+      "publication_blocker": "完整证据候选不是可直接注入的4096字节运行封包；需沿原发布锁做保留反例/分母的分场景封包、正式校验及实际消费者读回。"
+    }
+  ]
+}

@@ -1,0 +1,563 @@
+
+ RUN  v4.1.11 /home/dw/Projects/agent-sts2/.artifacts/integrator70-combination-20261026/actual-live-consumer/agent
+
+(node:2903304) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+ ❯ tests/brain-codex-session.test.ts (33 tests | 8 failed) 43219ms
+     ✓ one server, one thread with our system prompt; each question a turn with the strict schema, reverted after it 120ms
+     ✓ broadcasts the existing public summary/body deltas while leaving raw reasoning only in stall detection 104ms
+     ✓ quoted TUI model state and project trust keep both questions on the same isolated session 107ms
+     ✓ a new thread (the old one deleted) when the system prompt changes or a turn fails 144ms
+     ✓ config.toml with anything but model / effort / [tui] (or an instruction source) turns session mode off: exec mode answers 282ms
+     ✓ a stalled turn (silent after its first token) is interrupted, reverted and asked once more  1104ms
+     ✓ a runaway answer (past BRAIN_CODEX_MAX_ANSWER_CHARS) is interrupted, reverted and asked once more 200ms
+     ✓ a whitespace runaway (BRAIN_CODEX_MAX_ANSWER_BLANKS in a row between JSON tokens) is cut at once, long before the length cap; a padded answer is not 125ms
+     ✓ BRAIN_CODEX_ACCEPT_CUT (default on): a cut whose prefix is a whole, valid answer is taken, not asked again; the trace and brain.jsonl say so 122ms
+     ✓ ET3V5177HXSY F42 rest/plan, logged: a whole cut answer to a question with a discard option is taken (it was refused for lacking discard) 243ms
+     ✓ a cut naming an option that needs a field it lacks (a :discard option without slots, a card option without cards) is asked again; the trace says why  358ms
+     ✓ a cut is asked again as before when its prefix lacks a required field, names no option, or BRAIN_CODEX_ACCEPT_CUT is off  340ms
+     ✓ BlankRun counts whitespace between JSON tokens only: not inside strings (escaped quotes included), across deltas 0ms
+     ✓ BRAIN_CODEX_MAX_ANSWER_BLANKS: 100 by default, off, or a number of at least 20 1ms
+     ✓ the answer text a turn keeps is capped (ANSWER_TEXT_KEEP), however long the runaway streamed before the interrupt landed 110ms
+     ✓ a server that dies is restarted once; when it dies again, exec mode answers for the rest of the process  2186ms
+     ✓ a broken backend stream restarts the session once (and the question is asked again there) 127ms
+     ✓ a used-up plan in a turn rests codex for the process (as exec mode) 1ms
+     ✓ sweeps a dead process's threads (ours only), and deletes its own thread's files at exit  400ms
+     ✓ the exit fixture selects a model advertised by its fake catalog 49ms
+     ✓ the server does not keep the process alive; at exit the process removes its thread's files  1638ms
+     ✓ a pushed window at the stop stops codex before the next due read 237ms
+     ✓ accepts passive quoted TUI keys and project trust, while rejecting project instructions and nested tables 1ms
+     ✓ takes model, model_reasoning_effort and [tui]; names anything else by key only 1ms
+   ✓ knowledge session isolation failures stay unavailable and never dispatch exec 154ms
+   × #64 strict session through persistence and restored route consumer: change 4882ms
+   × #64 strict session through persistence and restored route consumer: construction-only 4326ms
+   × #64 strict session through persistence and restored route consumer: both 4292ms
+   × #64 strict session through persistence and restored route consumer: omit 4281ms
+   × #64 strict session through persistence and restored route consumer: keep 4293ms
+   × #64 strict session through persistence and restored route consumer: repeat 4327ms
+   × #64 strict session through persistence and restored route consumer: missing-reason 4336ms
+   × #64 strict session through persistence and restored route consumer: invalid-route 4328ms
+(node:2907430) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+ ❯ tests/brain-agent-mode.test.ts (15 tests | 1 failed) 306ms
+   ✓ exposes only fixed knowledge selectors, keeps external provenance, and returns empty optional libraries 10ms
+   ✓ serves the same ToolDefs over MCP and turns errors and exhausted budgets into tool text 35ms
+   ✓ records the external statistics single-source envelope without rewriting the tool output 1ms
+   × mounts all six #26 tools through the same MCP and retains controller role/ascension identity 17ms
+   ✓ uses the same engine and exact acquired results to answer after calls limit 31ms
+   ✓ uses the same engine and exact acquired results to answer after time limit 3ms
+   ✓ honors a configured answer reserve larger than half the question budget 23ms
+   ✓ production removes prefixes and inline open-book/strategies while retaining state and projections 5ms
+   ✓ dsh patches disable every inherited plugin, select Nova credentials/max and expose only the shared MCP 2ms
+   ✓ runs dsh with a fresh isolated cwd, streams NDJSON and needs no direct API key 76ms
+   ✓ does not renew the tool allowance when the same question recovers after an engine error 6ms
+   ✓ a previous question's delayed limit callback cannot cancel the next question 82ms
+   ✓ forwards live dsh text only to the existing parent stream observer 7ms
+   ✓ freezes codex/high with its configured L2 allowance of 300000 ms 6ms
+   ✓ freezes deepseek/max with its configured L2 allowance of 900000 ms 1ms
+(node:2907471) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+ ❯ tests/codex-only-brain.test.ts (36 tests | 5 failed) 113ms
+     ✓ selects the per-run engine and overrides per-question selectors/fallback without a direct API client 7ms
+     ✓ map/route-plan quota waits and recovers on the same question without any substitute 8ms
+     ✓ reward/card quota waits and recovers on the same question without any substitute 2ms
+     ✓ event/plan quota waits and recovers on the same question without any substitute 2ms
+     ✓ shop/plan quota waits and recovers on the same question without any substitute 1ms
+     ✓ rest/plan quota waits and recovers on the same question without any substitute 2ms
+     ✓ run-plan quota waits and recovers on the same question without any substitute 1ms
+     ✓ fight-plan quota waits and recovers on the same question without any substitute 1ms
+     ✓ empty/invalid answers retry the same question after the validation re-ask 2ms
+     ✓ does not drop a due embedded route or run-plan field 2ms
+     ✓ typed auth/unavailable/overload and preflight failures recover without resetting the run 2ms
+     ✓ does not swallow programming errors or authorize a fallback 2ms
+     ✓ two consecutive timeouts honor the existing ten-minute rest with bounded polling 2ms
+     ✓ call budget remains enforced, cancellation leaves no answer/action and emits once 2ms
+     ✓ heartbeats remain fresh during backoff, bounded sleeps and all retries; notices are idempotent 21ms
+     ✓ a long-timeout cancellation propagates while the engine is in flight 2ms
+     ✓ ops STOP interrupts an in-flight call even when the call timeout is disabled 1ms
+     ✓ preflight probe is retried, preserving engine/isolation checks 2ms
+     ✓ usage guard waits for a fresh passing quota reading rather than clearing a stop 1ms
+     ✓ classifies 'codex' by actual successes 0ms
+     ✓ classifies 'deepseek' by actual successes 0ms
+     ✓ classifies 'mixed' by actual successes 0ms
+     ✓ classifies 'missing' by actual successes 0ms
+     ✓ classifies 'unknown engine' by actual successes 0ms
+     ✓ classifies 'ambiguous historical answer' by actual successes 0ms
+     ✓ classifies 'explicit accepted soft notes' by actual successes 0ms
+     ✓ classifies 'claude' by actual successes 0ms
+     ✓ streaming preserves Unicode, complete records and role/SL isolation; compatibility fields cannot promote 14ms
+     ✓ initial logging or notice failures are terminal brain faults without heartbeat timers 1ms
+     ✓ terminal logging failures preserve fault exit type and release all heartbeat timers 3ms
+     ✓ runtime notification files are confined to fixed fixtures 5ms
+     × rest outage resumes the same real screen question and dispatches once 15ms
+     × reward outage resumes the same real screen question and dispatches once 3ms
+     × event outage resumes the same real screen question and dispatches once 2ms
+     × a genuine brain program fault crosses the loop's legacy fallback catches without dispatch 2ms
+     × missing route facts cannot silently select the code route fallback 2ms
+(node:2907591) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+ ❯ tests/brain-query-efficiency.test.ts (9 tests | 3 failed) 66ms
+   ✓ keeps query cues optional while the system describes registered strategy and rk tools 13ms
+   ✓ construction lookup excludes combat lines even if requested and returns summaries without predicate JSON 9ms
+   ✓ event/plan filters combat knowledge while fight-plan preserves its existing full result 7ms
+   ✓ rest/plan filters combat knowledge while fight-plan preserves its existing full result 6ms
+   ✓ shop/plan filters combat knowledge while fight-plan preserves its existing full result 6ms
+   ✓ event/act-plan filters combat knowledge while fight-plan preserves its existing full result 6ms
+   × reward/card gives truthful optional external lookup counts and executable inputs without statistics 8ms
+   × shop/plan gives truthful optional external lookup counts and executable inputs without statistics 5ms
+   × external hints stay absent outside supported questions, role/ascension or a valid pinned aggregate 5ms
+(node:2907686) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+ ❯ tests/brain-agent-provenance.test.ts (16 tests | 16 failed) 31ms
+   × records the actual selected Jev JSON and changes its audited SHA with the returned hint 7ms
+   × tracks both fight inputs and no unrelated statistics tables 2ms
+   × room_costs records only its selected table 1ms
+   × rest records only its selected table 1ms
+   × guide records the chosen text, not the other old knowledge 2ms
+   × handbook records the chosen text, not the other old knowledge 1ms
+   × fills boss records from the query copy, records the dependency and refreshes a same-size/same-mtime copy 1ms
+   × records room-cost dynamic fills from the current copy 2ms
+   × records monster facts dynamically used to fill Jev hint numbers 2ms
+   × records outcome statistics used by a card-outcome placeholder 1ms
+   × experience snapshots bypass warm gameplay caches without modifying those caches 1ms
+   × plain source output remains equivalent to the existing renderer on the same published inputs 1ms
+   × keeps concurrent queries in their own input snapshots and audit logs 1ms
+   × labels a catalogue reconstruction as a compatible view with its actual catalogue hash 1ms
+   × kb_old_knowledge preserves published Ironclad renderer bytes and its ordinary cache 2ms
+   × kb_stats preserves published Ironclad renderer bytes and its ordinary cache 1ms
+(node:2907741) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+ ✓ tests/brain-router.test.ts (30 tests) 6076ms
+     ✓ a timeout aborts the engine and falls back  1005ms
+     ✓ two timeouts in a row (a re-ask's too) rest the engine for TIMEOUT_REST_MS: the next question does not wait on it  2012ms
+     ✓ a timeout between answers starts the count over  2011ms
+     ✓ an invalid answer whose re-ask timed out goes to the fallback too; a fallback that fails leaves the unusable answer (then Jev/code)  1007ms
+(node:2908425) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+ ✓ tests/brain-budget-evidence.test.ts (15 tests) 229ms
+(node:2908490) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+ ✓ tests/brain-agent-codex.test.ts (2 tests) 219ms
+(node:2908641) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+ ✓ tests/brain-plan-reuse.test.ts (9 tests) 47ms
+(node:2908653) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+ ✓ tests/codex-cache-engine.test.ts (5 tests) 35ms
+(node:2908685) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+ ✓ tests/brain-run-profile.test.ts (7 tests) 22ms
+
+⎯⎯⎯⎯⎯⎯ Failed Tests 33 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/brain-agent-mode.test.ts > mounts all six #26 tools through the same MCP and retains controller role/ascension identity
+AssertionError: expected true to be false // Object.is equality
+
+- Expected
++ Received
+
+- false
++ true
+
+ ❯ tests/brain-agent-mode.test.ts:80:25
+     78|   expect(names.filter((n: string) => n.startsWith("external_stats_")))…
+     79|   const valid = (await rpc(url, "tools/call", { name: "external_stats_…
+     80|   expect(valid.isError).toBe(false);
+       |                         ^
+     81|   expect(JSON.parse(valid.content[0].text)).toMatchObject({ source: "e…
+     82|   expect(host.calls[0]).toMatchObject({ sources: [expect.objectContain…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/33]⎯
+
+ FAIL  tests/brain-agent-provenance.test.ts > records the actual selected Jev JSON and changes its audited SHA with the returned hint
+Error: ENOENT: no such file or directory, copyfile '/home/dw/Projects/agent-sts2/.artifacts/integrator70-combination-20261026/actual-live-consumer/knowledge/common/monster-db.json' -> '/home/dw/Projects/agent-sts2/.cache/t/s-4kVGoB/knowledge-provenance-fXRVcv/common/monster-db.json'
+ ❯ fixture tests/brain-agent-provenance.test.ts:24:91
+
+ ❯ tests/brain-agent-provenance.test.ts:48:13
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/33]⎯
+
+ FAIL  tests/brain-agent-provenance.test.ts > tracks both fight inputs and no unrelated statistics tables
+Error: ENOENT: no such file or directory, copyfile '/home/dw/Projects/agent-sts2/.artifacts/integrator70-combination-20261026/actual-live-consumer/knowledge/common/monster-db.json' -> '/home/dw/Projects/agent-sts2/.cache/t/s-4kVGoB/knowledge-provenance-OYIFJU/common/monster-db.json'
+ ❯ fixture tests/brain-agent-provenance.test.ts:24:91
+
+ ❯ tests/brain-agent-provenance.test.ts:57:13
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/33]⎯
+
+ FAIL  tests/brain-agent-provenance.test.ts > room_costs records only its selected table
+Error: ENOENT: no such file or directory, copyfile '/home/dw/Projects/agent-sts2/.artifacts/integrator70-combination-20261026/actual-live-consumer/knowledge/common/monster-db.json' -> '/home/dw/Projects/agent-sts2/.cache/t/s-4kVGoB/knowledge-provenance-oYJ4ds/common/monster-db.json'
+ ❯ fixture tests/brain-agent-provenance.test.ts:24:91
+
+ ❯ tests/brain-agent-provenance.test.ts:74:13
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/33]⎯
+
+ FAIL  tests/brain-agent-provenance.test.ts > rest records only its selected table
+Error: ENOENT: no such file or directory, copyfile '/home/dw/Projects/agent-sts2/.artifacts/integrator70-combination-20261026/actual-live-consumer/knowledge/common/monster-db.json' -> '/home/dw/Projects/agent-sts2/.cache/t/s-4kVGoB/knowledge-provenance-Yc9qRa/common/monster-db.json'
+ ❯ fixture tests/brain-agent-provenance.test.ts:24:91
+
+ ❯ tests/brain-agent-provenance.test.ts:74:13
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[5/33]⎯
+
+ FAIL  tests/brain-agent-provenance.test.ts > guide records the chosen text, not the other old knowledge
+Error: ENOENT: no such file or directory, copyfile '/home/dw/Projects/agent-sts2/.artifacts/integrator70-combination-20261026/actual-live-consumer/knowledge/common/monster-db.json' -> '/home/dw/Projects/agent-sts2/.cache/t/s-4kVGoB/knowledge-provenance-KdFUy6/common/monster-db.json'
+ ❯ fixture tests/brain-agent-provenance.test.ts:24:91
+
+ ❯ tests/brain-agent-provenance.test.ts:78:13
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[6/33]⎯
+
+ FAIL  tests/brain-agent-provenance.test.ts > handbook records the chosen text, not the other old knowledge
+Error: ENOENT: no such file or directory, copyfile '/home/dw/Projects/agent-sts2/.artifacts/integrator70-combination-20261026/actual-live-consumer/knowledge/common/monster-db.json' -> '/home/dw/Projects/agent-sts2/.cache/t/s-4kVGoB/knowledge-provenance-Mft7CO/common/monster-db.json'
+ ❯ fixture tests/brain-agent-provenance.test.ts:24:91
+
+ ❯ tests/brain-agent-provenance.test.ts:78:13
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[7/33]⎯
+
+ FAIL  tests/brain-agent-provenance.test.ts > fills boss records from the query copy, records the dependency and refreshes a same-size/same-mtime copy
+Error: ENOENT: no such file or directory, copyfile '/home/dw/Projects/agent-sts2/.artifacts/integrator70-combination-20261026/actual-live-consumer/knowledge/common/monster-db.json' -> '/home/dw/Projects/agent-sts2/.cache/t/s-4kVGoB/knowledge-provenance-lESTKy/common/monster-db.json'
+ ❯ fixture tests/brain-agent-provenance.test.ts:24:91
+
+ ❯ tests/brain-agent-provenance.test.ts:82:13
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[8/33]⎯
+
+ FAIL  tests/brain-agent-provenance.test.ts > records room-cost dynamic fills from the current copy
+Error: ENOENT: no such file or directory, copyfile '/home/dw/Projects/agent-sts2/.artifacts/integrator70-combination-20261026/actual-live-consumer/knowledge/common/monster-db.json' -> '/home/dw/Projects/agent-sts2/.cache/t/s-4kVGoB/knowledge-provenance-ltOJjT/common/monster-db.json'
+ ❯ fixture tests/brain-agent-provenance.test.ts:24:91
+
+ ❯ tests/brain-agent-provenance.test.ts:94:13
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[9/33]⎯
+
+ FAIL  tests/brain-agent-provenance.test.ts > records monster facts dynamically used to fill Jev hint numbers
+Error: ENOENT: no such file or directory, copyfile '/home/dw/Projects/agent-sts2/.artifacts/integrator70-combination-20261026/actual-live-consumer/knowledge/common/monster-db.json' -> '/home/dw/Projects/agent-sts2/.cache/t/s-4kVGoB/knowledge-provenance-bS1E7w/common/monster-db.json'
+ ❯ fixture tests/brain-agent-provenance.test.ts:24:91
+
+ ❯ tests/brain-agent-provenance.test.ts:105:13
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[10/33]⎯
+
+ FAIL  tests/brain-agent-provenance.test.ts > records outcome statistics used by a card-outcome placeholder
+Error: ENOENT: no such file or directory, copyfile '/home/dw/Projects/agent-sts2/.artifacts/integrator70-combination-20261026/actual-live-consumer/knowledge/common/monster-db.json' -> '/home/dw/Projects/agent-sts2/.cache/t/s-4kVGoB/knowledge-provenance-jfCrRX/common/monster-db.json'
+ ❯ fixture tests/brain-agent-provenance.test.ts:24:91
+
+ ❯ tests/brain-agent-provenance.test.ts:115:13
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[11/33]⎯
+
+ FAIL  tests/brain-agent-provenance.test.ts > experience snapshots bypass warm gameplay caches without modifying those caches
+Error: ENOENT: no such file or directory, copyfile '/home/dw/Projects/agent-sts2/.artifacts/integrator70-combination-20261026/actual-live-consumer/knowledge/common/monster-db.json' -> '/home/dw/Projects/agent-sts2/.cache/t/s-4kVGoB/knowledge-provenance-igFYD1/common/monster-db.json'
+ ❯ fixture tests/brain-agent-provenance.test.ts:24:91
+
+ ❯ tests/brain-agent-provenance.test.ts:127:13
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[12/33]⎯
+
+ FAIL  tests/brain-agent-provenance.test.ts > plain source output remains equivalent to the existing renderer on the same published inputs
+Error: ENOENT: no such file or directory, copyfile '/home/dw/Projects/agent-sts2/.artifacts/integrator70-combination-20261026/actual-live-consumer/knowledge/common/monster-db.json' -> '/home/dw/Projects/agent-sts2/.cache/t/s-4kVGoB/knowledge-provenance-PY4PgN/common/monster-db.json'
+ ❯ fixture tests/brain-agent-provenance.test.ts:24:91
+
+ ❯ tests/brain-agent-provenance.test.ts:137:13
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[13/33]⎯
+
+ FAIL  tests/brain-agent-provenance.test.ts > keeps concurrent queries in their own input snapshots and audit logs
+Error: ENOENT: no such file or directory, copyfile '/home/dw/Projects/agent-sts2/.artifacts/integrator70-combination-20261026/actual-live-consumer/knowledge/common/monster-db.json' -> '/home/dw/Projects/agent-sts2/.cache/t/s-4kVGoB/knowledge-provenance-h0N5l6/common/monster-db.json'
+ ❯ fixture tests/brain-agent-provenance.test.ts:24:91
+
+ ❯ tests/brain-agent-provenance.test.ts:143:13
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[14/33]⎯
+
+ FAIL  tests/brain-agent-provenance.test.ts > labels a catalogue reconstruction as a compatible view with its actual catalogue hash
+Error: ENOENT: no such file or directory, copyfile '/home/dw/Projects/agent-sts2/.artifacts/integrator70-combination-20261026/actual-live-consumer/knowledge/common/monster-db.json' -> '/home/dw/Projects/agent-sts2/.cache/t/s-4kVGoB/knowledge-provenance-ZnYLHQ/common/monster-db.json'
+ ❯ fixture tests/brain-agent-provenance.test.ts:24:91
+
+ ❯ tests/brain-agent-provenance.test.ts:151:13
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[15/33]⎯
+
+ FAIL  tests/brain-agent-provenance.test.ts > kb_old_knowledge preserves published Ironclad renderer bytes and its ordinary cache
+ FAIL  tests/brain-agent-provenance.test.ts > kb_stats preserves published Ironclad renderer bytes and its ordinary cache
+KnowledgeLoadError: 知识文件读取失败 /home/dw/Projects/agent-sts2/.artifacts/integrator70-combination-20261026/actual-live-consumer/knowledge/common/monster-db.json: ENOENT: no such file or directory, open '/home/dw/Projects/agent-sts2/.artifacts/integrator70-combination-20261026/actual-live-consumer/knowledge/common/monster-db.json'
+ ❯ readText src/knowledge/render/data.ts:125:11
+    123|     text = queryKnowledgeText(dir, name) ?? readCompatibleKnowledgeTex…
+    124|   } catch (error) {
+    125|     throw new KnowledgeLoadError(`知识文件读取失败 ${path}: ${(error as Error)…
+       |           ^
+    126|   }
+    127|   if (text.trim().length === 0) throw new KnowledgeLoadError(`知识文件为空 $…
+ ❯ readJson src/knowledge/render/data.ts:146:16
+ ❯ parseAll src/knowledge/render/data.ts:172:34
+ ❯ loadKnowledgeData src/knowledge/render/data.ts:259:16
+ ❯ tests/brain-agent-provenance.test.ts:161:91
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[16/33]⎯
+
+ FAIL  tests/brain-codex-session.test.ts > #64 strict session through persistence and restored route consumer: change
+AssertionError: {"firstStats":{"decisions":1,"jevCalls":0,"deepseekCalls":2,"deepseekTokens":0,"claudeCalls":0,"debounced":0,"staleSkips":0,"fallbacks":0,"acts":1,"waits":0,"unsupported":0,"errors":1,"inputTokens":0,"outputTokens":0,"runs":[],"runsCompleted":0,"stoppedBecause":"Jev failure: no fixture Jev reply","elapsedMs":4831,"logPath":"/home/dw/Projects/agent-sts2/.cache/t/s-4kVGoB/fake-codex-session-G0Xwkm/route-reason-change/decisions.jsonl","brainPausedMs":0,"activeElapsedMs":4831},"rows":[{"error":"knowledge agent requires isolated app-server: the app-server failed again after a restart: codex app-server it exited 1 during the turn","problems":[]},{"error":"knowledge agent requires isolated app-server: the app-server failed again after a restart: codex app-server it exited 1 during the turn","problems":[]}]}: expected 1 to be 2 // Object.is equality
+
+- Expected
++ Received
+
+- 2
++ 1
+
+ ❯ tests/brain-codex-session.test.ts:654:128
+    652|     try {
+    653|       const firstStats = await run(2);
+    654|       expect(firstStats.acts, JSON.stringify({ firstStats, rows: rows.…
+       |                                                                                                                                ^
+    655|       const requests = fake.requests().filter(r => r.method === "turn/…
+    656|       const schema = requests[1]!.params.outputSchema;
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[17/33]⎯
+
+ FAIL  tests/brain-codex-session.test.ts > #64 strict session through persistence and restored route consumer: construction-only
+AssertionError: {"firstStats":{"decisions":1,"jevCalls":0,"deepseekCalls":2,"deepseekTokens":0,"claudeCalls":0,"debounced":0,"staleSkips":0,"fallbacks":0,"acts":1,"waits":0,"unsupported":0,"errors":1,"inputTokens":0,"outputTokens":0,"runs":[],"runsCompleted":0,"stoppedBecause":"Jev failure: no fixture Jev reply","elapsedMs":4318,"logPath":"/home/dw/Projects/agent-sts2/.cache/t/s-4kVGoB/fake-codex-session-G0Xwkm/route-reason-construction-only/decisions.jsonl","brainPausedMs":0,"activeElapsedMs":4318},"rows":[{"error":"knowledge agent requires isolated app-server: the app-server failed again after a restart: codex app-server it exited 1 during the turn","problems":[]},{"error":"knowledge agent requires isolated app-server: the app-server failed again after a restart: codex app-server it exited 1 during the turn","problems":[]}]}: expected 1 to be 2 // Object.is equality
+
+- Expected
++ Received
+
+- 2
++ 1
+
+ ❯ tests/brain-codex-session.test.ts:654:128
+    652|     try {
+    653|       const firstStats = await run(2);
+    654|       expect(firstStats.acts, JSON.stringify({ firstStats, rows: rows.…
+       |                                                                                                                                ^
+    655|       const requests = fake.requests().filter(r => r.method === "turn/…
+    656|       const schema = requests[1]!.params.outputSchema;
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[18/33]⎯
+
+ FAIL  tests/brain-codex-session.test.ts > #64 strict session through persistence and restored route consumer: both
+AssertionError: {"firstStats":{"decisions":1,"jevCalls":0,"deepseekCalls":2,"deepseekTokens":0,"claudeCalls":0,"debounced":0,"staleSkips":0,"fallbacks":0,"acts":1,"waits":0,"unsupported":0,"errors":1,"inputTokens":0,"outputTokens":0,"runs":[],"runsCompleted":0,"stoppedBecause":"Jev failure: no fixture Jev reply","elapsedMs":4289,"logPath":"/home/dw/Projects/agent-sts2/.cache/t/s-4kVGoB/fake-codex-session-G0Xwkm/route-reason-both/decisions.jsonl","brainPausedMs":0,"activeElapsedMs":4289},"rows":[{"error":"knowledge agent requires isolated app-server: the app-server failed again after a restart: codex app-server it exited 1 during the turn","problems":[]},{"error":"knowledge agent requires isolated app-server: the app-server failed again after a restart: codex app-server it exited 1 during the turn","problems":[]}]}: expected 1 to be 2 // Object.is equality
+
+- Expected
++ Received
+
+- 2
++ 1
+
+ ❯ tests/brain-codex-session.test.ts:654:128
+    652|     try {
+    653|       const firstStats = await run(2);
+    654|       expect(firstStats.acts, JSON.stringify({ firstStats, rows: rows.…
+       |                                                                                                                                ^
+    655|       const requests = fake.requests().filter(r => r.method === "turn/…
+    656|       const schema = requests[1]!.params.outputSchema;
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[19/33]⎯
+
+ FAIL  tests/brain-codex-session.test.ts > #64 strict session through persistence and restored route consumer: omit
+AssertionError: {"firstStats":{"decisions":1,"jevCalls":0,"deepseekCalls":2,"deepseekTokens":0,"claudeCalls":0,"debounced":0,"staleSkips":0,"fallbacks":0,"acts":1,"waits":0,"unsupported":0,"errors":1,"inputTokens":0,"outputTokens":0,"runs":[],"runsCompleted":0,"stoppedBecause":"Jev failure: no fixture Jev reply","elapsedMs":4276,"logPath":"/home/dw/Projects/agent-sts2/.cache/t/s-4kVGoB/fake-codex-session-G0Xwkm/route-reason-omit/decisions.jsonl","brainPausedMs":0,"activeElapsedMs":4276},"rows":[{"error":"knowledge agent requires isolated app-server: the app-server failed again after a restart: codex app-server it exited 1 during the turn","problems":[]},{"error":"knowledge agent requires isolated app-server: the app-server failed again after a restart: codex app-server it exited 1 during the turn","problems":[]}]}: expected 1 to be 2 // Object.is equality
+
+- Expected
++ Received
+
+- 2
++ 1
+
+ ❯ tests/brain-codex-session.test.ts:654:128
+    652|     try {
+    653|       const firstStats = await run(2);
+    654|       expect(firstStats.acts, JSON.stringify({ firstStats, rows: rows.…
+       |                                                                                                                                ^
+    655|       const requests = fake.requests().filter(r => r.method === "turn/…
+    656|       const schema = requests[1]!.params.outputSchema;
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[20/33]⎯
+
+ FAIL  tests/brain-codex-session.test.ts > #64 strict session through persistence and restored route consumer: keep
+AssertionError: {"firstStats":{"decisions":1,"jevCalls":0,"deepseekCalls":2,"deepseekTokens":0,"claudeCalls":0,"debounced":0,"staleSkips":0,"fallbacks":0,"acts":1,"waits":0,"unsupported":0,"errors":1,"inputTokens":0,"outputTokens":0,"runs":[],"runsCompleted":0,"stoppedBecause":"Jev failure: no fixture Jev reply","elapsedMs":4288,"logPath":"/home/dw/Projects/agent-sts2/.cache/t/s-4kVGoB/fake-codex-session-G0Xwkm/route-reason-keep/decisions.jsonl","brainPausedMs":0,"activeElapsedMs":4288},"rows":[{"error":"knowledge agent requires isolated app-server: the app-server failed again after a restart: codex app-server it exited 1 during the turn","problems":[]},{"error":"knowledge agent requires isolated app-server: the app-server failed again after a restart: codex app-server it exited 1 during the turn","problems":[]}]}: expected 1 to be 2 // Object.is equality
+
+- Expected
++ Received
+
+- 2
++ 1
+
+ ❯ tests/brain-codex-session.test.ts:654:128
+    652|     try {
+    653|       const firstStats = await run(2);
+    654|       expect(firstStats.acts, JSON.stringify({ firstStats, rows: rows.…
+       |                                                                                                                                ^
+    655|       const requests = fake.requests().filter(r => r.method === "turn/…
+    656|       const schema = requests[1]!.params.outputSchema;
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[21/33]⎯
+
+ FAIL  tests/brain-codex-session.test.ts > #64 strict session through persistence and restored route consumer: repeat
+AssertionError: {"firstStats":{"decisions":1,"jevCalls":0,"deepseekCalls":2,"deepseekTokens":0,"claudeCalls":0,"debounced":0,"staleSkips":0,"fallbacks":0,"acts":1,"waits":0,"unsupported":0,"errors":1,"inputTokens":0,"outputTokens":0,"runs":[],"runsCompleted":0,"stoppedBecause":"Jev failure: no fixture Jev reply","elapsedMs":4322,"logPath":"/home/dw/Projects/agent-sts2/.cache/t/s-4kVGoB/fake-codex-session-G0Xwkm/route-reason-repeat/decisions.jsonl","brainPausedMs":0,"activeElapsedMs":4322},"rows":[{"error":"knowledge agent requires isolated app-server: the app-server failed again after a restart: codex app-server it exited 1 during the turn","problems":[]},{"error":"knowledge agent requires isolated app-server: the app-server failed again after a restart: codex app-server it exited 1 during the turn","problems":[]}]}: expected 1 to be 2 // Object.is equality
+
+- Expected
++ Received
+
+- 2
++ 1
+
+ ❯ tests/brain-codex-session.test.ts:654:128
+    652|     try {
+    653|       const firstStats = await run(2);
+    654|       expect(firstStats.acts, JSON.stringify({ firstStats, rows: rows.…
+       |                                                                                                                                ^
+    655|       const requests = fake.requests().filter(r => r.method === "turn/…
+    656|       const schema = requests[1]!.params.outputSchema;
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[22/33]⎯
+
+ FAIL  tests/brain-codex-session.test.ts > #64 strict session through persistence and restored route consumer: missing-reason
+AssertionError: {"firstStats":{"decisions":1,"jevCalls":0,"deepseekCalls":2,"deepseekTokens":0,"claudeCalls":0,"debounced":0,"staleSkips":0,"fallbacks":0,"acts":1,"waits":0,"unsupported":0,"errors":1,"inputTokens":0,"outputTokens":0,"runs":[],"runsCompleted":0,"stoppedBecause":"Jev failure: no fixture Jev reply","elapsedMs":4333,"logPath":"/home/dw/Projects/agent-sts2/.cache/t/s-4kVGoB/fake-codex-session-G0Xwkm/route-reason-missing-reason/decisions.jsonl","brainPausedMs":0,"activeElapsedMs":4333},"rows":[{"error":"knowledge agent requires isolated app-server: the app-server failed again after a restart: codex app-server it exited 1 during the turn","problems":[]},{"error":"knowledge agent requires isolated app-server: the app-server failed again after a restart: codex app-server it exited 1 during the turn","problems":[]}]}: expected 1 to be 2 // Object.is equality
+
+- Expected
++ Received
+
+- 2
++ 1
+
+ ❯ tests/brain-codex-session.test.ts:654:128
+    652|     try {
+    653|       const firstStats = await run(2);
+    654|       expect(firstStats.acts, JSON.stringify({ firstStats, rows: rows.…
+       |                                                                                                                                ^
+    655|       const requests = fake.requests().filter(r => r.method === "turn/…
+    656|       const schema = requests[1]!.params.outputSchema;
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[23/33]⎯
+
+ FAIL  tests/brain-codex-session.test.ts > #64 strict session through persistence and restored route consumer: invalid-route
+AssertionError: {"firstStats":{"decisions":1,"jevCalls":0,"deepseekCalls":2,"deepseekTokens":0,"claudeCalls":0,"debounced":0,"staleSkips":0,"fallbacks":0,"acts":1,"waits":0,"unsupported":0,"errors":1,"inputTokens":0,"outputTokens":0,"runs":[],"runsCompleted":0,"stoppedBecause":"Jev failure: no fixture Jev reply","elapsedMs":4325,"logPath":"/home/dw/Projects/agent-sts2/.cache/t/s-4kVGoB/fake-codex-session-G0Xwkm/route-reason-invalid-route/decisions.jsonl","brainPausedMs":0,"activeElapsedMs":4325},"rows":[{"error":"knowledge agent requires isolated app-server: the app-server failed again after a restart: codex app-server it exited 1 during the turn","problems":[]},{"error":"knowledge agent requires isolated app-server: the app-server failed again after a restart: codex app-server it exited 1 during the turn","problems":[]}]}: expected 1 to be 2 // Object.is equality
+
+- Expected
++ Received
+
+- 2
++ 1
+
+ ❯ tests/brain-codex-session.test.ts:654:128
+    652|     try {
+    653|       const firstStats = await run(2);
+    654|       expect(firstStats.acts, JSON.stringify({ firstStats, rows: rows.…
+       |                                                                                                                                ^
+    655|       const requests = fake.requests().filter(r => r.method === "turn/…
+    656|       const schema = requests[1]!.params.outputSchema;
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[24/33]⎯
+
+ FAIL  tests/brain-query-efficiency.test.ts > reward/card gives truthful optional external lookup counts and executable inputs without statistics
+Error: ENOENT: no such file or directory, copyfile '/home/dw/Projects/agent-sts2/.artifacts/integrator70-combination-20261026/actual-live-consumer/knowledge/external/sts2fun/silent-a10.json' -> '/home/dw/Projects/agent-sts2/.cache/t/s-4kVGoB/query-efficiency-szBrpg/external/sts2fun/silent-a10.json'
+ ❯ copyStats tests/brain-query-efficiency.test.ts:33:121
+     31|   const cues = async (request = req) => JSON.parse((await attachQueryG…
+     32|   const host = new ToolHost(buildKnowledgeTools(ctx), ctx, undefined, …
+     33|   const copyStats = () => { const path = join(dir, EXTERNAL_STATS_FILE…
+       |                                                                                                                         ^
+     34|   return { dir, write, ctx, req, combat, construction, library, cues, …
+     35| }
+ ❯ tests/brain-query-efficiency.test.ts:67:58
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[25/33]⎯
+
+ FAIL  tests/brain-query-efficiency.test.ts > shop/plan gives truthful optional external lookup counts and executable inputs without statistics
+Error: ENOENT: no such file or directory, copyfile '/home/dw/Projects/agent-sts2/.artifacts/integrator70-combination-20261026/actual-live-consumer/knowledge/external/sts2fun/silent-a10.json' -> '/home/dw/Projects/agent-sts2/.cache/t/s-4kVGoB/query-efficiency-GgIqT1/external/sts2fun/silent-a10.json'
+ ❯ copyStats tests/brain-query-efficiency.test.ts:33:121
+     31|   const cues = async (request = req) => JSON.parse((await attachQueryG…
+     32|   const host = new ToolHost(buildKnowledgeTools(ctx), ctx, undefined, …
+     33|   const copyStats = () => { const path = join(dir, EXTERNAL_STATS_FILE…
+       |                                                                                                                         ^
+     34|   return { dir, write, ctx, req, combat, construction, library, cues, …
+     35| }
+ ❯ tests/brain-query-efficiency.test.ts:67:58
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[26/33]⎯
+
+ FAIL  tests/brain-query-efficiency.test.ts > external hints stay absent outside supported questions, role/ascension or a valid pinned aggregate
+Error: ENOENT: no such file or directory, copyfile '/home/dw/Projects/agent-sts2/.artifacts/integrator70-combination-20261026/actual-live-consumer/knowledge/external/sts2fun/silent-a10.json' -> '/home/dw/Projects/agent-sts2/.cache/t/s-4kVGoB/query-efficiency-DGpqMD/external/sts2fun/silent-a10.json'
+ ❯ copyStats tests/brain-query-efficiency.test.ts:33:121
+     31|   const cues = async (request = req) => JSON.parse((await attachQueryG…
+     32|   const host = new ToolHost(buildKnowledgeTools(ctx), ctx, undefined, …
+     33|   const copyStats = () => { const path = join(dir, EXTERNAL_STATS_FILE…
+       |                                                                                                                         ^
+     34|   return { dir, write, ctx, req, combat, construction, library, cues, …
+     35| }
+ ❯ tests/brain-query-efficiency.test.ts:83:58
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[27/33]⎯
+
+ FAIL  tests/codex-only-brain.test.ts > production loop with fixed in-memory transport > rest outage resumes the same real screen question and dispatches once
+ FAIL  tests/codex-only-brain.test.ts > production loop with fixed in-memory transport > reward outage resumes the same real screen question and dispatches once
+ FAIL  tests/codex-only-brain.test.ts > production loop with fixed in-memory transport > event outage resumes the same real screen question and dispatches once
+AssertionError: expected { …(4) } to not have property "error"
+
+- Expected:
+undefined
+
++ Received:
+Error {
+  "message": "ENOENT: no such file or directory, open '/home/dw/Projects/agent-sts2/.artifacts/integrator70-combination-20261026/actual-live-consumer/knowledge/characters/ironclad/sl-elites.json'",
+  "errno": -2,
+  "code": "ENOENT",
+  "syscall": "open",
+  "path": "/home/dw/Projects/agent-sts2/.artifacts/integrator70-combination-20261026/actual-live-consumer/knowledge/characters/ironclad/sl-elites.json",
+}
+
+ ❯ tests/codex-only-brain.test.ts:280:19
+    278|   it.each([["rest", restPayload], ["reward", rewardCardPayload], ["eve…
+    279|     const h = await fixture(board());
+    280|     expect(h).not.toHaveProperty("error");
+       |                   ^
+    281|     expect(h.asked).toHaveLength(2);
+    282|     expect(h.asked[0]!.questionId).toBe(h.asked[1]!.questionId);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[28/33]⎯
+
+ FAIL  tests/codex-only-brain.test.ts > production loop with fixed in-memory transport > a genuine brain program fault crosses the loop's legacy fallback catches without dispatch
+AssertionError: expected { …(4) } to have property "error.state" with value 'fault'
+
+- Expected:
+"fault"
+
++ Received:
+undefined
+
+ ❯ tests/codex-only-brain.test.ts:292:15
+    290|   it("a genuine brain program fault crosses the loop's legacy fallback…
+    291|     const h = await fixture(restPayload(), true);
+    292|     expect(h).toHaveProperty("error.state", "fault");
+       |               ^
+    293|     expect(h.actions).toHaveLength(0); expect(h.jevAsk).not.toHaveBeen…
+    294|   });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[29/33]⎯
+
+ FAIL  tests/codex-only-brain.test.ts > production loop with fixed in-memory transport > missing route facts cannot silently select the code route fallback
+AssertionError: expected { …(4) } to have property "error.state" with value 'fault'
+
+- Expected:
+"fault"
+
++ Received:
+undefined
+
+ ❯ tests/codex-only-brain.test.ts:297:15
+    295|   it("missing route facts cannot silently select the code route fallba…
+    296|     const h = await fixture(mapPayload());
+    297|     expect(h).toHaveProperty("error.state", "fault");
+       |               ^
+    298|     expect(h.actions).toHaveLength(0); expect(h.jevAsk).not.toHaveBeen…
+    299|   });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[30/33]⎯
+
+
+ Test Files  5 failed | 6 passed (11)
+      Tests  33 failed | 144 passed (177)
+   Start at  01:00:44
+   Duration  57.46s (transform 2.72s, setup 870ms, import 4.90s, tests 50.36s, environment 1ms)
+
+JSON report written to /home/dw/Projects/agent-sts2/paper/materials/20261025-issue70-integrator/actual-live-consumer-tests.json

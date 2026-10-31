@@ -1,0 +1,332 @@
+{
+  "id": "c5-4",
+  "candidate_card_id": "OUTBREAK",
+  "formal_publication": "pending",
+  "consumer_readback": "pending",
+  "source": "mixed",
+  "own_support_runs": [
+    "FZT053H9PSC5"
+  ],
+  "strategy_entry": {
+    "id": "silent-brain-c5-outbreak-immediate-trigger-budget",
+    "version": "2026-10-24-c5-r1",
+    "trigger": {
+      "question_types": [
+        "card_reward"
+      ],
+      "acts": [
+        1,
+        2
+      ]
+    },
+    "strategy": "已有触媒、致命毒药+、带毒刺击+及偏折+时，毒性爆发+可与涂毒、钢铁风暴+比较直接群体施毒/立即触发与另一种启动代价。原文3费全体12毒并立即触发；涂毒2费须攻击造成未格挡伤害才施1毒。FZT053H9PSC5 F17一次奖励选择前者，F19两敌战60→60、2回合；后续F23仍51→31，不能从赢家或一次零损证明固定优先级。\n范围：Silent A10、幕1末奖励/幕2构筑且现场牌文同；此前牌组为代理、版本unknown、1局1机会；实际出牌次序和单牌贡献未核。",
+    "evidence": [
+      {
+        "type": "own",
+        "run": "FZT053H9PSC5",
+        "floor": 17,
+        "ref": ".worktrees/codex-strategy-silent-20261024-233359/learner/runs/20261024-233510-75269924-3572-4eac-bd79-21290edd1c9a-strategy-proposal/scratch/raw/FZT053H9PSC5-F17-reward-card.json#questions.pick.criteria;completed action; SHA256=d4cd04d951a56c1ce55687a63aba6b6c8f030fa7b78e9154da1f9821a3490a10",
+        "role": "support"
+      },
+      {
+        "type": "external_aggregate",
+        "source": "external:sts2fun",
+        "url": "https://sts2.fun/static/sts2_public.db.zst",
+        "version": "v0.111",
+        "dataset_sha256": "1f7c0c3d441aedb5c85f04bcd4d8d6a1039b438a8b6fda2d96cfa5c27580cbf5",
+        "downloaded_at": "2026-10-21",
+        "license": "No explicit dataset redistribution license found on public FAQ; aggregate statistics with attribution only; no raw redistribution.",
+        "filters": {
+          "character": "silent",
+          "ascension": 10,
+          "criteria": "valid, singleplayer, non-abandoned, no modifiers; frozen final-deck cluster=5; pairs 0,3,5,7,9; outcome=1; terminal card=OUTBREAK; selected representative subset, not current state"
+        },
+        "statistic": {
+          "name": "selected_representative_terminal_card_presence_context_only",
+          "value": 0.2,
+          "unit": "proportion"
+        },
+        "denominator": {
+          "unit": "runs",
+          "n": 5
+        },
+        "design": "observational",
+        "limitations": [
+          "外部为自选上传的观察数据，玩家标识未读，独立玩家数与玩家间依赖未知；不声称因果收益。",
+          "五对代表按早期相近代理选择，不是随机样本或同起点反事实；终局持牌仅事后关联，不能触发当前策略。",
+          "自有A10/no_retry_evidence与重试或预判必死、其他进阶分别统计；自有版本unknown不补为v0.111。"
+        ],
+        "ref": "knowledge/external/sts2fun/builds-v1/representative-timelines.json#cluster=5,pairs=0,3,5,7,9,outcome=1;input_sha256=dfde8d6ec66f58fca63ca30d45d86d47c2d822e807e9f77f65cb3c4c65268eda",
+        "role": "support"
+      },
+      {
+        "type": "external_aggregate",
+        "source": "external:sts2fun",
+        "url": "https://sts2.fun/static/sts2_public.db.zst",
+        "version": "v0.111",
+        "dataset_sha256": "1f7c0c3d441aedb5c85f04bcd4d8d6a1039b438a8b6fda2d96cfa5c27580cbf5",
+        "downloaded_at": "2026-10-21",
+        "license": "No explicit dataset redistribution license found on public FAQ; aggregate statistics with attribution only; no raw redistribution.",
+        "filters": {
+          "character": "silent",
+          "ascension": 10,
+          "criteria": "valid, singleplayer, non-abandoned, no modifiers; frozen final-deck cluster=5; pairs 0,3,5,7,9; outcome=0; terminal card=OUTBREAK; selected representative subset, not current state"
+        },
+        "statistic": {
+          "name": "selected_representative_terminal_card_presence_context_only",
+          "value": 0.4,
+          "unit": "proportion"
+        },
+        "denominator": {
+          "unit": "runs",
+          "n": 5
+        },
+        "design": "observational",
+        "limitations": [
+          "外部为自选上传的观察数据，玩家标识未读，独立玩家数与玩家间依赖未知；不声称因果收益。",
+          "五对代表按早期相近代理选择，不是随机样本或同起点反事实；终局持牌仅事后关联，不能触发当前策略。",
+          "自有A10/no_retry_evidence与重试或预判必死、其他进阶分别统计；自有版本unknown不补为v0.111。"
+        ],
+        "ref": "knowledge/external/sts2fun/builds-v1/representative-timelines.json#cluster=5,pairs=0,3,5,7,9,outcome=0;input_sha256=dfde8d6ec66f58fca63ca30d45d86d47c2d822e807e9f77f65cb3c4c65268eda",
+        "role": "contradict"
+      }
+    ],
+    "source": "mixed",
+    "confidence": 0.25,
+    "evidence_status": "conflict",
+    "formal_publication": "pending",
+    "consumer_readback": "pending"
+  },
+  "rk_entry": {
+    "schema": "reflex-entry-v1",
+    "id": "silent-rk-c5-c5-4",
+    "version": 1,
+    "applies_to": "card_pick",
+    "predicate": {
+      "op": "and",
+      "args": [
+        {
+          "op": "eq",
+          "field": "card.id",
+          "value": "OUTBREAK"
+        },
+        {
+          "op": "or",
+          "args": [
+            {
+              "op": "eq",
+              "field": "act",
+              "value": 1
+            },
+            {
+              "op": "eq",
+              "field": "act",
+              "value": 2
+            }
+          ]
+        }
+      ]
+    },
+    "signal": {
+      "kind": "tag",
+      "value": "silent-rk-c5-c5-4-review",
+      "unit": "label"
+    },
+    "label_en": "Compare immediate group poison with setup cost and available defense",
+    "evidence": {
+      "observations": [
+        {
+          "run_id": "FZT053H9PSC5",
+          "floor": 17
+        }
+      ],
+      "n_support": 1,
+      "n_contradict": 0
+    },
+    "confidence": 0.25,
+    "scope": {
+      "character": "silent",
+      "ascensions": [
+        10
+      ]
+    },
+    "directions": [],
+    "cores": [],
+    "combos": [],
+    "source_experience": [
+      "silent-brain-c5-outbreak-immediate-trigger-budget"
+    ],
+    "sources": [
+      {
+        "source": "own",
+        "path": ".worktrees/codex-strategy-silent-20261024-233359/learner/runs/20261024-233510-75269924-3572-4eac-bd79-21290edd1c9a-strategy-proposal/scratch/raw/FZT053H9PSC5-F17-reward-card.json",
+        "sha256": "d4cd04d951a56c1ce55687a63aba6b6c8f030fa7b78e9154da1f9821a3490a10",
+        "game_version": "unknown",
+        "retrieved_at": "2026-10-24",
+        "sample": {
+          "runs": 1,
+          "players": null,
+          "selection": "A10/no_retry_evidence; FZT053H9PSC5 F17; 1 choice opportunity, card text and completed choice only; no estimated advantage"
+        }
+      },
+      {
+        "source": "external:sts2fun",
+        "path": "knowledge/external/sts2fun/builds-v1/representative-timelines.json",
+        "sha256": "dfde8d6ec66f58fca63ca30d45d86d47c2d822e807e9f77f65cb3c4c65268eda",
+        "game_version": "v0.111",
+        "retrieved_at": "2026-10-21",
+        "url": "https://sts2.fun/static/sts2_public.db.zst",
+        "license": "No explicit dataset redistribution license found on public FAQ; aggregate statistics with attribution only; no raw redistribution.",
+        "sample": {
+          "runs": 10,
+          "players": null,
+          "selection": "five selected representative pairs 0,3,5,7,9; terminal OUTBREAK: winners 1/5, failures 2/5; descriptive, not an effect or trigger"
+        }
+      }
+    ]
+  },
+  "disposition": "new-context",
+  "rk_disposition": "new-description-tag",
+  "current_information": {
+    "exact_hp": 22,
+    "max_hp": 70,
+    "prior_deck_proxy": {
+      "act": 1,
+      "boss_id": "WATERFALL_GIANT_BOSS",
+      "deck": [
+        "STRIKE_SILENT",
+        "STRIKE_SILENT",
+        "STRIKE_SILENT",
+        "STRIKE_SILENT",
+        "STRIKE_SILENT",
+        "DEFEND_SILENT",
+        "DEFEND_SILENT",
+        "DEFEND_SILENT",
+        "DEFEND_SILENT",
+        "DEFEND_SILENT",
+        "NEUTRALIZE+",
+        "SURVIVOR",
+        "ASCENDERS_BANE",
+        "STRIKE_SILENT",
+        "DEFEND_SILENT+",
+        "BACKFLIP+",
+        "PREDATOR",
+        "DAGGER_SPRAY",
+        "DEFLECT+",
+        "DEADLY_POISON+",
+        "PIERCING_WAIL+",
+        "DEFLECT+",
+        "FOOTWORK+",
+        "POISONED_STAB+",
+        "ACCELERANT",
+        "PREPARED+"
+      ],
+      "floor": 17,
+      "go_victory": null,
+      "gold": 57,
+      "hp": 70,
+      "len": 28735,
+      "max_hp": 70,
+      "off": 15324058754,
+      "potions": [
+        "POISON_POTION",
+        "ENTROPIC_BREW"
+      ],
+      "relics": [
+        "RING_OF_THE_SNAKE",
+        "LARGE_CAPSULE",
+        "TOXIC_EGG",
+        "INTIMIDATING_HELMET",
+        "ETERNAL_FEATHER",
+        "ANCHOR",
+        "JOSS_PAPER"
+      ],
+      "run_id": "FZT053H9PSC5",
+      "screen": "COMBAT",
+      "ts": "2026-10-21T12:34:17.823000"
+    },
+    "card_text_and_options": ".worktrees/codex-strategy-silent-20261024-233359/learner/runs/20261024-233510-75269924-3572-4eac-bd79-21290edd1c9a-strategy-proposal/scratch/raw/FZT053H9PSC5-F17-reward-card.json",
+    "future_facts_used_as_trigger": false
+  },
+  "observed_followup": {
+    "act": 1,
+    "boss_id": "WATERFALL_GIANT_BOSS",
+    "deck": [
+      "STRIKE_SILENT",
+      "STRIKE_SILENT",
+      "STRIKE_SILENT",
+      "STRIKE_SILENT",
+      "STRIKE_SILENT",
+      "DEFEND_SILENT",
+      "DEFEND_SILENT",
+      "DEFEND_SILENT",
+      "DEFEND_SILENT",
+      "DEFEND_SILENT",
+      "NEUTRALIZE+",
+      "SURVIVOR",
+      "ASCENDERS_BANE",
+      "STRIKE_SILENT",
+      "DEFEND_SILENT+",
+      "BACKFLIP+",
+      "PREDATOR",
+      "DAGGER_SPRAY",
+      "DEFLECT+",
+      "DEADLY_POISON+",
+      "PIERCING_WAIL+",
+      "DEFLECT+",
+      "FOOTWORK+",
+      "POISONED_STAB+",
+      "ACCELERANT",
+      "PREPARED+",
+      "OUTBREAK+"
+    ],
+    "floor": 17,
+    "go_victory": null,
+    "gold": 132,
+    "hp": 22,
+    "len": 25203,
+    "max_hp": 70,
+    "off": 15326518824,
+    "potions": [
+      "POISON_POTION",
+      "ENTROPIC_BREW"
+    ],
+    "relics": [
+      "RING_OF_THE_SNAKE",
+      "LARGE_CAPSULE",
+      "TOXIC_EGG",
+      "INTIMIDATING_HELMET",
+      "ETERNAL_FEATHER",
+      "ANCHOR",
+      "JOSS_PAPER"
+    ],
+    "run_id": "FZT053H9PSC5",
+    "screen": "REWARD",
+    "ts": "2026-10-21T12:38:38.221000"
+  },
+  "external_terminal_counts": {
+    "1": 1,
+    "0": 2
+  },
+  "opportunity_denominator": {
+    "own_independent_runs": 1,
+    "own_choice_opportunities": 1,
+    "external_winner_uploads": 5,
+    "external_failure_uploads": 5,
+    "independent_players": null,
+    "pooled": false
+  },
+  "comparative_effect": null,
+  "both_groups_at_least_100_new": false,
+  "limits": [
+    "外部为自选上传的观察数据，玩家标识未读，独立玩家数与玩家间依赖未知；不声称因果收益。",
+    "五对代表按早期相近代理选择，不是随机样本或同起点反事实；终局持牌仅事后关联，不能触发当前策略。",
+    "自有A10/no_retry_evidence与重试或预判必死、其他进阶分别统计；自有版本unknown不补为v0.111。",
+    "自身牌文/原选择可核，完整当前牌组采用该题前最近快照代理；实际手牌、启动回合与不拿反事实未核。",
+    "无跨版本机制不变对照，五个版本各自分账；正block牌副本只是防护代理，非安全阈值。",
+    "每项本批自有1局1机会，全部比较未达双方100；旧达标比较只保留，不计本批新增达标。"
+  ],
+  "production_replay": "pending; no captured original consumer context",
+  "old_content": null,
+  "old_content_sha256": null
+}

@@ -1,0 +1,248 @@
+{
+  "at": "2026-10-24T23:41:55+08:00",
+  "ops_report": {
+    "path": "paper/materials/20261024-issue56-stock-ops/runtime-and-stock-readback.json",
+    "bytes": 13593,
+    "sha256": "0f45f386e6d71a897d75b79e13a5e62eb7e75313c05f28fbbeef78978b36611d"
+  },
+  "state_snapshot": {
+    "path": "ops/codex-ops/learn.json",
+    "bytes": 13503889,
+    "sha256": "0a9cfb67af32f3b3c153202daf60bfa925a3eee487ebf8e718a747bbea6854f6"
+  },
+  "host10": [
+    {
+      "path": "agent/tests/learner-registration-pipeline.test.ts",
+      "sha256": "be1080efbb55e76683b95f7cca75a4f7a7b8ed84d86a1a63e58126d00051c567"
+    },
+    {
+      "path": "agent/tests/ops-herdr.test.ts",
+      "sha256": "5d00a8fe51f7fc9461ff759825435988978ad2d28f2c57e1fca72aa4eecd88c1"
+    },
+    {
+      "path": "docs/learner-retention.md",
+      "sha256": "05a0e7c7cdf1b7f5f32d213e914275f40ac5a10b1381e1f97d739072c12e2640"
+    },
+    {
+      "path": "ops/codex-ops-learn.py",
+      "sha256": "8cfbd6c2577fd93f02b3eb3cf72537f69ecca1753b0001056bfa9945ad110da3"
+    },
+    {
+      "path": "ops/codex-ops-learner.sh",
+      "sha256": "2641659c78735e06f81b8e50ce32ee034e27b48ac336dc4cae083cbe86ce53f7"
+    },
+    {
+      "path": "ops/learner_jobs.py",
+      "sha256": "590a3d5aad37258b8d8a662b44fbc1319e2fa37f29413e4465fd5a8a44b4f262"
+    },
+    {
+      "path": "ops/learner_registration.py",
+      "sha256": "e66e70fa8bef4fd75ee27a44a5e307289b540fe99464ce91e38a9d68f1d17550"
+    },
+    {
+      "path": "ops/strategy_external_jobs.py",
+      "sha256": "29fcb0fa2522b7e04802664d9350f945eeace810cdf421edfc48ca7988d29313"
+    },
+    {
+      "path": "ops/tests/test_learner_registration_pipeline.py",
+      "sha256": "e8b7eaea2448560c80c40ba0c9a55d7d41a8296c6206bd9758a4ad75d2e88f04"
+    },
+    {
+      "path": "ops/tests/test_strategy_external.py",
+      "sha256": "30ee086f1206b280d3989770774c454a6af8152c2a7cfcdf2b0670891758abd8"
+    }
+  ],
+  "old214311": {
+    "state": "failed",
+    "rc": 3,
+    "not_started_authorized": true,
+    "stderr": {
+      "path": "ops/codex-ops/learner/20261024-214311.err",
+      "bytes": 1657,
+      "sha256": "3562e92208a7f4a9e11f160ba54bc3cc948a4cb7e1a9efd89eb28b5028307269"
+    },
+    "original_and_seal_supervisors_exited": true,
+    "attempts_preserved": true,
+    "pane_not_closed_by_this_audit": true
+  },
+  "new_external": [
+    {
+      "batch": "20261024-233358-strategy-proposal",
+      "lane": "B",
+      "row_policy": {
+        "schema": "external-learning-policy-v1",
+        "workers": 2,
+        "service_tier": "fast",
+        "weekly_used_percent": 76,
+        "sample_observed_at": "2026-10-24T15:30:01.621Z",
+        "reason": "weekly_over_70",
+        "account_home_sha256": "028dda3262774e87d954a2d8ca1fcd60a3c964fc5b7dea9b18cb80e1077d20d5"
+      },
+      "receipt": {
+        "path": "ops/codex-ops/learner/learner-20261024-233358-strategy-proposal.tui.json",
+        "bytes": 1893,
+        "sha256": "1de2073afe670949e2b74ad7b3230b6a178a0e9b7d686b738c061288d423bbc5"
+      },
+      "native_prefix": {
+        "path": "ops/codex-ops/accounts/codex3/learner/sessions/2026/10/24/rollout-2026-10-24T23-35-11-01a16e8d-39ea-7a52-be90-6b798f83e006.jsonl",
+        "bytes": 139133,
+        "sha256": "1fe2769ddc5833f019f27acb133a5fe08be82ccdd602ef57b39580e03bdc7ebc"
+      },
+      "session": "01a16e8d-39ea-7a52-be90-6b798f83e006",
+      "turn": "01a16e8e-2554-71c0-b2e9-4443157fe7b8",
+      "contexts": [
+        {
+          "offset": 102429,
+          "bytes": 7587,
+          "sha256": "e9b10d0b268d24b8c9cc56f548494a29110b3b0fb53836b4a477763845d1bfea",
+          "at": "2026-10-24T15:36:13.667Z",
+          "actual": {
+            "turn_id": "01a16e8e-2554-71c0-b2e9-4443157fe7b8",
+            "cwd": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261024-233358",
+            "model": "gpt-6.1-sol",
+            "effort": "high",
+            "service_tier": null,
+            "approval_policy": "never"
+          }
+        }
+      ],
+      "prompts": [
+        {
+          "offset": 114735,
+          "bytes": 24398,
+          "sha256": "cb9ab535ccec7e9d07783a75a8dd65421f9d1116e44160a131e29c22f543851a",
+          "canonical_sha256": "b4118c5121812704fb09b681a9772bf569d95742f97b7e306eb271aa801d4b6b"
+        }
+      ],
+      "starts": [
+        {
+          "offset": 22771,
+          "bytes": 496,
+          "sha256": "a7c4505c202b17e33d8d6fda38eb74c1fbecb3b8b44be3265be85d917bfb5ba6",
+          "at": "2026-10-24T15:36:11.882Z"
+        }
+      ],
+      "inputs": [
+        {
+          "path": "paper/materials/20261024-issue56-stock-ops/inputs/issue51-single-card-004-final-20261024-r56-stock.json",
+          "bytes": 12298,
+          "sha256": "e51055e2087c1862c04067906c0bc1e05abcc0635c8364f1a8377645cc30cfff"
+        },
+        {
+          "path": "paper/materials/20261024-issue56-stock-ops/inputs/issue51-single-card-004-final-20261024-r56-stock.md",
+          "bytes": 5304,
+          "sha256": "28f9e1fb3197ffd5f40111e81eed45ecf0d11c97a8838b1d9e60972d25428afd"
+        }
+      ],
+      "barrier_present": true,
+      "supervisor_pid": 864346,
+      "native_pid": 872163,
+      "native_birth": "28063926",
+      "registration_durable_fsync_not_proved_by_presence": true
+    },
+    {
+      "batch": "20261024-233359-strategy-proposal",
+      "lane": "A",
+      "row_policy": {
+        "schema": "external-learning-policy-v1",
+        "workers": 2,
+        "service_tier": "fast",
+        "weekly_used_percent": 76,
+        "sample_observed_at": "2026-10-24T15:30:01.621Z",
+        "reason": "weekly_over_70",
+        "account_home_sha256": "028dda3262774e87d954a2d8ca1fcd60a3c964fc5b7dea9b18cb80e1077d20d5"
+      },
+      "receipt": {
+        "path": "ops/codex-ops/learner/learner-20261024-233359-strategy-proposal.tui.json",
+        "bytes": 1893,
+        "sha256": "bfe92c92d309687d5e5294f3f573ed5f903d11b93b2736d1edb8e9592e1538a2"
+      },
+      "native_prefix": {
+        "path": "ops/codex-ops/accounts/codex3/learner/sessions/2026/10/24/rollout-2026-10-24T23-35-29-01a16e8d-7f17-7951-bbe3-040b607e3c78.jsonl",
+        "bytes": 139011,
+        "sha256": "d715b396d69c60ae1447f37de639c33a056d715ed8b02d44465e5a13b2100f0e"
+      },
+      "session": "01a16e8d-7f17-7951-bbe3-040b607e3c78",
+      "turn": "01a16e8e-4859-76a0-b8a9-6fb3b0734ed7",
+      "contexts": [
+        {
+          "offset": 102430,
+          "bytes": 7587,
+          "sha256": "1192fb2122d6f37a3ac7ca073fe508c741246872ea815867ea9a0a3cf059b662",
+          "at": "2026-10-24T15:36:22.620Z",
+          "actual": {
+            "turn_id": "01a16e8e-4859-76a0-b8a9-6fb3b0734ed7",
+            "cwd": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261024-233359",
+            "model": "gpt-6.1-sol",
+            "effort": "high",
+            "service_tier": null,
+            "approval_policy": "never"
+          }
+        }
+      ],
+      "prompts": [
+        {
+          "offset": 114736,
+          "bytes": 24275,
+          "sha256": "d979cccf69e5240d9ae21798a342b39ba6b3e5986ff3192ac3a7f590c2804a11",
+          "canonical_sha256": "d740c7c45f49c08d976e34d3d916509a709863e6c5c0ee75fe834463ff88e502"
+        }
+      ],
+      "starts": [
+        {
+          "offset": 22771,
+          "bytes": 496,
+          "sha256": "78304d07758d8f826ddffc7056cdb667ad735564df21bf1adc58db4f6efeb4e4",
+          "at": "2026-10-24T15:36:20.853Z"
+        }
+      ],
+      "inputs": [
+        {
+          "path": "paper/materials/20261024-issue56-stock-ops/inputs/issue51-remaining-build-003-20261024-r56-stock.json",
+          "bytes": 12291,
+          "sha256": "3f34a874aa09f82bc6a0365147a8bf5008dd3749402fb122eb04bfba834bcca1"
+        },
+        {
+          "path": "paper/materials/20261024-issue56-stock-ops/inputs/issue51-remaining-build-003-20261024-r56-stock.md",
+          "bytes": 5191,
+          "sha256": "b02d5010c51d8175149e1b8985c48e4d39bef58ee15eef2a3d97bc671d94af08"
+        }
+      ],
+      "barrier_present": true,
+      "supervisor_pid": 864733,
+      "native_pid": 874093,
+      "native_birth": "28065077",
+      "registration_durable_fsync_not_proved_by_presence": true
+    }
+  ],
+  "own_active": [
+    {
+      "batch": "20261024-231302",
+      "task": "postmortem",
+      "pid": 666870
+    },
+    {
+      "batch": "20261024-231317-strategy-proposal",
+      "task": "strategy-proposal",
+      "pid": 667627
+    },
+    {
+      "batch": "20261024-231317-fix-batch",
+      "task": "fix-batch",
+      "pid": 668258
+    }
+  ],
+  "reported_own_at_2338": 4,
+  "actual_own": 3,
+  "actual_external": 2,
+  "original_window": [
+    "2026-10-24T21:34:30+08:00",
+    "2026-10-24T23:34:30+08:00"
+  ],
+  "new_AB_after_window": true,
+  "native_tier_unknown": true,
+  "slot_convergence_acceptance": false,
+  "new_completion_or_throughput_claimed": false,
+  "fsync_runtime_syscalls_not_observed": true,
+  "read_only": true
+}

@@ -1,0 +1,740 @@
+[
+  {
+    "source": "/home/dw/Projects/agent-sts2/logs/decisions.jsonl",
+    "source_size": 4332795058,
+    "line": 497422,
+    "offset": 4238954102,
+    "bytes": 16212,
+    "sha256": "a4c0e8f6c783a72bdbdb7657039b447a6820a0b468b3d9105bbc23142ecf03b2",
+    "run_id": "Q3R929GHT14R",
+    "identity": {
+      "status": "explicit_run",
+      "fields": {
+        "run_id": "Q3R929GHT14R",
+        "fingerprint.run": "Q3R929GHT14R"
+      },
+      "decision_ref": null
+    },
+    "row": {
+      "ts": "2026-10-23T06:04:28.393Z",
+      "mode": "play",
+      "screen": "COMBAT",
+      "session": "singleplayer/run",
+      "floor": 37,
+      "turn": 6,
+      "label": "combat/plan-choice",
+      "decision_id": "54bb4afc-8c55-4ac6-ab28-e0d1d17d9f39",
+      "decider": "jev",
+      "fingerprint": "{\"actions\":[\"end_turn\",\"play_card\",\"save_and_quit\"],\"combat\":true,\"enemies\":\"0:36:0:true|1:90:12:true\",\"event\":\"\",\"gold\":111,\"hand\":\"0:STRIKE_SILENT:true|1:DEADLY_POISON:true|2:SURVIVOR:true|3:DASH:true|4:ECHOING_SLASH:true\",\"hp\":27,\"maxHp\":70,\"nodes\":\"\",\"pendingCard\":false,\"player\":\"3:0:0\",\"potions\":\":false:false|:false:false\",\"powers\":\"STRENGTH_POWER:-5|AFTERIMAGE_POWER:1|ENVENOM_POWER:1|DEXTERITY_POWER:-4\",\"rewards\":\"\",\"run\":\"Q3R929GHT14R\",\"screen\":\"COMBAT\",\"selection\":\"null:false\",\"shopOpen\":false,\"shopStock\":\"\",\"turn\":6}",
+      "questions": {
+        "plan": {
+          "type": "choice",
+          "instructions": "Which plan should I play this turn?",
+          "criteria": {
+            "plan1": "{\"focus\":\"失落之物, 遗忘之物\",\"plays\":\"冲刺+ -> 失落之物, then 生存者\",\"result\":\"survives with 3/70 HP before healing\",\"hp_lost\":24,\"damage_dealt\":20,\"enemies_after\":\"失落之物 21 HP, 中毒 6; 遗忘之物 85 HP, 中毒 4\",\"block_gained\":15,\"unmodelled_cards\":\"弃牌选择未确定\",\"quantitative_turn\":{\"schema\":\"quantitative-v1\",\"source\":\"turn-solver\",\"kind\":\"conditional_model\",\"window\":\"current_line_and_enemy_response\",\"damage_hp\":20,\"block_gained\":15,\"hp_after\":3,\"energy_left\":0,\"planned_actions\":2,\"planned_card_actions\":2,\"realization\":{\"model\":\"silent-realization-v1\",\"fingerprint\":\"ec7e10e60a82c2d5a9d2aa8d75dfc19ffef96960fdfff9ec9945554bbfabf5b6\",\"evidence\":[\"L704TLETMZBM/A10/F48/attempt3/T3/silent-0194\",\"KV0JHNJCKXLS/A10/F33/attempt6/T1/silent-0248/0249\",\"54G5683J0E5S/A10/F33/attempt1/T5-9/silent-0141/0385\"],\"kind\":\"conditional_model\",\"complete_line\":true,\"manual_plays\":{\"DASH\":1,\"SURVIVOR\":1},\"effect_resolutions\":{\"DASH\":1,\"SURVIVOR\":1},\"energy_paid\":3,\"prefix_energy_paid\":3,\"established_before\":{\"energy\":3,\"hp\":27,\"block\":0,\"damage\":0,\"blockGained\":0,\"drawn\":0,\"drawBudget\":0,\"hand\":[\"STRIKE_SILENT\",\"DEADLY_POISON\",\"SURVIVOR\",\"DASH\",\"ECHOING_SLASH\"],\"unknownHand\":0,\"noDraw\":false,\"pendingSelection\":false,\"dexterity\":-4,\"afterImage\":1,\"poisonExtraTriggers\":0,\"duplicateSkills\":0,\"enemies\":[{\"index\":0,\"hp\":36,\"poison\":6,\"artifact\":0},{\"index\":1,\"hp\":90,\"poison\":5,\"artifact\":0}],\"unknown\":[]},\"modeled_after_actions\":{\"energy\":0,\"hp\":27,\"block\":15,\"damage\":8,\"blockGained\":15,\"drawn\":0,\"drawBudget\":0,\"hand\":[\"STRIKE_SILENT\",\"DEADLY_POISON\",\"ECHOING_SLASH\"],\"unknownHand\":0,\"noDraw\":false,\"pendingSelection\":true,\"dexterity\":-4,\"afterImage\":1,\"poisonExtraTriggers\":0,\"duplicateSkills\":0,\"enemies\":[{\"index\":0,\"hp\":28,\"poison\":7,\"artifact\":0},{\"index\":1,\"hp\":90,\"poison\":5,\"artifact\":0}],\"unknown\":[\"弃牌选择未确定\"]},\"actions\":[{\"card\":\"DASH\",\"target\":0,\"cost\":2,\"effects\":1,\"leaves_pool\":null,\"energy_before\":3,\"energy_after\":1,\"hp_after\":27,\"block_after\":10,\"damage_hp\":8,\"block_gained\":10,\"draws\":0,\"draw_budget\":0,\"no_draw\":false,\"discards\":[],\"pending_selection\":false},{\"card\":\"SURVIVOR\",\"target\":null,\"cost\":1,\"effects\":1,\"leaves_pool\":null,\"energy_before\":1,\"energy_after\":0,\"hp_after\":27,\"block_after\":15,\"damage_hp\":0,\"block_gained\":5,\"draws\":0,\"draw_budget\":0,\"no_draw\":false,\"discards\":[],\"pending_selection\":true}],\"complete_combinations\":null,\"delayed_damage\":null,\"delayed_block\":null,\"unknown\":[\"弃牌选择未确定\",\"选择尚未解决，后继与完整组合未知\"],\"limits\":\"当前已知合法前缀的条件推演；自动重放不再次付费。已建、到手与手动施放分账，副本无物理UID不追认来源。完整组合须另核原四签名和后继；本表不证明整战收益、回流闭合或无限。\"},\"complete_combinations\":null,\"limits\":\"沿用当前机制模型；动作数不含自动重放，完整组合须有经证据验证的定义，不能用动作数替代。\",\"unknown_cards\":[\"弃牌选择未确定\"]},\"apotheosis_reference\":{\"deck_copies\":1,\"hand_copies\":0,\"forecast_basis\":\"candidate\",\"planned_plays\":0,\"simulated_upgrade_applied\":false,\"candidate_unmodelled_cards\":[\"弃牌选择未确定\"],\"actual_cast_this_fight\":null,\"note\":\"持有、候选出牌与模拟升级分列；本字段未核本战实际施放。缺口列表属于整个候选，空列表也不证明全部后续升级已覆盖；药水中位样本不是实抽结果。\"},\"rollout\":\"5-turn rollout (8 samples): expected further HP loss 27, fight over within 5 turns in 0/8, dead within 5 turns in 8/8 (~turn 3.3); every line loses all our HP here, so the expected loss does not separate them: the lines are ranked by fewest dead within 5 turns (this line 8/8), then the fight's progress: least enemy HP left (this line ~76, at T5 or at our death), then most turns alive (this line ~3.3), then least HP lost this turn (this line 24)\",\"rollout_turns\":\"T1 exact: hp -24, dmg 20; T2: hp -0 [0-0], dmg 19.9 [10-25], alive 8/8, won 0/8; T3: hp -9.8 [1-29], dmg 7.5 [3-18], alive 1/8, won 0/8; T4: hp -0 [0-0], dmg 6 [6-6], alive 1/8, won 0/8; T5: hp -7 [7-7], dmg 17 [17-17], alive 0/8, won 0/8\",\"rollout_kill_order\":\"失落之物 > 遗忘之物: the later turns aim at 失落之物 first (失落之物 dead by T5 in 7/8); best of 2 kill orders compared; the orders came out the same here\",\"rollout_other_orders\":\"遗忘之物 > 失落之物: further HP loss 27, over 0/8, dead 8/8, 遗忘之物 dead 0/8\",\"history_estimate\":\"further HP loss 27, win 0% (this encounter n=52; estimate from act-3 hallway fights n=1408, typical error ±5.5; few similar states for this encounter)\",\"rollout_best\":true}",
+            "plan2": "{\"plays\":\"冲刺+ -> 遗忘之物, then 生存者\",\"result\":\"survives with 3/70 HP before healing\",\"hp_lost\":24,\"damage_dealt\":11,\"enemies_after\":\"失落之物 30 HP, 中毒 5; 遗忘之物 85 HP, 中毒 4\",\"block_gained\":15,\"unmodelled_cards\":\"弃牌选择未确定\",\"quantitative_turn\":{\"schema\":\"quantitative-v1\",\"source\":\"turn-solver\",\"kind\":\"conditional_model\",\"window\":\"current_line_and_enemy_response\",\"damage_hp\":11,\"block_gained\":15,\"hp_after\":3,\"energy_left\":0,\"planned_actions\":2,\"planned_card_actions\":2,\"realization\":{\"model\":\"silent-realization-v1\",\"fingerprint\":\"e70560748987be2c6be726de293ac922c7f2b43884acddf8f8c62656a27d7007\",\"evidence\":[\"L704TLETMZBM/A10/F48/attempt3/T3/silent-0194\",\"KV0JHNJCKXLS/A10/F33/attempt6/T1/silent-0248/0249\",\"54G5683J0E5S/A10/F33/attempt1/T5-9/silent-0141/0385\"],\"kind\":\"conditional_model\",\"complete_line\":true,\"manual_plays\":{\"DASH\":1,\"SURVIVOR\":1},\"effect_resolutions\":{\"DASH\":1,\"SURVIVOR\":1},\"energy_paid\":3,\"prefix_energy_paid\":3,\"established_before\":{\"energy\":3,\"hp\":27,\"block\":0,\"damage\":0,\"blockGained\":0,\"drawn\":0,\"drawBudget\":0,\"hand\":[\"STRIKE_SILENT\",\"DEADLY_POISON\",\"SURVIVOR\",\"DASH\",\"ECHOING_SLASH\"],\"unknownHand\":0,\"noDraw\":false,\"pendingSelection\":false,\"dexterity\":-4,\"afterImage\":1,\"poisonExtraTriggers\":0,\"duplicateSkills\":0,\"enemies\":[{\"index\":0,\"hp\":36,\"poison\":6,\"artifact\":0},{\"index\":1,\"hp\":90,\"poison\":5,\"artifact\":0}],\"unknown\":[]},\"modeled_after_actions\":{\"energy\":0,\"hp\":27,\"block\":15,\"damage\":0,\"blockGained\":15,\"drawn\":0,\"drawBudget\":0,\"hand\":[\"STRIKE_SILENT\",\"DEADLY_POISON\",\"ECHOING_SLASH\"],\"unknownHand\":0,\"noDraw\":false,\"pendingSelection\":true,\"dexterity\":-4,\"afterImage\":1,\"poisonExtraTriggers\":0,\"duplicateSkills\":0,\"enemies\":[{\"index\":0,\"hp\":36,\"poison\":6,\"artifact\":0},{\"index\":1,\"hp\":90,\"poison\":5,\"artifact\":0}],\"unknown\":[\"弃牌选择未确定\"]},\"actions\":[{\"card\":\"DASH\",\"target\":1,\"cost\":2,\"effects\":1,\"leaves_pool\":null,\"energy_before\":3,\"energy_after\":1,\"hp_after\":27,\"block_after\":10,\"damage_hp\":0,\"block_gained\":10,\"draws\":0,\"draw_budget\":0,\"no_draw\":false,\"discards\":[],\"pending_selection\":false},{\"card\":\"SURVIVOR\",\"target\":null,\"cost\":1,\"effects\":1,\"leaves_pool\":null,\"energy_before\":1,\"energy_after\":0,\"hp_after\":27,\"block_after\":15,\"damage_hp\":0,\"block_gained\":5,\"draws\":0,\"draw_budget\":0,\"no_draw\":false,\"discards\":[],\"pending_selection\":true}],\"complete_combinations\":null,\"delayed_damage\":null,\"delayed_block\":null,\"unknown\":[\"弃牌选择未确定\",\"选择尚未解决，后继与完整组合未知\"],\"limits\":\"当前已知合法前缀的条件推演；自动重放不再次付费。已建、到手与手动施放分账，副本无物理UID不追认来源。完整组合须另核原四签名和后继；本表不证明整战收益、回流闭合或无限。\"},\"complete_combinations\":null,\"limits\":\"沿用当前机制模型；动作数不含自动重放，完整组合须有经证据验证的定义，不能用动作数替代。\",\"unknown_cards\":[\"弃牌选择未确定\"]},\"apotheosis_reference\":{\"deck_copies\":1,\"hand_copies\":0,\"forecast_basis\":\"candidate\",\"planned_plays\":0,\"simulated_upgrade_applied\":false,\"candidate_unmodelled_cards\":[\"弃牌选择未确定\"],\"actual_cast_this_fight\":null,\"note\":\"持有、候选出牌与模拟升级分列；本字段未核本战实际施放。缺口列表属于整个候选，空列表也不证明全部后续升级已覆盖；药水中位样本不是实抽结果。\"},\"rollout\":\"5-turn rollout (8 samples): expected further HP loss 27, fight over within 5 turns in 0/8, dead within 5 turns in 8/8 (~turn 3.3); every line loses all our HP here, so the expected loss does not separate them: the lines are ranked by fewest dead within 5 turns (this line 8/8), then the fight's progress: least enemy HP left (this line ~78, at T5 or at our death), then most turns alive (this line ~3.3), then least HP lost this turn (this line 24)\",\"rollout_turns\":\"T1 exact: hp -24, dmg 11; T2: hp -0 [0-0], dmg 19 [9-25], alive 8/8, won 0/8; T3: hp -11.8 [1-30], dmg 14.9 [8-19], alive 1/8, won 0/8; T4: hp -0 [0-0], dmg 6 [6-6], alive 1/8, won 0/8; T5: hp -7 [7-7], dmg 17 [17-17], alive 0/8, won 0/8\",\"rollout_kill_order\":\"失落之物 > 遗忘之物: the later turns aim at 失落之物 first (失落之物 dead by T5 in 6/8); best of 2 kill orders compared; the orders came out the same here\",\"rollout_other_orders\":\"遗忘之物 > 失落之物: further HP loss 27, over 0/8, dead 8/8, 遗忘之物 dead 0/8\",\"history_estimate\":\"further HP loss 27, win 0% (this encounter n=52; estimate from act-3 hallway fights n=1408, typical error ±5.5; few similar states for this encounter)\"}"
+          }
+        }
+      },
+      "answers": {
+        "plan": {
+          "type": "choice",
+          "choice": "plan1",
+          "probabilities": {
+            "plan1": 0.97,
+            "plan2": 0.03
+          },
+          "confidence": 0.94,
+          "raw": {
+            "choice": "plan1",
+            "confidence": 0.94,
+            "probabilities": {
+              "plan1": 0.97,
+              "plan2": 0.03
+            },
+            "type": "choice"
+          }
+        }
+      },
+      "chosen": {
+        "action": "play_card",
+        "card_index": 3,
+        "target_index": 0
+      },
+      "expect": {
+        "card": {
+          "id": "DASH",
+          "upgraded": true
+        },
+        "target": {
+          "id": "THE_LOST"
+        },
+        "turn": 6,
+        "from": "decision"
+      },
+      "rationale": "Jev chose plan 1/2 (冲刺+ -> 失落之物, 生存者) with confidence 0.94; code rank 1",
+      "confidence": 0.94,
+      "fallback": false,
+      "reasked": false,
+      "no_jev": false,
+      "reused_answer": false,
+      "request_ids": [],
+      "latency_ms": {
+        "plan": 77,
+        "jev": 2163,
+        "action": 602,
+        "planner": 256,
+        "pre": 1
+      },
+      "usage": {
+        "input_tokens": 9632,
+        "output_tokens": 34
+      },
+      "rollout": {
+        "available": true,
+        "ms": 246,
+        "horizon": 5,
+        "samples": 8,
+        "degraded": [],
+        "lines": 2,
+        "best": "plan1",
+        "best_added": false,
+        "saturated": true,
+        "orders": 2,
+        "orders_dropped": 0,
+        "best_order": "失落之物 > 遗忘之物"
+      },
+      "rollout_best_chosen": true,
+      "chosen_order": "失落之物 > 遗忘之物",
+      "focus": {
+        "plan1": "失落之物, 遗忘之物"
+      },
+      "selection_audit": {
+        "schema": 1,
+        "scope": "predicted_candidates",
+        "run_id": "Q3R929GHT14R",
+        "turn": 6,
+        "attempt": null,
+        "answer": {
+          "line": "focus: 失落之物, 遗忘之物 — 冲刺+ -> 失落之物, 生存者",
+          "outcome_kind": "turn_model",
+          "planned_steps": [
+            {
+              "card_id": "DASH",
+              "upgraded": true,
+              "card_index": 3,
+              "target_index": 0
+            },
+            {
+              "card_id": "SURVIVOR",
+              "upgraded": false,
+              "card_index": 2,
+              "target_index": null
+            }
+          ],
+          "turn": {
+            "hp_loss": 24,
+            "damage": 20,
+            "block_gained": 15,
+            "strength_gained": 0,
+            "lasting_value": 0,
+            "cards_drawn": 0,
+            "sandpit_after": null,
+            "unmodelled_cards": [
+              "弃牌选择未确定"
+            ]
+          },
+          "rollout": {
+            "scope": "sampled_horizon",
+            "horizon": 5,
+            "samples": 8,
+            "deaths": 8,
+            "further_hp_loss": 27
+          }
+        },
+        "before_sl": {
+          "line": "冲刺+ -> 失落之物, 生存者",
+          "outcome_kind": "turn_model",
+          "planned_steps": [
+            {
+              "card_id": "DASH",
+              "upgraded": true,
+              "card_index": 3,
+              "target_index": 0
+            },
+            {
+              "card_id": "SURVIVOR",
+              "upgraded": false,
+              "card_index": 2,
+              "target_index": null
+            }
+          ],
+          "turn": {
+            "hp_loss": 24,
+            "damage": 20,
+            "block_gained": 15,
+            "strength_gained": 0,
+            "lasting_value": 0,
+            "cards_drawn": 0,
+            "sandpit_after": null,
+            "unmodelled_cards": [
+              "弃牌选择未确定"
+            ]
+          },
+          "rollout": {
+            "scope": "sampled_horizon",
+            "horizon": 5,
+            "samples": 8,
+            "deaths": 8,
+            "further_hp_loss": 27
+          }
+        },
+        "after_sl": {
+          "line": "冲刺+ -> 失落之物, 生存者",
+          "outcome_kind": "turn_model",
+          "planned_steps": [
+            {
+              "card_id": "DASH",
+              "upgraded": true,
+              "card_index": 3,
+              "target_index": 0
+            },
+            {
+              "card_id": "SURVIVOR",
+              "upgraded": false,
+              "card_index": 2,
+              "target_index": null
+            }
+          ],
+          "turn": {
+            "hp_loss": 24,
+            "damage": 20,
+            "block_gained": 15,
+            "strength_gained": 0,
+            "lasting_value": 0,
+            "cards_drawn": 0,
+            "sandpit_after": null,
+            "unmodelled_cards": [
+              "弃牌选择未确定"
+            ]
+          },
+          "rollout": {
+            "scope": "sampled_horizon",
+            "horizon": 5,
+            "samples": 8,
+            "deaths": 8,
+            "further_hp_loss": 27
+          }
+        },
+        "sl_delta": {
+          "hp_loss": 0,
+          "damage": 0,
+          "strength_gained": 0,
+          "lasting_value": 0
+        },
+        "requested_action": {
+          "action": "play_card",
+          "card_index": 3,
+          "target_index": 0,
+          "option_index": null
+        },
+        "execution_status": "pending_dispatch",
+        "actual_turn": null
+      },
+      "timing": {
+        "planner_ms": 253,
+        "solve_ms": 0,
+        "mc_ms": 0,
+        "rollout_ms": 246,
+        "boss_sim_ms": 0,
+        "other_ms": 7,
+        "cpu_ms": 263,
+        "load1": 5.78,
+        "probe_ms": 2.62,
+        "memo": {
+          "hits": 0,
+          "stored": 1
+        }
+      },
+      "sl_attempt": null,
+      "sl_reloads": 0,
+      "run_id": "Q3R929GHT14R",
+      "observed_ts": "2026-10-23T06:04:25.896Z",
+      "journal": {
+        "choice": "冲刺+ -> 失落之物, then 生存者",
+        "reason": ""
+      },
+      "selection_dispatch": {
+        "schema": 1,
+        "scope": "single_action_receipt",
+        "requested_action": {
+          "action": "play_card",
+          "card_index": 3,
+          "target_index": 0,
+          "option_index": null
+        },
+        "gated_action": {
+          "action": "play_card",
+          "card_index": 3,
+          "target_index": 0
+        },
+        "expected_identity": {
+          "card": {
+            "id": "DASH",
+            "upgraded": true
+          },
+          "target": {
+            "id": "THE_LOST"
+          },
+          "turn": 6,
+          "from": "decision"
+        },
+        "dispatch_status": "returned",
+        "not_dispatched_reason": null,
+        "returned_status": "completed",
+        "returned_stable": true,
+        "error_kind": null,
+        "state_effect_verified": false,
+        "whole_plan_executed": null,
+        "actual_turn": null
+      },
+      "result": "completed: Action completed.",
+      "time_budget": {
+        "schema": "decision-budget-v1",
+        "kind": "ordinary",
+        "key": "Q3R929GHT14R:37:6:1",
+        "budget_ms": 10000,
+        "entry_budget_ms": 9986.665511000436,
+        "actual_ms": 2442,
+        "turn_actual_ms": 2455,
+        "shared_actual_ms": 2442,
+        "independent_actual_ms": 0,
+        "timed_out": false,
+        "fallback": null,
+        "jev_reserve_ms": 3000,
+        "jev_actual_ms": 2163,
+        "jev_reserved_remaining_ms": 836.8076299999375,
+        "computation_remaining_ms": 6708.135126000736,
+        "shadow_unknown": [],
+        "stages": [
+          {
+            "stage": "combat_computation",
+            "budget_ms": 6986.6211340005975,
+            "actual_ms": 0,
+            "timed_out": false
+          },
+          {
+            "stage": "exact_observed_solver_cache",
+            "budget_ms": 0,
+            "actual_ms": 0,
+            "timed_out": false
+          },
+          {
+            "stage": "exact_observed_solver_cache",
+            "budget_ms": 0,
+            "actual_ms": 0,
+            "timed_out": false
+          },
+          {
+            "stage": "exact_observed_solver_cache",
+            "budget_ms": 0,
+            "actual_ms": 0,
+            "timed_out": false
+          },
+          {
+            "stage": "combat_computation",
+            "budget_ms": 6986.568388000596,
+            "actual_ms": 256,
+            "timed_out": false
+          },
+          {
+            "stage": "combat_jev_projection",
+            "budget_ms": 9709.485864000628,
+            "actual_ms": 1,
+            "timed_out": false
+          },
+          {
+            "stage": "jev_gateway_request_encoding",
+            "budget_ms": 9708.639498000499,
+            "actual_ms": 0,
+            "timed_out": false
+          },
+          {
+            "stage": "jev_http_to_headers",
+            "budget_ms": 9708.349730000598,
+            "actual_ms": 2162,
+            "timed_out": false
+          },
+          {
+            "stage": "Jev",
+            "budget_ms": 9708.905408000574,
+            "actual_ms": 2163,
+            "timed_out": false
+          },
+          {
+            "stage": "jev_prompt_log",
+            "budget_ms": 7545.699819000671,
+            "actual_ms": 0,
+            "timed_out": false
+          }
+        ],
+        "animation_time_included": false
+      }
+    }
+  },
+  {
+    "source": "/home/dw/Projects/agent-sts2/logs/decisions.jsonl",
+    "source_size": 4332795058,
+    "line": 497423,
+    "offset": 4238970314,
+    "bytes": 2216,
+    "sha256": "9cdcfbcb102e3ba6fb334c4da4a3c46cdda1263bab7cb18dc22b14d917f965bd",
+    "run_id": "Q3R929GHT14R",
+    "identity": {
+      "status": "explicit_run",
+      "fields": {
+        "run_id": "Q3R929GHT14R",
+        "fingerprint.run": "Q3R929GHT14R"
+      },
+      "decision_ref": null
+    },
+    "row": {
+      "ts": "2026-10-23T06:04:29.567Z",
+      "mode": "play",
+      "screen": "COMBAT",
+      "session": "singleplayer/run",
+      "floor": 37,
+      "turn": 6,
+      "label": "combat/plan-continue",
+      "decision_id": "a1ceb571-dac1-47d3-a3eb-3ae720be3b67",
+      "decider": "code",
+      "fingerprint": "{\"actions\":[\"end_turn\",\"play_card\",\"save_and_quit\"],\"combat\":true,\"enemies\":\"0:28:0:true|1:90:12:true\",\"event\":\"\",\"gold\":111,\"hand\":\"0:STRIKE_SILENT:true|1:DEADLY_POISON:true|2:SURVIVOR:true|3:ECHOING_SLASH:true\",\"hp\":27,\"maxHp\":70,\"nodes\":\"\",\"pendingCard\":false,\"player\":\"1:10:0\",\"potions\":\":false:false|:false:false\",\"powers\":\"STRENGTH_POWER:-5|AFTERIMAGE_POWER:1|ENVENOM_POWER:1|DEXTERITY_POWER:-4\",\"rewards\":\"\",\"run\":\"Q3R929GHT14R\",\"screen\":\"COMBAT\",\"selection\":\"null:false\",\"shopOpen\":false,\"shopStock\":\"\",\"turn\":6}",
+      "chosen": {
+        "action": "play_card",
+        "card_index": 2
+      },
+      "expect": {
+        "card": {
+          "id": "SURVIVOR",
+          "upgraded": false
+        },
+        "turn": 6,
+        "from": "line",
+        "hand": "DEADLY_POISON,ECHOING_SLASH,STRIKE_SILENT,SURVIVOR",
+        "enemies": "0:THE_LOST|1:THE_FORGOTTEN"
+      },
+      "rationale": "continuing the Jev-chosen plan: 生存者",
+      "confidence": null,
+      "fallback": false,
+      "reasked": false,
+      "no_jev": false,
+      "reused_answer": false,
+      "request_ids": [],
+      "latency_ms": {
+        "plan": 0,
+        "jev": 0,
+        "action": 664,
+        "planner": 3,
+        "pre": 1
+      },
+      "usage": {
+        "input_tokens": 0,
+        "output_tokens": 0
+      },
+      "sl_attempt": null,
+      "sl_reloads": 0,
+      "run_id": "Q3R929GHT14R",
+      "observed_ts": "2026-10-23T06:04:29.563Z",
+      "journal": {
+        "choice": "continuing the Jev-chosen plan: 生存者",
+        "reason": ""
+      },
+      "result": "pending (unstable): Action queued but state is still transitioning.",
+      "time_budget": {
+        "schema": "decision-budget-v1",
+        "kind": "ordinary",
+        "key": "Q3R929GHT14R:37:6:1",
+        "budget_ms": 10000,
+        "entry_budget_ms": 7542.920678000664,
+        "actual_ms": 3,
+        "turn_actual_ms": 2460,
+        "shared_actual_ms": 3,
+        "independent_actual_ms": 0,
+        "timed_out": false,
+        "fallback": null,
+        "jev_reserve_ms": 3000,
+        "jev_actual_ms": 2163,
+        "jev_reserved_remaining_ms": 836.8076299999375,
+        "computation_remaining_ms": 6703.514293000568,
+        "shadow_unknown": [],
+        "stages": [
+          {
+            "stage": "combat_computation",
+            "budget_ms": 6706.065252000699,
+            "actual_ms": 0,
+            "timed_out": false
+          },
+          {
+            "stage": "combat_computation",
+            "budget_ms": 6706.007496000733,
+            "actual_ms": 2,
+            "timed_out": false
+          }
+        ],
+        "animation_time_included": false
+      }
+    }
+  },
+  {
+    "source": "/home/dw/Projects/agent-sts2/logs/decisions.jsonl",
+    "source_size": 4332795058,
+    "line": 497424,
+    "offset": 4238972530,
+    "bytes": 6967,
+    "sha256": "b0182428d2356296fc388de9a9f5cb261a71efe3126ac20c88ed58cb8de70686",
+    "run_id": "Q3R929GHT14R",
+    "identity": {
+      "status": "explicit_run",
+      "fields": {
+        "run_id": "Q3R929GHT14R",
+        "fingerprint.run": "Q3R929GHT14R"
+      },
+      "decision_ref": null
+    },
+    "row": {
+      "ts": "2026-10-23T06:04:32.549Z",
+      "mode": "play",
+      "screen": "CARD_SELECTION",
+      "session": "singleplayer/run",
+      "floor": 37,
+      "turn": 6,
+      "label": "selection/choose",
+      "decision_id": "cd4967e3-b294-4ffe-8154-b920619969e3",
+      "decider": "jev",
+      "fingerprint": "{\"actions\":[\"save_and_quit\",\"select_deck_card\"],\"combat\":true,\"enemies\":\"0:28:0:true|1:90:12:true\",\"event\":\"\",\"gold\":111,\"hand\":\"0:STRIKE_SILENT:false|1:DEADLY_POISON:false|2:ECHOING_SLASH:false\",\"hp\":27,\"maxHp\":70,\"nodes\":\"\",\"pendingCard\":false,\"player\":\"0:14:0\",\"potions\":\":false:false|:false:false\",\"powers\":\"STRENGTH_POWER:-5|AFTERIMAGE_POWER:1|ENVENOM_POWER:1|DEXTERITY_POWER:-4\",\"rewards\":\"\",\"run\":\"Q3R929GHT14R\",\"screen\":\"CARD_SELECTION\",\"selection\":\"0:false\",\"shopOpen\":false,\"shopStock\":\"\",\"turn\":6}",
+      "questions": {
+        "pick": {
+          "type": "choice",
+          "instructions": "选择要弃掉的牌。参考 discard_plan 的剩余动作和候选对后继的影响；原整条预测以完成后继为条件，所有候选都可选。",
+          "criteria": {
+            "card0": "{\"card\":\"打击\",\"upgraded\":false,\"type\":\"Attack\",\"cost\":1,\"text\":\"造成1点伤害。\",\"removes_planned_continuation\":false,\"discard_snapshot\":{\"basis\":\"仅从当前实存手牌移除此副本；弃牌触发尚未结算，后续费用、可打性和牌面变化须重读。每张牌的能量余额独立计算，不能相加成整线；抽到的牌、伤害、格挡、剩血及胜负均未推演。\",\"current_resources\":{\"hp\":27,\"block\":14,\"energy\":0},\"discarded\":{\"hand_index_before_discard\":0,\"card_id\":\"STRIKE_SILENT\",\"name\":\"打击\",\"upgraded\":false},\"retained_cards\":[{\"hand_index_before_discard\":1,\"card_id\":\"DEADLY_POISON\",\"name\":\"致命毒药\",\"upgraded\":false,\"energy_cost_now\":1,\"playable_before_discard\":false,\"unplayable_reason\":\"not_enough_energy\",\"energy_sufficient_for_this_card_alone\":false,\"energy_after_this_card_alone\":null,\"text_now\":\"给予5层中毒。\"},{\"hand_index_before_discard\":2,\"card_id\":\"ECHOING_SLASH\",\"name\":\"回响斩击\",\"upgraded\":false,\"energy_cost_now\":1,\"playable_before_discard\":false,\"unplayable_reason\":\"not_enough_energy\",\"energy_sufficient_for_this_card_alone\":false,\"energy_after_this_card_alone\":null,\"text_now\":\"对所有敌人造成5点伤害。 每有一名敌人被击杀，就重复此效果。\"}]}}",
+            "card1": "{\"card\":\"致命毒药\",\"upgraded\":false,\"type\":\"Skill\",\"cost\":1,\"text\":\"给予5层中毒。\",\"removes_planned_continuation\":false,\"discard_snapshot\":{\"basis\":\"仅从当前实存手牌移除此副本；弃牌触发尚未结算，后续费用、可打性和牌面变化须重读。每张牌的能量余额独立计算，不能相加成整线；抽到的牌、伤害、格挡、剩血及胜负均未推演。\",\"current_resources\":{\"hp\":27,\"block\":14,\"energy\":0},\"discarded\":{\"hand_index_before_discard\":1,\"card_id\":\"DEADLY_POISON\",\"name\":\"致命毒药\",\"upgraded\":false},\"retained_cards\":[{\"hand_index_before_discard\":0,\"card_id\":\"STRIKE_SILENT\",\"name\":\"打击\",\"upgraded\":false,\"energy_cost_now\":1,\"playable_before_discard\":false,\"unplayable_reason\":\"not_enough_energy\",\"energy_sufficient_for_this_card_alone\":false,\"energy_after_this_card_alone\":null,\"text_now\":\"造成1点伤害。\"},{\"hand_index_before_discard\":2,\"card_id\":\"ECHOING_SLASH\",\"name\":\"回响斩击\",\"upgraded\":false,\"energy_cost_now\":1,\"playable_before_discard\":false,\"unplayable_reason\":\"not_enough_energy\",\"energy_sufficient_for_this_card_alone\":false,\"energy_after_this_card_alone\":null,\"text_now\":\"对所有敌人造成5点伤害。 每有一名敌人被击杀，就重复此效果。\"}]}}",
+            "card2": "{\"card\":\"回响斩击\",\"upgraded\":false,\"type\":\"Attack\",\"cost\":1,\"text\":\"对所有敌人造成5点伤害。 每有一名敌人被击杀，就重复此效果。\",\"removes_planned_continuation\":false,\"discard_snapshot\":{\"basis\":\"仅从当前实存手牌移除此副本；弃牌触发尚未结算，后续费用、可打性和牌面变化须重读。每张牌的能量余额独立计算，不能相加成整线；抽到的牌、伤害、格挡、剩血及胜负均未推演。\",\"current_resources\":{\"hp\":27,\"block\":14,\"energy\":0},\"discarded\":{\"hand_index_before_discard\":2,\"card_id\":\"ECHOING_SLASH\",\"name\":\"回响斩击\",\"upgraded\":false},\"retained_cards\":[{\"hand_index_before_discard\":0,\"card_id\":\"STRIKE_SILENT\",\"name\":\"打击\",\"upgraded\":false,\"energy_cost_now\":1,\"playable_before_discard\":false,\"unplayable_reason\":\"not_enough_energy\",\"energy_sufficient_for_this_card_alone\":false,\"energy_after_this_card_alone\":null,\"text_now\":\"造成1点伤害。\"},{\"hand_index_before_discard\":1,\"card_id\":\"DEADLY_POISON\",\"name\":\"致命毒药\",\"upgraded\":false,\"energy_cost_now\":1,\"playable_before_discard\":false,\"unplayable_reason\":\"not_enough_energy\",\"energy_sufficient_for_this_card_alone\":false,\"energy_after_this_card_alone\":null,\"text_now\":\"给予5层中毒。\"}]}}"
+          }
+        }
+      },
+      "answers": {
+        "pick": {
+          "type": "choice",
+          "choice": "card0",
+          "probabilities": {
+            "card0": 0.6,
+            "card1": 0.17,
+            "card2": 0.23
+          },
+          "confidence": 0.4,
+          "raw": {
+            "choice": "card0",
+            "confidence": 0.4,
+            "probabilities": {
+              "card0": 0.6,
+              "card1": 0.17,
+              "card2": 0.23
+            },
+            "type": "choice"
+          }
+        }
+      },
+      "chosen": {
+        "action": "select_deck_card",
+        "option_index": 0
+      },
+      "expect": {
+        "option": {
+          "id": "STRIKE_SILENT"
+        },
+        "from": "decision"
+      },
+      "rationale": "Jev chose 打击 with confidence 0.40",
+      "confidence": 0.4,
+      "fallback": false,
+      "reasked": false,
+      "no_jev": false,
+      "reused_answer": false,
+      "request_ids": [],
+      "latency_ms": {
+        "plan": 48,
+        "jev": 2136,
+        "action": 368,
+        "planner": 2,
+        "pre": 1
+      },
+      "usage": {
+        "input_tokens": 9492,
+        "output_tokens": 42
+      },
+      "sl_attempt": null,
+      "sl_reloads": 0,
+      "run_id": "Q3R929GHT14R",
+      "observed_ts": "2026-10-23T06:04:30.361Z",
+      "journal": {
+        "choice": "打击",
+        "reason": ""
+      },
+      "result": "completed: Action completed.",
+      "time_budget": {
+        "schema": "decision-budget-v1",
+        "kind": "ordinary",
+        "key": "Q3R929GHT14R:37:6:1",
+        "budget_ms": 10000,
+        "entry_budget_ms": 7540.318683000514,
+        "actual_ms": 2155,
+        "turn_actual_ms": 4615,
+        "shared_actual_ms": 2155,
+        "independent_actual_ms": 0,
+        "timed_out": false,
+        "fallback": null,
+        "jev_reserve_ms": 3000,
+        "jev_actual_ms": 4299,
+        "jev_reserved_remaining_ms": 0,
+        "computation_remaining_ms": 5384.8647310005035,
+        "shadow_unknown": [],
+        "stages": [
+          {
+            "stage": "combat_computation",
+            "budget_ms": 6703.48405500059,
+            "actual_ms": 0,
+            "timed_out": false
+          },
+          {
+            "stage": "combat_computation",
+            "budget_ms": 6703.447748000734,
+            "actual_ms": 2,
+            "timed_out": false
+          },
+          {
+            "stage": "jev_gateway_request_encoding",
+            "budget_ms": 7520.963745000539,
+            "actual_ms": 0,
+            "timed_out": false
+          },
+          {
+            "stage": "jev_http_to_headers",
+            "budget_ms": 7520.763050000649,
+            "actual_ms": 2135,
+            "timed_out": false
+          },
+          {
+            "stage": "Jev",
+            "budget_ms": 7521.138442000607,
+            "actual_ms": 2135,
+            "timed_out": false
+          },
+          {
+            "stage": "jev_prompt_log",
+            "budget_ms": 5385.715007000603,
+            "actual_ms": 0,
+            "timed_out": false
+          }
+        ],
+        "animation_time_included": false
+      }
+    }
+  },
+  {
+    "source": "/home/dw/Projects/agent-sts2/logs/decisions.jsonl",
+    "source_size": 4332795058,
+    "line": 497425,
+    "offset": 4238979497,
+    "bytes": 1962,
+    "sha256": "daa579492ffd1d63664c81291ee9eba729a2576af29d4198016f779b526e03dd",
+    "run_id": "Q3R929GHT14R",
+    "identity": {
+      "status": "explicit_run",
+      "fields": {
+        "run_id": "Q3R929GHT14R",
+        "fingerprint.run": "Q3R929GHT14R"
+      },
+      "decision_ref": null
+    },
+    "row": {
+      "ts": "2026-10-23T06:04:33.033Z",
+      "mode": "play",
+      "screen": "COMBAT",
+      "session": "singleplayer/run",
+      "floor": 37,
+      "turn": 6,
+      "label": "combat/plan",
+      "decision_id": "6407b689-1c8c-48a8-9635-2f581c1f5f03",
+      "decider": "code",
+      "fingerprint": "{\"actions\":[\"end_turn\",\"save_and_quit\"],\"combat\":true,\"enemies\":\"0:28:0:true|1:90:12:true\",\"event\":\"\",\"gold\":111,\"hand\":\"0:DEADLY_POISON:false|1:ECHOING_SLASH:false\",\"hp\":27,\"maxHp\":70,\"nodes\":\"\",\"pendingCard\":false,\"player\":\"0:15:0\",\"potions\":\":false:false|:false:false\",\"powers\":\"STRENGTH_POWER:-5|AFTERIMAGE_POWER:1|ENVENOM_POWER:1|DEXTERITY_POWER:-4\",\"rewards\":\"\",\"run\":\"Q3R929GHT14R\",\"screen\":\"COMBAT\",\"selection\":\"null:false\",\"shopOpen\":false,\"shopStock\":\"\",\"turn\":6}",
+      "chosen": {
+        "action": "end_turn"
+      },
+      "expect": {
+        "turn": 6,
+        "from": "decision"
+      },
+      "rationale": "code plan (only line): end turn; hp -24, dmg 12",
+      "confidence": null,
+      "fallback": false,
+      "reasked": false,
+      "no_jev": false,
+      "reused_answer": false,
+      "request_ids": [],
+      "latency_ms": {
+        "plan": 0,
+        "jev": 0,
+        "action": 804,
+        "planner": 2,
+        "pre": 1
+      },
+      "usage": {
+        "input_tokens": 0,
+        "output_tokens": 0
+      },
+      "sl_attempt": null,
+      "sl_reloads": 0,
+      "run_id": "Q3R929GHT14R",
+      "observed_ts": "2026-10-23T06:04:33.030Z",
+      "journal": {
+        "choice": "code plan (only line): end turn; hp -24, dmg 12",
+        "reason": ""
+      },
+      "result": "completed: Action completed.",
+      "time_budget": {
+        "schema": "decision-budget-v1",
+        "kind": "ordinary",
+        "key": "Q3R929GHT14R:37:6:1",
+        "budget_ms": 10000,
+        "entry_budget_ms": 5384.860951000592,
+        "actual_ms": 2,
+        "turn_actual_ms": 4617,
+        "shared_actual_ms": 2,
+        "independent_actual_ms": 0,
+        "timed_out": false,
+        "fallback": null,
+        "jev_reserve_ms": 3000,
+        "jev_actual_ms": 4299,
+        "jev_reserved_remaining_ms": 0,
+        "computation_remaining_ms": 5382.532346000662,
+        "shadow_unknown": [],
+        "stages": [
+          {
+            "stage": "combat_computation",
+            "budget_ms": 5384.830104000634,
+            "actual_ms": 0,
+            "timed_out": false
+          },
+          {
+            "stage": "combat_computation",
+            "budget_ms": 5384.792276000604,
+            "actual_ms": 2,
+            "timed_out": false
+          }
+        ],
+        "animation_time_included": false
+      }
+    }
+  }
+]

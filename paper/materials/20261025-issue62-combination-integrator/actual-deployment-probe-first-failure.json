@@ -1,0 +1,10 @@
+{
+  "rc": 1,
+  "location": "read-actual-deployment.py:56",
+  "assertion": "len(expected_id_only)==len(actual_fact_rows)",
+  "error": "AssertionError",
+  "product_writes": 0,
+  "note": "Actual first read-only probe failed because ID alone is not unique across entity kinds: public974 has971 distinctIDs; BYRDPIP/LOST_WISP/PAELS_LEGION each span two kinds. Correct probe identity=(id,kind), original1074 rows/fields then equal source. No product/code/fixture/DB changes, no new full/model/game. Initial handwritten future timestamp removed as unobserved metadata.",
+  "archived_at": "2026-10-25T13:32:06+08:00",
+  "failure_at": null
+}

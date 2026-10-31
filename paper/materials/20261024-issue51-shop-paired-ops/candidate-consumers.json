@@ -1,0 +1,1032 @@
+{
+  "passed": true,
+  "content_root": "/home/dw/Projects/agent-sts2/.artifacts/ops-issue51-shop-paired-20261024/live-candidate-root",
+  "consumer_root": "/home/dw/Projects/agent-sts2/.worktrees/live",
+  "strategy_count": 61,
+  "reflex_count": 109,
+  "fixed_strategy_queries": 6,
+  "fixed_rk_construction_queries": 6,
+  "fixed_rk_full_queries": 6,
+  "current_coarse_predicate_true": 6,
+  "current_coarse_predicate_unknown": 0,
+  "wrong_ascension_cases": 6,
+  "other_role_cases": 4,
+  "byte_reused_strategy_preserved": true,
+  "custom_knowledge_candidates_formal_consumer": "pending",
+  "new_executable_shop_comparisons": 0,
+  "new_executable_card_pick_advice": 0,
+  "natural_queries": 0,
+  "model_or_jev_calls": 0,
+  "rows": [
+    {
+      "strategy_id": "silent-brain-shop-joint-budget",
+      "strategy": {
+        "id": "silent-brain-shop-joint-budget",
+        "version": "2026-10-24.1",
+        "trigger": {
+          "question_types": [
+            "shop"
+          ]
+        },
+        "strategy": "购买与删牌各自买得起时，先比较同一笔金币能完成的整套方案，再决定把预算给哪边。证据局100金币买51金币翻越撑击后剩49，原100删牌已不可付；另一局162金币先删100后仍能买52药。A10无重试证据购买互斥125机会/84局、选择删牌28/27；重试或判死组522/280、142/127。\n范围：Silent A10/自有版本unknown；只证明预算互斥与实际执行，不证明买牌或删牌更好，不固定删牌优先。",
+        "evidence": [
+          {
+            "type": "own",
+            "run": "MGA0CZDDKC0P",
+            "floor": 11,
+            "ref": "paper/materials/20261024-issue51-shop-paired-ops/original/scratch/joint-budget-evidence.json#/0",
+            "role": "support"
+          },
+          {
+            "type": "own",
+            "run": "NB8KCF6HRGVF",
+            "floor": 14,
+            "ref": "paper/materials/20261024-issue51-shop-paired-ops/original/scratch/joint-budget-evidence.json#/1",
+            "role": "support"
+          }
+        ],
+        "source": "own",
+        "confidence": 0.35
+      },
+      "rk_id": "silent-rk-shop-joint-budget",
+      "rk": {
+        "schema": "reflex-entry-v1",
+        "id": "silent-rk-shop-joint-budget",
+        "version": 1,
+        "applies_to": "shop",
+        "predicate": {
+          "op": "and",
+          "args": [
+            {
+              "op": "exists",
+              "field": "player.gold"
+            },
+            {
+              "op": "exists",
+              "field": "shop.stock"
+            },
+            {
+              "op": "exists",
+              "field": "shop.prices"
+            }
+          ]
+        },
+        "signal": {
+          "kind": "tag",
+          "value": "silent-shop-observed-joint-budget",
+          "unit": "label"
+        },
+        "label_en": "Purchases and removal can exhaust the same shop budget",
+        "evidence": {
+          "observations": [
+            {
+              "run_id": "MGA0CZDDKC0P",
+              "floor": 11
+            },
+            {
+              "run_id": "NB8KCF6HRGVF",
+              "floor": 14
+            }
+          ],
+          "n_support": 2,
+          "n_contradict": 0
+        },
+        "confidence": 0.35,
+        "scope": {
+          "character": "silent",
+          "ascensions": [
+            10
+          ]
+        },
+        "directions": [],
+        "cores": [],
+        "combos": [],
+        "source_experience": [
+          "silent-shop-joint-budget"
+        ],
+        "sources": [
+          {
+            "source": "own",
+            "path": "paper/materials/20261024-issue51-shop-paired-ops/original/scratch/joint-budget-evidence.json",
+            "sha256": "b1d08e9de750ed5bfbcafdb9fadbe6385510f76fd8cb426ea8b98b6a1304e2ad",
+            "game_version": "unknown",
+            "retrieved_at": "2026-10-24",
+            "sample": {
+              "runs": 2,
+              "players": null,
+              "selection": "本情境选定的局部商店状态/执行/后继见证；含重试/判死与无重试证据，完整分层见source-ledger；不是因果或整局剧本。"
+            }
+          }
+        ]
+      },
+      "construction_summary": {
+        "id": "silent-rk-shop-joint-budget",
+        "version": 1,
+        "applies_to": "shop",
+        "summary": "Purchases and removal can exhaust the same shop budget",
+        "confidence": 0.35,
+        "evidence": {
+          "observations": [
+            {
+              "run_id": "MGA0CZDDKC0P",
+              "floor": 11
+            },
+            {
+              "run_id": "NB8KCF6HRGVF",
+              "floor": 14
+            }
+          ],
+          "n_support": 2,
+          "n_contradict": 0
+        },
+        "source_experience": [
+          "silent-shop-joint-budget"
+        ]
+      },
+      "original_mod_state": {
+        "path": "/home/dw/Projects/agent-sts2/paper/materials/20261024-issue51-shop-paired-ops/original/scratch/ops-raw/states-7344473202.jsonl",
+        "sha256": "d79e99c188eec7be83990b6f09ed82d16dc0a56ddec2ab447f400c010667605b"
+      },
+      "current_coarse_predicate_result": true,
+      "dynamic_budget_and_removal_eligibility_not_proved": true,
+      "actual_fixed_production_tools": true,
+      "executable_comparison": false
+    },
+    {
+      "strategy_id": "silent-brain-shop-affordable-stop",
+      "strategy": {
+        "id": "silent-brain-shop-affordable-stop",
+        "version": "2026-10-24.1",
+        "trigger": {
+          "question_types": [
+            "shop"
+          ]
+        },
+        "strategy": "有可负担商品时也把离店留金列入比较，先分清库存为空、报价超金币和主动不买，别把打折当购买理由。证据局42金币面对25金币打折群蛇仍离店，金币保持42；113金币面对100删牌和37精准仍离店。A10无重试证据可负担价格代理离店74机会/53局、全价不可负担143/82；重试或判死组328/188、650/300；明确留金理由子集分别9/8、32/30。\n范围：Silent A10/自有版本unknown；价格代理不保证药栏等合法条件。原理由仅表意图，未证留金收益，也非打折牌一律不买。",
+        "evidence": [
+          {
+            "type": "own",
+            "run": "QNTW139MGECA",
+            "floor": 24,
+            "ref": "paper/materials/20261024-issue51-shop-paired-ops/original/scratch/affordable-stop-evidence.json#/0",
+            "role": "support"
+          },
+          {
+            "type": "own",
+            "run": "9663Y88TYK73",
+            "floor": 3,
+            "ref": "paper/materials/20261024-issue51-shop-paired-ops/original/scratch/affordable-stop-evidence.json#/1",
+            "role": "support"
+          }
+        ],
+        "source": "own",
+        "confidence": 0.35
+      },
+      "rk_id": "silent-rk-shop-affordable-stop",
+      "rk": {
+        "schema": "reflex-entry-v1",
+        "id": "silent-rk-shop-affordable-stop",
+        "version": 1,
+        "applies_to": "shop",
+        "predicate": {
+          "op": "and",
+          "args": [
+            {
+              "op": "exists",
+              "field": "player.gold"
+            },
+            {
+              "op": "exists",
+              "field": "shop.stock"
+            }
+          ]
+        },
+        "signal": {
+          "kind": "tag",
+          "value": "silent-shop-observed-affordable-stop",
+          "unit": "label"
+        },
+        "label_en": "Affordable stock does not establish intent to buy",
+        "evidence": {
+          "observations": [
+            {
+              "run_id": "QNTW139MGECA",
+              "floor": 24
+            },
+            {
+              "run_id": "9663Y88TYK73",
+              "floor": 3
+            }
+          ],
+          "n_support": 2,
+          "n_contradict": 0
+        },
+        "confidence": 0.35,
+        "scope": {
+          "character": "silent",
+          "ascensions": [
+            10
+          ]
+        },
+        "directions": [],
+        "cores": [],
+        "combos": [],
+        "source_experience": [
+          "silent-shop-affordable-stop"
+        ],
+        "sources": [
+          {
+            "source": "own",
+            "path": "paper/materials/20261024-issue51-shop-paired-ops/original/scratch/affordable-stop-evidence.json",
+            "sha256": "182b4c7673251bf1468a2da9015269c0eb3d054f33e3c60968e7ae1d6b2810a2",
+            "game_version": "unknown",
+            "retrieved_at": "2026-10-24",
+            "sample": {
+              "runs": 2,
+              "players": null,
+              "selection": "本情境选定的局部商店状态/执行/后继见证；含重试/判死与无重试证据，完整分层见source-ledger；不是因果或整局剧本。"
+            }
+          }
+        ]
+      },
+      "construction_summary": {
+        "id": "silent-rk-shop-affordable-stop",
+        "version": 1,
+        "applies_to": "shop",
+        "summary": "Affordable stock does not establish intent to buy",
+        "confidence": 0.35,
+        "evidence": {
+          "observations": [
+            {
+              "run_id": "QNTW139MGECA",
+              "floor": 24
+            },
+            {
+              "run_id": "9663Y88TYK73",
+              "floor": 3
+            }
+          ],
+          "n_support": 2,
+          "n_contradict": 0
+        },
+        "source_experience": [
+          "silent-shop-affordable-stop"
+        ]
+      },
+      "original_mod_state": {
+        "path": "/home/dw/Projects/agent-sts2/paper/materials/20261024-issue51-shop-paired-ops/original/scratch/ops-raw/states-8135223805.jsonl",
+        "sha256": "4cc45138628dae42fcdbb149fdda9f0b732cd43589070ffd3e3d6ef8f94057e2"
+      },
+      "current_coarse_predicate_result": true,
+      "dynamic_budget_and_removal_eligibility_not_proved": true,
+      "actual_fixed_production_tools": true,
+      "executable_comparison": false
+    },
+    {
+      "strategy_id": "silent-brain-shop-golden-reserve",
+      "strategy": {
+        "id": "silent-brain-shop-golden-reserve",
+        "version": "2026-10-24.1",
+        "trigger": {
+          "question_types": [
+            "shop"
+          ]
+        },
+        "strategy": "已持SEAL_OF_GOLD时，把保留金币的战斗用途与本店补强一起比较，避免因为商品买得起就花尽，也不设统一留金线。证据局76金币原样离店；同局另一店仍先买78金币残影，203→125。A10无重试证据有可负担价格代理仍离店5机会/3局、实购2/2；重试或判死组57/24、97/27。\n范围：仅Silent A10/自有版本unknown且实际持黄金印；原遗物牌文含花金币获能量但数值占位未知，不能算固定回合预算。两组局重叠，未证留金胜率收益。",
+        "evidence": [
+          {
+            "type": "own",
+            "run": "25226ZFLNR1J",
+            "floor": 39,
+            "ref": "paper/materials/20261024-issue51-shop-paired-ops/original/scratch/golden-reserve-evidence.json#/0",
+            "role": "support"
+          },
+          {
+            "type": "own",
+            "run": "25226ZFLNR1J",
+            "floor": 37,
+            "ref": "paper/materials/20261024-issue51-shop-paired-ops/original/scratch/golden-reserve-evidence.json#/1",
+            "role": "support"
+          },
+          {
+            "type": "own",
+            "run": "0YQJ9D1MC4NK",
+            "floor": 23,
+            "ref": "paper/materials/20261024-issue51-shop-paired-ops/original/scratch/golden-reserve-evidence.json#/2",
+            "role": "support"
+          }
+        ],
+        "source": "own",
+        "confidence": 0.35
+      },
+      "rk_id": "silent-rk-shop-golden-reserve",
+      "rk": {
+        "schema": "reflex-entry-v1",
+        "id": "silent-rk-shop-golden-reserve",
+        "version": 1,
+        "applies_to": "shop",
+        "predicate": {
+          "op": "and",
+          "args": [
+            {
+              "op": "contains",
+              "field": "player.relics",
+              "value": "SEAL_OF_GOLD"
+            },
+            {
+              "op": "exists",
+              "field": "player.gold"
+            },
+            {
+              "op": "exists",
+              "field": "shop.stock"
+            }
+          ]
+        },
+        "signal": {
+          "kind": "tag",
+          "value": "silent-shop-observed-golden-reserve",
+          "unit": "label"
+        },
+        "label_en": "Seal of Gold gives saved gold a combat use",
+        "evidence": {
+          "observations": [
+            {
+              "run_id": "25226ZFLNR1J",
+              "floor": 39
+            },
+            {
+              "run_id": "25226ZFLNR1J",
+              "floor": 37
+            },
+            {
+              "run_id": "0YQJ9D1MC4NK",
+              "floor": 23
+            }
+          ],
+          "n_support": 2,
+          "n_contradict": 0
+        },
+        "confidence": 0.35,
+        "scope": {
+          "character": "silent",
+          "ascensions": [
+            10
+          ]
+        },
+        "directions": [],
+        "cores": [],
+        "combos": [],
+        "source_experience": [
+          "silent-shop-golden-reserve"
+        ],
+        "sources": [
+          {
+            "source": "own",
+            "path": "paper/materials/20261024-issue51-shop-paired-ops/original/scratch/golden-reserve-evidence.json",
+            "sha256": "90ececabfeb7293080ff1623b015ff241d4341844a3e4233ca609c0feeee8cd4",
+            "game_version": "unknown",
+            "retrieved_at": "2026-10-24",
+            "sample": {
+              "runs": 2,
+              "players": null,
+              "selection": "本情境选定的局部商店状态/执行/后继见证；含重试/判死与无重试证据，完整分层见source-ledger；不是因果或整局剧本。"
+            }
+          }
+        ]
+      },
+      "construction_summary": {
+        "id": "silent-rk-shop-golden-reserve",
+        "version": 1,
+        "applies_to": "shop",
+        "summary": "Seal of Gold gives saved gold a combat use",
+        "confidence": 0.35,
+        "evidence": {
+          "observations": [
+            {
+              "run_id": "25226ZFLNR1J",
+              "floor": 39
+            },
+            {
+              "run_id": "25226ZFLNR1J",
+              "floor": 37
+            },
+            {
+              "run_id": "0YQJ9D1MC4NK",
+              "floor": 23
+            }
+          ],
+          "n_support": 2,
+          "n_contradict": 0
+        },
+        "source_experience": [
+          "silent-shop-golden-reserve"
+        ]
+      },
+      "original_mod_state": {
+        "path": "/home/dw/Projects/agent-sts2/paper/materials/20261024-issue51-shop-paired-ops/original/scratch/ops-raw/states-7368880799.jsonl",
+        "sha256": "114842c9d236b21b2f3fd64c6cba2a32fcbd6a7ea02e97eb933328eb376c2be7"
+      },
+      "current_coarse_predicate_result": true,
+      "dynamic_budget_and_removal_eligibility_not_proved": true,
+      "actual_fixed_production_tools": true,
+      "executable_comparison": false
+    },
+    {
+      "strategy_id": "silent-brain-shop-curse-removal",
+      "strategy": {
+        "id": "silent-brain-shop-curse-removal",
+        "version": "2026-10-24.1",
+        "trigger": {
+          "question_types": [
+            "shop"
+          ]
+        },
+        "strategy": "付费删牌可用且当前确有可删诅咒时，把其当前牌文造成的限制与基础牌、购物的取舍一起比较，别默认删打击。两局实际各付100移除NORMALITY，151→51与189→89；牌文记录每回合不能打出超过3张牌。A10无重试证据删诅咒5机会/5局；重试或判死组24/24。持其他诅咒却删非诅咒另有8/8与31/28，说明目标不可一概而论。\n范围：Silent A10/自有版本unknown，先核实际可删目标；不含不可删诅咒的假设。NORMALITY两例均终败，未证删诅咒因果收益或必优先。",
+        "evidence": [
+          {
+            "type": "own",
+            "run": "0QDRNCRMC8BU",
+            "floor": 24,
+            "ref": "paper/materials/20261024-issue51-shop-paired-ops/original/scratch/curse-removal-evidence.json#/0",
+            "role": "support"
+          },
+          {
+            "type": "own",
+            "run": "PZRSP3EL4K6B",
+            "floor": 21,
+            "ref": "paper/materials/20261024-issue51-shop-paired-ops/original/scratch/curse-removal-evidence.json#/1",
+            "role": "support"
+          },
+          {
+            "type": "own",
+            "run": "25226ZFLNR1J",
+            "floor": 31,
+            "ref": "paper/materials/20261024-issue51-shop-paired-ops/original/scratch/curse-removal-evidence.json#/2",
+            "role": "support"
+          }
+        ],
+        "source": "own",
+        "confidence": 0.35
+      },
+      "rk_id": "silent-rk-shop-curse-removal",
+      "rk": {
+        "schema": "reflex-entry-v1",
+        "id": "silent-rk-shop-curse-removal",
+        "version": 1,
+        "applies_to": "shop",
+        "predicate": {
+          "op": "or",
+          "args": [
+            {
+              "op": "any",
+              "field": "player.deck",
+              "arg": {
+                "op": "eq",
+                "field": "card.id",
+                "value": "NORMALITY"
+              }
+            },
+            {
+              "op": "any",
+              "field": "player.deck",
+              "arg": {
+                "op": "eq",
+                "field": "card.id",
+                "value": "INJURY"
+              }
+            },
+            {
+              "op": "any",
+              "field": "player.deck",
+              "arg": {
+                "op": "eq",
+                "field": "card.id",
+                "value": "CLUMSY"
+              }
+            },
+            {
+              "op": "any",
+              "field": "player.deck",
+              "arg": {
+                "op": "eq",
+                "field": "card.id",
+                "value": "REGRET"
+              }
+            },
+            {
+              "op": "any",
+              "field": "player.deck",
+              "arg": {
+                "op": "eq",
+                "field": "card.id",
+                "value": "SHAME"
+              }
+            },
+            {
+              "op": "any",
+              "field": "player.deck",
+              "arg": {
+                "op": "eq",
+                "field": "card.id",
+                "value": "POOR_SLEEP"
+              }
+            },
+            {
+              "op": "any",
+              "field": "player.deck",
+              "arg": {
+                "op": "eq",
+                "field": "card.id",
+                "value": "DEBT"
+              }
+            },
+            {
+              "op": "any",
+              "field": "player.deck",
+              "arg": {
+                "op": "eq",
+                "field": "card.id",
+                "value": "DOUBT"
+              }
+            },
+            {
+              "op": "any",
+              "field": "player.deck",
+              "arg": {
+                "op": "eq",
+                "field": "card.id",
+                "value": "SPORE_MIND"
+              }
+            }
+          ]
+        },
+        "signal": {
+          "kind": "tag",
+          "value": "silent-shop-observed-curse-removal",
+          "unit": "label"
+        },
+        "label_en": "Paid curse removal competes with other current targets",
+        "evidence": {
+          "observations": [
+            {
+              "run_id": "0QDRNCRMC8BU",
+              "floor": 24
+            },
+            {
+              "run_id": "PZRSP3EL4K6B",
+              "floor": 21
+            },
+            {
+              "run_id": "25226ZFLNR1J",
+              "floor": 31
+            }
+          ],
+          "n_support": 3,
+          "n_contradict": 0
+        },
+        "confidence": 0.35,
+        "scope": {
+          "character": "silent",
+          "ascensions": [
+            10
+          ]
+        },
+        "directions": [],
+        "cores": [],
+        "combos": [],
+        "source_experience": [
+          "silent-shop-curse-removal"
+        ],
+        "sources": [
+          {
+            "source": "own",
+            "path": "paper/materials/20261024-issue51-shop-paired-ops/original/scratch/curse-removal-evidence.json",
+            "sha256": "48bc807ca1067c6cee22e143ad759ff8ac45e3625ac29929ff2c64787b1906f7",
+            "game_version": "unknown",
+            "retrieved_at": "2026-10-24",
+            "sample": {
+              "runs": 3,
+              "players": null,
+              "selection": "本情境选定的局部商店状态/执行/后继见证；含重试/判死与无重试证据，完整分层见source-ledger；不是因果或整局剧本。"
+            }
+          }
+        ]
+      },
+      "construction_summary": {
+        "id": "silent-rk-shop-curse-removal",
+        "version": 1,
+        "applies_to": "shop",
+        "summary": "Paid curse removal competes with other current targets",
+        "confidence": 0.35,
+        "evidence": {
+          "observations": [
+            {
+              "run_id": "0QDRNCRMC8BU",
+              "floor": 24
+            },
+            {
+              "run_id": "PZRSP3EL4K6B",
+              "floor": 21
+            },
+            {
+              "run_id": "25226ZFLNR1J",
+              "floor": 31
+            }
+          ],
+          "n_support": 3,
+          "n_contradict": 0
+        },
+        "source_experience": [
+          "silent-shop-curse-removal"
+        ]
+      },
+      "original_mod_state": {
+        "path": "/home/dw/Projects/agent-sts2/paper/materials/20261024-issue51-shop-paired-ops/original/scratch/ops-raw/states-14334096809.jsonl",
+        "sha256": "eedb115e760b861ed9d6377d8af41cdaeef77a19046accf15a44bb119d0e893a"
+      },
+      "current_coarse_predicate_result": true,
+      "dynamic_budget_and_removal_eligibility_not_proved": true,
+      "actual_fixed_production_tools": true,
+      "executable_comparison": false
+    },
+    {
+      "strategy_id": "silent-brain-shop-nonbasic-removal",
+      "strategy": {
+        "id": "silent-brain-shop-nonbasic-removal",
+        "version": "2026-10-24.1",
+        "trigger": {
+          "question_types": [
+            "shop"
+          ]
+        },
+        "strategy": "当前非基础牌的费用、条件或用途不再合适时，也把它列入付费删牌比较，和基础牌、购买及离店一起审查。实际各付100删TORIC_TOUGHNESS或TACTICIAN，328→228、204→104；前者当前2费，后者当前3费且牌文有奇巧，不据名字补机制。A10无重试证据非基础非诅咒移除1机会/1局；重试或判死组9/9，十局最终均败。\n范围：Silent A10/自有版本unknown，仅提示扩展真实目标比较，不固定删除这些牌、不把旧理由或模型推断当收益。基本牌删除另账，不用稀疏样本排名。",
+        "evidence": [
+          {
+            "type": "own",
+            "run": "HSX4HYATB4E2",
+            "floor": 36,
+            "ref": "paper/materials/20261024-issue51-shop-paired-ops/original/scratch/nonbasic-removal-evidence.json#/0",
+            "role": "support"
+          },
+          {
+            "type": "own",
+            "run": "FETDVL1P59B9",
+            "floor": 20,
+            "ref": "paper/materials/20261024-issue51-shop-paired-ops/original/scratch/nonbasic-removal-evidence.json#/1",
+            "role": "support"
+          },
+          {
+            "type": "own",
+            "run": "VPW8YH7A4QFM",
+            "floor": 6,
+            "ref": "paper/materials/20261024-issue51-shop-paired-ops/original/scratch/nonbasic-removal-evidence.json#/2",
+            "role": "support"
+          }
+        ],
+        "source": "own",
+        "confidence": 0.22
+      },
+      "rk_id": "silent-rk-shop-nonbasic-removal",
+      "rk": {
+        "schema": "reflex-entry-v1",
+        "id": "silent-rk-shop-nonbasic-removal",
+        "version": 1,
+        "applies_to": "shop",
+        "predicate": {
+          "op": "or",
+          "args": [
+            {
+              "op": "any",
+              "field": "player.deck",
+              "arg": {
+                "op": "eq",
+                "field": "card.id",
+                "value": "TORIC_TOUGHNESS"
+              }
+            },
+            {
+              "op": "any",
+              "field": "player.deck",
+              "arg": {
+                "op": "eq",
+                "field": "card.id",
+                "value": "TACTICIAN"
+              }
+            },
+            {
+              "op": "any",
+              "field": "player.deck",
+              "arg": {
+                "op": "eq",
+                "field": "card.id",
+                "value": "MEMENTO_MORI"
+              }
+            },
+            {
+              "op": "any",
+              "field": "player.deck",
+              "arg": {
+                "op": "eq",
+                "field": "card.id",
+                "value": "INFINITE_BLADES"
+              }
+            },
+            {
+              "op": "any",
+              "field": "player.deck",
+              "arg": {
+                "op": "eq",
+                "field": "card.id",
+                "value": "FAN_OF_KNIVES"
+              }
+            },
+            {
+              "op": "any",
+              "field": "player.deck",
+              "arg": {
+                "op": "eq",
+                "field": "card.id",
+                "value": "METAMORPHOSIS"
+              }
+            },
+            {
+              "op": "any",
+              "field": "player.deck",
+              "arg": {
+                "op": "eq",
+                "field": "card.id",
+                "value": "PRECISE_CUT"
+              }
+            },
+            {
+              "op": "any",
+              "field": "player.deck",
+              "arg": {
+                "op": "eq",
+                "field": "card.id",
+                "value": "FINISHER"
+              }
+            },
+            {
+              "op": "any",
+              "field": "player.deck",
+              "arg": {
+                "op": "eq",
+                "field": "card.id",
+                "value": "KNIFE_TRAP"
+              }
+            }
+          ]
+        },
+        "signal": {
+          "kind": "tag",
+          "value": "silent-shop-observed-nonbasic-removal",
+          "unit": "label"
+        },
+        "label_en": "Paid removal can target nonbasic cards",
+        "evidence": {
+          "observations": [
+            {
+              "run_id": "HSX4HYATB4E2",
+              "floor": 36
+            },
+            {
+              "run_id": "FETDVL1P59B9",
+              "floor": 20
+            },
+            {
+              "run_id": "VPW8YH7A4QFM",
+              "floor": 6
+            }
+          ],
+          "n_support": 3,
+          "n_contradict": 0
+        },
+        "confidence": 0.22,
+        "scope": {
+          "character": "silent",
+          "ascensions": [
+            10
+          ]
+        },
+        "directions": [],
+        "cores": [],
+        "combos": [],
+        "source_experience": [
+          "silent-shop-nonbasic-removal"
+        ],
+        "sources": [
+          {
+            "source": "own",
+            "path": "paper/materials/20261024-issue51-shop-paired-ops/original/scratch/nonbasic-removal-evidence.json",
+            "sha256": "9ec1ee44f46e85787b36827466c205df36acf2e0543c319039a79400445bc1c2",
+            "game_version": "unknown",
+            "retrieved_at": "2026-10-24",
+            "sample": {
+              "runs": 3,
+              "players": null,
+              "selection": "本情境选定的局部商店状态/执行/后继见证；含重试/判死与无重试证据，完整分层见source-ledger；不是因果或整局剧本。"
+            }
+          }
+        ]
+      },
+      "construction_summary": {
+        "id": "silent-rk-shop-nonbasic-removal",
+        "version": 1,
+        "applies_to": "shop",
+        "summary": "Paid removal can target nonbasic cards",
+        "confidence": 0.22,
+        "evidence": {
+          "observations": [
+            {
+              "run_id": "HSX4HYATB4E2",
+              "floor": 36
+            },
+            {
+              "run_id": "FETDVL1P59B9",
+              "floor": 20
+            },
+            {
+              "run_id": "VPW8YH7A4QFM",
+              "floor": 6
+            }
+          ],
+          "n_support": 3,
+          "n_contradict": 0
+        },
+        "source_experience": [
+          "silent-shop-nonbasic-removal"
+        ]
+      },
+      "original_mod_state": {
+        "path": "/home/dw/Projects/agent-sts2/paper/materials/20261024-issue51-shop-paired-ops/original/scratch/ops-raw/states-8156251513.jsonl",
+        "sha256": "89d399fcf0bec208d2a8c747a9ed8cce3776be35536e05ba9fd5cc9425ed1130"
+      },
+      "current_coarse_predicate_result": true,
+      "dynamic_budget_and_removal_eligibility_not_proved": true,
+      "actual_fixed_production_tools": true,
+      "executable_comparison": false
+    },
+    {
+      "strategy_id": "silent-brain-shop-upgrade-aware-removal",
+      "strategy": {
+        "id": "silent-brain-shop-upgrade-aware-removal",
+        "version": "2026-10-24.1",
+        "trigger": {
+          "question_types": [
+            "shop"
+          ]
+        },
+        "strategy": "同时持有升级和未升级打击、准备付费删牌时，按每张实际费用与牌文分别比较目标，不只按同一ID或升级号决定。证据局付100删未升级打击而留升级版，牌文6/9伤；反例局当前打击却为0费9/12伤并删了MEMENTO_MORI。A10无重试证据混持后删牌4机会/3局，均删未升级打击；重试或判死组20/17中13/10删未升级打击，另7机会选择其他目标。\n范围：Silent A10/自有版本unknown，费用和牌文以当前快照为准；样本终局均败，未证保留升级牌或删打击的收益。",
+        "evidence": [
+          {
+            "type": "own",
+            "run": "NB8KCF6HRGVF",
+            "floor": 14,
+            "ref": "paper/materials/20261024-issue51-shop-paired-ops/original/scratch/upgrade-aware-removal-evidence.json#/0",
+            "role": "support"
+          },
+          {
+            "type": "own",
+            "run": "YF0LXT1QSTGG",
+            "floor": 20,
+            "ref": "paper/materials/20261024-issue51-shop-paired-ops/original/scratch/upgrade-aware-removal-evidence.json#/1",
+            "role": "support"
+          }
+        ],
+        "source": "own",
+        "confidence": 0.25
+      },
+      "rk_id": "silent-rk-shop-upgrade-aware-removal",
+      "rk": {
+        "schema": "reflex-entry-v1",
+        "id": "silent-rk-shop-upgrade-aware-removal",
+        "version": 1,
+        "applies_to": "shop",
+        "predicate": {
+          "op": "and",
+          "args": [
+            {
+              "op": "any",
+              "field": "player.deck",
+              "arg": {
+                "op": "and",
+                "args": [
+                  {
+                    "op": "eq",
+                    "field": "card.id",
+                    "value": "STRIKE_SILENT"
+                  },
+                  {
+                    "op": "eq",
+                    "field": "card.upgraded",
+                    "value": true
+                  }
+                ]
+              }
+            },
+            {
+              "op": "any",
+              "field": "player.deck",
+              "arg": {
+                "op": "and",
+                "args": [
+                  {
+                    "op": "eq",
+                    "field": "card.id",
+                    "value": "STRIKE_SILENT"
+                  },
+                  {
+                    "op": "eq",
+                    "field": "card.upgraded",
+                    "value": false
+                  }
+                ]
+              }
+            }
+          ]
+        },
+        "signal": {
+          "kind": "tag",
+          "value": "silent-shop-observed-upgrade-aware-removal",
+          "unit": "label"
+        },
+        "label_en": "Mixed Strike upgrades require separate removal target comparisons",
+        "evidence": {
+          "observations": [
+            {
+              "run_id": "NB8KCF6HRGVF",
+              "floor": 14
+            },
+            {
+              "run_id": "YF0LXT1QSTGG",
+              "floor": 20
+            }
+          ],
+          "n_support": 2,
+          "n_contradict": 0
+        },
+        "confidence": 0.25,
+        "scope": {
+          "character": "silent",
+          "ascensions": [
+            10
+          ]
+        },
+        "directions": [],
+        "cores": [],
+        "combos": [],
+        "source_experience": [
+          "silent-shop-upgrade-aware-removal"
+        ],
+        "sources": [
+          {
+            "source": "own",
+            "path": "paper/materials/20261024-issue51-shop-paired-ops/original/scratch/upgrade-aware-removal-evidence.json",
+            "sha256": "0a984777fa63993c73ff8e84f913caa350b8dd7dc3ef8dd497ffc32aed5fc0ed",
+            "game_version": "unknown",
+            "retrieved_at": "2026-10-24",
+            "sample": {
+              "runs": 2,
+              "players": null,
+              "selection": "本情境选定的局部商店状态/执行/后继见证；含重试/判死与无重试证据，完整分层见source-ledger；不是因果或整局剧本。"
+            }
+          }
+        ]
+      },
+      "construction_summary": {
+        "id": "silent-rk-shop-upgrade-aware-removal",
+        "version": 1,
+        "applies_to": "shop",
+        "summary": "Mixed Strike upgrades require separate removal target comparisons",
+        "confidence": 0.25,
+        "evidence": {
+          "observations": [
+            {
+              "run_id": "NB8KCF6HRGVF",
+              "floor": 14
+            },
+            {
+              "run_id": "YF0LXT1QSTGG",
+              "floor": 20
+            }
+          ],
+          "n_support": 2,
+          "n_contradict": 0
+        },
+        "source_experience": [
+          "silent-shop-upgrade-aware-removal"
+        ]
+      },
+      "original_mod_state": {
+        "path": "/home/dw/Projects/agent-sts2/paper/materials/20261024-issue51-shop-paired-ops/original/scratch/ops-raw/states-7737876665.jsonl",
+        "sha256": "02729be12e69744ba945f1f6a91b7782ef973a777a9d5318226428cdc22f9afb"
+      },
+      "current_coarse_predicate_result": true,
+      "dynamic_budget_and_removal_eligibility_not_proved": true,
+      "actual_fixed_production_tools": true,
+      "executable_comparison": false
+    }
+  ]
+}

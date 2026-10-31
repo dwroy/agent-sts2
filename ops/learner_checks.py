@@ -43,7 +43,7 @@ def read_report(path):
             report = json.loads(block)
         except ValueError:
             continue
-        if isinstance(report, dict) and report.get("task") in ("experience-update", "fix-batch", "strategy-proposal", "postmortem", "ascension-audit", "silent-historical-core-builds"):
+        if isinstance(report, dict) and (report.get("operational_candidate") or report.get("task") in ("experience-update", "fix-batch", "strategy-proposal", "postmortem", "ascension-audit", "silent-historical-core-builds")):
             return report
     # A report can be the leading JSON object followed by the launcher's summary.
     # Never search prose for braces: embedded examples are not completion reports.
@@ -51,7 +51,7 @@ def read_report(path):
         report, _ = json.JSONDecoder().raw_decode(text.lstrip())
     except ValueError:
         return {}
-    if isinstance(report, dict) and report.get("task") in ("experience-update", "fix-batch", "strategy-proposal", "silent-historical-core-builds"):
+    if isinstance(report, dict) and (report.get("operational_candidate") or report.get("task") in ("experience-update", "fix-batch", "strategy-proposal", "silent-historical-core-builds")):
         return report
     return {}
 
@@ -98,6 +98,12 @@ def verify_empty_fix(report, batch, root):
 
 def finish_write_batch(batch_id, batch, rc, root, out_dir, enqueue, inbox, *, run_checks=True):
     report = read_report(os.path.join(out_dir, batch_id + ".out"))
+    from learning_runtime import complete_products as complete_operational
+    if complete_operational(batch_id, batch, report, rc, root, enqueue, inbox):
+        return
+    from knowledge_runtime import complete as complete_knowledge
+    if not batch.get("knowledge_independent_consumed") and complete_knowledge(batch_id, batch, report, rc, root, enqueue, inbox):
+        return
     merged = report.get("merged")
     live = live_dir(root)
     verified = False
@@ -160,7 +166,10 @@ def finish_write_batch(batch_id, batch, rc, root, out_dir, enqueue, inbox, *, ru
     command = FULL_CHECK_COMMAND
     with open(log, "w", encoding="utf8") as handle:
         try:
-            checks = subprocess.run(["flock", os.path.join(root, "ops", "live-merge.lock"), "bash", "-c", command],
+            from board_heavy import queued_argv, resource_fds
+            argv = queued_argv(root, 'integrator', ["flock", "-F", os.path.join(root, "ops/integrator-full-check.lock"),
+                                "flock", "-F", os.path.join(root, "ops", "live-merge.lock"), "bash", "-c", command])
+            checks = subprocess.run(argv, pass_fds=resource_fds(root),
                                     cwd=os.path.join(live, "agent"), stdout=handle, stderr=subprocess.STDOUT, timeout=3600)
             code = checks.returncode
         except (OSError, subprocess.TimeoutExpired) as error:
@@ -295,6 +304,14 @@ def recheck_write_batch(batch_id, batch, root, out_dir, enqueue, inbox, *, conti
         spec.loader.exec_module(module)
         return module.run(batch_id, batch, root, out_dir, continuation, enqueue, inbox)
     report = read_report(os.path.join(out_dir, batch_id + ".out"))
+    if report.get("operational_candidate") or report.get("knowledge_independent"):
+        from learning_runtime import complete_products as complete_operational
+        if complete_operational(batch_id, batch, report, batch.get("rc", 1), root, enqueue, inbox):
+            return 0 if batch.get("state") == "done" else 1
+    if report.get("knowledge_candidate") and not batch.get("knowledge_independent_consumed"):
+        from knowledge_runtime import complete as complete_knowledge
+        complete_knowledge(batch_id, batch, report, batch.get("rc", 1), root, enqueue, inbox)
+        return 0 if batch.get("state") == "done" else 1
     report_proof = None
     if not report:
         report, report_proof = preserved_calibration_report(batch_id, batch, root)
@@ -328,7 +345,8 @@ def recheck_write_batch(batch_id, batch, root, out_dir, enqueue, inbox, *, conti
     if report_proof:
         commits.append(report["published_commit"])
     live = live_dir(root)
-    with open(os.path.join(root, "ops", "live-merge.lock"), "a", encoding="utf8") as lock:
+    from board_heavy import source_lock
+    with source_lock(root) as lock:
         fcntl.flock(lock, fcntl.LOCK_EX)
         publication_proof = None
         if descriptive_fixes:
@@ -395,6 +413,7 @@ def recheck_write_batch(batch_id, batch, root, out_dir, enqueue, inbox, *, conti
             try:
                 # The Python caller owns the live lock through verification, execution and result recording.
                 result = subprocess.run(["bash", "-c", FULL_CHECK_COMMAND], cwd=os.path.join(live, "agent"),
+                                        pass_fds=(*lock.queue_fds, lock.fileno()),
                                         stdout=handle, stderr=subprocess.STDOUT, timeout=3600)
                 code = result.returncode
             except (OSError, subprocess.TimeoutExpired) as error:

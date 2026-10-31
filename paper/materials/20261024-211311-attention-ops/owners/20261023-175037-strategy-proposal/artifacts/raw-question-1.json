@@ -1,0 +1,720 @@
+{
+  "ts": "2026-10-23T06:04:30.412Z",
+  "decision_id": "cd4967e3-b294-4ffe-8154-b920619969e3",
+  "run_id": "Q3R929GHT14R",
+  "floor": 37,
+  "turn": 6,
+  "fingerprint": "{\"actions\":[\"save_and_quit\",\"select_deck_card\"],\"combat\":true,\"enemies\":\"0:28:0:true|1:90:12:true\",\"event\":\"\",\"gold\":111,\"hand\":\"0:STRIKE_SILENT:false|1:DEADLY_POISON:false|2:ECHOING_SLASH:false\",\"hp\":27,\"maxHp\":70,\"nodes\":\"\",\"pendingCard\":false,\"player\":\"0:14:0\",\"potions\":\":false:false|:false:false\",\"powers\":\"STRENGTH_POWER:-5|AFTERIMAGE_POWER:1|ENVENOM_POWER:1|DEXTERITY_POWER:-4\",\"rewards\":\"\",\"run\":\"Q3R929GHT14R\",\"screen\":\"CARD_SELECTION\",\"selection\":\"0:false\",\"shopOpen\":false,\"shopStock\":\"\",\"turn\":6}",
+  "observed_ts": "2026-10-23T06:04:30.361Z",
+  "label": "selection/choose",
+  "jev_context": null,
+  "call": "ask",
+  "request": {
+    "model": "typesafe/jev-1.14",
+    "state": {
+      "run_brief": {
+        "character": "静默猎手",
+        "act": "3",
+        "floor": 37,
+        "hp": "27/70 (39%)",
+        "gold": 111,
+        "ascension": 10,
+        "deck": "30 cards | 9 attacks / 18 skills / 2 powers | 9 upgraded | 1 curses/statuses | avg cost 1",
+        "relics": [
+          "蛇之戒指",
+          "轰鸣海螺",
+          "纸鹤",
+          "五轮书",
+          "金刚杵",
+          "摆动球",
+          "美味饼干",
+          "天选芝士",
+          "准备背包",
+          "古钱币",
+          "珠宝盒"
+        ],
+        "relic_effects": [
+          "蛇之戒指: 在每场战斗开始时，额外抽?(数值未知)张牌。",
+          "轰鸣海螺: 在精英战的战斗开始时，额外抽?(数值未知)张牌并获得?(数值未知)。",
+          "纸鹤: 有虚弱状态的敌人造成的伤害降低40%而非25%。",
+          "五轮书: 你每将?(数值未知)张牌加入你的牌组时，回复?(数值未知)点生命。",
+          "金刚杵: 在每场战斗开始时，获得?(数值未知)点力量。",
+          "摆动球: 每?(数值未知)个回合，抽?(数值未知)张牌",
+          "美味饼干: 拾起时，升级?(数值未知)张牌。",
+          "天选芝士: 在战斗结束时，获得?(数值未知)点最大生命值。",
+          "准备背包: 在每场战斗开始时，额外抽?(数值未知)张牌。",
+          "古钱币: 拾起时，获得?(数值未知)金币。"
+        ],
+        "potions": [],
+        "notes": [
+          "used a rest site",
+          "floor 32: moved to Boss",
+          "took a card reward",
+          "floor 33: moved to Ancient",
+          "event choice (诺奴佩普)",
+          "floor 34: moved to Monster",
+          "floor 35: moved to Monster",
+          "floor 36: moved to Monster"
+        ],
+        "relic_effects_note": "?(数值未知) marks a value the mod does not expose; the effect text around it is accurate"
+      },
+      "situation": {
+        "screen": "CARD_SELECTION",
+        "task": "choose",
+        "prompt": "[center]选择[blue]1[/blue]张牌来[gold]丢弃[/gold]。[/center]",
+        "selecting": "pick 1 of 1: one card per answer",
+        "discard_plan": {
+          "status": "available",
+          "remaining": [],
+          "original_full_plan_prediction": {
+            "hp_lost": 24,
+            "damage_dealt": 20,
+            "block_gained": 15
+          },
+          "basis": "原整条方案的预测，只有完成后继才适用；这是已选方案的事实，不是固定保留规则。移除所需后继牌会使原预测失效，返回战斗后按真实手牌重算。"
+        }
+      },
+      "deck": "打击 (Attack, 1E): 造成6点伤害。\n打击 (Attack, 1E): 造成6点伤害。\n防御 (Skill, 1E): 获得5点格挡。\n防御 (Skill, 1E): 获得5点格挡。\n防御 (Skill, 1E): 获得5点格挡。\n防御 (Skill, 1E): 获得5点格挡。\n防御 (Skill, 1E): 获得5点格挡。\n中和+ (Attack, 0E): 造成4点伤害。 给予2层虚弱。\n生存者 (Skill, 1E): 获得8点格挡。 丢弃1张牌。\n进阶之灾 (Curse, -1E): 不能被打出。 虚无。 永恒。\n扫腿+ (Skill, 2E): 给予3层虚弱。 获得14点格挡。\n带毒刺击 (Attack, 1E): 造成6点伤害。 给予3层中毒。\n致命毒药 (Skill, 1E): 给予5层中毒。\n匕首雨 (Attack, 1E): 对所有敌人造成4点伤害两次。\n突然一拳 (Attack, 1E): 造成8点伤害。 给予1层虚弱。\n切割 (Attack, 0E): 造成6点伤害。\n咕嘟冒泡+ (Skill, 1E): 如果敌方拥有中毒，则给予12层中毒。\n余像 (Power, 1E) [enchanted 迅速: the first time the card is played, draw N cards (「第一次打出时抽N张牌」)]: 你每打出一张牌，都获得1点格挡。 第一次打出时抽2张牌。\n萎靡+ (Skill, 0E): 敌人失去X+1点力量。给予X+1层虚弱。 消耗。\n回响斩击 (Attack, 1E): 对所有敌人造成10点伤害。 每有一名敌人被击杀，就重复此效果。\n后空翻 (Skill, 1E): 获得5点格挡。 抽2张牌。\n墨之刃 (Skill, 1E): 添加2张墨影小刀到你的手牌。\n蜃景+ (Skill, 1E): 获得等量于所有敌人中毒层数总和的格挡。\n冲刺+ (Attack, 2E): 获得13点格挡。 造成13点伤害。\n独门技术+ (Skill, 1E): 抽3张牌。 这些牌在本回合获得保留。\n涂毒 (Power, 2E): 每有一次攻击造成未被格挡的伤害，就给予1层中毒。\n子弹时间 (Skill, 3E): 你在本回合内不能再抽牌。你手牌中的所有牌在本回合免费打出。\n神化 (Skill, 2E): 固有。 升级你的全部卡牌。 消耗。\n斗篷与匕首+ (Skill, 1E): 获得6点格挡。 将2张小刀添加到你的手牌。\n偏折+ (Skill, 0E): 获得7点格挡。",
+      "candidates": [
+        {
+          "card": "打击",
+          "upgraded": false,
+          "type": "Attack",
+          "cost": 1,
+          "text": "造成1点伤害。",
+          "removes_planned_continuation": false,
+          "discard_snapshot": {
+            "basis": "仅从当前实存手牌移除此副本；弃牌触发尚未结算，后续费用、可打性和牌面变化须重读。每张牌的能量余额独立计算，不能相加成整线；抽到的牌、伤害、格挡、剩血及胜负均未推演。",
+            "current_resources": {
+              "hp": 27,
+              "block": 14,
+              "energy": 0
+            },
+            "discarded": {
+              "hand_index_before_discard": 0,
+              "card_id": "STRIKE_SILENT",
+              "name": "打击",
+              "upgraded": false
+            },
+            "retained_cards": [
+              {
+                "hand_index_before_discard": 1,
+                "card_id": "DEADLY_POISON",
+                "name": "致命毒药",
+                "upgraded": false,
+                "energy_cost_now": 1,
+                "playable_before_discard": false,
+                "unplayable_reason": "not_enough_energy",
+                "energy_sufficient_for_this_card_alone": false,
+                "energy_after_this_card_alone": null,
+                "text_now": "给予5层中毒。"
+              },
+              {
+                "hand_index_before_discard": 2,
+                "card_id": "ECHOING_SLASH",
+                "name": "回响斩击",
+                "upgraded": false,
+                "energy_cost_now": 1,
+                "playable_before_discard": false,
+                "unplayable_reason": "not_enough_energy",
+                "energy_sufficient_for_this_card_alone": false,
+                "energy_after_this_card_alone": null,
+                "text_now": "对所有敌人造成5点伤害。 每有一名敌人被击杀，就重复此效果。"
+              }
+            ]
+          }
+        },
+        {
+          "card": "致命毒药",
+          "upgraded": false,
+          "type": "Skill",
+          "cost": 1,
+          "text": "给予5层中毒。",
+          "removes_planned_continuation": false,
+          "discard_snapshot": {
+            "basis": "仅从当前实存手牌移除此副本；弃牌触发尚未结算，后续费用、可打性和牌面变化须重读。每张牌的能量余额独立计算，不能相加成整线；抽到的牌、伤害、格挡、剩血及胜负均未推演。",
+            "current_resources": {
+              "hp": 27,
+              "block": 14,
+              "energy": 0
+            },
+            "discarded": {
+              "hand_index_before_discard": 1,
+              "card_id": "DEADLY_POISON",
+              "name": "致命毒药",
+              "upgraded": false
+            },
+            "retained_cards": [
+              {
+                "hand_index_before_discard": 0,
+                "card_id": "STRIKE_SILENT",
+                "name": "打击",
+                "upgraded": false,
+                "energy_cost_now": 1,
+                "playable_before_discard": false,
+                "unplayable_reason": "not_enough_energy",
+                "energy_sufficient_for_this_card_alone": false,
+                "energy_after_this_card_alone": null,
+                "text_now": "造成1点伤害。"
+              },
+              {
+                "hand_index_before_discard": 2,
+                "card_id": "ECHOING_SLASH",
+                "name": "回响斩击",
+                "upgraded": false,
+                "energy_cost_now": 1,
+                "playable_before_discard": false,
+                "unplayable_reason": "not_enough_energy",
+                "energy_sufficient_for_this_card_alone": false,
+                "energy_after_this_card_alone": null,
+                "text_now": "对所有敌人造成5点伤害。 每有一名敌人被击杀，就重复此效果。"
+              }
+            ]
+          }
+        },
+        {
+          "card": "回响斩击",
+          "upgraded": false,
+          "type": "Attack",
+          "cost": 1,
+          "text": "对所有敌人造成5点伤害。 每有一名敌人被击杀，就重复此效果。",
+          "removes_planned_continuation": false,
+          "discard_snapshot": {
+            "basis": "仅从当前实存手牌移除此副本；弃牌触发尚未结算，后续费用、可打性和牌面变化须重读。每张牌的能量余额独立计算，不能相加成整线；抽到的牌、伤害、格挡、剩血及胜负均未推演。",
+            "current_resources": {
+              "hp": 27,
+              "block": 14,
+              "energy": 0
+            },
+            "discarded": {
+              "hand_index_before_discard": 2,
+              "card_id": "ECHOING_SLASH",
+              "name": "回响斩击",
+              "upgraded": false
+            },
+            "retained_cards": [
+              {
+                "hand_index_before_discard": 0,
+                "card_id": "STRIKE_SILENT",
+                "name": "打击",
+                "upgraded": false,
+                "energy_cost_now": 1,
+                "playable_before_discard": false,
+                "unplayable_reason": "not_enough_energy",
+                "energy_sufficient_for_this_card_alone": false,
+                "energy_after_this_card_alone": null,
+                "text_now": "造成1点伤害。"
+              },
+              {
+                "hand_index_before_discard": 1,
+                "card_id": "DEADLY_POISON",
+                "name": "致命毒药",
+                "upgraded": false,
+                "energy_cost_now": 1,
+                "playable_before_discard": false,
+                "unplayable_reason": "not_enough_energy",
+                "energy_sufficient_for_this_card_alone": false,
+                "energy_after_this_card_alone": null,
+                "text_now": "给予5层中毒。"
+              }
+            ]
+          }
+        }
+      ],
+      "open_book": {
+        "schema": "open-book-context-v1",
+        "source": "external:spire-codex",
+        "game_version": "v0.111.0",
+        "limits": "外部机械资料，与实盘证据分账；当前 mod 优先。升级 facts.upgrade 是增量；进阶阈值未知。资料存在不证明模拟已支持。省略项可按 kind/id 查询本地库。",
+        "sources": [
+          {
+            "key": "cards:eng",
+            "url": "https://raw.githubusercontent.com/ptrlrd/spire-codex/4f52f5a53597e4fdc6cf130f7ebe2cdd35236101/data-beta/v0.111.0/eng/cards.json",
+            "sha256": "31383b5965746b3ad59da94ddd542e524fdc79c9147aced178639fff9d445938",
+            "license": "https://polyformproject.org/licenses/noncommercial/1.0.0",
+            "required_notice": "Copyright © 2025-present Peter Lord and Spire Codex contributors."
+          },
+          {
+            "key": "cards:zhs",
+            "url": "https://raw.githubusercontent.com/ptrlrd/spire-codex/4f52f5a53597e4fdc6cf130f7ebe2cdd35236101/data-beta/v0.111.0/zhs/cards.json",
+            "sha256": "50cb0b33a9c80131d46c9abd16bc983b96b3cd376abb1250265521915d68cebc",
+            "license": "https://polyformproject.org/licenses/noncommercial/1.0.0",
+            "required_notice": "Copyright © 2025-present Peter Lord and Spire Codex contributors."
+          },
+          {
+            "key": "relics:eng",
+            "url": "https://raw.githubusercontent.com/ptrlrd/spire-codex/4f52f5a53597e4fdc6cf130f7ebe2cdd35236101/data-beta/v0.111.0/eng/relics.json",
+            "sha256": "25a83cd102db871daaeb0c174d0f391d03f90f5eb0e4e4732e07f6d460b55bc7",
+            "license": "https://polyformproject.org/licenses/noncommercial/1.0.0",
+            "required_notice": "Copyright © 2025-present Peter Lord and Spire Codex contributors."
+          },
+          {
+            "key": "relics:zhs",
+            "url": "https://raw.githubusercontent.com/ptrlrd/spire-codex/4f52f5a53597e4fdc6cf130f7ebe2cdd35236101/data-beta/v0.111.0/zhs/relics.json",
+            "sha256": "d4601a1ebaf5d283cfaf8e492283da451e4778ab9fdc0e806f6f3c1d24821f17",
+            "license": "https://polyformproject.org/licenses/noncommercial/1.0.0",
+            "required_notice": "Copyright © 2025-present Peter Lord and Spire Codex contributors."
+          },
+          {
+            "key": "events:eng",
+            "url": "https://raw.githubusercontent.com/ptrlrd/spire-codex/4f52f5a53597e4fdc6cf130f7ebe2cdd35236101/data-beta/v0.111.0/eng/events.json",
+            "sha256": "1c57c17b1f00b57be4e2da4168d06818fc31b9e938571e58150a7a81a8cfc904",
+            "license": "https://polyformproject.org/licenses/noncommercial/1.0.0",
+            "required_notice": "Copyright © 2025-present Peter Lord and Spire Codex contributors."
+          },
+          {
+            "key": "events:zhs",
+            "url": "https://raw.githubusercontent.com/ptrlrd/spire-codex/4f52f5a53597e4fdc6cf130f7ebe2cdd35236101/data-beta/v0.111.0/zhs/events.json",
+            "sha256": "6f71fdd22127155103802bb19a1f7a48bac517cfb2a0e365324e01dd8d492d0e",
+            "license": "https://polyformproject.org/licenses/noncommercial/1.0.0",
+            "required_notice": "Copyright © 2025-present Peter Lord and Spire Codex contributors."
+          }
+        ],
+        "entries": [
+          {
+            "kind": "cards",
+            "id": "STRIKE_SILENT",
+            "name": "打击",
+            "aliases": [
+              "Strike"
+            ],
+            "source": "external:spire-codex",
+            "game_version": "v0.111.0",
+            "provenance": [
+              "cards:eng",
+              "cards:zhs"
+            ],
+            "origin_pool": "silent",
+            "evidence_scope": "external-reference; not live validation",
+            "facts": {
+              "cost": 1,
+              "target": "AnyEnemy",
+              "color": "silent",
+              "damage": 6,
+              "vars": {
+                "Damage": 6
+              },
+              "upgrade": {
+                "damage": "+3"
+              },
+              "type": "Attack",
+              "rarity": "Basic",
+              "keywords": []
+            },
+            "description": "造成6点伤害。",
+            "description_en": "Deal 6 damage.",
+            "upgraded_description": "造成9点伤害。",
+            "upgraded_description_en": "Deal 9 damage."
+          },
+          {
+            "kind": "cards",
+            "id": "DEADLY_POISON",
+            "name": "致命毒药",
+            "aliases": [
+              "Deadly Poison"
+            ],
+            "source": "external:spire-codex",
+            "game_version": "v0.111.0",
+            "provenance": [
+              "cards:eng",
+              "cards:zhs"
+            ],
+            "origin_pool": "silent",
+            "evidence_scope": "external-reference; not live validation",
+            "facts": {
+              "cost": 1,
+              "target": "AnyEnemy",
+              "color": "silent",
+              "vars": {
+                "PoisonPower": 5,
+                "Poison": 5
+              },
+              "upgrade": {
+                "poison": "+2"
+              },
+              "powers_applied": [
+                {
+                  "power": "Poison",
+                  "amount": 5,
+                  "power_key": "Poison"
+                }
+              ],
+              "type": "Skill",
+              "rarity": "Common",
+              "keywords": []
+            },
+            "description": "给予5层中毒。",
+            "description_en": "Apply 5 Poison.",
+            "upgraded_description": "给予7层中毒。",
+            "upgraded_description_en": "Apply 7 Poison."
+          },
+          {
+            "kind": "cards",
+            "id": "ECHOING_SLASH",
+            "name": "回响斩击",
+            "aliases": [
+              "Echoing Slash"
+            ],
+            "source": "external:spire-codex",
+            "game_version": "v0.111.0",
+            "provenance": [
+              "cards:eng",
+              "cards:zhs"
+            ],
+            "origin_pool": "silent",
+            "evidence_scope": "external-reference; not live validation",
+            "facts": {
+              "cost": 1,
+              "target": "AllEnemies",
+              "color": "silent",
+              "damage": 10,
+              "vars": {
+                "Damage": 10
+              },
+              "upgrade": {
+                "damage": "+3"
+              },
+              "type": "Attack",
+              "rarity": "Uncommon",
+              "keywords": []
+            },
+            "description": "对所有敌人造成10点伤害。\n每有一名敌人被击杀，就重复此效果。",
+            "description_en": "Deal 10 damage to ALL enemies.\nRepeat this effect for each enemy killed.",
+            "upgraded_description": "对所有敌人造成13点伤害。\n每有一名敌人被击杀，就重复此效果。",
+            "upgraded_description_en": "Deal 13 damage to ALL enemies.\nRepeat this effect for each enemy killed."
+          },
+          {
+            "kind": "relics",
+            "id": "RING_OF_THE_SNAKE",
+            "name": "蛇之戒指",
+            "aliases": [
+              "Ring of the Snake"
+            ],
+            "source": "external:spire-codex",
+            "game_version": "v0.111.0",
+            "provenance": [
+              "relics:eng",
+              "relics:zhs"
+            ],
+            "origin_pool": "silent",
+            "evidence_scope": "external-reference; not live validation",
+            "description": "在每场战斗开始时，额外抽2张牌。",
+            "description_en": "At the start of each combat, draw 2 additional cards.",
+            "facts": {
+              "rarity_key": "Starter",
+              "pool": "silent"
+            }
+          },
+          {
+            "kind": "relics",
+            "id": "BOOMING_CONCH",
+            "name": "轰鸣海螺",
+            "aliases": [
+              "Booming Conch"
+            ],
+            "source": "external:spire-codex",
+            "game_version": "v0.111.0",
+            "provenance": [
+              "relics:eng",
+              "relics:zhs"
+            ],
+            "origin_pool": "shared",
+            "evidence_scope": "external-reference; not live validation",
+            "description": "在精英战的战斗开始时，额外抽2张牌并获得[energy:1]。",
+            "description_en": "At the start of Elite combats, draw 2 additional cards and gain [energy:1].",
+            "facts": {
+              "rarity_key": "Ancient",
+              "pool": "shared"
+            }
+          },
+          {
+            "kind": "relics",
+            "id": "PAPER_KRANE",
+            "name": "纸鹤",
+            "aliases": [
+              "Paper Krane"
+            ],
+            "source": "external:spire-codex",
+            "game_version": "v0.111.0",
+            "provenance": [
+              "relics:eng",
+              "relics:zhs"
+            ],
+            "origin_pool": "silent",
+            "evidence_scope": "external-reference; not live validation",
+            "description": "有虚弱状态的敌人造成的伤害降低40%而非25%。",
+            "description_en": "Enemies with Weak deal 40% less damage to you rather than 25%.",
+            "facts": {
+              "rarity_key": "Rare",
+              "pool": "silent",
+              "merchant_price": {
+                "base": 275,
+                "min": 234,
+                "max": 316
+              }
+            }
+          },
+          {
+            "kind": "relics",
+            "id": "BOOK_OF_FIVE_RINGS",
+            "name": "五轮书",
+            "aliases": [
+              "Book of Five Rings"
+            ],
+            "source": "external:spire-codex",
+            "game_version": "v0.111.0",
+            "provenance": [
+              "relics:eng",
+              "relics:zhs"
+            ],
+            "origin_pool": "shared",
+            "evidence_scope": "external-reference; not live validation",
+            "description": "你每将5张牌加入你的牌组时，回复20点生命。",
+            "description_en": "Every 5 cards you add to your Deck, heal 20 HP.",
+            "facts": {
+              "rarity_key": "Common",
+              "pool": "shared",
+              "merchant_price": {
+                "base": 175,
+                "min": 149,
+                "max": 201
+              }
+            }
+          },
+          {
+            "kind": "relics",
+            "id": "VAJRA",
+            "name": "金刚杵",
+            "aliases": [
+              "Vajra"
+            ],
+            "source": "external:spire-codex",
+            "game_version": "v0.111.0",
+            "provenance": [
+              "relics:eng",
+              "relics:zhs"
+            ],
+            "origin_pool": "shared",
+            "evidence_scope": "external-reference; not live validation",
+            "description": "在每场战斗开始时，获得1点力量。",
+            "description_en": "Start each combat with 1 Strength.",
+            "facts": {
+              "rarity_key": "Common",
+              "pool": "shared",
+              "merchant_price": {
+                "base": 175,
+                "min": 149,
+                "max": 201
+              }
+            }
+          },
+          {
+            "kind": "relics",
+            "id": "PENDULUM",
+            "name": "摆动球",
+            "aliases": [
+              "Pendulum"
+            ],
+            "source": "external:spire-codex",
+            "game_version": "v0.111.0",
+            "provenance": [
+              "relics:eng",
+              "relics:zhs"
+            ],
+            "origin_pool": "shared",
+            "evidence_scope": "external-reference; not live validation",
+            "description": "每3个回合，抽1张牌",
+            "description_en": "Every 3 turns, draw 1 card.",
+            "facts": {
+              "rarity_key": "Common",
+              "pool": "shared",
+              "merchant_price": {
+                "base": 175,
+                "min": 149,
+                "max": 201
+              }
+            }
+          },
+          {
+            "kind": "relics",
+            "id": "YUMMY_COOKIE",
+            "name": "美味饼干",
+            "aliases": [
+              "Yummy Cookie"
+            ],
+            "source": "external:spire-codex",
+            "game_version": "v0.111.0",
+            "provenance": [
+              "relics:eng",
+              "relics:zhs"
+            ],
+            "origin_pool": "shared",
+            "evidence_scope": "external-reference; not live validation",
+            "description": "拾起时，升级4张牌。",
+            "description_en": "Upon pickup, Upgrade 4 cards.",
+            "facts": {
+              "rarity_key": "Ancient",
+              "pool": "shared"
+            }
+          },
+          {
+            "kind": "relics",
+            "id": "CHOSEN_CHEESE",
+            "name": "天选芝士",
+            "aliases": [
+              "The Chosen Cheese"
+            ],
+            "source": "external:spire-codex",
+            "game_version": "v0.111.0",
+            "provenance": [
+              "relics:eng",
+              "relics:zhs"
+            ],
+            "origin_pool": "shared",
+            "evidence_scope": "external-reference; not live validation",
+            "description": "在战斗结束时，获得1点最大生命值。",
+            "description_en": "At the end of combat, gain 1 Max HP.",
+            "facts": {
+              "rarity_key": "Event",
+              "pool": "shared"
+            }
+          },
+          {
+            "kind": "relics",
+            "id": "BAG_OF_PREPARATION",
+            "name": "准备背包",
+            "aliases": [
+              "Bag of Preparation"
+            ],
+            "source": "external:spire-codex",
+            "game_version": "v0.111.0",
+            "provenance": [
+              "relics:eng",
+              "relics:zhs"
+            ],
+            "origin_pool": "shared",
+            "evidence_scope": "external-reference; not live validation",
+            "description": "在每场战斗开始时，额外抽2张牌。",
+            "description_en": "At the start of each combat, draw 2 additional cards.",
+            "facts": {
+              "rarity_key": "Common",
+              "pool": "shared",
+              "merchant_price": {
+                "base": 175,
+                "min": 149,
+                "max": 201
+              }
+            }
+          },
+          {
+            "kind": "relics",
+            "id": "OLD_COIN",
+            "name": "古钱币",
+            "aliases": [
+              "Old Coin"
+            ],
+            "source": "external:spire-codex",
+            "game_version": "v0.111.0",
+            "provenance": [
+              "relics:eng",
+              "relics:zhs"
+            ],
+            "origin_pool": "shared",
+            "evidence_scope": "external-reference; not live validation",
+            "description": "拾起时，获得300金币。",
+            "description_en": "Upon pickup, gain 300 Gold.",
+            "facts": {
+              "rarity_key": "Rare",
+              "pool": "shared"
+            }
+          },
+          {
+            "kind": "relics",
+            "id": "JEWELRY_BOX",
+            "name": "珠宝盒",
+            "aliases": [
+              "Jewelry Box"
+            ],
+            "source": "external:spire-codex",
+            "game_version": "v0.111.0",
+            "provenance": [
+              "relics:eng",
+              "relics:zhs"
+            ],
+            "origin_pool": "shared",
+            "evidence_scope": "external-reference; not live validation",
+            "description": "拾起时，将1张神化加入你的牌组。",
+            "description_en": "Upon pickup, add 1 Apotheosis to your Deck.",
+            "facts": {
+              "rarity_key": "Ancient",
+              "pool": "shared"
+            }
+          },
+          {
+            "kind": "events",
+            "id": "NONUPEIPE",
+            "name": "诺奴佩普",
+            "aliases": [
+              "Nonupeipe"
+            ],
+            "source": "external:spire-codex",
+            "game_version": "v0.111.0",
+            "provenance": [
+              "events:eng",
+              "events:zhs"
+            ],
+            "origin_pool": "shared",
+            "evidence_scope": "external-reference; not live validation",
+            "facts": {
+              "act": "Act 3 - Glory",
+              "preconditions": null,
+              "options": [],
+              "pages": []
+            },
+            "limits": "只存机械选项效果；选项可随页面/局面变化，当前游戏选项优先。"
+          }
+        ],
+        "conflicts": [],
+        "missing": [],
+        "omitted": 22
+      }
+    },
+    "questions": {
+      "pick": {
+        "type": "choice",
+        "instructions": "选择要弃掉的牌。参考 discard_plan 的剩余动作和候选对后继的影响；原整条预测以完成后继为条件，所有候选都可选。",
+        "criteria": {
+          "card0": "{\"card\":\"打击\",\"upgraded\":false,\"type\":\"Attack\",\"cost\":1,\"text\":\"造成1点伤害。\",\"removes_planned_continuation\":false,\"discard_snapshot\":{\"basis\":\"仅从当前实存手牌移除此副本；弃牌触发尚未结算，后续费用、可打性和牌面变化须重读。每张牌的能量余额独立计算，不能相加成整线；抽到的牌、伤害、格挡、剩血及胜负均未推演。\",\"current_resources\":{\"hp\":27,\"block\":14,\"energy\":0},\"discarded\":{\"hand_index_before_discard\":0,\"card_id\":\"STRIKE_SILENT\",\"name\":\"打击\",\"upgraded\":false},\"retained_cards\":[{\"hand_index_before_discard\":1,\"card_id\":\"DEADLY_POISON\",\"name\":\"致命毒药\",\"upgraded\":false,\"energy_cost_now\":1,\"playable_before_discard\":false,\"unplayable_reason\":\"not_enough_energy\",\"energy_sufficient_for_this_card_alone\":false,\"energy_after_this_card_alone\":null,\"text_now\":\"给予5层中毒。\"},{\"hand_index_before_discard\":2,\"card_id\":\"ECHOING_SLASH\",\"name\":\"回响斩击\",\"upgraded\":false,\"energy_cost_now\":1,\"playable_before_discard\":false,\"unplayable_reason\":\"not_enough_energy\",\"energy_sufficient_for_this_card_alone\":false,\"energy_after_this_card_alone\":null,\"text_now\":\"对所有敌人造成5点伤害。 每有一名敌人被击杀，就重复此效果。\"}]}}",
+          "card1": "{\"card\":\"致命毒药\",\"upgraded\":false,\"type\":\"Skill\",\"cost\":1,\"text\":\"给予5层中毒。\",\"removes_planned_continuation\":false,\"discard_snapshot\":{\"basis\":\"仅从当前实存手牌移除此副本；弃牌触发尚未结算，后续费用、可打性和牌面变化须重读。每张牌的能量余额独立计算，不能相加成整线；抽到的牌、伤害、格挡、剩血及胜负均未推演。\",\"current_resources\":{\"hp\":27,\"block\":14,\"energy\":0},\"discarded\":{\"hand_index_before_discard\":1,\"card_id\":\"DEADLY_POISON\",\"name\":\"致命毒药\",\"upgraded\":false},\"retained_cards\":[{\"hand_index_before_discard\":0,\"card_id\":\"STRIKE_SILENT\",\"name\":\"打击\",\"upgraded\":false,\"energy_cost_now\":1,\"playable_before_discard\":false,\"unplayable_reason\":\"not_enough_energy\",\"energy_sufficient_for_this_card_alone\":false,\"energy_after_this_card_alone\":null,\"text_now\":\"造成1点伤害。\"},{\"hand_index_before_discard\":2,\"card_id\":\"ECHOING_SLASH\",\"name\":\"回响斩击\",\"upgraded\":false,\"energy_cost_now\":1,\"playable_before_discard\":false,\"unplayable_reason\":\"not_enough_energy\",\"energy_sufficient_for_this_card_alone\":false,\"energy_after_this_card_alone\":null,\"text_now\":\"对所有敌人造成5点伤害。 每有一名敌人被击杀，就重复此效果。\"}]}}",
+          "card2": "{\"card\":\"回响斩击\",\"upgraded\":false,\"type\":\"Attack\",\"cost\":1,\"text\":\"对所有敌人造成5点伤害。 每有一名敌人被击杀，就重复此效果。\",\"removes_planned_continuation\":false,\"discard_snapshot\":{\"basis\":\"仅从当前实存手牌移除此副本；弃牌触发尚未结算，后续费用、可打性和牌面变化须重读。每张牌的能量余额独立计算，不能相加成整线；抽到的牌、伤害、格挡、剩血及胜负均未推演。\",\"current_resources\":{\"hp\":27,\"block\":14,\"energy\":0},\"discarded\":{\"hand_index_before_discard\":2,\"card_id\":\"ECHOING_SLASH\",\"name\":\"回响斩击\",\"upgraded\":false},\"retained_cards\":[{\"hand_index_before_discard\":0,\"card_id\":\"STRIKE_SILENT\",\"name\":\"打击\",\"upgraded\":false,\"energy_cost_now\":1,\"playable_before_discard\":false,\"unplayable_reason\":\"not_enough_energy\",\"energy_sufficient_for_this_card_alone\":false,\"energy_after_this_card_alone\":null,\"text_now\":\"造成1点伤害。\"},{\"hand_index_before_discard\":1,\"card_id\":\"DEADLY_POISON\",\"name\":\"致命毒药\",\"upgraded\":false,\"energy_cost_now\":1,\"playable_before_discard\":false,\"unplayable_reason\":\"not_enough_energy\",\"energy_sufficient_for_this_card_alone\":false,\"energy_after_this_card_alone\":null,\"text_now\":\"给予5层中毒。\"}]}}"
+        }
+      }
+    }
+  },
+  "request_id": null,
+  "latency_ms": 2136,
+  "input_tokens": 9492,
+  "output_tokens": 42,
+  "answers": {
+    "pick": {
+      "type": "choice",
+      "choice": "card0",
+      "probabilities": {
+        "card0": 0.6,
+        "card1": 0.17,
+        "card2": 0.23
+      },
+      "confidence": 0.4,
+      "raw": {
+        "choice": "card0",
+        "confidence": 0.4,
+        "probabilities": {
+          "card0": 0.6,
+          "card1": 0.17,
+          "card2": 0.23
+        },
+        "type": "choice"
+      }
+    }
+  }
+}

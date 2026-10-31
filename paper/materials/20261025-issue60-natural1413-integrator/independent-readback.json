@@ -1,0 +1,411 @@
+{
+  "at": "2026-10-25T14:14:06.186012+08:00",
+  "ops_receipt": 6394272248,
+  "read_only": true,
+  "frozen_window": {
+    "start": 1710342490,
+    "end": 1714459433,
+    "sha256": "b6bcc2a7857e808a31cb085a2d3daafcdb92fc5c1b3a902d50787b6d261746e1"
+  },
+  "source_proofs": {
+    "natural-window-readback.json": "136ae2f5494f67efedcce157857d0ccbc61a59182c50812f810a8dcdba511791",
+    "comment-response.json": "09a676aba076cd986cf5564a90fbef8c59df8b81c83f471aadd5d2201e89eb87",
+    "natural-successor-same-window.json": "854a329c1804b0b87b84daa9bd5f2dcada3ee3f122e10e8dcd70aeafac9e677d",
+    "integrator-prompt.json": "551bf13a0076ea90d357a72ba20d55629dbbd9f054ee2e0d34791933c3da709c",
+    "delivery-readback.json": "41e71ce9bf5cbf06ce4ad405873b9ba4d709c3fd73b139f27f51f67bf146d75f",
+    "natural-config-readback.json": "2c511cfc82dc6d4184a87614e3927acda31e84684f211904f06fb7137ad7e7e1",
+    "database-and-business-readback.json": "5adc70bf38241fccca434da6592663ab1e578d345703856084e67eb3f6699a96"
+  },
+  "original_slices_verified": 39,
+  "snapshots_verified": 4,
+  "target_payloads_verified": 13,
+  "terminal": {
+    "run_id": "5K2E6HYNAAG1",
+    "ended": "2026-10-25T06:07:10.360Z",
+    "victory": false,
+    "floor": 33,
+    "character": "SILENT",
+    "ascension": 10,
+    "code": "current",
+    "decisions": 593,
+    "jev_calls": 118,
+    "deepseek_calls": 32,
+    "claude_calls": 0,
+    "tokens": 859156,
+    "ds_tokens_in": 1339317,
+    "ds_tokens_out": 7304,
+    "ds_cache_hit": 734848,
+    "deciders": {
+      "codex": 39,
+      "code": 260,
+      "jev": 118,
+      "jev-plan": 176
+    },
+    "death_fight": [
+      "知识恶魔"
+    ],
+    "death_fight_floor": 33,
+    "death_enemy_ids": [
+      "KNOWLEDGE_DEMON"
+    ]
+  },
+  "accepted": 32,
+  "physical_queries": 23,
+  "query_groups": 21,
+  "strategy_calls": 2,
+  "strategy_opportunities": 1,
+  "rest_plan_questions": 8,
+  "no_later_strategy_queries": true,
+  "target_correct_version_hits": 0,
+  "explicit_target_ID_answer_references": 0,
+  "tool_versions": {
+    "K1-04b03e8483afb3061eb9a060055313cfc614cab79a0928b7c14bdf4c3853e7a4": 23
+  },
+  "queries": [
+    {
+      "question": "mvne69l3-107318-1",
+      "index": 0,
+      "name": "kb_strategies",
+      "input": {
+        "query": "*",
+        "topic": "startup",
+        "limit": 3
+      },
+      "version": "K1-04b03e8483afb3061eb9a060055313cfc614cab79a0928b7c14bdf4c3853e7a4",
+      "output_sha256": "0980ca49c62dfdd20d65376639c5754a7d93e079e61a58f297cabd60fccd5bc6",
+      "returned": 0
+    },
+    {
+      "question": "mvne69l3-107318-1",
+      "index": 1,
+      "name": "kb_experience",
+      "input": {
+        "relevant": true,
+        "theme": "deck",
+        "limit": 6
+      },
+      "version": "K1-04b03e8483afb3061eb9a060055313cfc614cab79a0928b7c14bdf4c3853e7a4",
+      "output_sha256": "23ddc43621e5324045d7ae966c708b43bf45d09428a25888328ae25970fa9177",
+      "returned": 6
+    },
+    {
+      "question": "mvne69l3-107318-1",
+      "index": 2,
+      "name": "kb_strategies",
+      "input": {
+        "query": "*",
+        "topic": "startup",
+        "limit": 3
+      },
+      "version": "K1-04b03e8483afb3061eb9a060055313cfc614cab79a0928b7c14bdf4c3853e7a4",
+      "output_sha256": "0980ca49c62dfdd20d65376639c5754a7d93e079e61a58f297cabd60fccd5bc6",
+      "returned": 0
+    },
+    {
+      "question": "mvne69l3-107318-1",
+      "index": 3,
+      "name": "kb_experience",
+      "input": {
+        "relevant": true,
+        "theme": "deck",
+        "limit": 6
+      },
+      "version": "K1-04b03e8483afb3061eb9a060055313cfc614cab79a0928b7c14bdf4c3853e7a4",
+      "output_sha256": "23ddc43621e5324045d7ae966c708b43bf45d09428a25888328ae25970fa9177",
+      "returned": 6
+    },
+    {
+      "question": "mvne69l3-107318-2",
+      "index": 0,
+      "name": "kb_experience",
+      "input": {
+        "theme": "route",
+        "relevant": true,
+        "limit": 4
+      },
+      "version": "K1-04b03e8483afb3061eb9a060055313cfc614cab79a0928b7c14bdf4c3853e7a4",
+      "output_sha256": "2671007e624893b2996406987081cdb2d9ba0c1910e36f560dec2215ec098348",
+      "returned": 3
+    },
+    {
+      "question": "mvne69l3-107318-4",
+      "index": 0,
+      "name": "kb_experience",
+      "input": {
+        "keyword": "LEADING_STRIKE",
+        "limit": 3
+      },
+      "version": "K1-04b03e8483afb3061eb9a060055313cfc614cab79a0928b7c14bdf4c3853e7a4",
+      "output_sha256": "0980ca49c62dfdd20d65376639c5754a7d93e079e61a58f297cabd60fccd5bc6",
+      "returned": 0
+    },
+    {
+      "question": "mvne69l3-107318-4",
+      "index": 1,
+      "name": "kb_experience",
+      "input": {
+        "keyword": "BACKFLIP",
+        "limit": 3
+      },
+      "version": "K1-04b03e8483afb3061eb9a060055313cfc614cab79a0928b7c14bdf4c3853e7a4",
+      "output_sha256": "0980ca49c62dfdd20d65376639c5754a7d93e079e61a58f297cabd60fccd5bc6",
+      "returned": 0
+    },
+    {
+      "question": "mvne69l3-107318-5",
+      "index": 0,
+      "name": "kb_experience",
+      "input": {
+        "id": "silent-bouncing-flask-poison",
+        "limit": 1
+      },
+      "version": "K1-04b03e8483afb3061eb9a060055313cfc614cab79a0928b7c14bdf4c3853e7a4",
+      "output_sha256": "34409230aab2ec2a5b532949569926af4c281237e816a52128b2584a13f6aa1f",
+      "returned": 1
+    },
+    {
+      "question": "mvne69l3-107318-9",
+      "index": 0,
+      "name": "kb_experience",
+      "input": {
+        "theme": "deck",
+        "keyword": "DEADLY_POISON",
+        "limit": 3
+      },
+      "version": "K1-04b03e8483afb3061eb9a060055313cfc614cab79a0928b7c14bdf4c3853e7a4",
+      "output_sha256": "46cafcc779f015d02cec73683c50b010bbb6a719f1706ad916f90d215002f484",
+      "returned": 1
+    },
+    {
+      "question": "mvne69l3-107318-12",
+      "index": 0,
+      "name": "kb_experience",
+      "input": {
+        "id": "silent-bubble-bubble-condition",
+        "limit": 1
+      },
+      "version": "K1-04b03e8483afb3061eb9a060055313cfc614cab79a0928b7c14bdf4c3853e7a4",
+      "output_sha256": "d0af7b18d1c61a3135e808fd6c94357880e03657f79d30506b12355ce45cf7e7",
+      "returned": 1
+    },
+    {
+      "question": "mvne69l3-107318-13",
+      "index": 0,
+      "name": "kb_experience",
+      "input": {
+        "id": "silent-bubble-bubble-condition",
+        "limit": 1
+      },
+      "version": "K1-04b03e8483afb3061eb9a060055313cfc614cab79a0928b7c14bdf4c3853e7a4",
+      "output_sha256": "d0af7b18d1c61a3135e808fd6c94357880e03657f79d30506b12355ce45cf7e7",
+      "returned": 1
+    },
+    {
+      "question": "mvne69l3-107318-17",
+      "index": 0,
+      "name": "kb_experience",
+      "input": {
+        "id": "silent-afterimage-per-card-block",
+        "limit": 1
+      },
+      "version": "K1-04b03e8483afb3061eb9a060055313cfc614cab79a0928b7c14bdf4c3853e7a4",
+      "output_sha256": "cebc81ae7f99022903e2421efc7149e9523e1252df96d83fc76ece06fc33a0f8",
+      "returned": 1
+    },
+    {
+      "question": "mvne69l3-107318-18",
+      "index": 0,
+      "name": "kb_open_book",
+      "input": {
+        "query": "南瓜蜡烛",
+        "category": "relics",
+        "limit": 2
+      },
+      "version": "K1-04b03e8483afb3061eb9a060055313cfc614cab79a0928b7c14bdf4c3853e7a4",
+      "output_sha256": "cbb37a4609eec75c429e492d5f4878dd12c5e261166bfeba09c3a055991d7b4b",
+      "returned": 1
+    },
+    {
+      "question": "mvne69l3-107318-18",
+      "index": 1,
+      "name": "kb_experience",
+      "input": {
+        "keyword": "南瓜蜡烛",
+        "limit": 4
+      },
+      "version": "K1-04b03e8483afb3061eb9a060055313cfc614cab79a0928b7c14bdf4c3853e7a4",
+      "output_sha256": "e17c2c7e885256381405836a5bfc09558dab5744493a41f3cfaabaa67dc62afd",
+      "returned": 1
+    },
+    {
+      "question": "mvne69l3-107318-21",
+      "index": 0,
+      "name": "kb_experience",
+      "input": {
+        "keyword": "SNAKEBITE",
+        "limit": 3
+      },
+      "version": "K1-04b03e8483afb3061eb9a060055313cfc614cab79a0928b7c14bdf4c3853e7a4",
+      "output_sha256": "6aed5a5abfc7d948a761ba509436cb9e42bcda28a3e0f5ab381b35da135302c1",
+      "returned": 1
+    },
+    {
+      "question": "mvne69l3-107318-22",
+      "index": 0,
+      "name": "kb_open_book",
+      "input": {
+        "query": "AFTERIMAGE",
+        "category": "cards",
+        "limit": 1
+      },
+      "version": "K1-04b03e8483afb3061eb9a060055313cfc614cab79a0928b7c14bdf4c3853e7a4",
+      "output_sha256": "cd93390aa32c17c333d1f31518c004e89f773c006bb9fade0e0d4822c1e44aca",
+      "returned": 1
+    },
+    {
+      "question": "mvne69l3-107318-24",
+      "index": 0,
+      "name": "kb_open_book",
+      "input": {
+        "query": "AFTERIMAGE",
+        "category": "cards",
+        "limit": 1
+      },
+      "version": "K1-04b03e8483afb3061eb9a060055313cfc614cab79a0928b7c14bdf4c3853e7a4",
+      "output_sha256": "cd93390aa32c17c333d1f31518c004e89f773c006bb9fade0e0d4822c1e44aca",
+      "returned": 1
+    },
+    {
+      "question": "mvne69l3-107318-24",
+      "index": 1,
+      "name": "kb_experience",
+      "input": {
+        "id": "silent-afterimage-per-card-block",
+        "limit": 1
+      },
+      "version": "K1-04b03e8483afb3061eb9a060055313cfc614cab79a0928b7c14bdf4c3853e7a4",
+      "output_sha256": "cebc81ae7f99022903e2421efc7149e9523e1252df96d83fc76ece06fc33a0f8",
+      "returned": 1
+    },
+    {
+      "question": "mvne69l3-107318-25",
+      "index": 0,
+      "name": "kb_open_book",
+      "input": {
+        "query": "COLORFUL_PHILOSOPHERS",
+        "category": "events",
+        "limit": 1
+      },
+      "version": "K1-04b03e8483afb3061eb9a060055313cfc614cab79a0928b7c14bdf4c3853e7a4",
+      "output_sha256": "3f1ef64b0f23924bcd5ef6d3823358e3c1b6c2d2e525a9d0df48bbaf5c0c4ee7",
+      "returned": 1
+    },
+    {
+      "question": "mvne69l3-107318-28",
+      "index": 0,
+      "name": "kb_experience",
+      "input": {
+        "keyword": "MIRAGE",
+        "limit": 3
+      },
+      "version": "K1-04b03e8483afb3061eb9a060055313cfc614cab79a0928b7c14bdf4c3853e7a4",
+      "output_sha256": "6065f7e6318b1412c65416934a22176eb15f6399b13346d900a2d159d770551a",
+      "returned": 1
+    },
+    {
+      "question": "mvne69l3-107318-31",
+      "index": 0,
+      "name": "kb_open_book",
+      "input": {
+        "query": "UNTOUCHABLE",
+        "category": "cards",
+        "limit": 2
+      },
+      "version": "K1-04b03e8483afb3061eb9a060055313cfc614cab79a0928b7c14bdf4c3853e7a4",
+      "output_sha256": "527403a1adc12ae3124ba29cb4fd2ed583e171e03d7475962d863e29cf3a28f7",
+      "returned": 1
+    },
+    {
+      "question": "mvne69l3-107318-31",
+      "index": 1,
+      "name": "kb_experience",
+      "input": {
+        "keyword": "UNTOUCHABLE",
+        "limit": 3
+      },
+      "version": "K1-04b03e8483afb3061eb9a060055313cfc614cab79a0928b7c14bdf4c3853e7a4",
+      "output_sha256": "0980ca49c62dfdd20d65376639c5754a7d93e079e61a58f297cabd60fccd5bc6",
+      "returned": 0
+    },
+    {
+      "question": "mvne69l3-107318-31",
+      "index": 2,
+      "name": "kb_vocab",
+      "input": {
+        "query": "Sly",
+        "limit": 2
+      },
+      "version": "K1-04b03e8483afb3061eb9a060055313cfc614cab79a0928b7c14bdf4c3853e7a4",
+      "output_sha256": "0980ca49c62dfdd20d65376639c5754a7d93e079e61a58f297cabd60fccd5bc6",
+      "returned": 0
+    }
+  ],
+  "successor": {
+    "run": "WBDA6CTM07R4",
+    "accepted": 2,
+    "physical_queries": 3,
+    "target_hits": 0,
+    "queries": [
+      {
+        "question": "mvnfexhe-296454-1",
+        "index": 0,
+        "name": "kb_strategies",
+        "input": {
+          "query": "*",
+          "limit": 3,
+          "topic": "startup"
+        },
+        "version": "K1-04b03e8483afb3061eb9a060055313cfc614cab79a0928b7c14bdf4c3853e7a4",
+        "output_sha256": "0980ca49c62dfdd20d65376639c5754a7d93e079e61a58f297cabd60fccd5bc6",
+        "returned": 0
+      },
+      {
+        "question": "mvnfexhe-296454-1",
+        "index": 1,
+        "name": "kb_experience",
+        "input": {
+          "relevant": true,
+          "theme": "deck",
+          "limit": 5
+        },
+        "version": "K1-04b03e8483afb3061eb9a060055313cfc614cab79a0928b7c14bdf4c3853e7a4",
+        "output_sha256": "bdfa9fe54cfd2b8f85e8d708cf4c1d78f770b7c3f694ff3b6fc167885a861804",
+        "returned": 5
+      },
+      {
+        "question": "mvnfexhe-296454-2",
+        "index": 0,
+        "name": "kb_experience",
+        "input": {
+          "theme": "route",
+          "relevant": true,
+          "limit": 3
+        },
+        "version": "K1-04b03e8483afb3061eb9a060055313cfc614cab79a0928b7c14bdf4c3853e7a4",
+        "output_sha256": "2671007e624893b2996406987081cdb2d9ba0c1910e36f560dec2215ec098348",
+        "returned": 3
+      }
+    ]
+  },
+  "sql_old_bindings_and_publish_events_equal": true,
+  "original_autoplay_identity_verified": true,
+  "old_play_absent": true,
+  "live_head": "e9a468882a4fe1da2b1b721f0271b82f6083b002",
+  "limitations": [
+    "Original brain runtime_version absent; version checked from original output/config/SQL.",
+    "Original run-config ENOBUFS and terminal code=current preserved.",
+    "Zero explicit IDs does not prove absence of implicit use; no causal adoption or benefit established.",
+    "Frozen successor two-question window only; later natural turns not polled.",
+    "No product query, model, game, publish, close, retry, or full-check operation."
+  ]
+}

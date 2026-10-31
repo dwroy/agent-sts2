@@ -1,0 +1,16 @@
+import fs from 'node:fs';
+import path from 'node:path';
+import {unresolvedImports} from '../../.worktrees/integrator37-20-r434-20261024-1828/agent/tools/check-imports.ts';
+const a=path.dirname(import.meta.filename),root=path.join(a,'cache-control-fixture');
+fs.mkdirSync(path.join(root,'agent/tests'),{recursive:true});
+for(const name of ['v6-build-core.test.ts','v6-infrastructure.test.ts'])fs.writeFileSync(path.join(root,'agent/tests',name),'const tempRoot = new URL("../../.cache/", import.meta.url);\n');
+const before=unresolvedImports(root);
+fs.mkdirSync(path.join(root,'.cache/vitest'),{recursive:true});
+const after=unresolvedImports(root);
+const w=path.resolve(a,'../../.worktrees/integrator37-20-r434-20261024-1828');
+fs.mkdirSync(path.join(w,'.cache/vitest'),{recursive:true});
+const actual=unresolvedImports(w);
+if(before.length!==2||after.length!==0||actual.length!==0)throw Error(JSON.stringify({before,after,actual}));
+const result={at:new Date().toISOString(),fixture_before:before,fixture_after:after,actual_after_cache_preparation:actual,source_changes:0,full_runs:0,first_failure_evidence:'directed.json',interpretation:'The scanner includes literal new URL directory references and requires their target to exist. Creating generated scratch alone satisfies both failures. No tracked source change.'};
+fs.writeFileSync(path.resolve(a,'../../paper/materials/20261024-issue37-20-r434-integrator/cache-precondition-probe.json'),JSON.stringify(result,null,2)+'\n');
+console.log(JSON.stringify(result));

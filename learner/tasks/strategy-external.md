@@ -6,15 +6,20 @@ tools: Read, Grep, Glob, Bash, Edit, Write
 timeout_min: 240
 max_turns: 800
 default.batch: manual
+default.merge: no
 ---
 
 # 外部来源专线
+
+启动模式 merge={{merge}}，必须为 no；candidate_mode 绑定独立工作树及 dispatch_base，发布等待也不授权写 main/live 或忽略层 open-book。
 
 本批角色 {{character}}，真实调度ID {{batch}}，工作树 {{worktree}}，项目根 {{project_root}}，临时产出 {{scratch}}。自行完成，不派下级模型。先读 README、最新 STATE、decision-log 末尾和 docs/learning-protocol.md 第9节。仅处理宿主附加的 external_binding 与冻结 work_spec；它优先于普通选题，没有旧四专题/旧批次身份。先核 learn.json 本批 external_source、绑定清单 SHA、实际 HEAD=dispatch_base；失配即停，不改请求或登记。
 
 只读冻结的脱敏聚合 JSON、#54新授权匿名代表轨迹与发布契约；不读原始数据库、逐玩家数据或玩家标识，不下载新数据。代表轨迹只通过manifest核SHA的有界reader读取，一对一页，保留完整节点，不把它当真实快照全字段。游戏知识只能来自这些证据，不从预训练知识补齐。来源统一 external:sts2fun；逐结论记录版本、采集日期、输入 SHA、独立样本分母、观察性限制、反例和缺口。版本处理：有实际依据表明机制未改的版本合并统计，同时保留各版本原分母和异质性；机制已改的版本拆分。缺机改对照时标明未知，先从各自已满足样本条件的组产出，不把未知补成“未改”，也不因此整批停产；本系统 live 证据另账，runs=[]，不得补局号或把玩家聚合冒成本系统验证。
 
 按 work_spec 的有界单批主题提炼 knowledge/strategy/rk 候选。先核 #27/#28/#42 冻结契约，命中同场景就合并候选/指向既有ID，冲突保留本系统与外部两条证据和适用条件。按本批冻结work_spec确定阶段：单牌批处理改进单牌；#54统计层交付后新授权的流派批，一个流派一个剧本，先毒/刀，不重新派旧双Boss/幕Boss及同类任务。统计簇号不是玩法名称，须学习者依据核心原ID与完整代表轨迹自行确认语义，ops不提供游戏结论。只在 scratch 保存真实候选和来源账本；每条写 formal_publication=pending、consumer_readback=pending。正式发布仍沿既有发布锁、学习账本、消费者读回和后续自然采用流程，候选完成不关闭科学父。不改源码/正式知识、不合入 main/live；HEAD 保持 dispatch_base。
+
+新批次实际附带 runtime 知识合同时，完整整局构筑研究可按 `docs/build-research.md` 保存为 `build-research-v1`，候选文档路径 `characters/silent/build-research.json`。这是可查询的未验证研究，`verified_complete_playbook=false`、`validation_status=unverified`；原取得顺序、阶段、转向理由、资源连续性、终局准备与支持/反证/unknown完整保留，不为适配格式重学、不自动晋级旧七整体候选。外部去向沿现有 `kind:knowledge` 指向 scratch 中该原研究条目；完整候选仍由原完成回调按实际来源产物逐字核验。未附 runtime 合同的在途批次不热改交付协议，未达到科学门不变成可执行策略/rk或模拟参数。
 
 缺列先寻找可计算的代理并继续产出，条目、统计和适用范围都显式标“代理”：例如拿牌顺序/已拿奖励前缀作为牌组代理，上节点结束HP作为入场资源代理；只有连代理都没有时，才跳过该子项并说明缺什么。只有终局牌组时可以给终局关联的方向性统计，但不得写成真实战前快照或使用未来事实作当前题目的触发条件。缺因果证明不是否决方向性统计条目的理由；写清观察关联和混杂，不写因果收益/保证/固定拿牌命令。缺失分母不能估成真实样本；不累加重叠cell为独立局。单牌每个用于发布的比较组样本至少100；不满足的细分组退到真实可用的更宽代理条件，仍不满足才跳该子组，不把其他合格组一起waiting。
 

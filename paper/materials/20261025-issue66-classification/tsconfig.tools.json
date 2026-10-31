@@ -1,0 +1,6 @@
+{
+ "extends": "../../../agent/tsconfig.json",
+ "compilerOptions": {"typeRoots": ["../../../agent/node_modules/@types"]},
+ "include": ["../../../agent/src/**/*.ts", "../../../learner/**/*.ts", "../../../agent/tools/knowledge-runtime.ts", "../../../agent/tools/knowledge-classification-audit.ts"],
+ "exclude": ["../../../learner/runs/**"]
+}

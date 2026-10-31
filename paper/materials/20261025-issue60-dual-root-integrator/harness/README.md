@@ -1,0 +1,1 @@
+本目录为本轮已执行harness原件归档，原执行目录为 .artifacts/integrator60-dual-root-20261025；绝对路径和原execution guard保留，不在归档目录直接重跑完整检查。具体命令与退出回执见 ../probe-command-receipts.json。打包只对core/paths.ts的import.meta.url作保真路径搬迁，产品逻辑不替换。任何复验先确认原任务、部署状态及唯一完整检查门，不能凭归档启动第二次full。

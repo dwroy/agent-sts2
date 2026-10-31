@@ -13,6 +13,7 @@ import time
 
 import strategy_backfill_jobs as shared
 import external_learning_policy as policy
+import publication_gate
 import learner_registration
 from strategy_research_jobs import atomic_json
 
@@ -67,6 +68,15 @@ def queue(root):
     ids = [plan.get("plan_id") for plan in value["plans"]]
     if any(not isinstance(ident, str) or not shared.ID.fullmatch(ident) for ident in ids) or len(set(ids)) != len(ids):
         raise ValueError("invalid external source plan IDs")
+    import external_stock
+    # Operational overlay: never rewrite the original plan list or old generations.
+    try:
+        value["plans"] += external_stock.overlay(root)
+    except (OSError, ValueError, KeyError, TypeError, AttributeError, IndexError, RecursionError):
+        pass  # Original plans remain usable; maintain reports the independent stock failure.
+    ids = [plan["plan_id"] for plan in value["plans"]]
+    if len(set(ids)) != len(ids):
+        raise ValueError("stock plan collides with original external queue")
     return value
 
 
@@ -124,7 +134,11 @@ def read_source(root, plan):
         shared.artifact(root, ref)
     if not manifest.get("contracts"):
         raise ValueError("external batch requires frozen publication contracts")
-    return {"request_id": REQUEST, "plan_id": plan["plan_id"], "source": "external:sts2fun",
+    stock = None
+    if "stock" in manifest:
+        import external_stock
+        stock = external_stock.validate_binding(root, plan, manifest)
+    return {**({"stock": stock} if stock else {}), "request_id": REQUEST, "plan_id": plan["plan_id"], "source": "external:sts2fun",
             "input_manifest": plan["input_manifest"], "work_spec": plan["work_spec"], "topic": manifest["topic"], "provenance": provenance,
             "entry_ids": ids, "all_entry_ids": ids, "dispatch_runs": [], "cohorts": cohorts}, spec, (
                 [plan["input_manifest"], plan["work_spec"]] + manifest["contracts"]
@@ -255,11 +269,16 @@ def _dispatch_lanes(state, root, scripts, character, alive, stamp, writer):
         if not result:
             break
         results.append(result)
+    import external_stock
+    if character == "silent":
+        external_stock.maintain(state, root, alive)
     return results
 
 
 def dispatch(state, root, scripts, character, alive, stamp, writer, normal):
     directory = Path(os.environ.get("CODEX_OPS_DIR") or Path(root, "ops/codex-ops"))
+    if publication_gate.learners_held(root, directory):
+        return None
     reconcile(state, directory)
     if character != "silent" or not re.fullmatch(r"[0-9]{8}-[0-9]{6}", stamp):
         return None
@@ -306,7 +325,14 @@ def dispatch(state, root, scripts, character, alive, stamp, writer, normal):
                     continue
                 for bid, old in overlaps:
                     shared.retired(bid, old, directory)
-                base = subprocess.check_output(["git", "-C", root, "rev-parse", "main"], text=True).strip()
+                # The immutable source ref is captured under the same writer locks.
+                # Caller already owns learn.lock; contention defers this natural tick.
+                with publication_gate.source_locks(root):
+                    frozen, _ = source(root, plan)
+                    frozen["entry_ids"] = binding["entry_ids"]
+                    if frozen != binding:
+                        raise ValueError("external source changed during snapshot")
+                    base = subprocess.check_output(["git", "-C", root, "rev-parse", "main"], text=True).strip()
                 if not re.fullmatch(r"[0-9a-f]{40}", base):
                     raise ValueError("invalid external dispatch base")
                 result = writer(state, root, scripts, "strategy-proposal", character, [],
@@ -314,7 +340,8 @@ def dispatch(state, root, scripts, character, alive, stamp, writer, normal):
                 if result:
                     state["batches"][result[0]].update(external_binding={**binding, "retry_generation": generation, "dispatch_base": base},
                                                      external_registered_at=time.time(), external_lane=selected_lane,
-                                                     external_policy=selected)
+                                                     external_policy=selected,
+                                                     candidate_mode=publication_gate.candidate_binding(base, state["batches"][result[0]]["worktree"]))
                     learner_registration.checkpoint(state)
                     return result
             except (OSError, ValueError, KeyError, TypeError, AttributeError, IndexError, RuntimeError, subprocess.SubprocessError) as error:
@@ -339,6 +366,15 @@ def bound(root, directory, bid, character, tree, ident):
 
 
 def prepare(root, directory, bid, character, tree, ident):
+    if publication_gate.learners_held(root, directory):
+        raise ValueError("external startup admission held")
+    # A registered wrapper owns its batch barrier, not the parent's long learn transaction.
+    # These read-only frozen inputs still serialize with writers in refresh -> live order.
+    with publication_gate.source_locks(root):
+        return prepare_snapshot(root, directory, bid, character, tree, ident)
+
+
+def prepare_snapshot(root, directory, bid, character, tree, ident):
     batch = bound(root, directory, bid, character, tree, ident)
     configured = queue(root)
     plan = next(p for p in configured["plans"] if p["plan_id"] == ident)

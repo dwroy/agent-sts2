@@ -1,0 +1,31 @@
+diff --git a/ops/codex-ops-learner.sh b/ops/codex-ops-learner.sh
+index 0bb7edd60..b123e8d04 100644
+--- a/ops/codex-ops-learner.sh
++++ b/ops/codex-ops-learner.sh
+@@ -19,6 +19,7 @@ implementation_request=""
+ implementation_task_file=""
+ backfill_source=""
+ source_kind=backfill
++external_tier=""
+ unset LEARNER_EXTERNAL_SOURCE LEARNER_EXTERNAL_SERVICE_TIER
+ backfill_task_file=""
+ if [ "$task" = strategy-proposal ] && [ "$#" -ge 7 ]; then
+@@ -88,6 +89,9 @@ if [ -n "$backfill_source" ]; then
+   exec 8> "$DIR/learn.lock"
+   if flock -w 120 8; then
+     research_base="$(python3 "$OPS/strategy_${source_kind}_jobs.py" ready "$ROOT" "$DIR" "$batch" "$character" "$worktree" "$backfill_source" 2>> "$err")" || audit_ready=0
++    if [ "$source_kind" = external ] && [ "$audit_ready" = 1 ]; then
++      external_tier=$(nice -n 19 python3 "$OPS/strategy_external_jobs.py" tier "$ROOT" "$DIR" "$batch" "$character" "$worktree" "$backfill_source" 2>> "$err") || audit_ready=0
++    fi
+     flock -u 8
+   else
+     echo "backfill registration lock timed out; no model started" >> "$err"
+@@ -230,7 +234,7 @@ else
+   if [ -n "$backfill_source" ]; then
+     if [ "$source_kind" = external ]; then
+       export LEARNER_EXTERNAL_SOURCE="$backfill_source"
+-      args+=(--service-tier fast)
++      args+=(--service-tier "$external_tier")
+     else
+       export LEARNER_BACKFILL_SOURCE="$backfill_source"
+     fi

@@ -1,0 +1,100 @@
+{
+  "task": "strategy-proposal",
+  "character": "silent",
+  "code_proposals": [],
+  "implementation_domains": [],
+  "proposal_results": [],
+  "batch": "20261024-181311-strategy-proposal",
+  "base": "33733c9dd031d1c69be1985918a7001dca051fe8",
+  "runs": [],
+  "own_support_runs": [
+    "9R916WW0V65N"
+  ],
+  "own_counterexample_runs": [
+    "9ZERN492CSHX",
+    "9R916WW0V65N"
+  ],
+  "source": "mixed",
+  "fixes": [],
+  "merged": null,
+  "tests": {
+    "tsc": null,
+    "vitest": null,
+    "cases": null
+  },
+  "report": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261024-181311/learner/runs/20261024-181408-c699f2dc-5057-406c-90f0-e8f8dbf9c51f-strategy-proposal/report.md",
+  "external_source": "issue51-whole-run-blade-003-20261024",
+  "input_sha256": "453b5f28d9030a8c4b9fba8834308e2d609773c7e410e9d67fff292155f076d1",
+  "reason": "已落盘6个情境（2新、4更新）、6条文字策略及6条rk描述tag候选；5个情境已候选配对，整局成型审查的rk局部waiting。原Plan/完整回放缺失，正式发布与消费者读回均pending，HEAD保持派发基线。",
+  "external_results": [
+    {
+      "id": "external-whole-run-blade-003",
+      "state": "processed",
+      "destinations": [
+        {
+          "kind": "knowledge",
+          "id": "silent-whole-run-blade-003",
+          "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261024-181311/learner/runs/20261024-181408-c699f2dc-5057-406c-90f0-e8f8dbf9c51f-strategy-proposal/scratch/playbook.md"
+        },
+        {
+          "kind": "strategy",
+          "id": "silent-brain-blade-flexible-formation-review",
+          "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261024-181311/learner/runs/20261024-181408-c699f2dc-5057-406c-90f0-e8f8dbf9c51f-strategy-proposal/scratch/strategy-candidates.json"
+        },
+        {
+          "kind": "rk",
+          "id": "silent-rk-blade-fan-setup-test-subject",
+          "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261024-181311/learner/runs/20261024-181408-c699f2dc-5057-406c-90f0-e8f8dbf9c51f-strategy-proposal/scratch/rk-draft.json"
+        }
+      ],
+      "reason": "已落盘6个情境（2新、4更新）、6条文字策略及6条rk描述tag候选；5个情境已候选配对，整局成型审查的rk局部waiting。原Plan/完整回放缺失，正式发布与消费者读回均pending，HEAD保持派发基线。"
+    }
+  ],
+  "decision_output_counts": {
+    "contexts": 6,
+    "real_new_contexts": 2,
+    "updated_existing_contexts": 4,
+    "byte_identical_reuse": 0,
+    "aliases": 0,
+    "new_strategy_projection_ids": 6,
+    "text_candidates": 6,
+    "rk_candidates": 6,
+    "paired_contexts": 5,
+    "paired_candidates": 6,
+    "rk_waiting_contexts": 1,
+    "numeric_effect_rk": 0,
+    "format_consumable_text_candidates": 6,
+    "format_consumable_rk_candidates": 6,
+    "executable_rk_with_original_plan_and_replay": 0,
+    "comparison_groups_both_at_least_100": 0,
+    "external_descriptive_winner_checkpoint_n": 101,
+    "external_matched_comparison_n_each": 63,
+    "formal_publications": 0,
+    "production_consumer_readbacks": 0,
+    "natural_queries": 0,
+    "actual_adoptions": 0,
+    "benefits_validated": 0,
+    "scientific_parent_closed": false,
+    "previous_batch_real_new_contexts": 4,
+    "consecutive_zero_new_batches": 0
+  },
+  "coverage": {
+    "frozen_package_leaves_verified": 132,
+    "own_shards_verified": 11,
+    "external_complete_trajectories": 20,
+    "external_nodes": 772,
+    "own_complete_projected_games": 2,
+    "own_projected_records": 512,
+    "own_raw_rows_verified": 242,
+    "coverage_path": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261024-181311/learner/runs/20261024-181408-c699f2dc-5057-406c-90f0-e8f8dbf9c51f-strategy-proposal/scratch/coverage.json"
+  },
+  "scenario_mapping": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261024-181311/learner/runs/20261024-181408-c699f2dc-5057-406c-90f0-e8f8dbf9c51f-strategy-proposal/scratch/scenario-mapping.json",
+  "paired_output_map": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261024-181311/learner/runs/20261024-181408-c699f2dc-5057-406c-90f0-e8f8dbf9c51f-strategy-proposal/scratch/paired_output_map.json",
+  "source_ledger": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261024-181311/learner/runs/20261024-181408-c699f2dc-5057-406c-90f0-e8f8dbf9c51f-strategy-proposal/scratch/source-ledger.json",
+  "limitations": [
+    "外部v0.111观察统计与自有unknown版本分账；版本机改未知，旧版本未合并。",
+    "终局簇及还原牌组只作离线定位/代理；不作当前触发。自有簇6八局均败，缺同簇自有赢家。",
+    "六条rk格式及原状态条件通过；缺原Plan/完整候选结果/留出回放，可执行消费数0，生产读回0。",
+    "仅scratch候选；正式发布、自然查询、实际采用/收益及科学父保持开放。"
+  ]
+}

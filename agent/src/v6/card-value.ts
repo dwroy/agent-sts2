@@ -1,5 +1,4 @@
 /** Reward-only, observed-data whole-fight predictions. No combat simulation or card-value constants. */
-import { join } from "node:path";
 import { asArray, asRecord, bool, num, str } from "../core/util/json.js";
 import type { DecisionEnv } from "../memory/types.js";
 import { permanentCardGain } from "../memory/run-constraints.js";
@@ -11,6 +10,7 @@ import { v6PublishedKnowledge } from "./direction-runtime.js";
 import { evaluatePredicate } from "./predicate.js";
 import type { BuildCore, BuildCombo } from "./build-core.js";
 import { loadOpeningModel, openingCardKey, predictOpening, type FightKind, type OpeningInput, type OpeningModel } from "./opening-value.js";
+import { knowledgeFile } from "../knowledge/files.js";
 
 export interface ValueTarget {
   id: string; kind: FightKind; act: number; floor: number; weight: number; count: number; n: number; runs: number;
@@ -94,7 +94,7 @@ export class CardValueRuntime {
     const run = str(env.state.raw.run_id), character = str(asRecord(env.state.run?.raw).character_id).toLowerCase();
     if (run !== this.run) {
       this.run = run; this.cache.clear();
-      this.model = loadOpeningModel(join(this.dir, "characters", character, "opening-value.json"), character);
+      this.model = loadOpeningModel(knowledgeFile(this.dir, "opening-value.json", character), character);
       const loaded = v6PublishedKnowledge(env, this.dir).cores; this.cores = loaded.status === "loaded" ? loaded.value : [];
     }
   }

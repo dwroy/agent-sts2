@@ -1,0 +1,179 @@
+{
+  "schema": "issue84-readonly-method-preview-v1",
+  "live_head": "f6ccd3fcc79c2527acfa1ed7da183e311ec84764",
+  "control_sha256": "4acce6346f9f169bcafded8c78b2183a8e998b795bc17c4666078c123c052866",
+  "enabled_refresh": [
+    "outcome"
+  ],
+  "old_admission": {
+    "outcome": "c15317fed3c329382663738d56b6802658abfb8a2bb6fdd48c0a7aa3ae034beb"
+  },
+  "code_inputs": {
+    "agent/tools/logdb/component_usage.py": {
+      "before": "77158bcf34e85c765ea1a99905c363dc8a3021910f94912710a84d933bb25f16",
+      "after": "77158bcf34e85c765ea1a99905c363dc8a3021910f94912710a84d933bb25f16"
+    },
+    "agent/tools/logdb/extract.py": {
+      "before": "57fd2d330e4c5ac9d5b284bb4addda240eab246d15abf9ba48e7a5e1b4304545",
+      "after": "57fd2d330e4c5ac9d5b284bb4addda240eab246d15abf9ba48e7a5e1b4304545"
+    },
+    "agent/tools/logdb/sync.py": {
+      "before": "15440e9581f5fdb3387c1938c783f3a2b85bdccb47417efdd44ed31b00f5a8dd",
+      "after": "15440e9581f5fdb3387c1938c783f3a2b85bdccb47417efdd44ed31b00f5a8dd"
+    },
+    "knowledge/builders/build-outcome-stats.py": {
+      "before": "dd633842fc34effe0c797920387aa1fd707237cb124dbbed35230604e81aa1dc",
+      "after": "fa5a6b3c87efae2220419bcb9ea59e79389d90c4eb7f9c025c0536915fbe3407"
+    },
+    "knowledge/builders/characters.py": {
+      "before": "b3b99b9bf00c4562b77e922b2894b1c8faf4c3e545ec3cb0c742083b7dc0eec9",
+      "after": "b3b99b9bf00c4562b77e922b2894b1c8faf4c3e545ec3cb0c742083b7dc0eec9"
+    },
+    "knowledge/builders/incremental_evidence.py": {
+      "before": "601b32f27e2876e47fd822aa3e1cbe9777a10007f549cdaa6865350fc2f0d992",
+      "after": "601b32f27e2876e47fd822aa3e1cbe9777a10007f549cdaa6865350fc2f0d992"
+    },
+    "knowledge/builders/legacy_incremental.py": {
+      "before": "2be0196785eab1f62559c05abc3c2b005de54b9e2299d050dc74d3909e5ea4bf",
+      "after": "2be0196785eab1f62559c05abc3c2b005de54b9e2299d050dc74d3909e5ea4bf"
+    },
+    "knowledge/builders/outcome_logdb.py": {
+      "before": null,
+      "after": "5a63369ed25bc1b0c47dbdc1c12cf07c61e5b4999e73474e10e2d6f8e1d578af"
+    },
+    "knowledge/builders/refresh_publish.py": {
+      "before": "148ee97128d3f77dbf9902c65b8b4c766b9b363da0502baac79e909574dd2eac",
+      "after": "148ee97128d3f77dbf9902c65b8b4c766b9b363da0502baac79e909574dd2eac"
+    },
+    "learner/evidence_identity.py": {
+      "before": "e1f6da7ca1a44b7de61454ee057c2f11ab0cfab758c0b878274f6fd6cda760dc",
+      "after": "e1f6da7ca1a44b7de61454ee057c2f11ab0cfab758c0b878274f6fd6cda760dc"
+    }
+  },
+  "projected_method_sha256": "f50b9ea3c7debe7724ad29e0d36d654791442f252ede0d6f2dc28a5fe8fdfaf9",
+  "projected_manifest": {
+    "schema": "fixed-method-closure-v2",
+    "producer": "outcome",
+    "inputs": {
+      "code:agent/tools/logdb/component_usage.py": "77158bcf34e85c765ea1a99905c363dc8a3021910f94912710a84d933bb25f16",
+      "code:agent/tools/logdb/extract.py": "57fd2d330e4c5ac9d5b284bb4addda240eab246d15abf9ba48e7a5e1b4304545",
+      "code:agent/tools/logdb/sync.py": "15440e9581f5fdb3387c1938c783f3a2b85bdccb47417efdd44ed31b00f5a8dd",
+      "code:knowledge/builders/build-outcome-stats.py": "fa5a6b3c87efae2220419bcb9ea59e79389d90c4eb7f9c025c0536915fbe3407",
+      "code:knowledge/builders/characters.py": "b3b99b9bf00c4562b77e922b2894b1c8faf4c3e545ec3cb0c742083b7dc0eec9",
+      "code:knowledge/builders/incremental_evidence.py": "601b32f27e2876e47fd822aa3e1cbe9777a10007f549cdaa6865350fc2f0d992",
+      "code:knowledge/builders/legacy_incremental.py": "2be0196785eab1f62559c05abc3c2b005de54b9e2299d050dc74d3909e5ea4bf",
+      "code:knowledge/builders/outcome_logdb.py": "5a63369ed25bc1b0c47dbdc1c12cf07c61e5b4999e73474e10e2d6f8e1d578af",
+      "code:knowledge/builders/refresh_publish.py": "148ee97128d3f77dbf9902c65b8b4c766b9b363da0502baac79e909574dd2eac",
+      "code:learner/evidence_identity.py": "e1f6da7ca1a44b7de61454ee057c2f11ab0cfab758c0b878274f6fd6cda760dc",
+      "runtime:ops/fixed_producer_methods.py": "ebdd6d2af3c99d052e2880e8d80c9e0c3167661557349a70738befbbf2772cc9",
+      "runtime:ops/knowledge_runtime_env.py": "4c3285ab33a4075a9c739747c2f694004324b982e0a2931d5e69d699f1433ba7",
+      "runtime:ops/learning_runtime.py": "a1bb9b9e691062ec711366abdc04567ba883f2fe1f9b9bacd49e4f179645b15f",
+      "runtime:ops/learning_runtime_data.py": "8656efac2f3241edcaaeeb332de1d82484cba328cca514e19f48191e16b1e7c9",
+      "runtime:ops/learning_runtime_store.py": "15d3d3e3ad9745d97f2290aefc809709c608d272fbcb76b0f3a0b8ff76404a3e"
+    },
+    "declaration": {
+      "entries": [
+        "knowledge/builders/build-outcome-stats.py"
+      ],
+      "dynamic_edges": {
+        "knowledge/builders/legacy_incremental.py": [
+          "knowledge/builders/incremental_evidence.py",
+          "learner/evidence_identity.py"
+        ],
+        "ops/learning_runtime_data.py": [
+          "ops/fixed_producer_methods.py",
+          "ops/knowledge_runtime_env.py"
+        ]
+      },
+      "unknown_dependencies": "reject; reviewed byte identity required"
+    },
+    "edges": {
+      "code:agent/tools/logdb/component_usage.py": [
+        "code:agent/tools/logdb/extract.py"
+      ],
+      "code:agent/tools/logdb/extract.py": [
+        "code:agent/tools/logdb/component_usage.py"
+      ],
+      "code:agent/tools/logdb/sync.py": [
+        "code:agent/tools/logdb/extract.py"
+      ],
+      "code:knowledge/builders/build-outcome-stats.py": [
+        "code:knowledge/builders/characters.py",
+        "code:knowledge/builders/legacy_incremental.py",
+        "code:knowledge/builders/outcome_logdb.py",
+        "code:knowledge/builders/refresh_publish.py"
+      ],
+      "code:knowledge/builders/characters.py": [],
+      "code:knowledge/builders/incremental_evidence.py": [
+        "code:learner/evidence_identity.py"
+      ],
+      "code:knowledge/builders/legacy_incremental.py": [
+        "code:knowledge/builders/characters.py",
+        "code:knowledge/builders/incremental_evidence.py",
+        "code:learner/evidence_identity.py"
+      ],
+      "code:knowledge/builders/outcome_logdb.py": [
+        "code:agent/tools/logdb/sync.py"
+      ],
+      "code:knowledge/builders/refresh_publish.py": [
+        "runtime:ops/learning_runtime_data.py"
+      ],
+      "code:learner/evidence_identity.py": [],
+      "runtime:ops/fixed_producer_methods.py": [
+        "runtime:ops/learning_runtime_store.py"
+      ],
+      "runtime:ops/knowledge_runtime_env.py": [],
+      "runtime:ops/learning_runtime.py": [
+        "runtime:ops/learning_runtime_store.py"
+      ],
+      "runtime:ops/learning_runtime_data.py": [
+        "runtime:ops/fixed_producer_methods.py",
+        "runtime:ops/knowledge_runtime_env.py",
+        "runtime:ops/learning_runtime.py",
+        "runtime:ops/learning_runtime_store.py"
+      ],
+      "runtime:ops/learning_runtime_store.py": []
+    }
+  },
+  "old_data_releases": [
+    {
+      "version": "D1-b4c75ef8dfbeeeb7585a21ce9f37606041407819b4bdc9242f5477c21b293735",
+      "parent": null,
+      "request": "issue67-initial-effective-data-20261025"
+    },
+    {
+      "version": "D1-2e061b83cb2769667d401ae0ec5aa35a827c6344860792a30f070a362f24754e",
+      "parent": "D1-b4c75ef8dfbeeeb7585a21ce9f37606041407819b4bdc9242f5477c21b293735",
+      "request": "eeaf58872afd44b89ef2e3455297034d:outcome:silent"
+    },
+    {
+      "version": "D1-ceecb5ec33cac75e0d2b5465e7dc398b74e56d953b30bc9da7fa2c8e87b816b2",
+      "parent": "D1-2e061b83cb2769667d401ae0ec5aa35a827c6344860792a30f070a362f24754e",
+      "request": "28df1b299bd24ba59d015ff18077389a:outcome:silent"
+    },
+    {
+      "version": "D1-436eaf6e43c5c541aa368ea7878705c9abdcc5a4151f118186f5b1cff8ff93be",
+      "parent": "D1-ceecb5ec33cac75e0d2b5465e7dc398b74e56d953b30bc9da7fa2c8e87b816b2",
+      "request": "d6f5de2dfa7d46cfa15bf59ee480343b:outcome:silent"
+    }
+  ],
+  "old_data_attempts": [
+    {
+      "request": "eeaf58872afd44b89ef2e3455297034d:outcome:silent",
+      "version": "D1-2e061b83cb2769667d401ae0ec5aa35a827c6344860792a30f070a362f24754e",
+      "status": "published"
+    },
+    {
+      "request": "28df1b299bd24ba59d015ff18077389a:outcome:silent",
+      "version": "D1-ceecb5ec33cac75e0d2b5465e7dc398b74e56d953b30bc9da7fa2c8e87b816b2",
+      "status": "published"
+    },
+    {
+      "request": "d6f5de2dfa7d46cfa15bf59ee480343b:outcome:silent",
+      "version": "D1-436eaf6e43c5c541aa368ea7878705c9abdcc5a4151f118186f5b1cff8ff93be",
+      "status": "published"
+    }
+  ],
+  "production_writes": false,
+  "natural_acceptance": false
+}

@@ -1,0 +1,46 @@
+{
+  "passed": true,
+  "probes": [
+    {
+      "probe": "missing new exposure leaf:v6-history",
+      "rejected": true,
+      "error": "incomplete fixed dependency declaration: code:agent/src/brain/decision-knowledge.ts"
+    },
+    {
+      "probe": "missing new exposure leaf:silent-boss-calibration",
+      "rejected": true,
+      "error": "calibration source read family needs explicit dependency declaration"
+    },
+    {
+      "probe": "changed ledger source without review",
+      "rejected": true,
+      "error": "fixed dependency needs engineering declaration: code:agent/src/brain/decision-knowledge-exposure.ts"
+    },
+    {
+      "probe": "hash update without opaque IO review",
+      "rejected": true,
+      "error": "opaque dependency site needs explicit declaration: code:agent/src/brain/decision-knowledge-exposure.ts"
+    },
+    {
+      "probe": "deleted static exposure edge",
+      "rejected": true,
+      "error": "undeclared static dependency: code:agent/src/brain/router.ts"
+    },
+    {
+      "probe": "unreviewed new calibration read leaf",
+      "rejected": true,
+      "error": "calibration source read family needs explicit dependency declaration"
+    },
+    {
+      "probe": "unrelated agent/src leaf preserves outcome",
+      "unchanged": true
+    },
+    {
+      "probe": "ledger data changes preserve source methods",
+      "unchanged": true
+    }
+  ],
+  "source_root_mutated": false,
+  "admission": false,
+  "production_control": false
+}

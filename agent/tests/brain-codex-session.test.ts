@@ -9,7 +9,7 @@ import { chmodSync, existsSync, mkdirSync, mkdtempSync, readFileSync, rmSync, wr
 import { tmpdir } from "node:os";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
-import { afterEach, describe, expect, it } from "vitest";
+import { afterEach, describe, expect, it, vi } from "vitest";
 
 import { ANSWER_TEXT_KEEP, BlankRun, configTomlProblems, sessionCwdRoot } from "../src/brain/engines/codex-session.js";
 import { CodexEngine, catalogEntry, codexKindSchema, codexSchema, sessionFailure } from "../src/brain/engines/codex.js";
@@ -17,6 +17,16 @@ import { pickSpec, stableSchema } from "../src/brain/specs.js";
 import type { BrainRequest } from "../src/brain/types.js";
 import { loadConfig } from "../src/core/config.js";
 import { BrainRouter, type BrainLogRow } from "../src/brain/router.js";
+import { Brain, agentSystemPrompt } from "../src/brain/brain.js";
+import { runLoop } from "../src/hand/loop.js";
+import { ModClient } from "../src/hand/mod/client.js";
+import { setKnowledgeCharacter } from "../src/knowledge/files.js";
+import { loadRunPlan } from "../src/memory/run-plan.js";
+import { readRunLogs, replayRun } from "../src/memory/journal-replay.js";
+import * as buildSim from "../src/sim/build-sim-facts.js";
+import { mainMenuPayload, testKnowledge } from "./scenarios.js";
+import { envelope } from "./support.js";
+import { changedRoute, constructionPatch, initialPlan, initialRoute, previousRoute, routeBoard, routeReason } from "./route-reason-fixture.js";
 
 const dir = mkdtempSync(join(tmpdir(), "fake-codex-session-"));
 
@@ -37,6 +47,8 @@ interface Script {
   /** Threads thread/list returns (the sweep). */
   stale?: Event[];
   revertFails?: boolean;
+  /** Enforce the supplied strict output format before emitting each scripted answer. */
+  strictAnswers?: boolean;
 }
 
 interface Req {
@@ -109,7 +121,29 @@ for await (const line of createInterface({ input: process.stdin })) {
         if (current !== turnId) return;
         if (e.__sleep) { await new Promise((ok) => setTimeout(ok, e.__sleep)); continue; }
         if (e.__die) process.exit(9);
-        send(JSON.parse(JSON.stringify(e).replaceAll("$TURN", turnId).replaceAll("$THREAD", p.threadId)));
+        const event = JSON.parse(JSON.stringify(e).replaceAll("$TURN", turnId).replaceAll("$THREAD", p.threadId));
+        if (script.strictAnswers && event.params?.item?.type === "agentMessage") {
+          // Fill nullable slots exactly as a strict structured-output response would; reject unknown fields.
+          const check = (schema, value) => {
+            const types = Array.isArray(schema.type) ? schema.type : [schema.type];
+            const type = value === null ? "null" : Array.isArray(value) ? "array" : typeof value;
+            if (!types.includes(type) && !(type === "number" && types.includes("integer") && Number.isInteger(value))) throw Error("strict type mismatch");
+            if (schema.enum && !schema.enum.includes(value)) throw Error("strict enum mismatch");
+            if (type === "object") {
+              for (const key of Object.keys(value)) if (!Object.hasOwn(schema.properties, key)) throw Error("strict unknown field: " + key);
+              for (const key of schema.required) {
+                if (!Object.hasOwn(value, key)) value[key] = null;
+                check(schema.properties[key], value[key]);
+              }
+            }
+            if (type === "array") value.forEach(item => check(schema.items, item));
+            if (type === "string" && ((schema.maxLength && Array.from(value).length > schema.maxLength) || (schema.pattern && !new RegExp(schema.pattern).test(value)))) throw Error("strict string constraint");
+          };
+          const answer = JSON.parse(event.params.item.text);
+          check(p.outputSchema, answer);
+          event.params.item.text = JSON.stringify(answer);
+        }
+        send(event);
       }
     })();
   } else send({ id: msg.id, error: { code: -32601, message: "unknown " + msg.method } });
@@ -169,6 +203,15 @@ function sessionEngine(fake: { bin: string; state: string }, opts: { env?: Recor
 }
 
 describe("codex session mode", () => {
+  it.each(["fast", "priority"])("sends the explicit brain %s tier on thread creation and every turn", async tier => {
+    const fake = fakeSession(`tier-${tier}`, { turns: [answering({ choice: "a", reason: "fixture" }), answering({ choice: "b", reason: "fixture" })] });
+    const { engine } = sessionEngine(fake, { env: { BRAIN_CODEX_SERVICE_TIER: tier } });
+    await engine.decide(request()); await engine.decide(request());
+    const requests = fake.requests();
+    expect(requests.find(r => r.method === "thread/start")!.params.serviceTier).toBe(tier);
+    expect(requests.filter(r => r.method === "turn/start").map(r => r.params.serviceTier)).toEqual([tier, tier]);
+  });
+
   it("one server, one thread with our system prompt; each question a turn with the strict schema, reverted after it", async () => {
     const fake = fakeSession("basic", { turns: [answering({ choice: "b", reason: "smith", route: null, cards: null }), answering({ choice: "a", reason: "heal" }, 3)] });
     const { engine, trace } = sessionEngine(fake);
@@ -586,3 +629,79 @@ it("knowledge session isolation failures stay unavailable and never dispatch exe
   await expect(engine.decide(request())).rejects.toMatchObject({ kind: "unavailable" });
   expect(fake.execs()).toBe(0);
 });
+
+
+for (const scenario of ["change", "construction-only", "both", "omit", "keep", "repeat", "missing-reason", "invalid-route"] as const) {
+  it(`#64 strict session through persistence and restored route consumer: ${scenario}`, async () => {
+    setKnowledgeCharacter("silent");
+    const change = ["change", "both", "missing-reason", "invalid-route"].includes(scenario);
+    const construction = ["construction-only", "both", "missing-reason"].includes(scenario);
+    const answer = { choice: "card0", reason: "格式选择",
+      ...(scenario === "omit" || scenario === "construction-only" ? {} : { route: scenario === "keep" ? "keep" : scenario === "repeat" ? previousRoute : scenario === "invalid-route" ? "r99c0" : changedRoute }),
+      ...(change && scenario !== "missing-reason" ? { route_reason: routeReason } : {}),
+      ...(construction ? { run_plan: constructionPatch } : {}) };
+    const fake = fakeSession(`route-reason-${scenario}`, { strictAnswers: true, turns: [
+      answering({ route: initialRoute, reason: "格式初始路线", run_plan: initialPlan }), answering(answer), answering(answer),
+    ] });
+    const { engine } = sessionEngine(fake, { knowledgeAgent: true, env: { BRAIN_CODEX_ROUTE_REASON: "drop", BRAIN_CODEX_ROUTE_PATTERN: "on" } });
+    const cfg = loadConfig({ BRAIN_RUN_CONFIG: JSON.stringify({ engine: "codex", effort: "high" }), BRAIN_LOG: "off", RUN_PLAN: "off", FIGHT_PLAN: "off", BUILD_ONESHOT: "off", BUILD_DECIDER: "deepseek" });
+    cfg.log.decisionLog = join(fake.state, "decisions.jsonl");
+    cfg.runPlanLog = join(fake.state, "run-plans.jsonl");
+    cfg.fightPlanLog = join(fake.state, "fight-plans.jsonl");
+    const rows: BrainLogRow[] = [];
+    const brain = new Brain(new BrainRouter({ config: { ...cfg.brain, log: null }, knowledgeAgent: true, engine: () => engine, log: r => rows.push(r) }), { systemPrompt: agentSystemPrompt(routeBoard("reward")) });
+    // The admission gate is unchanged; only the expensive projection is supplied as a completed fixed fixture.
+    const sim = vi.spyOn(buildSim, "withBossSim").mockImplementation(async decision => ({ decision,
+      record: { samples: 1, requested: 1, completion: { status: "complete" } } }));
+    const actions: unknown[] = [];
+    const sequence = [routeBoard("initial"), routeBoard("reward"), routeBoard("next"), mainMenuPayload()];
+    let position = 0;
+    const client = new ModClient({ baseUrl: "http://fixture.invalid", fetchImpl: (async (url, init) => {
+      if (String(url).endsWith("/state")) return Response.json(envelope(sequence[position]));
+      const action = JSON.parse(String(init?.body)); actions.push(action); position++;
+      return Response.json(envelope({ action: action.action, status: "completed", stable: true, message: "fixed", state: sequence[position] }));
+    }) as typeof fetch });
+    const jev = { ask: vi.fn().mockRejectedValue(new Error("no fixture Jev reply")) };
+    const run = (maxDecisions: number) => runLoop({ config: cfg, mode: "play", client, brain, jev: jev as any, knowledge: testKnowledge,
+      buildSim: {} as buildSim.BuildSimSetup, maxDecisions, maxMinutes: 1, pollIntervalMs: 0 });
+    try {
+      const firstStats = await run(2);
+      expect(firstStats.acts, JSON.stringify({ firstStats, rows: rows.map(r => ({ error: r.error, problems: r.problems })) })).toBe(2);
+      const requests = fake.requests().filter(r => r.method === "turn/start");
+      const schema = requests[1]!.params.outputSchema;
+      expect(schema).toMatchObject({ additionalProperties: false, properties: { route_reason: { type: ["string", "null"], maxLength: 60 } } });
+      expect(schema.required).toContain("route_reason");
+      const prompt = JSON.parse(requests[1]!.params.input[0].text);
+      expect(prompt.question).toContain("route_reason");
+      expect(prompt.state.route_review.plan).toContain("r1c0");
+      expect(prompt.state.route_review.plan_facts).toBeDefined();
+      expect(rows[1]!.answer).toMatchObject({ choice: "card0" });
+      const validChange = change && !["missing-reason", "invalid-route"].includes(scenario);
+      expect(requests).toHaveLength(validChange || !change ? 2 : 3);
+      const records = readFileSync(cfg.log.decisionLog, "utf8").trim().split("\n").map(line => JSON.parse(line));
+      const pick = records.find(r => r.label === "reward/card");
+      expect(pick.route_review.outcome).toBe(validChange ? "change" : change ? "invalid" : "keep");
+      const routeChanges = records.filter(r => r.label === "map/route-change");
+      expect(routeChanges).toHaveLength(validChange ? 1 : 0);
+      if (validChange) {
+        expect(pick.deepseek.route_reason).toBe(routeReason);
+        expect(routeChanges[0]).toMatchObject({ journal: { reason: routeReason }, route_plan: { why: `card-reward review: ${routeReason}` } });
+      }
+      if (scenario === "missing-reason") {
+        expect(rows[1]!.problems?.join()).toContain("route_reason");
+        expect(pick.deepseek).not.toHaveProperty("route_reason");
+      }
+      const stored = loadRunPlan(cfg.runPlanLog, "ROUTE_CONTRACT_FIXTURE", 1)!;
+      expect(stored.endgame?.core).toBe(initialPlan.endgame.core);
+      expect(stored.endgame?.resources).toBe(construction ? constructionPatch.endgame.resources : initialPlan.endgame.resources);
+      const replay = replayRun(readRunLogs({ states: join(fake.state, "states.jsonl"), decisions: cfg.log.decisionLog, runPlans: cfg.runPlanLog }, "ROUTE_CONTRACT_FIXTURE"), testKnowledge);
+      expect(replay.routePlan!.path.map(n => `r${n.row}c${n.col}`).join(" ")).toBe(validChange ? changedRoute : initialRoute);
+      if (validChange) expect(replay.routePlan!.why).toContain(routeReason);
+      // A fresh loop has no screen memory: production recovery must read the persisted route before following it.
+      expect((await run(1)).acts).toBe(1);
+      expect(actions.at(-1)).toEqual({ action: "choose_map_node", option_index: validChange ? 1 : 0 });
+      expect(fake.requests().filter(r => r.method === "turn/start")).toHaveLength(requests.length);
+      expect(readFileSync(cfg.log.decisionLog, "utf8")).toContain('"label":"map/route-follow"');
+    } finally { sim.mockRestore(); setKnowledgeCharacter(null); }
+  }, 30_000);
+}

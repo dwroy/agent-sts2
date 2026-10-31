@@ -1,0 +1,140 @@
+{
+  "at": "2026-10-25T01:59:50+08:00",
+  "batch": "20261025-014301-strategy-proposal",
+  "state": "done",
+  "rc": 0,
+  "finished": "2026-10-25 01:58",
+  "native": {
+    "session": "01a16f03-5da8-74c0-b2ca-2c9c5347d17b",
+    "turn": "01a16f03-ca21-71f1-8998-5b9845d8f429",
+    "started_at": "2026-10-24T17:44:41.768Z",
+    "prompt_sha256": "96840223620dad21dbf33074dadc18b92e1e1736fbe578f1d186877c748f26d6",
+    "service_tier": null,
+    "rollout": "/home/dw/Projects/agent-sts2/ops/codex-ops/accounts/codex3/learner/sessions/2026/10/25/rollout-2026-10-25T01-44-14-01a16f03-5da8-74c0-b2ca-2c9c5347d17b.jsonl",
+    "prefix_bytes": 141788,
+    "prefix_sha256": "c933b66fb9c176fa4c8d20f011bfd7ecea3347d61f2a8b03f76a03399737d20b"
+  },
+  "native_contexts": [
+    {
+      "turn_id": "01a16f03-ca21-71f1-8998-5b9845d8f429",
+      "model": "gpt-6.1-sol",
+      "effort": "high",
+      "service_tier": null,
+      "approval_policy": "never",
+      "sandbox_policy": {
+        "type": "workspace-write",
+        "writable_roots": [
+          "/home/dw/Projects/agent-sts2",
+          "/home/dw/Projects/agent-sts2/.git",
+          "/home/dw/Projects/agent-sts2/.git/worktrees/codex-strategy-silent-20261025-014301"
+        ],
+        "network_access": false,
+        "exclude_tmpdir_env_var": false,
+        "exclude_slash_tmp": false
+      }
+    }
+  ],
+  "original_tui_unchanged_sha256": "64062fc733de176b9ea61cccbfe0e26ad57df03c427971de1f23e33ec0689728",
+  "native_and_report_proof": {
+    "destination_files": [
+      {
+        "unit_id": "external-remaining-events-003-r56-stock",
+        "kind": "strategy",
+        "id": "silent-events003-strategy-candidates",
+        "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261025-014301/learner/runs/20261025-014408-67b768ca-2220-48c1-a414-61df93f6ddd7-strategy-proposal/scratch/strategy-candidates.json",
+        "bytes": 49228,
+        "sha256": "b2ada2328b3b391c50fa269f7a5809e28fca79207e725a0917e608219a8ecac9"
+      },
+      {
+        "unit_id": "external-remaining-events-003-r56-stock",
+        "kind": "rk",
+        "id": "silent-events003-rk-candidates",
+        "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261025-014301/learner/runs/20261025-014408-67b768ca-2220-48c1-a414-61df93f6ddd7-strategy-proposal/scratch/rk-candidates.json",
+        "bytes": 40637,
+        "sha256": "c773696a18c5f73c4b2023c6746d5292602fb750eeb02c3e66067136293f51c5"
+      }
+    ],
+    "plan_id": "issue51-remaining-events-003-20261024-r56-stock",
+    "report_sha256": "56bd6438ca6c7be04d43e94ae3322d1eaab6b82e7839d227b784a18bb9767129",
+    "dispositions": [
+      {
+        "id": "external-remaining-events-003-r56-stock",
+        "state": "processed",
+        "destinations": [
+          {
+            "kind": "strategy",
+            "id": "silent-events003-strategy-candidates",
+            "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261025-014301/learner/runs/20261025-014408-67b768ca-2220-48c1-a414-61df93f6ddd7-strategy-proposal/scratch/strategy-candidates.json"
+          },
+          {
+            "kind": "rk",
+            "id": "silent-events003-rk-candidates",
+            "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261025-014301/learner/runs/20261025-014408-67b768ca-2220-48c1-a414-61df93f6ddd7-strategy-proposal/scratch/rk-candidates.json"
+          }
+        ],
+        "reason": "INFESTED_AUTOMATON 1情境、BATTLEWORN_DUMMY 2情境、BYRDONIS_NEST 2情境已落盘；复用/更新0。外部51统计行逐build分账，自有95独立局106机会另账。rk五项均research_only_waiting_consumer，不能作正式reflex发布或已消费。"
+      }
+    ]
+  },
+  "candidate_mode": {
+    "schema": "candidate-only-v1",
+    "merge": "no",
+    "dispatch_base": "6fca07a41446bda2acec25b61ab42af437ba5df1",
+    "worktree": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261025-014301"
+  },
+  "original_git_metadata_exists": false,
+  "upward_git_parent_discovery_used": false,
+  "raw_seek_checks": 452,
+  "own_support_runs": 95,
+  "counts": {
+    "distinct_new_contexts": 5,
+    "new_strategy_entries": 5,
+    "same_id_updates": 0,
+    "byte_reuses": 0,
+    "aliases": 0,
+    "rk_research_candidates": 5,
+    "production_loadable_rk_entries": 0,
+    "external_statistics_rows": 51,
+    "v0111_unique_cells_with_n_ge_100": 3,
+    "comparisons_with_both_arms_n_ge_100": 0,
+    "own_event_comparison_arms_n_ge_100": 0,
+    "formal_published": 0,
+    "consumer_readback": 0,
+    "natural_queries": 0,
+    "actual_adoption": 0,
+    "benefit_verified": 0,
+    "target_min": 5,
+    "target_max": 10,
+    "target_met_for_text_contexts": true,
+    "paired_research_rk_delivered": true,
+    "paired_formal_rk_complete": false
+  },
+  "strategy_ids": [
+    "silent-events003-automaton-random-pools",
+    "silent-events003-dummy-three-turn-feasibility",
+    "silent-events003-dummy-random-upgrades-tradeoff",
+    "silent-events003-nest-immediate-health",
+    "silent-events003-nest-hatching-opportunity"
+  ],
+  "rk_research_ids": [
+    "silent-rk-events003-automaton-random-pools",
+    "silent-rk-events003-dummy-three-turn-feasibility",
+    "silent-rk-events003-dummy-random-upgrades-tradeoff",
+    "silent-rk-events003-nest-immediate-health",
+    "silent-rk-events003-nest-hatching-opportunity"
+  ],
+  "strategy_evidence_status": {
+    "silent-events003-automaton-random-pools": "unassessed",
+    "silent-events003-dummy-three-turn-feasibility": "conflict",
+    "silent-events003-dummy-random-upgrades-tradeoff": "conflict",
+    "silent-events003-nest-immediate-health": "unassessed",
+    "silent-events003-nest-hatching-opportunity": "unassessed"
+  },
+  "formal_publication_and_consumer_readback": false,
+  "source_commit": null,
+  "merged": null,
+  "C5_phase": "waiting-original-natural-game-and-report",
+  "new_model_full_tick_game": 0,
+  "session_control_reclamation": 0,
+  "priority": "C5 original transaction, source58 next without waiting60, source60 next batch, serialized candidate data using effective writer"
+}

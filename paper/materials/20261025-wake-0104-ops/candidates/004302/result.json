@@ -1,0 +1,164 @@
+{
+  "task": "strategy-proposal",
+  "character": "silent",
+  "code_proposals": [],
+  "implementation_domains": [],
+  "proposal_results": [],
+  "batch": "20261025-004302-strategy-proposal",
+  "base": "ebe5bfc38d80694f6ec5a4f2e0c8ebf0bb2c3bf5",
+  "runs": [],
+  "fixes": [],
+  "merged": null,
+  "tests": {
+    "tsc": null,
+    "vitest": null,
+    "cases": null
+  },
+  "report": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261025-004302/learner/runs/20261025-004418-c8f0cf38-5d63-4e63-9401-ca47b4b1ab15-strategy-proposal/report.md",
+  "external_source": "issue51-remaining-events-004-20261024-r56-stock",
+  "input_sha256": "be116277d4bc5cc5a9de5ff7332bc7132784edec343fb277ef69e28c5a2a6ba9",
+  "external_results": [
+    {
+      "id": "external-remaining-events-004-r56-stock",
+      "state": "processed",
+      "destinations": [
+        {
+          "kind": "strategy",
+          "id": "silent-brain-events004-baths-initial-resource",
+          "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261025-004302/learner/runs/20261025-004418-c8f0cf38-5d63-4e63-9401-ca47b4b1ab15-strategy-proposal/strategy-candidates.json"
+        },
+        {
+          "kind": "rk",
+          "id": "silent-rk-events004-baths-initial-resource",
+          "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261025-004302/learner/runs/20261025-004418-c8f0cf38-5d63-4e63-9401-ca47b4b1ab15-strategy-proposal/rk-candidates.json"
+        },
+        {
+          "kind": "strategy",
+          "id": "silent-brain-events004-baths-linger-marginal-cost",
+          "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261025-004302/learner/runs/20261025-004418-c8f0cf38-5d63-4e63-9401-ca47b4b1ab15-strategy-proposal/strategy-candidates.json"
+        },
+        {
+          "kind": "rk",
+          "id": "silent-rk-events004-baths-linger-marginal-cost",
+          "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261025-004302/learner/runs/20261025-004418-c8f0cf38-5d63-4e63-9401-ca47b4b1ab15-strategy-proposal/rk-candidates.json"
+        },
+        {
+          "kind": "strategy",
+          "id": "silent-brain-events004-book-multihit-enchant",
+          "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261025-004302/learner/runs/20261025-004418-c8f0cf38-5d63-4e63-9401-ca47b4b1ab15-strategy-proposal/strategy-candidates.json"
+        },
+        {
+          "kind": "rk",
+          "id": "silent-rk-events004-book-multihit-enchant",
+          "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261025-004302/learner/runs/20261025-004418-c8f0cf38-5d63-4e63-9401-ca47b4b1ab15-strategy-proposal/rk-candidates.json"
+        },
+        {
+          "kind": "strategy",
+          "id": "silent-brain-events004-book-block-enchant",
+          "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261025-004302/learner/runs/20261025-004418-c8f0cf38-5d63-4e63-9401-ca47b4b1ab15-strategy-proposal/strategy-candidates.json"
+        },
+        {
+          "kind": "rk",
+          "id": "silent-rk-events004-book-block-enchant",
+          "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261025-004302/learner/runs/20261025-004418-c8f0cf38-5d63-4e63-9401-ca47b4b1ab15-strategy-proposal/rk-candidates.json"
+        },
+        {
+          "kind": "strategy",
+          "id": "silent-brain-events004-book-first-play-draw",
+          "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261025-004302/learner/runs/20261025-004418-c8f0cf38-5d63-4e63-9401-ca47b4b1ab15-strategy-proposal/strategy-candidates.json"
+        },
+        {
+          "kind": "rk",
+          "id": "silent-rk-events004-book-first-play-draw",
+          "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261025-004302/learner/runs/20261025-004418-c8f0cf38-5d63-4e63-9401-ca47b4b1ab15-strategy-proposal/rk-candidates.json"
+        },
+        {
+          "kind": "strategy",
+          "id": "silent-brain-events004-book-power-locked",
+          "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261025-004302/learner/runs/20261025-004418-c8f0cf38-5d63-4e63-9401-ca47b4b1ab15-strategy-proposal/strategy-candidates.json"
+        },
+        {
+          "kind": "rk",
+          "id": "silent-rk-events004-book-power-locked",
+          "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261025-004302/learner/runs/20261025-004418-c8f0cf38-5d63-4e63-9401-ca47b4b1ab15-strategy-proposal/rk-candidates.json"
+        }
+      ],
+      "reason": "两个固定事件产出6个新增情境文字策略及6个对应rk研究候选，达到5～10条目标；OROBAS因自有0局且外部缺完整选项/代价局部waiting。rk事件用途/字段消费者缺失，6候选均不可加载，正式发布/读回pending；无源码、合入或收益声明。"
+    }
+  ],
+  "source_commit": null,
+  "own_support_runs": [
+    "0CLP16ZR4ZZC",
+    "0DJ6GFZZ0TG9",
+    "0YQJ9D1MC4NK",
+    "2Q6ZYZ6JHM0M",
+    "456MRNGCPD8E",
+    "4AA19CXDKQK6",
+    "7BNC8QX746YP",
+    "7X0W3U8TVA2A",
+    "87LCSDR5P3DL",
+    "9U1E3V6XQAZ9",
+    "A3X30TN54LSH",
+    "AF76L5UTPP8U",
+    "AR523ATD2G4W",
+    "ATP5MCMJDMQY",
+    "CDXCWKNSBN8M",
+    "CRK2HNYKSCZC",
+    "G2XYF48GKAUW",
+    "GWE810ZD014M",
+    "HLAWCGM3KHVB",
+    "HTXMNBS3PPF5",
+    "LKC9YXKZWTKR",
+    "MGB1D1T0Y8G0",
+    "MR7EBRYRJ5R6",
+    "NTMAU4XZ2NN2",
+    "PYE4VXNSLGSS",
+    "Q3R929GHT14R",
+    "SWXESN56U1QJ",
+    "T1XWKCUQW4T3",
+    "T3FW7R2R2306",
+    "V3PJA3FV92BG",
+    "WG8GK5B9D7YH",
+    "WYB0NCD6W83J",
+    "Y5H4CFAQ2WTG",
+    "YLYLZWHA0GKU",
+    "YUWMCVH6MFUH",
+    "YXY2RL1E83HM"
+  ],
+  "decision_output_counts": {
+    "target_min": 5,
+    "target_max": 10,
+    "new_contexts": 6,
+    "new_strategy_ids": 6,
+    "updated_existing_contexts": 0,
+    "byte_reused_contexts": 0,
+    "aliases": 0,
+    "rk_research_candidates": 6,
+    "rk_loadable_candidates": 0,
+    "knowledge_local_candidates": 6,
+    "waiting_event_subitems": 1,
+    "external_statistical_cells": 356,
+    "comparable_groups_reaching_100_per_arm": 0,
+    "formal_publication": 0,
+    "production_consumer_readback": 0,
+    "natural_queries": 0,
+    "actual_adoption": 0,
+    "measured_benefit": null,
+    "new_zero_batch": false,
+    "consecutive_zero_new_batches": 0,
+    "previous_counter_limit": "未从旧冷启动predecessor推造events004连续零新增基线；本批有6新增，连续零计数为0。"
+  },
+  "mapping": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261025-004302/learner/runs/20261025-004418-c8f0cf38-5d63-4e63-9401-ca47b4b1ab15-strategy-proposal/experience-strategy-rk-map.json",
+  "coverage": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261025-004302/learner/runs/20261025-004418-c8f0cf38-5d63-4e63-9401-ca47b4b1ab15-strategy-proposal/coverage.json",
+  "source_ledger": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261025-004302/learner/runs/20261025-004418-c8f0cf38-5d63-4e63-9401-ca47b4b1ab15-strategy-proposal/source-ledger.json",
+  "formal_publication": "pending",
+  "consumer_readback": "pending",
+  "limitations": [
+    "自有版本unknown；A10/no_retry_evidence仅表示未观察到重试证据，不能证明从无SL；其他进阶与retry_or_predicted_death另账。",
+    "当前题面/原生后继牌文用于局部事实；不是伤害实测、整局因果收益、最佳选择或安全阈值。后继只作验证标签，不作触发。",
+    "外部自愿上传、玩家水平/选择偏差、路线/遗物/牌组与到达深度混杂；玩家数未知；上传记录不是已按玩家去重的独立实验。",
+    "外部仅定位键/节点聚合，缺完整未选项、代价和入场快照；前节点末HP为代理。不同cell会重叠，独立局并集未知，不能累加。",
+    "v0.107～v0.111缺机制未改的核对依据，逐build/幕分账，不合并版本；未知不补成未改。",
+    "rk现行applies_to无event，predicate无event_id/options/locked/enchantment，故对应rk是不可加载的研究意图候选，不是假造reflex-entry-v1。"
+  ]
+}

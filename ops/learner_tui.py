@@ -153,7 +153,7 @@ def policy_identity(payload):
                       ensure_ascii=False, sort_keys=True, separators=(",", ":"))
 
 
-def reconstruct_native(receipt):
+def reconstruct_native(receipt, *, source=None):
     """Reconstruct one-use native turn bindings from the journaled prompts, never a later human answer."""
     result = receipt["result"]
     bindings = receipt.get("bindings", [])
@@ -184,7 +184,7 @@ def reconstruct_native(receipt):
     restricted_policy, open_turn = False, False
     updates = []
     environment_ids = set()
-    with open(result["rollout"]) as source:
+    with (open(result["rollout"]) if source is None else contextlib.nullcontext(source)) as source:
         for line in source:
             if not line.endswith("\n"):
                 raise ValueError("native record is not durably complete")
@@ -286,15 +286,15 @@ def reconstruct_native(receipt):
     return updates
 
 
-def verify_native(receipt):
-    updates = reconstruct_native(receipt)
+def verify_native(receipt, *, source=None):
+    updates = reconstruct_native(receipt, source=source)
     if updates is None:
         return
     if (updates and receipt.get("native_environment_version") != 1) or receipt.get("native_environment_updates", []) != updates:
         raise ValueError("native environment proof differs from the original dispatch")
 
 
-def verify(path, output):
+def verify(path, output, *, persist_output=True):
     receipt = json.loads(Path(path).read_text())
     if "agent_name" in receipt or "agent_name_version" in receipt:
         binding = json.dumps([receipt["label"], receipt["pane"], os.path.abspath(receipt["cwd"])],
@@ -308,7 +308,8 @@ def verify(path, output):
                 or any(receipt.get(key) or result.get(key) for key in ("session", "turn", "rollout"))):
             raise ValueError("not-started receipt contains model activity")
         receipt["output"] = {"path": str(output), "sha256": digest(output)}
-        persist(path, receipt)
+        if persist_output:
+            persist(path, receipt)
         return receipt
     artifacts = receipt.get("artifacts", {})
     if (receipt.get("state") != "session-ended" or receipt.get("retirement_authorized") is not True
@@ -329,12 +330,13 @@ def verify(path, output):
         raise ValueError("original batch output is missing")
     receipt["output"] = {"path": str(output), "sha256": digest(output)}
     artifacts["out_pending_wrapper_flush"] = False
-    persist(path, receipt)
+    if persist_output:
+        persist(path, receipt)
     return receipt
 
 
-def verified_code(path, output, launcher_rc):
-    receipt = verify(path, output)
+def verified_code(path, output, launcher_rc, *, persist_output=True):
+    receipt = verify(path, output, persist_output=persist_output)
     code = receipt["result"]["code"]
     # The interactive launcher's error summary maps a preflight refusal to 1.
     if int(launcher_rc) != code and not (receipt["state"] == "not-started" and code == 3 and int(launcher_rc) == 1):

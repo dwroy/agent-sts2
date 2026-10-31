@@ -1,0 +1,40 @@
+test_dead_reused_and_zombie_game_identity_is_not_running (ops.tests.test_board_queue_resources.Probe.test_dead_reused_and_zombie_game_identity_is_not_running) ... ok
+test_kernel_lock_waiter_does_not_consume_a_second_slot (ops.tests.test_board_queue_resources.Probe.test_kernel_lock_waiter_does_not_consume_a_second_slot) ... ok
+test_legacy_parent_child_count_as_one_task (ops.tests.test_board_queue_resources.Probe.test_legacy_parent_child_count_as_one_task) ... ok
+test_missing_incomplete_old_boot_or_foreign_declaration_is_unknown (ops.tests.test_board_queue_resources.Probe.test_missing_incomplete_old_boot_or_foreign_declaration_is_unknown) ... ok
+test_two_game_reservations_are_observed_without_heavy_claims (ops.tests.test_board_queue_resources.Probe.test_two_game_reservations_are_observed_without_heavy_claims) ... ok
+test_unreadable_or_partial_process_identity_fails_closed (ops.tests.test_board_queue_resources.Probe.test_unreadable_or_partial_process_identity_fails_closed) ... ok
+test_actual_inherited_locked_descriptors_avoid_nested_admission (ops.tests.test_board_queue_resources.ResourceBridge.test_actual_inherited_locked_descriptors_avoid_nested_admission) ... ok
+test_business_lock_owner_cannot_wait_for_a_machine_slot (ops.tests.test_board_queue_resources.ResourceBridge.test_business_lock_owner_cannot_wait_for_a_machine_slot) ... ok
+test_disabled_keeps_original_argv_and_does_not_initialize_machine_state (ops.tests.test_board_queue_resources.ResourceBridge.test_disabled_keeps_original_argv_and_does_not_initialize_machine_state) ... ok
+test_enabled_wraps_before_business_lock_with_no_shell (ops.tests.test_board_queue_resources.ResourceBridge.test_enabled_wraps_before_business_lock_with_no_shell) ... ok
+test_environment_claim_alone_cannot_bypass_admission (ops.tests.test_board_queue_resources.ResourceBridge.test_environment_claim_alone_cannot_bypass_admission) ... ok
+test_fallback_admission_is_before_original_live_lock (ops.tests.test_board_queue_resources.ResourceBridge.test_fallback_admission_is_before_original_live_lock) ... ok
+test_linked_development_tree_cannot_publish_production_observations (ops.tests.test_board_queue_resources.ResourceBridge.test_linked_development_tree_cannot_publish_production_observations) ... ok
+test_ops_bootstrap_publishes_before_enable_without_changing_control (ops.tests.test_board_queue_resources.ResourceBridge.test_ops_bootstrap_publishes_before_enable_without_changing_control) ... ok
+test_unknown_bootstrap_cannot_initialize_machine_state (ops.tests.test_board_queue_resources.ResourceBridge.test_unknown_bootstrap_cannot_initialize_machine_state) ... ok
+test_actual_data_baseline_is_frozen_separately_from_candidate (ops.tests.test_board_queue_checks.CandidateChecks.test_actual_data_baseline_is_frozen_separately_from_candidate) ... ok
+test_capacity_refusal_is_before_first_checkout (ops.tests.test_board_queue_checks.CandidateChecks.test_capacity_refusal_is_before_first_checkout) ... ok
+test_check_executable_drift_invalidates_a_completed_projection (ops.tests.test_board_queue_checks.CandidateChecks.test_check_executable_drift_invalidates_a_completed_projection) ... ERROR
+test_concurrent_main_change_invalidates_without_mutating_candidate (ops.tests.test_board_queue_checks.CandidateChecks.test_concurrent_main_change_invalidates_without_mutating_candidate) ... ok
+test_conflicting_live_preimage_is_preserved (ops.tests.test_board_queue_checks.CandidateChecks.test_conflicting_live_preimage_is_preserved) ... ok
+test_existing_view_does_not_start_a_second_check (ops.tests.test_board_queue_checks.CandidateChecks.test_existing_view_does_not_start_a_second_check) ... ok
+test_large_new_cold_materials_are_refused_without_checkout (ops.tests.test_board_queue_checks.CandidateChecks.test_large_new_cold_materials_are_refused_without_checkout) ... ok
+test_runtime_patch_preserves_actual_live_differences_and_main (ops.tests.test_board_queue_checks.CandidateChecks.test_runtime_patch_preserves_actual_live_differences_and_main) ... ok
+test_source_dependency_and_index_drift_are_rejected (ops.tests.test_board_queue_checks.CandidateChecks.test_source_dependency_and_index_drift_are_rejected) ... ok
+test_unlocked_or_duplicate_queue_descriptors_are_rejected (ops.tests.test_board_queue_checks.CandidateChecks.test_unlocked_or_duplicate_queue_descriptors_are_rejected) ... ok
+test_unmapped_runtime_code_is_rejected_before_allocation (ops.tests.test_board_queue_checks.CandidateChecks.test_unmapped_runtime_code_is_rejected_before_allocation) ... ok
+
+======================================================================
+ERROR: test_check_executable_drift_invalidates_a_completed_projection (ops.tests.test_board_queue_checks.CandidateChecks.test_check_executable_drift_invalidates_a_completed_projection)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/dw/Projects/agent-sts2/.worktrees/issue-68-board-kit-merge-queue/ops/tests/test_board_queue_checks.py", line 143, in test_check_executable_drift_invalidates_a_completed_projection
+    (tree / 'agent/src/value.ts').write_bytes(original)
+     ^^^^
+NameError: name 'tree' is not defined. Did you mean: 'True'?
+
+----------------------------------------------------------------------
+Ran 26 tests in 3.357s
+
+FAILED (errors=1)

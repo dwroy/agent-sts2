@@ -1,0 +1,54 @@
+{
+  "schema": "issue69-development-checks-v1",
+  "base": "50c720312d1c3fe0d3e43edb2b7e17a19a8d3e8d",
+  "production_tsc": {
+    "exit": 0,
+    "log": "tsc-freeze.log"
+  },
+  "targeted": {
+    "files": 8,
+    "passed": 161,
+    "exit": 0,
+    "log": "targeted-exec-final.log"
+  },
+  "python": {
+    "tests": 27,
+    "exit": 0,
+    "log": "python-tests-final.log"
+  },
+  "sandbox_threads_first": {
+    "files": 642,
+    "files_passed": 641,
+    "files_failed": 1,
+    "tests_passed": 5923,
+    "tests_failed": 1,
+    "exit": 1,
+    "log": "sandbox-first.log",
+    "failure": "old sparse issue29 results.jsonl absent; exact HEAD blob restored after worker exit"
+  },
+  "imports_and_fork_paths": {
+    "files": 2,
+    "passed": 12,
+    "exit": 0,
+    "log": "imports-paths-final.log"
+  },
+  "original_learner_cli": {
+    "passed": 47,
+    "exit": 0,
+    "log": "learner-cli-final.log"
+  },
+  "full_final_combination": "pending original integrator",
+  "real_public_web_unit": "pending original ops",
+  "natural_adoption_and_winrate": "pending",
+  "worker": {
+    "pid": 2329045,
+    "nice": 19,
+    "max_workers": 1,
+    "exited": true
+  },
+  "source_freeze": {
+    "files": 18,
+    "drift": []
+  },
+  "updated_at": "2026-10-25T23:27:34.440865+08:00"
+}

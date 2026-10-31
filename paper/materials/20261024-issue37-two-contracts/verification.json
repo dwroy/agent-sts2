@@ -1,0 +1,74 @@
+{
+  "original_full": {
+    "passed": 6585,
+    "failed": 13,
+    "historical_skips": 2,
+    "sha256": "8b699fe607a09a986242f07ba13155529d65603a43ea3c3421f951d5510cd6ed",
+    "checker_thread_pool_failures": 11
+  },
+  "original_forks_diagnostic": {
+    "passed": 69,
+    "failed": 2,
+    "sha256": "cabf90011047c00ca14ed49a9d030a692c06e0f6b22fd5851a790dc2360f0347"
+  },
+  "frozen_profile": {
+    "anchor": "a0736855cb204bf579b264b40441db3936192eee",
+    "tree": "13079fcf68ecf105886c75a01d8d334d9084ac47",
+    "inputs": 2763,
+    "dependencies": 1417,
+    "original_inputs_manifest_sha256": "c8edd4a3d05fe5d4a7acad1db571bd4f16772801aff5c55b8d9e8f63246de6ec",
+    "owner_changed": [],
+    "dependencies_changed": [],
+    "patched_paths": [
+      {
+        "path": "agent/tests/external-strategy-evidence.test.ts",
+        "sha256": "4eacb4ea72044c40a9675de0a38cee55a230838930f410e2606e48774ce23664"
+      },
+      {
+        "path": "agent/tests/oneshot-support.ts",
+        "sha256": "7ea18651f03ac138d2bcb9a0544b63a98f12faf92db440415aca155fc71f227d"
+      },
+      {
+        "path": "agent/tests/run-plan-merge.test.ts",
+        "sha256": "46a96009f74f6b0fc8baf5a6d8dd47808ff8f42db7a785a0a403e310b09c00b5"
+      }
+    ],
+    "knowledge_inputs_unchanged": 604
+  },
+  "checks": {
+    "baseline": {
+      "sha256": "9b692f1ffbc417759500404dc523b4ce5aceac59a122eb84c42e14dd982de4a2",
+      "passed": 0,
+      "failed": 2,
+      "not_selected": 58,
+      "pool": "forks"
+    },
+    "diagnostic": {
+      "sha256": "a137ab078c692be7944a13d9c8fa9857d4715f7df7fa2566c8f05d8565455bf9",
+      "passed": 0,
+      "failed": 1,
+      "not_selected": 18,
+      "pool": "forks"
+    },
+    "plan-paths": {
+      "sha256": "0edba5b12d780472c0096284da9874d29e4390a725f4bee558f5f7358dbecf4b",
+      "passed": 30,
+      "failed": 0,
+      "not_selected": 0,
+      "pool": "forks"
+    },
+    "external": {
+      "sha256": "283fe71398252387c627f6d350b0570a2b253577bd5b820aafbfed9c6080880f",
+      "passed": 43,
+      "failed": 0,
+      "not_selected": 0,
+      "pool": "threads"
+    }
+  },
+  "production_tsc_rc": 0,
+  "new_full_runs": 0,
+  "check_lock_acquisitions": 0,
+  "game_or_model_calls": 0,
+  "production_operations": 0,
+  "release_scope": "frozen R433 reproduction only; preserve current live knowledge/entries/catalog and re-freeze next real profile; #20 owns current full window"
+}

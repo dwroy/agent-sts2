@@ -1,0 +1,182 @@
+{
+  "base": "16f66e76ad49e65df75a2efd88685b56fb86294d",
+  "final_inputs": "final-inputs.json",
+  "input_drift": [],
+  "production_tsc": {
+    "exit_code": 0,
+    "log": "final-tsc.log"
+  },
+  "stock_python": {
+    "exit_code": 0,
+    "cases": 28,
+    "log": "final-targeted-vitest-v3.log",
+    "standalone_log": "final-stock-python-v2.log"
+  },
+  "final_targeted_vitest": {
+    "exit_code": 0,
+    "files": 10,
+    "cases": 50,
+    "log": "final-targeted-vitest-v3.log"
+  },
+  "paths": {
+    "exit_code": 0,
+    "files": 1,
+    "cases": 11,
+    "log": "final-paths-vitest.log"
+  },
+  "broad_predecessor": {
+    "exit_code": 1,
+    "files": 644,
+    "passed_files": 642,
+    "passed_cases": 5939,
+    "failed_cases": 2,
+    "inputs": "frozen-inputs.json",
+    "log": "sandbox-vitest.log",
+    "failures": [
+      {
+        "test": "check-imports/all resolve",
+        "cause": "sparse historical fixture absent",
+        "resolution": "exact original HEAD blob materialized",
+        "path": "paper/materials/issue29-brain-speed/results.jsonl",
+        "sha256": "8d83deb7c85a8b7ceb92da9ffb195f13edf4fa2876f9be5692ec8d2ded1c23ef"
+      },
+      {
+        "test": "strategy-research-scheduling/full_slots_are_read_only",
+        "cause": "unconfigured stock mutated ordinary state",
+        "resolution": "no state write without control; original assertion kept"
+      }
+    ]
+  },
+  "final_combination_full": "pending original integrator; no claim final HEAD broad/full passed",
+  "earlier_targeted": {
+    "files": 8,
+    "passed_files": 7,
+    "passed_cases": 38,
+    "failed_cases": 1,
+    "cause": "copied publication fixture lacked two new modules; wrapper timed out",
+    "log": "targeted-vitest.log",
+    "resolution": "fixture closure completed; original 4 pipeline cases and final targeted pass"
+  },
+  "known_check_parent_pids_absent": {
+    "4003268": true,
+    "4145305": true,
+    "4148381": true,
+    "4150372": true,
+    "4169614": true
+  },
+  "runtime": "not enabled/deployed; two automatic disjoint natural units and real K1 publication/local readback pending ops",
+  "local_logs": {
+    "final-paths-vitest.log": {
+      "bytes": 437,
+      "sha256": "f9dbef3665a18bb5d02028b15396ab9ae0d1c17656366118b8bb9f3415194775"
+    },
+    "final-targeted-vitest-v2.log": {
+      "bytes": 1076,
+      "sha256": "0f1516d0f2e2f2c2c4edfec5dd46594256441ba0925b701e9600b73c84f1027f"
+    },
+    "final-boundaries-r2.log": {
+      "bytes": 126,
+      "sha256": "6bf813ec6963dd3f4f31635415022be924105f5ae895cea4dcbd7350907b48b4"
+    },
+    "publication-pipeline-recheck.log": {
+      "bytes": 102,
+      "sha256": "e65c7e6acedfe760aec10a3a4830f9d74728976fd3c504ab0dd7a4f056029337"
+    },
+    "native-envelope-before.log": {
+      "bytes": 1019,
+      "sha256": "1f405921f1572a82d923d0c53fecde04dbae8209c8d700ac812c4f9f34643150"
+    },
+    "stock-tests-r5.log": {
+      "bytes": 117,
+      "sha256": "f88be864a7b736c852f38ef603fa8c87d335340689d956ae8ca41e4cce8e27d3"
+    },
+    "final-boundaries-r1.log": {
+      "bytes": 1198,
+      "sha256": "9b3f680c45d7f95e7dc240e2104e2c5690a1c4c0646bc4a368baccc64d73b8e7"
+    },
+    "stock-tests-r3.log": {
+      "bytes": 112,
+      "sha256": "e47affc10409c50feb9e9671007a61e959c6e4c27d7426402e244e591922220f"
+    },
+    "tsc.log": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "original-external-tests.log": {
+      "bytes": 121,
+      "sha256": "d5a2273dfdce2510f8bf7b548ca485d3b72cc5bb492e77af15234090c65d3b79"
+    },
+    "stock-tests-r4.log": {
+      "bytes": 116,
+      "sha256": "80ff3d79fefa71af7fd3ca8ccc5f401ddf51458e3d62bfcafdff736063cd5fb8"
+    },
+    "final-stock-python-v2.log": {
+      "bytes": 127,
+      "sha256": "c40420fc4177459476a26ef0001083a21021ff2263eefe05456012d274a1e0b9"
+    },
+    "final-stock-python.log": {
+      "bytes": 127,
+      "sha256": "12dfe3079c6816603e609e92a882c87c5c9107f5f010d2e192adc11dad817acd"
+    },
+    "final-targeted-vitest-v3.log": {
+      "bytes": 1076,
+      "sha256": "b7330b7c6fcdbb8504f3a1116199360e5f81b255627d4032cf899b370770ff99"
+    },
+    "stock-tests-final-v2.log": {
+      "bytes": 122,
+      "sha256": "a42b3a56b8601fddfeef1fea7d0970b0e4fcec8d223a7bc49cecab187f0b1d73"
+    },
+    "stock-tests-r1.log": {
+      "bytes": 1566,
+      "sha256": "31e88479a11e741c2b4792fb0557fc21442bf29b31921648e1e211443fb1d3f3"
+    },
+    "stock-tests-final-v3.log": {
+      "bytes": 122,
+      "sha256": "cee6099cd52f2a703a38aa3aa2694e6abfebc3456b53baf9944e2f134dca6be5"
+    },
+    "sandbox-vitest.log": {
+      "bytes": 32546,
+      "sha256": "9629305b2c8504864033b41a2695839de1dec130867f0bb58406c3ec48585b30"
+    },
+    "targeted-vitest.log": {
+      "bytes": 1766,
+      "sha256": "c276d5d3bf71704d27b832b0e4e2d1542df255f95d22a85d9deb8e46aacbbd48"
+    },
+    "gitleaks-staged.log": {
+      "bytes": 108,
+      "sha256": "cae75c7fca849dc0e353666487ac351641b044899c704300fc54a5059e9a7760"
+    },
+    "stock-tests-r6.log": {
+      "bytes": 117,
+      "sha256": "dbc0f0e718ef040931a633856a93ab5e12a0b1e4ae31df5b8550dad36efedc25"
+    },
+    "final-targeted-vitest.log": {
+      "bytes": 1076,
+      "sha256": "a3cf4bb3b473afbcb996527cdd61476d55b2b0430e14dbe942ab4e561d8218c9"
+    },
+    "stock-tests-r8.log": {
+      "bytes": 121,
+      "sha256": "2f52212dba65bb8ab5615bd30a63298efe9e36c0450ba1a2a102edd899581625"
+    },
+    "stock-tests-r2.log": {
+      "bytes": 112,
+      "sha256": "58ec822a7ff8c5198cb2623f9005fa917f6bc570783e7b6401281d65ea5f91e4"
+    },
+    "final-tsc.log": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "stock-tests-final.log": {
+      "bytes": 121,
+      "sha256": "a584db215ed9019908601a962f28f4a725ba65b2f25b2fe9ef6a99642ebb521f"
+    },
+    "stock-tests-r7.log": {
+      "bytes": 120,
+      "sha256": "840b894972a432f9c65489213c7041b0d004f179559392c4db518148fa64c3f5"
+    }
+  },
+  "precommit_format_check": {
+    "result": "two trailing spaces removed; AST identical",
+    "ast_sha256": "b090bfdc06d6bdb4a4f09882950e6917aa62b9852212946c24e5dcb350863411"
+  }
+}

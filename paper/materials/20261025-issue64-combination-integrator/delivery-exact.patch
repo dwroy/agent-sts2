@@ -1,0 +1,740 @@
+diff --git a/agent/src/brain/engines/codex.ts b/agent/src/brain/engines/codex.ts
+index dfbb59d6d..0c1c011bd 100644
+--- a/agent/src/brain/engines/codex.ts
++++ b/agent/src/brain/engines/codex.ts
+@@ -382,15 +382,16 @@ export function closeCutAnswer(text: string): { json: Record<string, unknown>; t
+  * (2026-10-03, RNTVAT76BPV0 / J4S28FRQKD7G: 7 of 27 live calls at high stalled; the replayed ones streamed route_reason
+  * as an endless chain of single characters, 「稳。好。走。保。…」, after a short phrase):
+  * - routeReason "drop" (BRAIN_CODEX_ROUTE_REASON, default): no route_reason field (it is only logged: the route review's
+- *   reason in the decision log); "keep": the field stays, capped at ROUTE_REASON_CHARS.
++ *   reason in the decision log); "keep": the field stays, capped at ROUTE_REASON_CHARS. A question whose
++ *   contract requires a reason on a changed route preserves the optional field even with "drop".
+  * - maxFieldChars (BRAIN_CODEX_MAX_FIELD_CHARS, default 600): every free-text string (no enum) gets that maxLength,
+  *   which OpenAI's strict mode enforces while it samples: a runaway in any text field ends there. Logged answers' longest
+  *   single field is ~180 characters; the act route ~90.
+  * DeepSeek's and Claude's schemas and every prompt stay as they are.
+  */
+-export function codexSchema(kindSchema: JsonSchema, opts: { routeReason: "drop" | "keep"; maxFieldChars: number | null; routePattern?: boolean }): StrictSchema | null {
++export function codexSchema(kindSchema: JsonSchema, opts: { routeReason: "drop" | "keep"; maxFieldChars: number | null; routePattern?: boolean; routeReasonOnChange?: boolean }): StrictSchema | null {
+   let schema = kindSchema;
+-  if (opts.routeReason === "drop" && schema.properties?.["route_reason"]) {
++  if (opts.routeReason === "drop" && !opts.routeReasonOnChange && schema.properties?.["route_reason"]) {
+     const { route_reason: _dropped, ...properties } = schema.properties;
+     schema = { ...schema, properties, required: (schema.required ?? []).filter((key) => key !== "route_reason") };
+   }
+@@ -1024,7 +1025,7 @@ export class CodexEngine implements BrainEngine {
+     mkdirSync(this.stateDir, { recursive: true });
+     const entry = await this.catalog(model, effort, env);
+     const kindSchema = codexKindSchema(req.spec, { fields: this.opts.codex.schemaFields, reasonLast: this.opts.codex.reasonLast });
+-    const schema = codexSchema(kindSchema, { routeReason: this.opts.codex.routeReason, maxFieldChars: this.opts.codex.maxFieldChars, routePattern: this.opts.codex.routePattern });
++    const schema = codexSchema(kindSchema, { routeReason: this.opts.codex.routeReason, maxFieldChars: this.opts.codex.maxFieldChars, routePattern: this.opts.codex.routePattern, routeReasonOnChange: req.spec.routeReasonOnChange });
+     const cacheRequest = this.cacheObserver.capture({ scope: `${knowledgeCharacter()}|${req.runId ?? ""}`, system: req.system, prompt: promptWithReask(req), schema, serviceTier: this.opts.codex.serviceTier });
+     const call = { model, effort, env, entry, kindSchema, schema, cacheRequest };
+     // The usage guard's changes since the last row (codex back after reads failed, a refreshed token): on this question's row.
+diff --git a/agent/src/brain/specs.ts b/agent/src/brain/specs.ts
+index 58f96fe82..7a18f08c6 100644
+--- a/agent/src/brain/specs.ts
++++ b/agent/src/brain/specs.ts
+@@ -162,6 +162,7 @@ export function pickSpec(label: string, options: Record<string, string | null>,
+     label,
+     kind: "pick",
+     schema: { type: "object", properties, required, additionalProperties: false },
++    ...(reviewMap && endgamePlanningTask(st) ? { routeReasonOnChange: true } : {}),
+     ...(route || ranking ? { reask: true } : {}),
+     validate(answer: unknown): string[] {
+       if (!isObject(answer)) return ["the answer is not a JSON object"];
+diff --git a/agent/src/brain/types.ts b/agent/src/brain/types.ts
+index 7304e5d4f..48c9d3987 100644
+--- a/agent/src/brain/types.ts
++++ b/agent/src/brain/types.ts
+@@ -32,6 +32,8 @@ export interface AnswerSpec {
+   kind: "pick" | "plan";
+   /** JSON Schema of the answer object (JSON mode instruction, tool schema, --json-schema, --output-schema). */
+   schema: JsonSchema;
++  /** A changed route needs its own reason; schema adapters must preserve that optional field. */
++  routeReasonOnChange?: boolean;
+   /** Problems with a parsed answer; [] means valid. Messages are specific enough to re-ask with. */
+   validate(answer: unknown): string[];
+   /**
+diff --git a/agent/src/core/config.ts b/agent/src/core/config.ts
+index 26f806765..7f5126ee9 100644
+--- a/agent/src/core/config.ts
++++ b/agent/src/core/config.ts
+@@ -616,6 +616,7 @@ export interface BrainConfig {
+     /**
+      * BRAIN_CODEX_ROUTE_REASON: "drop" (default) leaves route_reason out of codex's answer schema (only logged; the
+      * replayed runaways were all in it), "keep" keeps it capped at 60 characters (engines/codex.ts codexSchema).
++     * A question requiring a route-change reason preserves the optional field regardless of this legacy setting.
+      */
+     routeReason: "drop" | "keep";
+     /**
+diff --git a/agent/tests/brain-codex-session.test.ts b/agent/tests/brain-codex-session.test.ts
+index b0f9cdc53..e3e4ee02c 100644
+--- a/agent/tests/brain-codex-session.test.ts
++++ b/agent/tests/brain-codex-session.test.ts
+@@ -9,7 +9,7 @@ import { chmodSync, existsSync, mkdirSync, mkdtempSync, readFileSync, rmSync, wr
+ import { tmpdir } from "node:os";
+ import { dirname, join } from "node:path";
+ import { fileURLToPath } from "node:url";
+-import { afterEach, describe, expect, it } from "vitest";
++import { afterEach, describe, expect, it, vi } from "vitest";
+ 
+ import { ANSWER_TEXT_KEEP, BlankRun, configTomlProblems, sessionCwdRoot } from "../src/brain/engines/codex-session.js";
+ import { CodexEngine, catalogEntry, codexKindSchema, codexSchema, sessionFailure } from "../src/brain/engines/codex.js";
+@@ -17,6 +17,16 @@ import { pickSpec, stableSchema } from "../src/brain/specs.js";
+ import type { BrainRequest } from "../src/brain/types.js";
+ import { loadConfig } from "../src/core/config.js";
+ import { BrainRouter, type BrainLogRow } from "../src/brain/router.js";
++import { Brain, agentSystemPrompt } from "../src/brain/brain.js";
++import { runLoop } from "../src/hand/loop.js";
++import { ModClient } from "../src/hand/mod/client.js";
++import { setKnowledgeCharacter } from "../src/knowledge/files.js";
++import { loadRunPlan } from "../src/memory/run-plan.js";
++import { readRunLogs, replayRun } from "../src/memory/journal-replay.js";
++import * as buildSim from "../src/sim/build-sim-facts.js";
++import { mainMenuPayload, testKnowledge } from "./scenarios.js";
++import { envelope } from "./support.js";
++import { changedRoute, constructionPatch, initialPlan, initialRoute, previousRoute, routeBoard, routeReason } from "./route-reason-fixture.js";
+ 
+ const dir = mkdtempSync(join(tmpdir(), "fake-codex-session-"));
+ 
+@@ -37,6 +47,8 @@ interface Script {
+   /** Threads thread/list returns (the sweep). */
+   stale?: Event[];
+   revertFails?: boolean;
++  /** Enforce the supplied strict output format before emitting each scripted answer. */
++  strictAnswers?: boolean;
+ }
+ 
+ interface Req {
+@@ -109,7 +121,29 @@ for await (const line of createInterface({ input: process.stdin })) {
+         if (current !== turnId) return;
+         if (e.__sleep) { await new Promise((ok) => setTimeout(ok, e.__sleep)); continue; }
+         if (e.__die) process.exit(9);
+-        send(JSON.parse(JSON.stringify(e).replaceAll("$TURN", turnId).replaceAll("$THREAD", p.threadId)));
++        const event = JSON.parse(JSON.stringify(e).replaceAll("$TURN", turnId).replaceAll("$THREAD", p.threadId));
++        if (script.strictAnswers && event.params?.item?.type === "agentMessage") {
++          // Fill nullable slots exactly as a strict structured-output response would; reject unknown fields.
++          const check = (schema, value) => {
++            const types = Array.isArray(schema.type) ? schema.type : [schema.type];
++            const type = value === null ? "null" : Array.isArray(value) ? "array" : typeof value;
++            if (!types.includes(type) && !(type === "number" && types.includes("integer") && Number.isInteger(value))) throw Error("strict type mismatch");
++            if (schema.enum && !schema.enum.includes(value)) throw Error("strict enum mismatch");
++            if (type === "object") {
++              for (const key of Object.keys(value)) if (!Object.hasOwn(schema.properties, key)) throw Error("strict unknown field: " + key);
++              for (const key of schema.required) {
++                if (!Object.hasOwn(value, key)) value[key] = null;
++                check(schema.properties[key], value[key]);
++              }
++            }
++            if (type === "array") value.forEach(item => check(schema.items, item));
++            if (type === "string" && ((schema.maxLength && Array.from(value).length > schema.maxLength) || (schema.pattern && !new RegExp(schema.pattern).test(value)))) throw Error("strict string constraint");
++          };
++          const answer = JSON.parse(event.params.item.text);
++          check(p.outputSchema, answer);
++          event.params.item.text = JSON.stringify(answer);
++        }
++        send(event);
+       }
+     })();
+   } else send({ id: msg.id, error: { code: -32601, message: "unknown " + msg.method } });
+@@ -586,3 +620,79 @@ it("knowledge session isolation failures stay unavailable and never dispatch exe
+   await expect(engine.decide(request())).rejects.toMatchObject({ kind: "unavailable" });
+   expect(fake.execs()).toBe(0);
+ });
++
++
++for (const scenario of ["change", "construction-only", "both", "omit", "keep", "repeat", "missing-reason", "invalid-route"] as const) {
++  it(`#64 strict session through persistence and restored route consumer: ${scenario}`, async () => {
++    setKnowledgeCharacter("silent");
++    const change = ["change", "both", "missing-reason", "invalid-route"].includes(scenario);
++    const construction = ["construction-only", "both", "missing-reason"].includes(scenario);
++    const answer = { choice: "card0", reason: "格式选择",
++      ...(scenario === "omit" || scenario === "construction-only" ? {} : { route: scenario === "keep" ? "keep" : scenario === "repeat" ? previousRoute : scenario === "invalid-route" ? "r99c0" : changedRoute }),
++      ...(change && scenario !== "missing-reason" ? { route_reason: routeReason } : {}),
++      ...(construction ? { run_plan: constructionPatch } : {}) };
++    const fake = fakeSession(`route-reason-${scenario}`, { strictAnswers: true, turns: [
++      answering({ route: initialRoute, reason: "格式初始路线", run_plan: initialPlan }), answering(answer), answering(answer),
++    ] });
++    const { engine } = sessionEngine(fake, { knowledgeAgent: true, env: { BRAIN_CODEX_ROUTE_REASON: "drop", BRAIN_CODEX_ROUTE_PATTERN: "on" } });
++    const cfg = loadConfig({ BRAIN_RUN_CONFIG: JSON.stringify({ engine: "codex", effort: "high" }), BRAIN_LOG: "off", RUN_PLAN: "off", FIGHT_PLAN: "off", BUILD_ONESHOT: "off", BUILD_DECIDER: "deepseek" });
++    cfg.log.decisionLog = join(fake.state, "decisions.jsonl");
++    cfg.runPlanLog = join(fake.state, "run-plans.jsonl");
++    cfg.fightPlanLog = join(fake.state, "fight-plans.jsonl");
++    const rows: BrainLogRow[] = [];
++    const brain = new Brain(new BrainRouter({ config: { ...cfg.brain, log: null }, knowledgeAgent: true, engine: () => engine, log: r => rows.push(r) }), { systemPrompt: agentSystemPrompt(routeBoard("reward")) });
++    // The admission gate is unchanged; only the expensive projection is supplied as a completed fixed fixture.
++    const sim = vi.spyOn(buildSim, "withBossSim").mockImplementation(async decision => ({ decision,
++      record: { samples: 1, requested: 1, completion: { status: "complete" } } }));
++    const actions: unknown[] = [];
++    const sequence = [routeBoard("initial"), routeBoard("reward"), routeBoard("next"), mainMenuPayload()];
++    let position = 0;
++    const client = new ModClient({ baseUrl: "http://fixture.invalid", fetchImpl: (async (url, init) => {
++      if (String(url).endsWith("/state")) return Response.json(envelope(sequence[position]));
++      const action = JSON.parse(String(init?.body)); actions.push(action); position++;
++      return Response.json(envelope({ action: action.action, status: "completed", stable: true, message: "fixed", state: sequence[position] }));
++    }) as typeof fetch });
++    const jev = { ask: vi.fn().mockRejectedValue(new Error("no fixture Jev reply")) };
++    const run = (maxDecisions: number) => runLoop({ config: cfg, mode: "play", client, brain, jev: jev as any, knowledge: testKnowledge,
++      buildSim: {} as buildSim.BuildSimSetup, maxDecisions, maxMinutes: 1, pollIntervalMs: 0 });
++    try {
++      const firstStats = await run(2);
++      expect(firstStats.acts, JSON.stringify({ firstStats, rows: rows.map(r => ({ error: r.error, problems: r.problems })) })).toBe(2);
++      const requests = fake.requests().filter(r => r.method === "turn/start");
++      const schema = requests[1]!.params.outputSchema;
++      expect(schema).toMatchObject({ additionalProperties: false, properties: { route_reason: { type: ["string", "null"], maxLength: 60 } } });
++      expect(schema.required).toContain("route_reason");
++      const prompt = JSON.parse(requests[1]!.params.input[0].text);
++      expect(prompt.question).toContain("route_reason");
++      expect(prompt.state.route_review.plan).toContain("r1c0");
++      expect(prompt.state.route_review.plan_facts).toBeDefined();
++      expect(rows[1]!.answer).toMatchObject({ choice: "card0" });
++      const validChange = change && !["missing-reason", "invalid-route"].includes(scenario);
++      expect(requests).toHaveLength(validChange || !change ? 2 : 3);
++      const records = readFileSync(cfg.log.decisionLog, "utf8").trim().split("\n").map(line => JSON.parse(line));
++      const pick = records.find(r => r.label === "reward/card");
++      expect(pick.route_review.outcome).toBe(validChange ? "change" : change ? "invalid" : "keep");
++      const routeChanges = records.filter(r => r.label === "map/route-change");
++      expect(routeChanges).toHaveLength(validChange ? 1 : 0);
++      if (validChange) {
++        expect(pick.deepseek.route_reason).toBe(routeReason);
++        expect(routeChanges[0]).toMatchObject({ journal: { reason: routeReason }, route_plan: { why: `card-reward review: ${routeReason}` } });
++      }
++      if (scenario === "missing-reason") {
++        expect(rows[1]!.problems?.join()).toContain("route_reason");
++        expect(pick.deepseek).not.toHaveProperty("route_reason");
++      }
++      const stored = loadRunPlan(cfg.runPlanLog, "ROUTE_CONTRACT_FIXTURE", 1)!;
++      expect(stored.endgame?.core).toBe(initialPlan.endgame.core);
++      expect(stored.endgame?.resources).toBe(construction ? constructionPatch.endgame.resources : initialPlan.endgame.resources);
++      const replay = replayRun(readRunLogs({ states: join(fake.state, "states.jsonl"), decisions: cfg.log.decisionLog, runPlans: cfg.runPlanLog }, "ROUTE_CONTRACT_FIXTURE"), testKnowledge);
++      expect(replay.routePlan!.path.map(n => `r${n.row}c${n.col}`).join(" ")).toBe(validChange ? changedRoute : initialRoute);
++      if (validChange) expect(replay.routePlan!.why).toContain(routeReason);
++      // A fresh loop has no screen memory: production recovery must read the persisted route before following it.
++      expect((await run(1)).acts).toBe(1);
++      expect(actions.at(-1)).toEqual({ action: "choose_map_node", option_index: validChange ? 1 : 0 });
++      expect(fake.requests().filter(r => r.method === "turn/start")).toHaveLength(requests.length);
++      expect(readFileSync(cfg.log.decisionLog, "utf8")).toContain('"label":"map/route-follow"');
++    } finally { sim.mockRestore(); setKnowledgeCharacter(null); }
++  }, 30_000);
++}
+diff --git a/agent/tests/route-reason-fixture.ts b/agent/tests/route-reason-fixture.ts
+new file mode 100644
+index 000000000..7ec70e507
+--- /dev/null
++++ b/agent/tests/route-reason-fixture.ts
+@@ -0,0 +1,29 @@
++/** Synthetic interface data only; no strategy, live response or measured game result. */
++import { input } from "./route-fixture.js";
++import { rewardCardPayload } from "./scenarios.js";
++
++export const initialRoute = "r0c1 r1c0 r2c0 r3c1 r4c1 r5c1";
++export const previousRoute = "r1c0 r2c0 r3c1 r4c1 r5c1";
++export const changedRoute = "r1c2 r2c1 r3c1 r4c1 r5c1";
++export const routeReason = "当前资源变化，比较原路后选择另一分支，预期改善胜率，效果未知";
++export const constructionPatch = { endgame: { resources: "格式资源更新" }, change_reason: "当前资源变化，局部更新构筑假设，预期有利，效果未知" };
++export const initialPlan = { archetype: "格式方向", want: [], avoid: [], remove: [], block_target: 0, elites: "normal", rest: "auto",
++  construction: { primary: "uncommitted", alternatives: [], checkpoint: 4, reason: "格式未知", pivot_if: "新证据" },
++  boss_prep: "未知", summary: "格式计划", endgame: { core: "格式核心", gaps: "未知", scaling_damage: "未知", sustainable_defense: "未知", resources: "未知", win_condition: "未知", checkpoint: "" } };
++
++export function routeBoard(kind: "initial" | "reward" | "next", character = "SILENT", ascension = 10) {
++  const raw = rewardCardPayload();
++  raw.run_id = "ROUTE_CONTRACT_FIXTURE";
++  raw.run = { ...raw.run as object, character_id: character, ascension, act_id: "0", floor: kind === "initial" ? 0 : 1,
++    current_hp: kind === "initial" ? 70 : 40, max_hp: 80, relics: [], potions: [] };
++  if (kind === "reward") return raw;
++  raw.screen = "MAP";
++  raw.available_actions = ["choose_map_node", "save_and_quit"];
++  raw.reward = null;
++  const nodes = input().nodes;
++  const available = kind === "initial" ? [{ row: 0, col: 1 }] : [{ row: 1, col: 0 }, { row: 1, col: 2 }];
++  raw.map = { nodes: nodes.map(n => ({ ...n, node_type: n.type, visited: kind !== "initial" && n.row === 0 })),
++    current_node: kind === "initial" ? null : { row: 0, col: 1 }, boss_node: { row: 4, col: 1 }, second_boss_node: { row: 5, col: 1 },
++    available_nodes: available.map((n, index) => ({ ...n, index, node_type: nodes.find(v => v.row === n.row && v.col === n.col)!.type })) };
++  return raw;
++}
+diff --git a/agent/tests/route-reason-schema.test.ts b/agent/tests/route-reason-schema.test.ts
+new file mode 100644
+index 000000000..8cd1f2103
+--- /dev/null
++++ b/agent/tests/route-reason-schema.test.ts
+@@ -0,0 +1,64 @@
++/** Strict-format contract and legacy-scope controls; fixed interface data only. */
++import { expect, it } from "vitest";
++import { codexKindSchema, codexSchema, dropNulls } from "../src/brain/engines/codex.js";
++import { pickSpec } from "../src/brain/specs.js";
++import { parseGameState } from "../src/hand/mod/schema.js";
++import { makeRoutePlan, routeBlockState } from "../src/hand/screens/route-plan.js";
++import { ROUTE_REVIEW_NOTE, withRouteReview } from "../src/hand/screens/route-review.js";
++import { endgameQuestion, endgameTask } from "../src/memory/endgame-plan.js";
++import { buildRouteMap } from "../src/sim/route-map.js";
++import type { AskDecision } from "../src/memory/types.js";
++import { costs, input } from "./route-fixture.js";
++import { env } from "./oneshot-support.js";
++import { changedRoute, previousRoute, routeBoard, routeReason } from "./route-reason-fixture.js";
++
++const map = buildRouteMap(input());
++const review = routeBlockState({ map, plan: previousRoute.split(" "), start: { hp: 40, max: 80 }, costs });
++const payload = (character = "SILENT", ascension = 10) => {
++  const state = parseGameState(routeBoard("reward", character, ascension));
++  return { route_review: review, ...(endgameQuestion(state, "reward/card") ? { run_plan_task: endgameTask(state, "reward/card", true) } : {}) };
++};
++
++it.each(["used", "all"] as const)("keeps the changed-route reason in %s fields with either field order and text cap", fields => {
++  const spec = pickSpec("reward/card", { a: null }, payload());
++  expect(spec.routeReasonOnChange).toBe(true);
++  expect(spec.schema.required).not.toContain("route_reason");
++  for (const reasonLast of [false, true]) for (const maxFieldChars of [600, 20, null]) {
++    const kind = codexKindSchema(spec, { fields, reasonLast });
++    const strict = codexSchema(kind, { routeReason: "drop", routeReasonOnChange: spec.routeReasonOnChange, maxFieldChars, routePattern: true })!;
++    expect((strict.properties as any).route_reason).toMatchObject({ type: ["string", "null"] });
++    expect((strict.properties as any).route_reason.maxLength).toBe(maxFieldChars === null ? undefined : Math.min(maxFieldChars, 60));
++    expect(strict.additionalProperties).toBe(false);
++    expect(dropNulls({ choice: "a", reason: "格式", route: null, route_reason: null, run_plan: null }, kind)).toEqual({ choice: "a", reason: "格式" });
++    expect(spec.softValidate?.({ choice: "a", route: changedRoute, route_reason: routeReason })).toEqual([]);
++  }
++});
++
++it("leaves the legacy drop/keep schemas unchanged outside the existing target contract", () => {
++  for (const [character, ascension] of [["IRONCLAD", 10], ["SILENT", 9], ["SILENT", 11], ["REGENT", 10]] as const) {
++    const spec = pickSpec("reward/card", { a: null }, payload(character, ascension));
++    expect(spec.routeReasonOnChange).toBeUndefined();
++    const kind = codexKindSchema(spec, { fields: "used", reasonLast: false });
++    expect((codexSchema(kind, { routeReason: "drop", maxFieldChars: 600 })!.properties as any).route_reason).toBeUndefined();
++    expect((codexSchema(kind, { routeReason: "keep", maxFieldChars: 600 })!.properties as any).route_reason).toMatchObject({ maxLength: 60 });
++  }
++  const noReview = pickSpec("reward/card", { a: null }, { run_plan_task: payload().run_plan_task });
++  expect(noReview.routeReasonOnChange).toBeUndefined();
++});
++
++it.each([undefined, null, "", "   ", 12])("rejects a changed route with unusable reason %j in validation and the consumer", route_reason => {
++  const spec = pickSpec("reward/card", { a: null }, payload());
++  const answer = { choice: "a", route: changedRoute, route_reason, run_plan: { change_reason: routeReason } };
++  expect(spec.softValidate?.(answer).join()).toContain("route_reason");
++  const e = env(routeBoard("reward"));
++  const plan = makeRoutePlan(e, map, previousRoute.split(" "), { hp: 40, max: 80 }, costs);
++  e.screenMemory.routePlan = plan;
++  const decision: AskDecision = { kind: "ask", label: "reward/card", state: {}, questions: {},
++    deepseek: { question: "pick", baseline: { kind: "act", label: "fixture", intent: { action: "choose_reward_card", option_index: 0 }, rationale: "格式" } },
++    resolve: () => ({ intent: { action: "choose_reward_card", option_index: 0 }, rationale: "格式", confidence: null, fallback: false }) };
++  const reviewed = withRouteReview(e, decision, { kind: "card", state: review, note: ROUTE_REVIEW_NOTE, map, plan, remaining: previousRoute.split(" "), costs });
++  if (reviewed.kind !== "ask") throw Error("fixture");
++  const result = reviewed.resolve({ pick: { type: "choice", choice: "a", probabilities: { a: 1 }, confidence: 1, raw: answer } });
++  expect(result.routeReview?.outcome).toBe("invalid"); result.apply?.();
++  expect(e.screenMemory.routePlan).toBe(plan);
++});
+diff --git a/docs/brain-agent-mode.md b/docs/brain-agent-mode.md
+index fa506fa55..d41f7dd7b 100644
+--- a/docs/brain-agent-mode.md
++++ b/docs/brain-agent-mode.md
+@@ -102,6 +102,8 @@ Silent A10 的终局目标继续从第一幕面向 F48→F49 连胜。初次建
+ 
+ 爬楼继续使用原 `RoutePlan`、代码逐节点执行和合法性检查。普通复核题可省略 route 或给 `keep`，重复相同节点序列也复用原计划；真实改线才给合法新节点序列及 `route_reason`，结合当前情况说明取舍和预期收益。初始路线、路线失效、幕初随机结果的一次复核沿原入口处理；两类路线分别调整。非目标角色/进阶保留原控制与日志语义。
+ 
++Silent A10 的改线题在严格 Codex 输出格式中保留可空的 `route_reason`，即使历史配置为 `BRAIN_CODEX_ROUTE_REASON=drop`；默认文本上限仍为 60 字符。不改线可给 null，解析后等同省略。理由只随真实改线进入路线记录，构筑的 `run_plan.change_reason` 不代替它；字段存在不表示代码能验证理由语义或胜率收益。
++
+ Silent A10 的 `routeBlockState` 按实际依赖分别缓存 `plan_facts`、`next_rest` 和初始 `candidate_routes`。地图/当前位置/可达性/飞行靴、剩余节点与房间代价参与键，HP/maxHP、连续战斗数、休息选项及文字说明按各自消费者参与；金币、牌组等仍随当前事实更新，经 `routeCosts` 实际改变的回血/房间模型也会失效。仅休息选项变化不重算无关的 next_rest；重复题且依赖未变不再计算同一整段投影/枚举替代线。缓存不落盘，冷启动重新核算当前数值；不拿原计划投影冒充当前HP。缓存数据复制后交题面，不能被消费者修改污染。
+ 
+ 沿原自然局读取 `brain.jsonl` 和 `run-plans.jsonl`，报告 `planning_questions` 列实际查库、路线/构筑变更理由、`route_calculation` 复用/失效原因、答案JSON字符数、原文字符数、输出token及整题耗时。`run_plan_merge`/`plan_update` 记录 reused/updated/checkpoint 与变更字段；合法执行仍核 decisions 的 route_review、route-change及后继读回。报告的 accepted 只证明接口接受，不能代实际落盘/采用或决策质量；缺字段/空样本保持未知。ops 在自然发布边界核实际提示SHA/工具清单与消费者、恢复后，继续观察自然决策质量与原 #50 达标线/终局效果；不为本项增开局或以查询次数下降单独验收。
+diff --git a/paper/materials/20261025-issue64-route-reason/checks.json b/paper/materials/20261025-issue64-route-reason/checks.json
+new file mode 100644
+index 000000000..d810ba274
+--- /dev/null
++++ b/paper/materials/20261025-issue64-route-reason/checks.json
+@@ -0,0 +1,134 @@
++{
++  "base": "614687462eaed74a0264f29730b73e883e2b25ee",
++  "nice": 19,
++  "workers": 1,
++  "production_tsc": {
++    "exit_code": 0,
++    "command": "node agent/node_modules/typescript/bin/tsc -p agent/tsconfig.json --noEmit",
++    "log": ".artifacts/issue64/production-tsc.log"
++  },
++  "targeted": {
++    "exit_code": 0,
++    "files": 7,
++    "tests_passed": 150,
++    "log": ".artifacts/issue64/targeted-final.log"
++  },
++  "sandbox_first": {
++    "exit_code": 1,
++    "files_passed": 635,
++    "files_failed": 1,
++    "tests_passed": 5882,
++    "tests_failed": 1,
++    "log": ".artifacts/issue64/sandbox.log",
++    "command": ".artifacts/issue64/sandbox-command.json",
++    "only_failure": "check-imports: sparse checkout lacks existing baseline paper/materials/issue29-brain-speed/results.jsonl"
++  },
++  "corrected_import_and_paths": {
++    "exit_code": 0,
++    "files": 2,
++    "tests_passed": 12,
++    "log": ".artifacts/issue64/import-paths-final.log",
++    "materialization": "materialized-import.json"
++  },
++  "test_tsc_diagnostic": {
++    "exit_code": 1,
++    "new_test_regions_diagnostics": 0,
++    "scope": "Non-production baseline diagnostics retained, including old unused import and SessionTurn fixtures in brain-codex-session.test.ts."
++  },
++  "final_combination_full": "pending original integrator; no second single all-green full claimed",
++  "failures_retained": {
++    "targeted_first": {
++      "exit_code": 1,
++      "tests_passed": 148,
++      "tests_failed": 2,
++      "reasons": [
++        "old child tsx resolution with repository-root cwd",
++        "new legacy fixture erroneously carrying an endgame task"
++      ]
++    },
++    "initial_fixture_debug": "session/debug*.log retained; fixed required construction and engine admission fixture fields",
++    "capture_first": {
++      "exit_code": 130,
++      "pid": 4161344,
++      "reason": "Stopped only own replay to replace repeated whole-log reads with bounded offset reads; no original evidence was modified."
++    },
++    "first_materialization": "wrong agent cwd; exact duplicate removed after byte comparison, corrected and import/paths rerun; original failure output retained"
++  },
++  "logs": [
++    {
++      "path": ".artifacts/issue64/debug.log",
++      "bytes": 4193,
++      "sha256": "cbb33326d05115991ceb36011e868847d7d378128582555e3f65bf70fb710b2e"
++    },
++    {
++      "path": ".artifacts/issue64/debug2.log",
++      "bytes": 4193,
++      "sha256": "bb7bdf63683fa787d02414996c795e64f077505ec2145aa6fe820fbe4aff42ec"
++    },
++    {
++      "path": ".artifacts/issue64/debug3.log",
++      "bytes": 56227,
++      "sha256": "9680b842bafcce52da7f8f9d31aada8835074680898b527051ab4af73b219392"
++    },
++    {
++      "path": ".artifacts/issue64/debug4.log",
++      "bytes": 151179,
++      "sha256": "7243be886dcf24d0ef7cba7f47d7d4c513c310bc3bc2d3d89fa25ab6a02be756"
++    },
++    {
++      "path": ".artifacts/issue64/debug5.log",
++      "bytes": 275,
++      "sha256": "764dc96e647105ce76ca39e7450d0da7f5af079d94a351acc2ab2622856a3b88"
++    },
++    {
++      "path": ".artifacts/issue64/import-paths-final.log",
++      "bytes": 263,
++      "sha256": "7a07493754a5299f8ac4e6c82361678c710697900d5dc6a1fd4fe8722cda24e9"
++    },
++    {
++      "path": ".artifacts/issue64/import-paths-wrong-cwd.log",
++      "bytes": 1032,
++      "sha256": "7b1acef91c93a5d416c4749ad066d83079dcac6edd663d80d03c48100785cfd5"
++    },
++    {
++      "path": ".artifacts/issue64/matrix.log",
++      "bytes": 275,
++      "sha256": "a8f2f78b05c648fe7bf69a22220d64e81ac7ee68628bbaf327f911ed9bf212dd"
++    },
++    {
++      "path": ".artifacts/issue64/production-tsc.log",
++      "bytes": 0,
++      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
++    },
++    {
++      "path": ".artifacts/issue64/sandbox-command.json",
++      "bytes": 2960,
++      "sha256": "1823f5d4aeca5d522cc6bfeb74502864206b61f155117c0eb06fcba51a0feebe"
++    },
++    {
++      "path": ".artifacts/issue64/sandbox.log",
++      "bytes": 2029,
++      "sha256": "fbe401b439940d01e23f29c616765e5c2094e443cc71928fbddff2a2bf780fb1"
++    },
++    {
++      "path": ".artifacts/issue64/session.log",
++      "bytes": 2654,
++      "sha256": "e81122decc557f200cb9af6cbb61134602ef9014d1b578db514b36d71e6b4b37"
++    },
++    {
++      "path": ".artifacts/issue64/targeted-final.log",
++      "bytes": 267,
++      "sha256": "97b79b8ccc7a8a39365949f7e3f58d60b75b42455183049a260ad4762a17ad0a"
++    },
++    {
++      "path": ".artifacts/issue64/targeted-first.log",
++      "bytes": 3248,
++      "sha256": "00b663438593029a63983df1d44507cc58ecd4d343788345bfabd63d213cab15"
++    },
++    {
++      "path": ".artifacts/issue64/test-tsc-diagnostic.log",
++      "bytes": 269500,
++      "sha256": "908aa883810b619ee679d9886bd67b81dbc3a37dd6186b93f7472841f3757d73"
++    }
++  ]
++}
+diff --git a/paper/materials/20261025-issue64-route-reason/materialized-import.json b/paper/materials/20261025-issue64-route-reason/materialized-import.json
+new file mode 100644
+index 000000000..f77aec778
+--- /dev/null
++++ b/paper/materials/20261025-issue64-route-reason/materialized-import.json
+@@ -0,0 +1,9 @@
++{
++  "path": "paper/materials/issue29-brain-speed/results.jsonl",
++  "base": "614687462eaed74a0264f29730b73e883e2b25ee",
++  "git_blob": "b84d95c5185941eec143cbcf2966d5770309cca5",
++  "bytes": 211076,
++  "sha256": "8d83deb7c85a8b7ceb92da9ffb195f13edf4fa2876f9be5692ec8d2ded1c23ef",
++  "unchanged_git_bytes": true,
++  "reason": "Only sandbox failure: sparse allocator did not materialize this existing fixed import. First materialization used the agent cwd; that exact duplicate was removed after byte verification and the original root path restored."
++}
+diff --git a/paper/materials/20261025-issue64-route-reason/original-evidence-check.json b/paper/materials/20261025-issue64-route-reason/original-evidence-check.json
+new file mode 100644
+index 000000000..d4f150b5b
+--- /dev/null
++++ b/paper/materials/20261025-issue64-route-reason/original-evidence-check.json
+@@ -0,0 +1,35 @@
++{
++  "source_base": "614687462eaed74a0264f29730b73e883e2b25ee",
++  "original_readback_sha256": "05935c734a60bc85853eea7b8cba496ebddfc576a13bb7e45fa7f89d905894e1",
++  "original_artifacts": [
++    {
++      "path": ".artifacts/ops-issue58-route-reason-20261025/inventory.json",
++      "bytes": 47988,
++      "sha256": "da6753a8d6188f1206e24895efb360e272f4bc2b7250e49d061d17838798349c"
++    },
++    {
++      "path": ".artifacts/ops-issue58-route-reason-20261025/fixed-replay.json",
++      "bytes": 57344,
++      "sha256": "8485204e346676afd5d111fa6e32372c6c18997cb41c8a077647ac8c77f01500"
++    },
++    {
++      "path": ".artifacts/ops-issue58-route-reason-20261025/consumer-audit.json",
++      "bytes": 30677,
++      "sha256": "27d015e016d37b6fef2e093643bfe7222d47ea7be75a23444b7a396b94b7ba9d"
++    },
++    {
++      "path": ".artifacts/ops-issue58-route-reason-20261025/config-inventory.json",
++      "bytes": 1003,
++      "sha256": "34771a9326d5adb70ac53b7811dea0bd8447051807cc814d48bfd882b48d0e9f"
++    },
++    {
++      "path": ".artifacts/ops-issue58-route-reason-20261025/replay.mts",
++      "bytes": 3271,
++      "sha256": "8dc6d8a104406e82f5442740abf158953fb4f14ca262867d25d402c41e3ae2f8"
++    }
++  ],
++  "hit_slices_verified": 21,
++  "old_tree_retained": true,
++  "original_recovery_read": "paper/materials/20261025-issue59-56-58-ops/sessions/58/continue-codex1.md",
++  "concrete_runtime_data_copied": false
++}
+diff --git a/paper/materials/20261025-issue64-route-reason/progress-comment.md b/paper/materials/20261025-issue64-route-reason/progress-comment.md
+new file mode 100644
+index 000000000..9144f9abd
+--- /dev/null
++++ b/paper/materials/20261025-issue64-route-reason/progress-comment.md
+@@ -0,0 +1,5 @@
++[dev #64] 已在独立树修复显式改线理由合同，8个严格输出至冷恢复消费者的固定场景通过；最终组合 full 请由原集成员沿唯一窗口协调。
++
++生产差量仅增加 AnswerSpec 的改线理由合同标记，并让实际 Codex schema 适配器保留该可空字段（默认60字符），历史 drop 配置不改；解析、校验、路线执行、预算与失败链沿用。固定假 app-server 按实际 outputSchema 检查字段/类型/长度后，走真实 CodexEngine、Brain、router、runLoop、路线日志和冷恢复消费者；覆盖改线、构筑单独更新/两者更新、omit/keep/重复原线、无理由/非法路线。
++
++正在补其他角色/进阶的等价对照并封存原件核验；尚未交付固定提交、不把该定向结果报成最终组合 full 或自然运行通过。预计本项准备好后给固定 SHA 与材料，保持 #59 冻结包及 #60/#62/#63 原线，本树不启动第二个 full、不写 main/live/STOP。
+diff --git a/paper/materials/20261025-issue64-route-reason/replay-summary.json b/paper/materials/20261025-issue64-route-reason/replay-summary.json
+new file mode 100644
+index 000000000..331e50f7c
+--- /dev/null
++++ b/paper/materials/20261025-issue64-route-reason/replay-summary.json
+@@ -0,0 +1,13 @@
++{
++  "fixture_only": true,
++  "model_or_game_calls": 0,
++  "original_artifacts_modified": false,
++  "inventory_sha256": "da6753a8d6188f1206e24895efb360e272f4bc2b7250e49d061d17838798349c",
++  "original_slices_verified": 77,
++  "original_answers_still_rejected_without_route_reason": 42,
++  "schemas_with_nullable_reason": 21,
++  "legal_changes_with_synthetic_separate_reason_consumed": 42,
++  "omission_keep_repeated_controls": 126,
++  "explanation_semantics_or_win_benefit_verified": false,
++  "strict_session_persistence_and_cold_restore": "agent/tests/brain-codex-session.test.ts: #64 strict (8 scenarios)"
++}
+diff --git a/paper/materials/20261025-issue64-route-reason/replay.mts b/paper/materials/20261025-issue64-route-reason/replay.mts
+new file mode 100644
+index 000000000..310505104
+--- /dev/null
++++ b/paper/materials/20261025-issue64-route-reason/replay.mts
+@@ -0,0 +1,82 @@
++// Read original frozen evidence without modifying it; publish only aggregate contract checks.
++// Run from agent/: node --import tsx ../paper/materials/20261025-issue64-route-reason/replay.mts
++import assert from "node:assert/strict";
++import { createHash } from "node:crypto";
++import { closeSync, openSync, readSync, readFileSync, writeFileSync } from "node:fs";
++import { fileURLToPath } from "node:url";
++import { resolve } from "node:path";
++import { pickSpec } from "../../../agent/src/brain/specs.ts";
++import { codexKindSchema, codexSchema, dropNulls } from "../../../agent/src/brain/engines/codex.ts";
++import { parseAnswerText } from "../../../agent/src/brain/message.ts";
++import { routeIds, routeMapFromView, checkRoute } from "../../../agent/src/sim/route-map.ts";
++import { makeRoutePlan } from "../../../agent/src/hand/screens/route-plan.ts";
++import { withRouteReview, ROUTE_REVIEW_NOTE } from "../../../agent/src/hand/screens/route-review.ts";
++import { loadConfig } from "../../../agent/src/core/config.ts";
++import { parseGameState } from "../../../agent/src/hand/mod/schema.ts";
++import { createScreenMemory } from "../../../agent/src/memory/types.ts";
++import { buildRunBrief } from "../../../agent/src/memory/run-brief.ts";
++import { testKnowledge } from "../../../agent/tests/scenarios.ts";
++import { costs } from "../../../agent/tests/route-fixture.ts";
++import { routeBoard, routeReason } from "../../../agent/tests/route-reason-fixture.ts";
++
++const root = resolve(process.env.ISSUE64_ORIGINAL_ROOT ?? fileURLToPath(new URL("../../../../..", import.meta.url)));
++const original = resolve(root, ".artifacts/ops-issue58-route-reason-20261025");
++const sha = (b: Buffer) => createHash("sha256").update(b).digest("hex");
++const frozen = readFileSync(resolve(original, "inventory.json"));
++const inventory = JSON.parse(frozen.toString());
++const reasonProblem = "route_reason must explain current facts, tradeoff and expected win benefit";
++let answers = 0, consumers = 0, controls = 0;
++const refs = new Set<string>();
++for (const entry of inventory.rows) {
++  const ref = entry.ref, bytes = Buffer.alloc(ref.bytes);
++  const fd = openSync(resolve(root, ref.path), "r");
++  try { assert.equal(readSync(fd, bytes, 0, ref.bytes, ref.offset), ref.bytes); } finally { closeSync(fd); }
++  assert.equal(bytes.length, ref.bytes); assert.equal(sha(bytes), ref.sha256);
++  refs.add(`${ref.path}:${ref.offset}`);
++}
++for (const hit of inventory.hits) {
++  const row = JSON.parse(readFileSync(resolve(root, hit.local), "utf8"));
++  const spec = pickSpec(row.label, row.options, row.payload);
++  const kind = codexKindSchema(spec, { fields: "used", reasonLast: false });
++  const schema = codexSchema(kind, { routeReason: "drop", routeReasonOnChange: spec.routeReasonOnChange, maxFieldChars: 600, routePattern: true })!;
++  assert.deepEqual((schema.properties as any).route_reason.type, ["string", "null"]);
++  assert.equal(schema.additionalProperties, false);
++  const map = routeMapFromView(row.payload.route_review)!;
++  const previous = routeIds(row.payload.route_review.plan)!;
++  for (const answer of [row.first.answer, JSON.parse(row.raw)]) {
++    assert.deepEqual(spec.validate(answer), []);
++    assert.deepEqual(spec.softValidate!(answer), [reasonProblem]);
++    assert.deepEqual(checkRoute(map, routeIds(answer.route)!), []);
++    // A synthetic explanation exercises transport only; do not repurpose the independent construction reason.
++    const wire = { ...answer, route_reason: routeReason };
++    for (const key of Object.keys(wire)) assert(Object.hasOwn((schema.properties as object), key));
++    const parsed = dropNulls(parseAnswerText(JSON.stringify(wire)), kind) as Record<string, any>;
++    assert.deepEqual(spec.validate(parsed), []); assert.deepEqual(spec.softValidate!(parsed), []);
++    for (const route of [undefined, "keep", previous.join(" ")]) {
++      assert.deepEqual(spec.softValidate!({ ...answer, route }), []); controls++;
++    }
++    const state = parseGameState(routeBoard("reward"));
++    const env: any = { state, screenMemory: createScreenMemory(), knowledge: testKnowledge,
++      thresholds: loadConfig({}).thresholds, brief: buildRunBrief(state, testKnowledge) };
++    const plan = makeRoutePlan(env, map, previous, { hp: 40, max: 80 }, costs);
++    env.screenMemory.routePlan = plan;
++    const review = withRouteReview(env, { kind: "ask", label: row.label, state: {}, questions: {},
++      deepseek: { question: "pick", baseline: { kind: "act", label: "fixture", intent: { action: "choose_reward_card", option_index: 0 }, rationale: "格式" } },
++      resolve: () => ({ intent: { action: "choose_reward_card", option_index: 0 }, rationale: "格式", confidence: null, fallback: false }) },
++    { kind: "card", state: row.payload.route_review, note: ROUTE_REVIEW_NOTE, map, plan, remaining: previous, costs });
++    assert.equal(review.kind, "ask");
++    const result = (review as any).resolve({ pick: { type: "choice", choice: parsed.choice, probabilities: { [parsed.choice]: 1 }, confidence: 1, raw: parsed } });
++    assert.equal(result.routeReview.outcome, "change"); assert.equal(result.routeReview.reason, routeReason);
++    result.apply();
++    assert.equal(env.screenMemory.routePlan.path.map((n: any) => `r${n.row}c${n.col}`).join(" "), routeIds(parsed.route)!.join(" "));
++    assert(env.screenMemory.routePlan.why.includes(routeReason));
++    answers++; consumers++;
++  }
++}
++const result = { fixture_only: true, model_or_game_calls: 0, original_artifacts_modified: false,
++  inventory_sha256: sha(frozen), original_slices_verified: refs.size, original_answers_still_rejected_without_route_reason: answers,
++  schemas_with_nullable_reason: inventory.hits.length, legal_changes_with_synthetic_separate_reason_consumed: consumers,
++  omission_keep_repeated_controls: controls, explanation_semantics_or_win_benefit_verified: false,
++  strict_session_persistence_and_cold_restore: "agent/tests/brain-codex-session.test.ts: #64 strict (8 scenarios)" };
++writeFileSync(new URL("replay-summary.json", import.meta.url), JSON.stringify(result, null, 2) + "\n");
++process.stdout.write(JSON.stringify(result) + "\n");
+diff --git a/paper/materials/20261025-issue64-route-reason/report.md b/paper/materials/20261025-issue64-route-reason/report.md
+new file mode 100644
+index 000000000..dd81f5c20
+--- /dev/null
++++ b/paper/materials/20261025-issue64-route-reason/report.md
+@@ -0,0 +1,32 @@
++# #64 严格输出与改线理由合同
++
++基线 `614687462eaed74a0264f29730b73e883e2b25ee`，工作树/分支 `issue-64-route-reason-schema`。任务与主管接收见 #64/6393659422，原 ops 交接 #64/6393602524，开发进展 #64/6393638679。本项接续 #58 单一缺陷，未重复开发工具、计划复用或缓存功能。
++
++## 修复
++
++原 Silent A10 改线题的校验和爬楼消费者要求 `route_reason`，Codex 历史默认 `drop` 却在严格格式中删除该字段，且 `additionalProperties=false`。构筑的 `run_plan.change_reason` 属于另一消费者，不能代替。原失败、L2/L1、旧计划后继消费的证据不改写。
++
++`AnswerSpec.routeReasonOnChange` 显式声明原有“真实改线必须有独立理由”的合同；`pickSpec` 在已有终局改线合同的题型设置标记。实际 `CodexEngine.decide` 把标记传给原 schema 适配器，保留可空 `route_reason`，默认仍按原 60 字符文本上限约束。历史配置值不变；非目标角色/进阶沿原 drop/keep 语义。其他引擎不消费该适配标记。
++
++现有题面已要求结合当前情况、相对旧线取舍与预期胜率收益，允许未知、不编造数字。原解析器、router、`Brain.choose`、持久化与路线消费者已能传递这个字段，本项保留这些实现和原理由/合法性检查，没有降级校验。省略/null、keep、重复旧节点继续复用；无理由/空白/非字符串、非法路线继续拒绝。构筑和爬楼仍可分别更新，无新增工具/模型调用、每题保持声明、全盘规划或游戏知识。
++
++## 验证
++
++- 生产 `tsc` 通过。
++- 最终定向 7 文件 / 150 项通过，包含真实 Codex session、schema、路线复核、终局计划及恢复。
++- 新增 8 个严格 session 场景：初次完整路线和构筑、真实改线、构筑单独更新、两者更新、省略/keep/重复旧线、缺理由、非法节点。固定假 app-server 对实际 `turn/start.outputSchema` 检查字段、可空类型、长度与模式后返回完整严格 JSON，经真实 `CodexEngine` 解析、`Brain`/router、`runLoop`、路线和构筑日志、`readRunLogs`/`replayRun`，再以新循环冷恢复并核实际下一节点及无新增调用。HP 从初始状态变化后使用当前投影。原拒绝走原一次重问/保留旧路线分支，构筑理由不能顶替爬楼理由。
++- 新增 schema 对照覆盖 used/all、字段顺序、文本上限/关闭、null 解析，以及 Ironclad/Regent/Silent 非 A10 的原 drop/keep 格式。空理由值同时核真实校验与路线消费者。
++- `replay.mts` 只读核原窗口 SHA 并重放原 42 答：不带独立理由仍拒绝，补入明确标作格式夹具的独立理由后 42 条合法原路径进入路线消费者；126 个省略/keep/重复旧线对照通过。具体运行题面/回答不复制到公开材料，汇总见 `replay-summary.json`。这不是对原构筑理由的语义复用，也不验证策略正确或胜率。
++- 项目沙箱等价检查首轮636文件：635过/1失败，5882项过/1失败。唯一失败为稀疏分配未展开的既存 issue29 固定导入。按基线 Git blob 精确恢复后，导入检查与 paths 两文件12项全过；原失败、第一次恢复时使用错误工作目录的失败及最终复验均保留，见 `checks.json` / `materialized-import.json`。这是首轮覆盖与定向补验，不冒称二次单次全绿 full。最终实际发布组合的唯一完整回归由原集成员协调，本开发自测不代该验收。额外非生产 test-tsc 仍有基线诊断，新测试代码区域0诊断。
++
++## 原件与失败保留
++
++已读原 #58 树及报告、可恢复入口和 ops 固定复现索引，五份内部原件大小/SHA 核同，见 `original-evidence-check.json`。旧树、分支、旧线程和账号、原生日志、终端尾日志及生命周期登记保持。`replay.mts` 只读原字节窗口，不导入或改写 live，也不修改原 replay。
++
++本次首轮新夹具失败保留：初始开发夹具遗漏原构筑字段/引擎准入参数，修正为实际合同；首次定向 148 过/2 败，分别为从仓库根运行导致旧子进程找不到 tsx、非目标角色夹具误挂终局任务，改为 agent 工作目录及与生产一致的任务作用域后最终150全过。首次原路径捕获因读取整份日志反复扫描而由本会话仅中断自有 PID（130），改为按固定 offset/bytes 只读；最终77个不同窗口核同。所有原失败/中断输出和最终原日志均留 `.artifacts/issue64/`，哈希及命令见清单，不覆盖成通过。
++
++## 交接
++
++工程交付与自然运行、学习/胜率保持分账。固定源码由原集成员鲜核届时实际组合、唯一 full；原 ops 通过新 publication-admission 事务在自然边界部署，核严格输出实际字段、真实改线理由/日志/后继消费及不改线复用。#59 冻结包、#60/#62/#63 各自原线保持；本树未改 main/live/STOP、账号、权限、生产控制、知识或版本编号，未运行游戏入口或关闭任何会话。
++
++回退：沿原发布流程回退本项四个生产文件的差量（合同标记三叶与配置注释一叶），保留原 JSONL/理由/完整计划和失败证据；不修改配置开关绕过本合同。原消费者及历史日志结构兼容，实际行为发布编号、decision-log 和双通知由 ops 在核实际发布后登记。本开发树不 complete、不删除。
+diff --git a/paper/materials/20261025-issue64-route-reason/source-leaves.json b/paper/materials/20261025-issue64-route-reason/source-leaves.json
+new file mode 100644
+index 000000000..c9642a568
+--- /dev/null
++++ b/paper/materials/20261025-issue64-route-reason/source-leaves.json
+@@ -0,0 +1,34 @@
++[
++  {
++    "path": "agent/src/brain/types.ts",
++    "sha256": "ced97df523e7dd6c225044eb37c3640dfa6a51fd333fe1aae17e8786f814bd5b"
++  },
++  {
++    "path": "agent/src/brain/specs.ts",
++    "sha256": "1aad44cf019fd7a9904c6448d6b7652f8ad821fa6da696a51dfa6fce57e441a0"
++  },
++  {
++    "path": "agent/src/brain/engines/codex.ts",
++    "sha256": "701a770f57fec206c0d67a5eec3a5a8a54ecfe65a43010b5294800404b0815e9"
++  },
++  {
++    "path": "agent/src/core/config.ts",
++    "sha256": "39fd22c1c212db914ace1672562e1349c4c00a14329780134fae6706d01e12eb"
++  },
++  {
++    "path": "agent/tests/brain-codex-session.test.ts",
++    "sha256": "840840fd3d30e6509b1224141baf0663af2b9c7612666d7b4921770e2f7f8768"
++  },
++  {
++    "path": "agent/tests/route-reason-schema.test.ts",
++    "sha256": "37e3575680055b9a6517f7a588e4e48cd2ec33e622ee0212be612c7a3ccfe0e1"
++  },
++  {
++    "path": "agent/tests/route-reason-fixture.ts",
++    "sha256": "71d5e66e94de8b3ca4928a91a31846af83d0fed8c62570e12ff8aaeaaaea6b40"
++  },
++  {
++    "path": "docs/brain-agent-mode.md",
++    "sha256": "c2eb1dec3b777b311784ef7d21fc28854556daa9a6cd3d93855de0d6b846782c"
++  }
++]
+diff --git a/paper/materials/decision-log.md b/paper/materials/decision-log.md
+index 04ac60b4f..6c88deba6 100644
+--- a/paper/materials/decision-log.md
++++ b/paper/materials/decision-log.md
+@@ -7012,3 +7012,5 @@ S键shadow已由原ops持锁实际发布V5-R369，source655e1bb→main8ecbe935/l
+ - 2026-10-25T14:14:29+08:00 [watcher] #60 ops6394272248独核公开6394282116：5K2终局32题/23实际KB输出均K04b03，21去重组/1策略机会，13目标命中和答案显式ID引用均0；四快照/39切片/原SQL绑定与发布各1核同，同冻结窗口WBDA两题3查询无目标命中，原autoplay身份及LIVE e9a468882保持。采用/收益及brain缺版本、ENOBUFS限制保持，原ops接自然消费；64与61独立，未强查/开局/发布/full。
+ 
+ - 2026-10-25 14:22:32 +0800 [watcher] #59/#63独核134331四叶/原件/ROOT-LIVE前像与只读apply-check0，未提交候选排64后最终宿主tsc/full；原full130/13文件59败/无最终分母及当时只装run-config限制保留。普通fix缺原launch.params.batch在实际native_evidence只读复现拒绝，pFK/原failed-rc0/树/日志保留，封存回收关闭0；交原63 owner标准窄化返工，不夹64/补旧参数。公开6394340635/6394340752逐字回读，材料paper/materials/20261025-fix134331-integrator/。
++
++- 2026-10-25T13:20:26+08:00 [dev #64] 接#58双重复现与主管6393659422，显式routeReasonOnChange合同让实际Codex严格格式保留可空改线理由，默认60字符；原解析/合法性/理由校验/持久化/消费者及非目标drop保持。生产tsc0、定向7文件150过；沙箱首轮635文件5882过/1既存稀疏导入失败，按基线原字节恢复后导入+paths2文件12过，首败保留，不冒第二次全绿full。42原答缺理由仍拒、独立格式理由42合法原路径消费/126复用对照过，8严格session→落盘→冷恢复场景通过；交原集成员最终组合唯一full与ops新事务自然发布，未写main/live/STOP或分配版本。材料paper/materials/20261025-issue64-route-reason/。

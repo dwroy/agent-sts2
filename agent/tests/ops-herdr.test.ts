@@ -72,7 +72,7 @@ describe("interactive TUI arguments", () => {
     expect(args.slice(1, 3)).toEqual(["--cd", root]);
     expect(args).toContain(`default_permissions="${OPS_PROFILE}"`);
     expect(args).toContain('approval_policy="never"');
-    expect(args).toContain('service_tier="fast"');
+    expect(args).toContain('service_tier="default"');
     expect(args).toContain("model_auto_compact_token_limit=460800");
     expect(args).toContain("hooks"); // --disable hooks: no hook (herdr's or anyone's) runs in the ops TUI
     expect(args.find((arg) => arg.startsWith(`permissions.${OPS_PROFILE}.filesystem=`))).toContain(`"${join(home, ".jev_api_keys")}" = "none"`);
@@ -309,7 +309,7 @@ describe("ops/herdr-host.sh (fake herdr)", () => {
     const logs = join(root, "logs");
     const stateDir = join(root, "ops", "codex-ops");
     mkdirSync(logs);
-    for (const file of ["herdr-host.sh", "herdr-exec.sh", "herdr_titles.py", "brain_view.py", "learner_jobs.py", "external_learning_policy.py", "learner_registration.py"]) {
+    for (const file of ["herdr-host.sh", "herdr-exec.sh", "herdr_titles.py", "brain_view.py", "learner_jobs.py", "external_learning_policy.py", "publication_gate.py", "learner_registration.py"]) {
       copyFileSync(join(REPO, "ops", file), join(root, "ops", file));
     }
     const runFile = join(logs, "run-config.jsonl");

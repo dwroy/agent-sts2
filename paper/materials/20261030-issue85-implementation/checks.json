@@ -1,0 +1,58 @@
+{
+  "production_tsc": {
+    "exit": 0,
+    "command": "nice -n 19 node agent/node_modules/typescript/bin/tsc -p agent/tsconfig.json --noEmit"
+  },
+  "runtime_tsc": {
+    "exit": 0,
+    "command": "nice -n 19 node agent/node_modules/typescript/bin/tsc -p agent/tsconfig.knowledge-runtime.json --noEmit"
+  },
+  "sandbox_initial": {
+    "files": 652,
+    "tests": 6028,
+    "passed": 6025,
+    "failed": 3,
+    "exit": 1,
+    "note": "Retained original failures; final affected tests and all failures individually rechecked."
+  },
+  "final_targeted": {
+    "files": 12,
+    "tests": 142,
+    "exit": 0
+  },
+  "external_stock_recheck": {
+    "files": 1,
+    "tests": 1,
+    "exit": 0
+  },
+  "paths": {
+    "files": 1,
+    "tests": 11,
+    "exit": 0
+  },
+  "git_diff_check": {
+    "source_code": 0,
+    "including_verbatim_archived_logs": 2,
+    "reason": "Four original Vitest logs retain blank lines at EOF; source/check leaves have no whitespace errors."
+  },
+  "logs": {
+    "external-stock-recheck.log": {
+      "bytes": 389,
+      "sha256": "9ec94131afdf4b14eaf1f8526fbe059187eb990717d2fff9d204c8615614633e"
+    },
+    "final-targeted-tests.log": {
+      "bytes": 1968,
+      "sha256": "4d0d345d87d7cbd691af7da26e89fc00df21f0eb795f03bf6e2013a34deee09f"
+    },
+    "paths-check.log": {
+      "bytes": 432,
+      "sha256": "42007c894e1d848a618c2baf7b23f0791f6490924ae5639b2f1865f4a2963a89"
+    },
+    "sandbox-initial.log": {
+      "bytes": 30780,
+      "sha256": "8e9e0c80b82f066b3426a6e65a68348e42773d79db873092cfad449b1ab9c44d"
+    }
+  },
+  "full_integration_check": "pending original integrator on exact publication combination",
+  "source_map": "deployment-map.json"
+}

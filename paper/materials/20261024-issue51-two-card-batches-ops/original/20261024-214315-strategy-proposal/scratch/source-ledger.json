@@ -1,0 +1,294 @@
+{
+  "source": "mixed",
+  "external_identity": "external:sts2fun",
+  "external_plan": "issue51-single-card-002-20261024-r56",
+  "input_manifest_sha256": "3afff54624bc677981c3f34a24d48b52b24307277363f962dcca52cdc6c881f7",
+  "work_spec_sha256": "e988243acebbe8d6f56d14e541e4a0859de35a2d03010042ce3e73baafaa3d37",
+  "external": {
+    "url": "https://sts2.fun/static/sts2_public.db.zst",
+    "downloaded_at": "2026-10-21",
+    "database_sha256": "1f7c0c3d441aedb5c85f04bcd4d8d6a1039b438a8b6fda2d96cfa5c27580cbf5",
+    "input_statistics_sha256": "4cf36c85eee760ed8e74495c1758e0228bbe1214789d3d0bd97052d5ca6a1f9d",
+    "version_cohorts": {
+      "v0.107": 2932,
+      "v0.108": 683,
+      "v0.109": 583,
+      "v0.110": 411,
+      "v0.111": 1739
+    },
+    "license": "No explicit dataset redistribution license found on public FAQ; aggregate statistics with attribution only; no raw redistribution.",
+    "design": "observational",
+    "version_merge": "none; mechanism equivalence unknown",
+    "independent_players": null,
+    "selected_cell_run_union": null
+  },
+  "own": {
+    "source": "own",
+    "game_version": "unknown",
+    "frozen_scope_sha256": "da915311f233ba0c350f5278a630a61fee1ab9540c520d407f6227e9c87e3478",
+    "allowed_runs": 506,
+    "witness_support_runs": [
+      "1913SE84AXQF",
+      "456MRNGCPD8E",
+      "5X2GHKJ89PN1",
+      "7X0W3U8TVA2A",
+      "833ZM0MJGWHC",
+      "AF76L5UTPP8U",
+      "CA5KE8GFJ9X2",
+      "CNKR125PFHJ5",
+      "F6XY4QJMS5RC",
+      "G3TD6JEN47KT",
+      "HLAWCGM3KHVB",
+      "MCCK2602T1SR",
+      "NB8KCF6HRGVF",
+      "PYE4VXNSLGSS",
+      "Q3R929GHT14R",
+      "QNTW139MGECA",
+      "TKXQ6L4N9A6U",
+      "U8K28UUGYP3U",
+      "V0383V5S9BCQ",
+      "V3PJA3FV92BG",
+      "VGNDNGPFYRE3",
+      "VLZ6CCT8AQ0A",
+      "VPW8YH7A4QFM",
+      "X4M1GPAJGAB9",
+      "YLYLZWHA0GKU",
+      "YXY2RL1E83HM"
+    ],
+    "statistical_runs_path": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261024-214315/learner/runs/20261024-214947-204072d6-db59-4625-a932-711753eba9f6-strategy-proposal/scratch/own-statistical-runs.json",
+    "strata": [
+      "each exact ascension",
+      "retry_or_predicted_death",
+      "no_retry_evidence"
+    ],
+    "first_opportunity": "first completed known-choice occurrence per card per run; later opportunities excluded from rate denominators",
+    "known_choice_does_not_imply_first_attempt": "cohort flags retained; final_victory is final recorded outcome, not first-attempt success",
+    "raw_cutoffs": {
+      "decisions": {
+        "path": "logs/decisions.jsonl",
+        "max_bytes": 4638939179,
+        "original_source_identity": "5ec4d712ff68d72c6a8390830c47181eb08a140c"
+      },
+      "run-config": {
+        "path": "logs/run-config.jsonl",
+        "max_bytes": 3320082,
+        "original_source_identity": "433f578df72c006af1aee2cf2ccd86bdcc74bc3f"
+      },
+      "run-plans": {
+        "path": "logs/run-plans.jsonl",
+        "max_bytes": 12781782,
+        "original_source_identity": "ee023e7458d04a745a37ebe99bfb08152e9873f3"
+      },
+      "runs": {
+        "path": "logs/runs.jsonl",
+        "max_bytes": 455331,
+        "original_source_identity": "d20854916723386af602e1a2680db285aa0488d3"
+      },
+      "sl-attempts": {
+        "path": "logs/sl-attempts.jsonl",
+        "max_bytes": 61282656,
+        "original_source_identity": "169cde8797955dbb7da961e2151a5533eff10a74"
+      },
+      "states": {
+        "path": "logs/states.jsonl",
+        "max_bytes": 17026867203,
+        "original_source_identity": "c2482d3430eaad143f5c5b91ec8a931cf978a4d7"
+      }
+    },
+    "read_audit_path": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261024-214315/learner/runs/20261024-214947-204072d6-db59-4625-a932-711753eba9f6-strategy-proposal/scratch/raw-seek-audit.json"
+  },
+  "formal_publication": "pending",
+  "consumer_readback": "pending",
+  "source_commit": null,
+  "shared_learning_ledger_changed": false,
+  "limitations": [
+    "观察关联，非因果；真实备选与skip均保留，旧大脑理由及旧outcome_stats/boss_sim不作为本批结论。",
+    "自有A10和其他进阶、retry_or_predicted_death与no_retry_evidence分别统计；后者仅未见重试证据，不证明无SL；游戏版本unknown。",
+    "同run/floor在决策时间之前最近REWARD快照是当前牌组/资源代理，不是战斗手牌、未来状态或严格原子快照。",
+    "外部是自选上传的Silent A10；按版本/build/act原分母分账；cards_gained包括多来源，同局可重复，独立玩家与跨cell局并集未知。",
+    "外部牌次与整局终胜关联受存活、达到幕数、牌组、水平、路线和选择偏差混杂；不能当拿/不拿效果，不能拿终局牌组/胜负/统计簇作触发。",
+    "未有跨版本机制不变的证据，不合池；先前版本反向结果保留；样本不足的效果比较不准发布。"
+  ],
+  "artifacts": [
+    {
+      "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261024-214315/learner/runs/20261024-214947-204072d6-db59-4625-a932-711753eba9f6-strategy-proposal/scratch/audit-summary.json",
+      "bytes": 434,
+      "sha256": "6286eb06168e0cf32e40ed57603973efc607852f3870296b98ac7b9f579832e1"
+    },
+    {
+      "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261024-214315/learner/runs/20261024-214947-204072d6-db59-4625-a932-711753eba9f6-strategy-proposal/scratch/audit_inputs.py",
+      "bytes": 2886,
+      "sha256": "0962d85269575f46187ff29835867e31ea44462e919b16fe40a4b65f23fd4c16"
+    },
+    {
+      "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261024-214315/learner/runs/20261024-214947-204072d6-db59-4625-a932-711753eba9f6-strategy-proposal/scratch/binding-audit.json",
+      "bytes": 48509,
+      "sha256": "f20f76372c4c559fc2323362a95851f4ed834ae64f5561fe955914ec916d88aa"
+    },
+    {
+      "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261024-214315/learner/runs/20261024-214947-204072d6-db59-4625-a932-711753eba9f6-strategy-proposal/scratch/build_candidates.py",
+      "bytes": 14183,
+      "sha256": "c896739b1859b171399f4fe1c4849b803c4eb4fb6750f99b1348b8b4e7cf2f7c"
+    },
+    {
+      "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261024-214315/learner/runs/20261024-214947-204072d6-db59-4625-a932-711753eba9f6-strategy-proposal/scratch/card-dispositions.json",
+      "bytes": 16125,
+      "sha256": "3baeb75d0d342599e1c2b4fc0de83bfde3ff64d5f1adf63195ce2be282ea29f7"
+    },
+    {
+      "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261024-214315/learner/runs/20261024-214947-204072d6-db59-4625-a932-711753eba9f6-strategy-proposal/scratch/card-text-variants.json",
+      "bytes": 40766,
+      "sha256": "064b00efbe448551b6fabe220a0919e0e9032313de05accfba5d5e9b28549871"
+    },
+    {
+      "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261024-214315/learner/runs/20261024-214947-204072d6-db59-4625-a932-711753eba9f6-strategy-proposal/scratch/coverage.json",
+      "bytes": 18901,
+      "sha256": "96ac7c631698192a9e150e715931a77c606615777943125575dac75719275652"
+    },
+    {
+      "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261024-214315/learner/runs/20261024-214947-204072d6-db59-4625-a932-711753eba9f6-strategy-proposal/scratch/decision-output-counts.json",
+      "bytes": 684,
+      "sha256": "08412ba63d745d0d65a7552287020a50094c2bee63b5f4f06558b27bf696ac64"
+    },
+    {
+      "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261024-214315/learner/runs/20261024-214947-204072d6-db59-4625-a932-711753eba9f6-strategy-proposal/scratch/dedup-audit.json",
+      "bytes": 12051,
+      "sha256": "70f781c495cb80fc600bfd2d49ea4ea92d6a2643d7cb24df169f973a9c0f7f84"
+    },
+    {
+      "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261024-214315/learner/runs/20261024-214947-204072d6-db59-4625-a932-711753eba9f6-strategy-proposal/scratch/external-combinations-selected.json",
+      "bytes": 12489,
+      "sha256": "64908770eb556fa36b7f32c1ba9466e4177512abebe2e035b1fd768d2a6d4e1f"
+    },
+    {
+      "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261024-214315/learner/runs/20261024-214947-204072d6-db59-4625-a932-711753eba9f6-strategy-proposal/scratch/external-directional-comparisons.json",
+      "bytes": 214432,
+      "sha256": "79656b0ca13f07f8ce4b6e779c106776f68eb4d165b1621a522421a920eef1b4"
+    },
+    {
+      "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261024-214315/learner/runs/20261024-214947-204072d6-db59-4625-a932-711753eba9f6-strategy-proposal/scratch/external-statistics-selected.json",
+      "bytes": 3687485,
+      "sha256": "940151b318762c29b3d4eba7fe9f21996f66314741f4f7673acb2a0b68db081c"
+    },
+    {
+      "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261024-214315/learner/runs/20261024-214947-204072d6-db59-4625-a932-711753eba9f6-strategy-proposal/scratch/extract_own.py",
+      "bytes": 5536,
+      "sha256": "81039de794b7d7ed46ad4bc015606532883af17d8741aa478667db2fa66116cb"
+    },
+    {
+      "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261024-214315/learner/runs/20261024-214947-204072d6-db59-4625-a932-711753eba9f6-strategy-proposal/scratch/finalize.py",
+      "bytes": 14855,
+      "sha256": "6e01bdb945b24630c93faedb883e6e54ad03bfb785b433315368588fb5a4bb81"
+    },
+    {
+      "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261024-214315/learner/runs/20261024-214947-204072d6-db59-4625-a932-711753eba9f6-strategy-proposal/scratch/format-validation.json",
+      "bytes": 1076,
+      "sha256": "b13546e11348eaee6f9c201fb9f2ae09447210e280778da315e8100a2648cfe6"
+    },
+    {
+      "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261024-214315/learner/runs/20261024-214947-204072d6-db59-4625-a932-711753eba9f6-strategy-proposal/scratch/gitleaks-report.json",
+      "bytes": 3,
+      "sha256": "37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570"
+    },
+    {
+      "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261024-214315/learner/runs/20261024-214947-204072d6-db59-4625-a932-711753eba9f6-strategy-proposal/scratch/knowledge-candidates.json",
+      "bytes": 632315,
+      "sha256": "745a91965e1fab3cc0d851a3b6462601e4341df4ca74d4794b8b2b5bcb2ae7de"
+    },
+    {
+      "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261024-214315/learner/runs/20261024-214947-204072d6-db59-4625-a932-711753eba9f6-strategy-proposal/scratch/own-extraction-audit.json",
+      "bytes": 521,
+      "sha256": "988b39c252dc09e26a06e7dcda08db8875c3275a2f89b03eba9f6bb9c31c0816"
+    },
+    {
+      "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261024-214315/learner/runs/20261024-214947-204072d6-db59-4625-a932-711753eba9f6-strategy-proposal/scratch/own-opportunities.json",
+      "bytes": 7826568,
+      "sha256": "b1c3257c99f07767660696d55f182599d74882161e8894c15a803ce3b0193a22"
+    },
+    {
+      "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261024-214315/learner/runs/20261024-214947-204072d6-db59-4625-a932-711753eba9f6-strategy-proposal/scratch/own-statistical-runs.json",
+      "bytes": 8949,
+      "sha256": "359ef591840b22ac2d8ff922e647319f12f1bd2bd4fae7f84118bbe75545fb27"
+    },
+    {
+      "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261024-214315/learner/runs/20261024-214947-204072d6-db59-4625-a932-711753eba9f6-strategy-proposal/scratch/own-statistics.json",
+      "bytes": 166390,
+      "sha256": "358c964912149c9f4ecb1eddff8d49ca21d019e922fe63e1191cf2700663f62b"
+    },
+    {
+      "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261024-214315/learner/runs/20261024-214947-204072d6-db59-4625-a932-711753eba9f6-strategy-proposal/scratch/prepare_evidence.py",
+      "bytes": 2884,
+      "sha256": "773685250fede4a15dd79a49136a095c236cc696ba3595d86d7b9042e3c598b3"
+    },
+    {
+      "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261024-214315/learner/runs/20261024-214947-204072d6-db59-4625-a932-711753eba9f6-strategy-proposal/scratch/raw-seek-audit.json",
+      "bytes": 2214480,
+      "sha256": "5e1d740801b5872853841e2e909a7b640e6424361e93f3be60e25a12bbab5faf"
+    },
+    {
+      "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261024-214315/learner/runs/20261024-214947-204072d6-db59-4625-a932-711753eba9f6-strategy-proposal/scratch/reflex-dedup.json",
+      "bytes": 1922,
+      "sha256": "2a90341998b6545d9cc008b075af3185cf4957470b4115efe367371e73eab01b"
+    },
+    {
+      "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261024-214315/learner/runs/20261024-214947-204072d6-db59-4625-a932-711753eba9f6-strategy-proposal/scratch/rk-candidates.json",
+      "bytes": 25772,
+      "sha256": "fb5ee2106da60f025ea6b86d3fdeaa2538e58647de6ae4c4dc67d9b05353e754"
+    },
+    {
+      "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261024-214315/learner/runs/20261024-214947-204072d6-db59-4625-a932-711753eba9f6-strategy-proposal/scratch/rk-status.json",
+      "bytes": 4934,
+      "sha256": "cede6f92fa7edfbfb78ac4d6493f2ac581b24e4ea7b68081667ed6edbeb1a56d"
+    },
+    {
+      "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261024-214315/learner/runs/20261024-214947-204072d6-db59-4625-a932-711753eba9f6-strategy-proposal/scratch/rk-vocab-candidates.json",
+      "bytes": 5577,
+      "sha256": "98742b7a30e58c348114f8f3a0c398e4c81d883140b908ac37342dafce16b84b"
+    },
+    {
+      "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261024-214315/learner/runs/20261024-214947-204072d6-db59-4625-a932-711753eba9f6-strategy-proposal/scratch/scenario-examples.json",
+      "bytes": 104404,
+      "sha256": "2a234fcb26248b979034dec344a9cfbc0aacca480dff4592df12970cb22b1052"
+    },
+    {
+      "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261024-214315/learner/runs/20261024-214947-204072d6-db59-4625-a932-711753eba9f6-strategy-proposal/scratch/scenario-mapping.json",
+      "bytes": 7600,
+      "sha256": "bcce050620f4d777f670d1b06dbabf76e7477f1dc92043894aa2e6bb1b467d08"
+    },
+    {
+      "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261024-214315/learner/runs/20261024-214947-204072d6-db59-4625-a932-711753eba9f6-strategy-proposal/scratch/security-scan.json",
+      "bytes": 217,
+      "sha256": "a893a532386fd180fa875d18f4ac7538b65688f16165f1b6dd2b780b389fa104"
+    },
+    {
+      "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261024-214315/learner/runs/20261024-214947-204072d6-db59-4625-a932-711753eba9f6-strategy-proposal/scratch/selection.json",
+      "bytes": 22235,
+      "sha256": "34889c8e98639d47b0c2ca5db1d7bb61d6ca829f1ff2db10c602f350dd2c4d7d"
+    },
+    {
+      "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261024-214315/learner/runs/20261024-214947-204072d6-db59-4625-a932-711753eba9f6-strategy-proposal/scratch/source-diff.patch",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261024-214315/learner/runs/20261024-214947-204072d6-db59-4625-a932-711753eba9f6-strategy-proposal/scratch/strategy-candidates.json",
+      "bytes": 61766,
+      "sha256": "3d36bb68ee8c78aa1d93b6385d81e90122734e2d698ec45fddb1b5140e21bfe6"
+    },
+    {
+      "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261024-214315/learner/runs/20261024-214947-204072d6-db59-4625-a932-711753eba9f6-strategy-proposal/scratch/strategy-entries-dedup.json",
+      "bytes": 4609,
+      "sha256": "5cf3f4deecdcc2bfc60d627eba5c62ca95006382a1ecd6721a6cb66beb885271"
+    },
+    {
+      "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261024-214315/learner/runs/20261024-214947-204072d6-db59-4625-a932-711753eba9f6-strategy-proposal/scratch/summarize.py",
+      "bytes": 2475,
+      "sha256": "9ff2cf3ba0eedc9657ae131eabfe74ca0401899267ea698ef6a67ca06649798d"
+    },
+    {
+      "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261024-214315/learner/runs/20261024-214947-204072d6-db59-4625-a932-711753eba9f6-strategy-proposal/scratch/version-heterogeneity.json",
+      "bytes": 11274,
+      "sha256": "e67a65dc80d5204767352aa1a47adc199c7b1dea53fe0cbe543f9c9678d2039a"
+    }
+  ]
+}

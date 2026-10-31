@@ -16,11 +16,13 @@ import shutil
 import subprocess
 import sys
 import tarfile
+import time
+from types import SimpleNamespace
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 from learner_checks import read_report
 
-BATCH = re.compile(r"[0-9]{8}-[0-9]{6}(?:-(?:s2-)?(?:experience-update|fix-batch|strategy-proposal|ascension-audit))?")
+BATCH = re.compile(r"[0-9]{8}-[0-9]{6}(?:-(?:s2-)?(?:experience-update|fix-batch|strategy-proposal|ascension-audit|mechanics-audit|experience-asc-audit))?")
 SCRATCH = re.compile(r"[0-9]{8}-[0-9]{6}-(?:[0-9a-f]{8}(?:-[0-9a-f]{4}){3}-[0-9a-f]{12}-)?[a-z][a-z0-9-]*")
 SHA = re.compile(r"[0-9a-f]{40}")
 SMALL = 128 * 1024
@@ -302,7 +304,25 @@ def admission(root, state_dir, state, batch_id, check_ignored=True):
             candidate = workspaces.source_admission(root, state_dir, tree, head)
             if not candidate["live_required"]:
                 document_source = candidate
-    if document_source:
+    if batch.get("operational_publication"):
+        from learning_runtime import selection
+        from learning_runtime_store import Store
+        chosen = selection(root, batch)
+        store = Store(chosen["directory"], readonly=True)
+        try:
+            receipt = store.completion(batch_id)
+            if not receipt or receipt != batch["operational_publication"] or receipt["character"] != character:
+                raise ValueError("operational receipt not backed by original database")
+            row = store.db.execute("SELECT body FROM completions WHERE id=?", (batch_id,)).fetchone()
+            preserved = json.loads(row[0])["report"]
+            if sha_file(safe_path(root, preserved["path"])) != preserved["sha256"]:
+                raise ValueError("operational report changed")
+        finally:
+            store.close()
+        if sources or report.get("merged") or batch.get("state") != "done":
+            raise ValueError("mixed source delivery still requires original publication checks")
+        proof.update(kind="recorded-operational-data", operational=receipt, no_experience_claim=True)
+    elif document_source:
         proof.update(kind="settled-report-only", no_experience_claim=True, document_source=document_source)
     elif sources:
         check = successful_checks(batch)
@@ -351,7 +371,9 @@ def admission(root, state_dir, state, batch_id, check_ignored=True):
         raise ValueError("no verified ingestion or settled outcome")
     retired = tree.parent == root / ".worktrees" and tree.name in (
         "codex-fix-" + character + "-" + batch_id.removesuffix("-fix-batch"),
-        "codex-strategy-" + character + "-" + batch_id.removesuffix("-strategy-proposal"))
+        "codex-strategy-" + character + "-" + batch_id.removesuffix("-strategy-proposal"),
+        "codex-mechanics-audit-" + character + "-" + batch_id.removesuffix("-mechanics-audit"),
+        "codex-experience-asc-audit-" + character + "-" + batch_id.removesuffix("-experience-asc-audit"))
     if tree != root and tree.parent != root / ".worktrees":
         raise ValueError("foreign runtime/worktree retained")
     if tree != root and not retired and tree.name not in ("exp", "exp-" + character):
@@ -433,10 +455,10 @@ def sha_file(path):
     return h.hexdigest()
 
 
-def archive(root, base, scratch, files, proof):
+def archive(root, base, scratch, files, proof, previous=None):
     archive_path = base.with_suffix(".tar.gz")
     manifest_path = base.with_suffix(".manifest.json")
-    if archive_path.exists() or manifest_path.exists():
+    if archive_path.exists() or (manifest_path.exists() and previous is None):
         raise ValueError("existing archive retained; use explicit recovery")
     base.parent.mkdir(parents=True, exist_ok=True)
     if shutil.disk_usage(base.parent).free < sum(p.stat().st_size for p in files) + 1024 * 1024:
@@ -482,6 +504,8 @@ def archive(root, base, scratch, files, proof):
     manifest = {"schema": "learner-retention-v1", "at": stamp(), "root": str(root), "scratch": str(scratch.relative_to(root)),
                 "proof": proof, "archive": str(archive_path.relative_to(root)), "archive_sha256": sha_file(archive_path),
                 "archive_bytes": archive_path.stat().st_size, "files": records, "state": "archived_not_reclaimed"}
+    if previous is not None:
+        manifest['previous_manifest'] = previous
     atomic(manifest_path, manifest)
     return manifest, manifest_path
 
@@ -521,58 +545,128 @@ def remove_checkout(root, state_dir, batch_id, tree, scratch, keep_scratch):
             staging.rmdir()
 
 
+def storage_admission(root, directory, state, bid):
+    from retention_scratch import done_admission, consumers
+    module = SimpleNamespace(**globals())
+    try:
+        tree = safe_path(root, state.get('batches', {}).get(bid, {}).get('worktree') or root)
+        if tree != root and not (tree / '.git').exists():
+            raise ValueError('checkout already reclaimed; scratch storage only')
+        batch, tree, scratch, proof = admission(root, directory, state, bid)
+    except (OSError, ValueError, KeyError, TypeError, subprocess.SubprocessError) as error:
+        if state.get('batches', {}).get(bid, {}).get('state') != 'done':
+            raise
+        batch, tree, scratch, proof = done_admission(root, directory, state, bid, module)
+        proof['checkout_retained_reason'] = str(error)
+    if batch.get('state') == 'done':
+        proof['compact_scratch'] = True
+    protected = consumers(root, directory, bid, batch, tree, scratch, module)
+    if any(not (root / p).is_relative_to(scratch) and root / p != scratch.with_suffix('.jsonl') for p in protected):
+        proof['retire_checkout'] = False
+        proof['checkout_retained_reason'] = 'runtime proof files outside scratch'
+    proof['runtime_original_paths'] = protected
+    previous = directory / 'retention/archives' / (bid + '.manifest.json')
+    if previous.is_file():
+        saved = load(previous)
+        old = saved['proof']
+        if saved.get('state') == 'checkout_reclaimed' or old.get('restore_checkout'):
+            proof.update(restore_checkout=True, worktree_head=old['worktree_head'], worktree_branch=old['worktree_branch'])
+    workspace = directory / 'retention/worktree-archives' / (tree.name + '.manifest.json')
+    if tree != root and not (tree / '.git').exists() and workspace.is_file():
+        saved = load(workspace)
+        old = saved.get('proof', {})
+        if (saved.get('root') == str(root) and saved.get('state') == 'reclaimed'
+                and old.get('worktree') == str(tree) and bid in old.get('learner_owners', [])):
+            proof.update(restore_checkout=True, worktree_head=old['worktree_head'], worktree_branch=old['worktree_branch'],
+                         workspace_restore=dict(path=str(workspace.relative_to(root)), sha256=sha_file(workspace)))
+    return batch, tree, scratch, proof
+
+
 def reclaim(root, state_dir, batch_id, apply=False, state=None):
     previous = state_dir / "retention/archives" / (batch_id + ".manifest.json")
     if not BATCH.fullmatch(batch_id):
         raise ValueError("invalid batch identity")
+    prior = None
     if previous.exists():
         receipt = load(previous)
-        if receipt.get("state") in ("reclaimed", "checkout_reclaimed"):
+        if receipt.get('root') != str(root):
+            raise ValueError('foreign archive runtime retained')
+        if receipt.get('state') == 'checkout_reclaimed':
+            prior = receipt
+        elif receipt.get('state') == 'restored':
+            prior = receipt
+        elif receipt.get("state") == "reclaimed":
             return {"batch": batch_id, "state": "already_reclaimed"}
-        raise ValueError("interrupted archive retained; inspect or restore explicitly")
+        else:
+            raise ValueError("interrupted archive retained; inspect or restore explicitly")
     state = state or load(state_dir / "learn.json")
-    batch, tree, scratch, proof = admission(root, state_dir, state, batch_id)
+    batch, tree, scratch, proof = storage_admission(root, state_dir, state, batch_id)
     target = tree if proof["retire_checkout"] else scratch
     if active_cwd(target) or (proof.get("legacy_binding") and active_cwd(tree)):
         raise ValueError("active process cwd retained")
     files = files_under(root, scratch)
+    protected = set(proof['runtime_original_paths'])
+    files = [p for p in files if str(p.relative_to(root)) not in protected]
     estimate = {"batch": batch_id, "worktree": str(tree.relative_to(root)), "scratch": str(scratch.relative_to(root)),
                 "proof": proof, "scratch_bytes": sum(p.stat().st_size for p in files), "scratch_files": len(files)}
     if not apply or not (proof["retire_checkout"] or proof["compact_scratch"]):
         return dict(estimate, state="eligible" if proof["retire_checkout"] or proof["compact_scratch"] else "retained-report")
     related = [ident for ident, b in state["batches"].items() if Path(b.get("worktree") or root) == tree]
-    leases = [state_dir / "learner" / (tree.name + ".lock")]
+    leases = [state_dir / "learner" / (tree.name + ".lock"), root / 'ops/live-merge.lock']
     leases += [state_dir / (ident + ".checks.lock") for ident in related]
     with locks(leases):
         with locks([state_dir / "learn.lock"]):
-            _, _, _, current_proof = admission(root, state_dir, load(state_dir / "learn.json"), batch_id)
+            _, _, _, current_proof = storage_admission(root, state_dir, load(state_dir / "learn.json"), batch_id)
             if (current_proof != proof or active_cwd(target)
                     or (proof.get("legacy_binding") and active_cwd(tree))):
                 raise ValueError("owner/proof changed; retained")
         base = state_dir / "retention" / "archives" / batch_id
         before_space = shutil.disk_usage(root).free
-        if proof["kind"] == "settled-report-only":
+        if proof["kind"] == "settled-report-only" and not proof['compact_scratch']:
             # The checkout is reproducible from its branch; pending scratch stays at the exact original paths.
             remove_checkout(root, state_dir, batch_id, tree, scratch, True)
             manifest = dict(estimate, schema="learner-retention-v1", root=str(root), at=stamp(),
                             state="checkout_reclaimed", branch_retained=True, pending_scratch_preserved=True)
             atomic(base.with_suffix(".manifest.json"), manifest)
         else:
-            manifest, manifest_path = archive(root, base, scratch, files, proof)
+            if prior and prior.get('state') == 'restored':
+                archive_path = safe_path(root, prior['archive'])
+                if sha_file(archive_path) != prior['archive_sha256']:
+                    raise ValueError('archive hash mismatch')
+                if ({str(p.relative_to(root)) for p in files} != {row['path'] for row in prior['files']}
+                        or any(sha_file(root / row['path']) != row['sha256'] for row in prior['files'])):
+                    raise ValueError('restored process files changed; preserve revised evidence')
+                manifest, manifest_path = prior, base.with_suffix('.manifest.json')
+                manifest.setdefault('original_proof', manifest['proof'])
+                manifest['proof'] = proof
+                manifest['state'] = 'archived_not_reclaimed'
+                atomic(manifest_path, manifest)
+            else:
+                manifest, manifest_path = archive(root, base, scratch, files, proof, prior)
             staging = state_dir / "retention" / "staging" / batch_id
             if staging.exists():
                 raise ValueError("prior interrupted projection retained")
             staging.mkdir(parents=True)
             project_small(root, manifest, staging)
             with locks([state_dir / "learn.lock"]):
-                _, _, _, current_proof = admission(root, state_dir, load(state_dir / "learn.json"), batch_id)
+                _, _, _, current_proof = storage_admission(root, state_dir, load(state_dir / "learn.json"), batch_id)
                 if (current_proof != proof or active_cwd(target)
                         or (proof.get("legacy_binding") and active_cwd(tree))):
                     raise ValueError("owner changed before deletion; archive retained")
-                # Original root logs, native sessions, out/err, checks and learned knowledge are outside scratch.
-                shutil.rmtree(scratch)
+                # Delete only verified archive members. Consumer originals never enter the archive.
+                current_files = files_under(root, scratch)
+                if set(current_files) != set(files) | {root / p for p in protected if (root / p).is_relative_to(scratch)}:
+                    raise ValueError('scratch file set changed before deletion')
+                for record in manifest['files']:
+                    if sha_file(root / record['path']) != record['sha256']:
+                        raise ValueError('scratch changed before deletion')
+                for record in manifest['files']:
+                    path = root / record['path']
+                    if (staging / record['path']).is_file():
+                        continue
+                    path.unlink()
                 if proof["retire_checkout"]:
-                    remove_checkout(root, state_dir, batch_id, tree, scratch, False)
+                    remove_checkout(root, state_dir, batch_id, tree, scratch, True)
                 if staging.exists():
                     for parent, _, names in os.walk(staging):
                         for name in names:
@@ -590,9 +684,12 @@ def reclaim(root, state_dir, batch_id, apply=False, state=None):
 
 
 def sweep(root, state_dir, apply, limit):
-    limit = min(limit, 4)
+    from retention_metrics import bytes_under, batch_scope, summarize
     state = load(state_dir / "learn.json")
-    result = {"at": stamp(), "apply": apply, "results": [], "retained": {}, "limit": limit}
+    limit = max(limit, min(128, sum(b.get('state') == 'done' for b in state.get('batches', {}).values())))
+    result = {"at": stamp(), "apply": apply, "results": [], "retained": {}, "retained_bytes": {}, "limit": limit}
+    started = time.monotonic()
+    measured = set()
     batches = sorted(state.get("batches", {}), reverse=True)
     batches.sort(key=lambda ident: state["batches"][ident].get("task", "postmortem") == "postmortem")
     batches.sort(key=lambda ident: not (state_dir / "retention/requests" / (ident + ".json")).is_file())
@@ -600,7 +697,7 @@ def sweep(root, state_dir, apply, limit):
         batch = state["batches"][batch_id]
         tree = safe_path(root, batch.get("worktree") or root)
         workspace_manifest = state_dir / "retention/worktree-archives" / (tree.name + ".manifest.json")
-        if workspace_manifest.is_file() and not (tree / ".git").exists():
+        if batch.get('state') != 'done' and workspace_manifest.is_file() and not (tree / ".git").exists():
             workspace = load(workspace_manifest)
             if (workspace.get("state") == "reclaimed" and workspace.get("root") == str(root)
                     and workspace.get("proof", {}).get("worktree") == str(tree)
@@ -611,41 +708,58 @@ def sweep(root, state_dir, apply, limit):
                         "workspace_manifest_sha256": sha_file(workspace_manifest), "no_parent_request_closed": True})
                 continue
         if (state_dir / "retention/archives" / (batch_id + ".manifest.json")).exists():
-            if apply:
-                manifest = load(state_dir / "retention/archives" / (batch_id + ".manifest.json"))
-                request_outcome(root, state_dir, batch_id, {"state": manifest["state"]})
-            continue
+            manifest = load(state_dir / "retention/archives" / (batch_id + ".manifest.json"))
+            if manifest['state'] == 'reclaimed':
+                if apply:
+                    request_outcome(root, state_dir, batch_id, {"state": manifest["state"]})
+                continue
         try:
+            if len(result['results']) >= limit or (result['results'] and time.monotonic() - started >= 50):
+                raise ValueError('sweep budget; retry next natural tick')
             item = reclaim(root, state_dir, batch_id, apply, state)
         except (OSError, ValueError, KeyError, TypeError, subprocess.SubprocessError) as error:
             reason = str(error)
             result["retained"][reason] = result["retained"].get(reason, 0) + 1
+            try:
+                scope = batch_scope(root, state_dir, batch_id, batch, SimpleNamespace(**globals()))
+                count = 0 if (reason, scope) in measured else bytes_under(scope)
+                measured.add((reason, scope))
+                result['retained_bytes'][reason] = result['retained_bytes'].get(reason, 0) + count
+            except (OSError, ValueError, KeyError, TypeError):
+                result.setdefault('unknown_byte_batches', []).append(batch_id)
             if apply:
                 request_outcome(root, state_dir, batch_id, {"state": "deferred", "reason": reason})
             continue
         if item.get("state") == "retained-report":
             reason = "report-only scratch awaits experience ingestion"
             result["retained"][reason] = result["retained"].get(reason, 0) + 1
+            result['retained_bytes'][reason] = result['retained_bytes'].get(reason, 0) + item.get('scratch_bytes', 0)
             if apply:
                 request_outcome(root, state_dir, batch_id, {"state": "deferred", "reason": reason})
             continue
         result["results"].append(item)
         if apply:
             request_outcome(root, state_dir, batch_id, item)
-        if len(result["results"]) >= limit:
-            break
     atomic(state_dir / "retention/last-sweep.json", result)
-    remaining = limit - len(result["results"])
+    remaining = min(4, limit - len(result["results"]))
     if remaining > 0:
         import worktree_retention
         result["workspaces"] = worktree_retention.sweep(root, state_dir, apply, remaining)
         atomic(state_dir / "retention/last-sweep.json", result)
-    storage_remaining = limit - len(result["results"]) - len(result.get("workspaces", {}).get("results", []))
+    storage_remaining = min(4, limit - len(result["results"]) - len(result.get("workspaces", {}).get("results", [])))
     if storage_remaining > 0 and (root / "ops/worktree_storage.py").is_file():
         # Cache eviction has no ingestion/completion semantics; reuse this same bounded worker.
         import worktree_storage
         result["storage_cache"] = worktree_storage.sweep(root, state_dir, apply, storage_remaining)
         atomic(state_dir / "retention/last-sweep.json", result)
+    from refresh_retention import sweep as refresh_sweep
+    result['refresh'] = refresh_sweep(root, state_dir, apply)
+    for reason, count in result['refresh']['retained'].items():
+        reason = 'refresh: ' + reason
+        result['retained'][reason] = result['retained'].get(reason, 0) + count
+        result['retained_bytes'][reason] = result['refresh']['retained_bytes'].get(reason.removeprefix('refresh: '), 0)
+    summarize(root, state_dir, result, apply, SimpleNamespace(**globals()))
+    atomic(state_dir / 'retention/last-sweep.json', result)
     return result
 
 
@@ -686,21 +800,37 @@ def request_cleanup(root, state_dir, batch_id):
             "worker": kick(root, state_dir, Path(__file__).parent)}
 
 
-def restore(root, state_dir, batch_id):
+def restore(root, state_dir, batch_id, learn_locked=False):
+    require_host_process_view()
     manifest = load(state_dir / "retention/archives" / (batch_id + ".manifest.json"))
-    if manifest.get("root") != str(root) or manifest.get("state") not in ("reclaimed", "archived_not_reclaimed", "checkout_reclaimed"):
+    if manifest.get("root") != str(root) or manifest.get("state") not in ("reclaimed", "archived_not_reclaimed", "checkout_reclaimed", "restored"):
         raise ValueError("only this runtime's verified archives are restorable")
     path = safe_path(root, manifest["archive"]) if manifest.get("archive") else None
     if path is not None and sha_file(path) != manifest["archive_sha256"]:
         raise ValueError("archive hash mismatch")
-    with locks([state_dir / "retention.lock", state_dir / "learn.lock"]):
+    with locks([state_dir / "retention.lock", root / 'ops/live-merge.lock']
+               + ([] if learn_locked else [state_dir / "learn.lock"])):
         state = load(state_dir / "learn.json")
         batch = state["batches"][batch_id]
         tree = safe_path(root, batch.get("worktree") or root)
-        target = tree if manifest["proof"]["retire_checkout"] else safe_path(root, manifest["scratch"])
+        checkout = manifest['proof'].get('restore_checkout', manifest['proof']['retire_checkout'])
+        target = tree if checkout else safe_path(root, manifest["scratch"])
         if active_cwd(target) or any(b.get("state") == "running" and Path(b.get("worktree") or root) == tree for b in state["batches"].values()):
             raise ValueError("active owner retained")
-        if manifest["proof"]["retire_checkout"] and not (tree / ".git").exists():
+        from disk_capacity import require_capacity
+        require_capacity(root, sum(row['bytes'] for row in manifest.get('files', []) if not (root / row['path']).exists()),
+                         len(manifest.get('files', [])))
+        if checkout and not (tree / '.git').exists() and manifest['proof'].get('workspace_restore'):
+            ref = manifest['proof']['workspace_restore']
+            saved_path = safe_path(root, ref['path'])
+            if sha_file(saved_path) != ref['sha256']:
+                raise ValueError('original workspace archive receipt changed')
+            saved = load(saved_path)
+            require_capacity(root, sum(row['bytes'] for row in saved['files'] if not (root / row['path']).exists()), len(saved['files']))
+            import worktree_retention
+            worktree_retention.restore(root, state_dir, tree.name)
+            manifest['proof']['original_workspace_restore'] = manifest['proof'].pop('workspace_restore')
+        if checkout and not (tree / ".git").exists():
             branch = manifest["proof"]["worktree_branch"]
             if git(root, "rev-parse", branch).decode().strip() != manifest["proof"]["worktree_head"]:
                 raise ValueError("archived branch changed; existing evidence retained")
@@ -753,6 +883,8 @@ def restore(root, state_dir, batch_id):
                 if sha_file(dest) != record["sha256"]:
                     raise ValueError("restored hash mismatch")
                 dest.chmod(record["mode"])
+        manifest.update(state='restored', restored_at=stamp())
+        atomic(state_dir / 'retention/archives' / (batch_id + '.manifest.json'), manifest)
     return {"batch": batch_id, "state": "scratch_restored", "checkout_branch": manifest["proof"].get("worktree_branch")}
 
 

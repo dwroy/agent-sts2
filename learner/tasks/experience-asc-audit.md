@@ -91,3 +91,5 @@ default.merge_dir: {{project_root}}/.worktrees/live
 Roy 已授权：学习者有足够理由和自己核实的数据，可直接修改人定的出牌、药水、SL、终局价值规则，自测上线后通知 Roy；不再一律送回待审批。此授权不提供任何游戏事实；证据不足保留原行为、写清限制。只读复盘/审计/经验任务仍通过独立 strategy-proposal 实现代码，不让运维添加游戏知识。修改实际上线后先 date，在根目录 notes/for-roy.md 与 ops/inbox-dev.md 同时追加旧规则、新规则、证据/账本/任务、预期影响、回退方法；这是明确授权的双通知例外。无关角色保持等价，不改运维 prompt。
 
 最终 JSON 必须带 `code_proposals`（CLI id 列表）与 `implementation_domains`（combat/potion/sl/terminal/structure；只填实际涉及的，纯工具可空）。报告保存 {{scratch}}/report.md。已经实现的提案只有实际 live 祖先源码 commit 才可登记 implemented；不要冒称 shipped。失败日志、工作树、初稿和缺数据均保留。
+
+若 launcher 追加运营 runtime 合同，审计记录交 `operational_candidate`；正式经验修订另经已注入的 K1 `knowledge_candidate`，不再修改 Git 经验/commit/merge/full。原 Ironclad 来源与适用范围、原 ID/反证、提案与审计义务不变；库未启用时只保存候选待原owner。运营与正式知识回执分开，旧批次仍按原合同。

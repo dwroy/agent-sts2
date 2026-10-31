@@ -1,0 +1,77 @@
+{
+  "schema": "reflex-entry-v1",
+  "id": "silent-rk-c0-fasten-shop-target",
+  "version": 1,
+  "applies_to": "shop",
+  "predicate": {
+    "op": "and",
+    "args": [
+      {
+        "op": "eq",
+        "field": "act",
+        "value": 2
+      },
+      {
+        "op": "any",
+        "field": "player.deck",
+        "arg": {
+          "op": "eq",
+          "field": "card.id",
+          "value": "DEFEND_SILENT"
+        }
+      },
+      {
+        "op": "any",
+        "field": "shop.stock",
+        "arg": {
+          "op": "eq",
+          "field": "shop_item.id",
+          "value": "FASTEN"
+        }
+      }
+    ]
+  },
+  "signal": {
+    "kind": "tag",
+    "value": "silent-rk-c0-fasten-shop-target-tag",
+    "unit": "label"
+  },
+  "label_en": "Compare Defend-specific setup with the current shop budget",
+  "evidence": {
+    "observations": [
+      {
+        "run_id": "P5HT1272P5SB",
+        "floor": 21
+      }
+    ],
+    "n_support": 1,
+    "n_contradict": 0
+  },
+  "confidence": 0.25,
+  "scope": {
+    "character": "silent",
+    "ascensions": [
+      10
+    ]
+  },
+  "directions": [],
+  "cores": [],
+  "combos": [],
+  "source_experience": [
+    "silent-fasten-defend-extra-block"
+  ],
+  "sources": [
+    {
+      "source": "own",
+      "path": "learner/runs/20261025-021443-41ad5aa7-4a88-4f67-97a0-8cc882b5bed6-strategy-proposal/scratch/raw-window-receipts.json",
+      "sha256": "2a3a66bc04f7d237d3a50561ddf38ffa0b1d8002b0bc77b8ece937426a9919af",
+      "game_version": "unknown",
+      "retrieved_at": "2026-10-25",
+      "sample": {
+        "runs": 1,
+        "players": null,
+        "selection": "P5HT1272P5SB A10 no_retry_evidence；原506/六流截止内具名题；1局1情境，非因果。"
+      }
+    }
+  ]
+}

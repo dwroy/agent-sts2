@@ -1,0 +1,1597 @@
+{
+  "strategy_library": {
+    "path": "knowledge/characters/silent/strategy-entries.json",
+    "sha256": "303120262ed547827b2fe4c717e8114aca76358c5beb188899e9c8491f5a36b8",
+    "entries": 114
+  },
+  "rk_library": {
+    "path": "knowledge/characters/silent/reflex.json",
+    "sha256": "7af201275dd2115daf91e2dc63f930ab0be40bcf52a65f583133942c120316cf",
+    "entries": 160
+  },
+  "purpose": "仅去重和保留旧证据；旧结论/统计/局号不计本批新证据。",
+  "reviewed_texts": [
+    {
+      "id": "silent-brain-kin-priest-exit-window",
+      "trigger": {
+        "question_types": [
+          "act_plan",
+          "rest",
+          "shop",
+          "fight_plan"
+        ],
+        "acts": [
+          1
+        ],
+        "floor": {
+          "max": 17
+        },
+        "bosses": [
+          "THE_KIN_BOSS"
+        ]
+      },
+      "strategy": "同族备战仍核神官退出窗口及撑到该窗口的资源；当前神官BEAM_MOVE、信徒BOOMERANG_MOVE且尖啸可打时，比较群体减攻与单纯格挡/继续输出。KUHYZBFFLALU F17 T3一次机会：显示3×3与5×2；实际派发毒雾+、尖啸、触媒后，两组攻击均变0，T4仍47血。原脑选防御线，执行闸改线，不能把原答案当实打；整战55→9，后续仍有高血价。\n范围：Silent/A10/版本unknown、1局1窗口；不指定固定击杀顺序。ZTRGYYMLR8SC持尖啸仍最终败，含SL；首次预判不冒实际死亡，不能推出尖啸整战收益。"
+    },
+    {
+      "id": "silent-brain-vantom-two-stage-preparation",
+      "trigger": {
+        "question_types": [
+          "act_plan",
+          "rest",
+          "shop",
+          "fight_plan"
+        ],
+        "acts": [
+          1
+        ],
+        "floor": {
+          "max": 17
+        },
+        "bosses": [
+          "VANTOM_BOSS"
+        ]
+      },
+      "strategy": "墨影备战继续分核有滑溜的早期推进与后段输出；当前DISMEMBER_MOVE且滑溜仍在、冲刺/后空翻均可打时，比较兼顾防护抽牌的组合线。0CLP16ZR4ZZC F17 T3一次机会：4敏捷，敌178血/4滑溜/显示22攻；实打冲刺、后空翻后23挡，敌仅177血/3滑溜，次轮玩家84血未降。整战85→84；旧证据55→17仍保留，不能以本局覆盖旧血价。\n范围：Silent/A10/版本unknown；1局1动作窗口，抽牌/遗物/药水混杂；1303HVDLVMGR终败含重试，首次仅预判截止，非独立同起点反事实。"
+    },
+    {
+      "id": "silent-brain-crab-surviving-part-budget",
+      "trigger": {
+        "question_types": [
+          "act_plan",
+          "rest",
+          "shop",
+          "fight_plan"
+        ],
+        "acts": [
+          2
+        ],
+        "floor": {
+          "min": 18,
+          "max": 33
+        },
+        "bosses": [
+          "KAISER_CRAB_BOSS"
+        ]
+      },
+      "strategy": "帝王蟹仍分核双体与残敌预算；双体当前为碾碎爪GUARDED_STRIKE_MOVE、火箭RECHARGE_MOVE时，按实际攻击侧比较扫腿与施毒目标。LKC9YXKZWTKR F33 T5一次机会：火箭95血/15毒暂不显示攻击，碾碎爪191血/7毒/25攻；实打致命毒药后已变17攻，再扫腿到12攻/12挡，带毒刺击后T6仍47血；不把25→12全归于扫腿。不能把火箭休眠当退场，也未证固定先杀哪侧；整战76→47。\n范围：Silent/A10/版本unknown、1局1窗口；F6XY4QJMS5RC持施毒/防护仍57血进场实际败。旧预判SL/后试败例原样保留，不作扫腿因果收益或安全保证。"
+    },
+    {
+      "id": "silent-brain-act2-reward-skip-comparison",
+      "trigger": {
+        "question_types": [
+          "card_reward"
+        ],
+        "acts": [
+          2
+        ]
+      },
+      "strategy": "仅A10/v0.111.0参考：第2幕卡奖把跳过与补牌逐项比较，先说明候选能补当前哪一缺口；未找到具体用途时保留跳过，不因奖励必须选一张。外部7821个奖励屏幕有2198次跳过（28.10%，玩家簇区间20.75–37.11%），说明该幕跳过是实际出现的选择。这是屏幕频率，不是局胜率、最优跳过配额或跳过收益；到达该幕的玩家/牌组已被筛选。当前确有可兑现补强时不能为凑比例拒拿。"
+    },
+    {
+      "id": "silent-brain-act3-reward-skip-comparison",
+      "trigger": {
+        "question_types": [
+          "card_reward"
+        ],
+        "acts": [
+          3
+        ]
+      },
+      "strategy": "仅A10/v0.111.0参考：第3幕卡奖把跳过与补牌逐项比较，先说明候选能补当前哪一缺口；未找到具体用途时保留跳过，不因奖励必须选一张。外部4411个奖励屏幕有1704次跳过（38.63%，玩家簇区间31.34–49.58%），说明该幕跳过是实际出现的选择。这是屏幕频率，不是局胜率、最优跳过配额或跳过收益；到达该幕的玩家/牌组已被筛选。当前确有可兑现补强时不能为凑比例拒拿。"
+    },
+    {
+      "id": "silent-brain-act1-blade-dance-choice-context",
+      "trigger": {
+        "question_types": [
+          "card_reward"
+        ],
+        "acts": [
+          1
+        ]
+      },
+      "strategy": "仅Silent A10/v0.111第一幕：出现BLADE_DANCE时按现场牌文与实际牌组比较用途、备选牌和跳过，勿按外部相关胜率设必拿。奖励拿牌前缀代理为0张时，拿25/88局胜、不拿23/91局胜；前缀含LEADING_STRIKE时拿21/64、不拿42/126，差值方向已不同。后者后续Boss到达为63/69与140/146机会，非独立局率或Boss通过率。前缀不含初始/删改/商店/升级牌，不能用实际牌组张数代替；同局可跨组重复，玩家未知，均非因果。其他前缀/版本不能直接套用。"
+    },
+    {
+      "id": "silent-brain-knowledge-demon-external-tail-budget",
+      "trigger": {
+        "question_types": [
+          "act_plan",
+          "event",
+          "rest",
+          "shop",
+          "fight_plan"
+        ],
+        "acts": [
+          2
+        ],
+        "bosses": [
+          "KNOWLEDGE_DEMON_BOSS"
+        ]
+      },
+      "strategy": "知识恶魔准备仍给受伤尾部留预算，不以均值定安全血线。当前SLAP_MOVE且尖啸与防御合法时，比较减攻后补挡的整条线。KUHYZBFFLALU F33 T2一次机会：已有3弱化，显示13攻；实打尖啸变9攻，再两张防御合10挡，兼打触媒，T3仍63血。整战63→24，后续血价并未消失。\n范围：Silent/A10/自有版本unknown、1局1窗口；MEQ6ETDCEEE9持尖啸仍终败，含SL，首次仅预判截止。外部v0.111分簇代价只是方向对照；不把模型均值当反事实，不改变H0/G1a或校准可信度。"
+    },
+    {
+      "id": "silent-brain-test-subject-external-tail-budget",
+      "trigger": {
+        "question_types": [
+          "act_plan",
+          "event",
+          "rest",
+          "shop"
+        ],
+        "acts": [
+          3
+        ],
+        "bosses": [
+          "TEST_SUBJECT_BOSS"
+        ]
+      },
+      "strategy": "仅A10/v0.111.0参考：备战TEST_SUBJECT时，把当前HP、现有防护和补强可兑现的减损列入休息/升级/购物或事件取舍；别用一个平均代价承诺能安全入场。外部匹配501场/501局/70玩家，总受伤gross_damage的90分位为62。这是受伤尾部的量级提示，非净掉血、非置信区间，也不是62血安全线或固定休息线。上传自选、SL未知、死亡截断和牌组差异保留；不由此指定杀序、必拿牌、必喝药或推断本系统模拟误差。本条只指当前已识别Boss，不能覆盖第三幕未知后场或将两Boss代价相加。"
+    },
+    {
+      "id": "silent-brain-act1-deadly-poison-prefix-context",
+      "trigger": {
+        "question_types": [
+          "card_reward"
+        ],
+        "acts": [
+          1
+        ]
+      },
+      "strategy": "DEADLY_POISON的拿牌观察关联偏负：v0.111拿66/257、不拿309/949最终胜，差-6.88个百分点；样本单位为选择记录（重复局；合并独立局数未知）。\n范围：仅Silent A10/v0.111奖励出现此卡，幕1前缀张数∈{0–6}（奖励获取前缀代理）。观察非因果，不能视为完整牌组、固定拿牌命令或外推到其他版本；反向/小样本见证据附件。"
+    },
+    {
+      "id": "silent-brain-act1-footwork-prefix-context",
+      "trigger": {
+        "question_types": [
+          "card_reward"
+        ],
+        "acts": [
+          1
+        ]
+      },
+      "strategy": "已有多张后空翻时，可比较灵动步法的部署与即时补强，不能把持有能力牌当已安全。4YPG F11已有3后空翻、8/70血，五选一选1费2敏捷的步法；F12休至29，F13仍29→2，终F14败（1局1次）。CLA89 F7也拿步法、F8锻造后56血进精英仍败，保留反例。\n范围：Silent A10、自有版本unknown；未核能力实际启动和替代路线，不定回血线。旧v0.111幕1奖励前缀5张拿11/40、不拿9/19胜；前缀含斗篷拿8/44、不拿6/16，原重叠/代理限制保留。新簇7步法+后空翻赢家15/27、败者11/27，但步法+翻越撑击5/27对9/27；不固定排序。"
+    },
+    {
+      "id": "silent-brain-accuracy-external-prefix-context",
+      "trigger": {
+        "question_types": [
+          "card_reward"
+        ],
+        "acts": [
+          2
+        ]
+      },
+      "strategy": "ACCURACY的拿牌观察关联偏正：v0.111拿60/140、不拿69/163最终胜，差+0.53个百分点；样本单位为选择记录（重复局；合并独立局数未知）。\n范围：仅Silent A10/v0.111奖励出现此卡，幕2前缀张数∈{7–13}（奖励获取前缀代理）。观察非因果，不能视为完整牌组、固定拿牌命令或外推到其他版本；反向/小样本见证据附件。"
+    },
+    {
+      "id": "silent-brain-poisoned-stab-external-prefix-context",
+      "trigger": {
+        "question_types": [
+          "card_reward"
+        ],
+        "acts": [
+          1
+        ]
+      },
+      "strategy": "POISONED_STAB的拿牌观察关联偏负：v0.111拿32/141、不拿244/869最终胜，差-5.38个百分点；样本单位为选择记录（重复局；合并独立局数未知）。\n范围：仅Silent A10/v0.111奖励出现此卡，幕1前缀张数∈{0–4}（奖励获取前缀代理）。观察非因果，不能视为完整牌组、固定拿牌命令或外推到其他版本；反向/小样本见证据附件。"
+    },
+    {
+      "id": "silent-brain-infinite-blades-external-prefix-context",
+      "trigger": {
+        "question_types": [
+          "card_reward"
+        ],
+        "acts": [
+          1
+        ]
+      },
+      "strategy": "INFINITE_BLADES的拿牌观察关联偏正：v0.111拿82/234、不拿77/299最终胜，差+9.29个百分点；样本单位为选择记录（重复局；合并独立局数未知）。\n范围：仅Silent A10/v0.111奖励出现此卡，幕1前缀张数∈{0–7}（奖励获取前缀代理）。观察非因果，不能视为完整牌组、固定拿牌命令或外推到其他版本；反向/小样本见证据附件。"
+    },
+    {
+      "id": "silent-brain-bubble-bubble-external-prefix-context",
+      "trigger": {
+        "question_types": [
+          "card_reward"
+        ],
+        "acts": [
+          1
+        ]
+      },
+      "strategy": "BUBBLE_BUBBLE的拿牌观察关联偏正：v0.107拿43/133、不拿135/537最终胜，差+7.19个百分点；样本单位为选择记录（重复局；合并独立局数未知）。\n范围：仅Silent A10/v0.107奖励出现此卡，幕1前缀张数∈{0–6}（奖励获取前缀代理）。观察非因果，不能视为完整牌组、固定拿牌命令或外推到其他版本；反向/小样本见证据附件。"
+    },
+    {
+      "id": "silent-brain-malaise-external-prefix-context",
+      "trigger": {
+        "question_types": [
+          "card_reward"
+        ],
+        "acts": [
+          1,
+          2
+        ]
+      },
+      "strategy": "MALAISE的拿牌观察关联偏正：v0.107拿50/116、不拿57/169最终胜，差+9.38个百分点；样本单位为选择记录（重复局；合并独立局数未知）。\n范围：仅Silent A10/v0.107奖励出现此卡，幕1前缀张数∈{4–8}；幕2前缀张数∈{11–12}（奖励获取前缀代理）。观察非因果，不能视为完整牌组、固定拿牌命令或外推到其他版本；反向/小样本见证据附件。"
+    },
+    {
+      "id": "silent-brain-phantom-blades-external-prefix-context",
+      "trigger": {
+        "question_types": [
+          "card_reward"
+        ],
+        "acts": [
+          1
+        ]
+      },
+      "strategy": "PHANTOM_BLADES的拿牌观察关联偏正：v0.111拿84/209、不拿79/287最终胜，差+12.67个百分点；样本单位为选择记录（重复局；合并独立局数未知）。\n范围：仅Silent A10/v0.111奖励出现此卡，幕1前缀张数∈{0–7}（奖励获取前缀代理）。观察非因果，不能视为完整牌组、固定拿牌命令或外推到其他版本；反向/小样本见证据附件。"
+    },
+    {
+      "id": "silent-brain-blade-of-ink-external-prefix-context",
+      "trigger": {
+        "question_types": [
+          "card_reward"
+        ],
+        "acts": [
+          1,
+          2
+        ]
+      },
+      "strategy": "BLADE_OF_INK的拿牌观察关联偏正：v0.107拿82/193、不拿61/159最终胜，差+4.12个百分点；样本单位为选择记录（重复局；合并独立局数未知）。\n范围：仅Silent A10/v0.107奖励出现此卡，幕1前缀张数∈{5–8}；幕2前缀张数∈{11–14}（奖励获取前缀代理）。观察非因果，不能视为完整牌组、固定拿牌命令或外推到其他版本；反向/小样本见证据附件。"
+    },
+    {
+      "id": "silent-brain-blur-external-prefix-context",
+      "trigger": {
+        "question_types": [
+          "card_reward"
+        ],
+        "acts": [
+          1,
+          2
+        ]
+      },
+      "strategy": "BLUR的拿牌观察关联偏负：v0.111拿36/139、不拿67/255最终胜，差-0.38个百分点；样本单位为选择记录（重复局；合并独立局数未知）。\n范围：仅Silent A10/v0.111奖励出现此卡，幕1前缀张数∈{0–6}（奖励获取前缀代理）。观察非因果，不能视为完整牌组、固定拿牌命令或外推到其他版本；反向/小样本见证据附件。"
+    },
+    {
+      "id": "silent-brain-bouncing-flask-external-prefix-context",
+      "trigger": {
+        "question_types": [
+          "card_reward"
+        ],
+        "acts": [
+          1
+        ]
+      },
+      "strategy": "BOUNCING_FLASK的拿牌观察关联偏正：v0.111拿35/121、不拿69/245最终胜，差+0.76个百分点；样本单位为选择记录（重复局；合并独立局数未知）。\n范围：仅Silent A10/v0.111奖励出现此卡，幕1前缀张数∈{0–5}（奖励获取前缀代理）。观察非因果，不能视为完整牌组、固定拿牌命令或外推到其他版本；反向/小样本见证据附件。"
+    },
+    {
+      "id": "silent-brain-knife-trap-external-prefix-context",
+      "trigger": {
+        "question_types": [
+          "card_reward"
+        ],
+        "acts": [
+          1,
+          2
+        ]
+      },
+      "strategy": "KNIFE_TRAP的拿牌观察关联偏正：v0.107拿60/117、不拿90/219最终胜，差+10.19个百分点；样本单位为选择记录（重复局；合并独立局数未知）。\n范围：仅Silent A10/v0.107奖励出现此卡，幕1前缀张数∈{4–8}；幕2前缀张数∈{11,13–14}（奖励获取前缀代理）。观察非因果，不能视为完整牌组、固定拿牌命令或外推到其他版本；反向/小样本见证据附件。"
+    },
+    {
+      "id": "silent-brain-haze-external-prefix-context",
+      "trigger": {
+        "question_types": [
+          "card_reward"
+        ],
+        "acts": [
+          1
+        ]
+      },
+      "strategy": "HAZE的拿牌观察关联偏负：v0.107拿48/205、不拿140/523最终胜，差-3.35个百分点；样本单位为选择记录（重复局；合并独立局数未知）。\n范围：仅Silent A10/v0.107奖励出现此卡，幕1前缀张数∈{0–7}（奖励获取前缀代理）。观察非因果，不能视为完整牌组、固定拿牌命令或外推到其他版本；反向/小样本见证据附件。"
+    },
+    {
+      "id": "silent-brain-leading-strike-external-prefix-context",
+      "trigger": {
+        "question_types": [
+          "card_reward"
+        ],
+        "acts": [
+          1
+        ]
+      },
+      "strategy": "LEADING_STRIKE的拿牌观察关联偏正：v0.111拿190/567、不拿218/699最终胜，差+2.32个百分点；样本单位为选择记录（重复局；合并独立局数未知）。\n范围：仅Silent A10/v0.111奖励出现此卡，幕1前缀张数∈{0–7}（奖励获取前缀代理）。观察非因果，不能视为完整牌组、固定拿牌命令或外推到其他版本；反向/小样本见证据附件。"
+    },
+    {
+      "id": "silent-brain-noxious-fumes-external-prefix-context",
+      "trigger": {
+        "question_types": [
+          "card_reward"
+        ],
+        "acts": [
+          1,
+          2
+        ]
+      },
+      "strategy": "NOXIOUS_FUMES的拿牌观察关联偏负：v0.111拿77/245、不拿75/206最终胜，差-4.98个百分点；样本单位为选择记录（重复局；合并独立局数未知）。\n范围：仅Silent A10/v0.111奖励出现此卡，幕1前缀张数∈{0–7}（奖励获取前缀代理）。观察非因果，不能视为完整牌组、固定拿牌命令或外推到其他版本；反向/小样本见证据附件。\n补充幕2实牌组情境：已有触媒/单体施毒而无毒雾时，比较每回合开始群体施毒与再添单体牌。0CLP16ZR4ZZC F30的1次机会在毒雾/致命毒药/计算下注/跳过中选毒雾；本地牌文1费、全体2毒/升级3，版本unknown。外部v0.111触媒+毒雾配对终局胜5/27、负8/27（-11.11pp，q=1）；并非收益或安全保证。"
+    },
+    {
+      "id": "silent-brain-well-laid-plans-external-prefix-context",
+      "trigger": {
+        "question_types": [
+          "card_reward"
+        ],
+        "acts": [
+          1
+        ]
+      },
+      "strategy": "WELL_LAID_PLANS的拿牌观察关联偏正：v0.107拿129/404、不拿125/472最终胜，差+5.45个百分点；样本单位为选择记录（重复局；合并独立局数未知）。\n范围：仅Silent A10/v0.107奖励出现此卡，幕1前缀张数∈{0–7}（奖励获取前缀代理）。观察非因果，不能视为完整牌组、固定拿牌命令或外推到其他版本；反向/小样本见证据附件。"
+    },
+    {
+      "id": "silent-brain-accelerant-external-prefix-context",
+      "trigger": {
+        "question_types": [
+          "card_reward"
+        ],
+        "acts": [
+          1,
+          2
+        ]
+      },
+      "strategy": "ACCELERANT的拿牌观察关联偏负：v0.111拿37/119、不拿148/452最终胜，差-1.65个百分点；样本单位为选择记录（重复局；合并独立局数未知）。\n范围：仅Silent A10/v0.111奖励出现此卡，幕1前缀张数∈{2–6}；幕2前缀张数∈{9–11}（奖励获取前缀代理）。观察非因果，不能视为完整牌组、固定拿牌命令或外推到其他版本；反向/小样本见证据附件。\n补充实牌组情境：已有蛇咬、致命毒药、迷雾时，再比较触媒的额外触发与启动前存活。0CLP16ZR4ZZC F21的1次机会拿触媒；本地牌文1费/额外触发1次，升级2次，版本unknown。外部v0.111配对终局触媒+致命毒药胜8/27、负11/27（-11.11pp，q=1），保留负向，不作必拿。"
+    },
+    {
+      "id": "silent-brain-burst-external-prefix-context",
+      "trigger": {
+        "question_types": [
+          "card_reward"
+        ],
+        "acts": [
+          1,
+          2
+        ]
+      },
+      "strategy": "BURST的拿牌观察关联偏负：v0.107拿34/103、不拿104/228最终胜，差-12.60个百分点；样本单位为选择记录（重复局；合并独立局数未知）。\n范围：仅Silent A10/v0.107奖励出现此卡，幕1前缀张数∈{4–8}；幕2前缀张数∈{13–14}（奖励获取前缀代理）。观察非因果，不能视为完整牌组、固定拿牌命令或外推到其他版本；反向/小样本见证据附件。\n补充实牌组情境：已有蛇咬/致命毒药及防护技能时，爆发可比较下一技能的多用途复制与1费启动，不把能力牌触媒当复制目标。0CLP16ZR4ZZC F33的1次奖励选择爆发；牌文为本回合下一技能额外打出一次，版本unknown。外部v0.111代表终局胜2/5、负1/5有爆发；负例92f节点17拿后仍节点25止。旧v0.107负关联另账，机制对齐未知。"
+    },
+    {
+      "id": "silent-brain-sucker-punch-external-prefix-context",
+      "trigger": {
+        "question_types": [
+          "card_reward"
+        ],
+        "acts": [
+          1
+        ]
+      },
+      "strategy": "已有两张后空翻和下注时，突然一拳应与继续抽弃、随机攻击逐项比较，不能只追抽牌数量。4YPG F6在突然一拳/早有准备/连续反弹中选前者；原牌文1费8伤1虚弱，对照为0费抽1弃1、2费随机3伤4次。1局1次，随后休息28→49、下一战49→21，不能归因于该牌。\n范围：Silent A10、自有版本unknown；按现场费用/目标核实，不推奇巧或虚弱时长。旧外部v0.107幕1前缀0–5：拿63/246、不拿427/1724终胜，+0.84pp，单位为重复选择记录；不外推v0.111，也非固定拿牌命令。"
+    },
+    {
+      "id": "silent-brain-abrasive-external-prefix-context",
+      "trigger": {
+        "question_types": [
+          "card_reward"
+        ],
+        "acts": [
+          1,
+          2
+        ]
+      },
+      "strategy": "ABRASIVE的拿牌观察关联偏负：v0.107拿87/209、不拿80/165最终胜，差-6.86个百分点；样本单位为选择记录（重复局；合并独立局数未知）。\n范围：仅Silent A10/v0.107奖励出现此卡，幕1前缀张数∈{5–9}；幕2前缀张数∈{11–14}（奖励获取前缀代理）。观察非因果，不能视为完整牌组、固定拿牌命令或外推到其他版本；反向/小样本见证据附件。"
+    },
+    {
+      "id": "silent-brain-backflip-external-prefix-context",
+      "trigger": {
+        "question_types": [
+          "card_reward"
+        ],
+        "acts": [
+          1,
+          2
+        ]
+      },
+      "strategy": "后空翻应按当前攻防缺口比较，不把更多抽牌当产出已够。4YPG已有翻越撑击/下注，F4、F5、F9连续拿后空翻（1局3次），牌文1费5挡抽2；F8赢战仍49→21，F13赢战29→2，F14败。\n范围：Silent A10、自有版本unknown；当前牌组用此前快照代理，无固定副本数或安全线。保留旧外部v0.111幕2前缀含LEADING_STRIKE：56/126对58/138胜，+2.42pp（两臂可能同局）；旧自有0CLP F13、HLAW F24的补挡过牌场景仍有效且非收益证明。新外部簇7后空翻+步法赢家/败者15/27对11/27，而后空翻+反弹10/27对15/27，方向相反。"
+    },
+    {
+      "id": "silent-brain-dagger-spray-external-prefix-context",
+      "trigger": {
+        "question_types": [
+          "card_reward"
+        ],
+        "acts": [
+          1
+        ]
+      },
+      "strategy": "DAGGER_SPRAY的拿牌观察关联偏负：v0.111拿69/262、不拿231/860最终胜，差-0.52个百分点；样本单位为选择记录（重复局；合并独立局数未知）。\n范围：仅Silent A10/v0.111奖励出现此卡，幕1前缀张数∈{0–5}（奖励获取前缀代理）。观察非因果，不能视为完整牌组、固定拿牌命令或外推到其他版本；反向/小样本见证据附件。"
+    },
+    {
+      "id": "silent-brain-potion-buff-before-relevant-cards",
+      "trigger": {
+        "question_types": [
+          "fight_plan",
+          "act_plan"
+        ]
+      },
+      "strategy": "仅Silent A10、来源游戏版本unknown。备战时：若本战已决定使用力量/敏捷药，且后续确有相应攻击/格挡牌可兑现，优先比较“药→相关牌”的顺序并读回变化后的牌面。470次已执行、同回合出牌数未变的用药（246局）中，445次（238局）相应手牌Damage/Block数值改变；也有25次未见相关变化。样例DAGGER_SPRAY展示6→8、防御5→7，均为实际后继牌面；不是通关收益，也不表示必须用药。没相应牌、无法出牌或准备留药时仍比较其他选择，不把固定增幅套到所有状态。"
+    },
+    {
+      "id": "silent-brain-potion-uncovered-end-turn",
+      "trigger": {
+        "question_types": [
+          "fight_plan",
+          "act_plan"
+        ]
+      },
+      "strategy": "仅Silent A10、来源游戏版本unknown。备战计划保留一个结束回合前检查：实际格挡不足以覆盖当前显示攻击、格挡药can_use且行动ready时，把现在喝与保留逐项比较；不要只以能量耗尽结束评估。227次缺口场景用药（138局）的同回合、出牌数未变后继均观察到格挡+12。另有168次可用格挡药却结束回合（69局），并非都致死；抽核78→76与40→38后药仍在。显示攻击只是威胁代理，其他伤害/防护与留药价值仍须核当前状态；不规定缺口必喝或安全HP。"
+    },
+    {
+      "id": "silent-brain-potion-zero-energy-continuation",
+      "trigger": {
+        "question_types": [
+          "fight_plan",
+          "act_plan"
+        ]
+      },
+      "strategy": "仅Silent A10、来源游戏版本unknown。备战时为能量耗尽留一个条件分支：若实际能量为0、能量药可用，且手里存在仅因能量不足而不可打、喝后仍有目标与用途的牌，比较补能续牌与留药；不因0能量直接认定无动作。146次此类用药（109局）后能量0→2，并有手牌从not_enough_energy变为playable；142次下一记录选择出牌（135次完成、7次排队未稳定）。另有159次零能量持可用药后结束回合（60局），抽核可保血不掉，不能自动判错。新增能量不证明整战划算；仍核自伤、额外费用、行动闸与本战用途。"
+    },
+    {
+      "id": "silent-brain-potion-full-shop-replacement",
+      "trigger": {
+        "question_types": [
+          "shop"
+        ]
+      },
+      "strategy": "仅Silent A10、来源游戏版本unknown。商店满栏且货架有当前金币买得起的替代药时，按当前每瓶用途比较保留、可用药先饮、弃药换购；先确认目标库存/价格，再决定腾栏，别把弃药记作喝药。306个已记录机会（191局）中26店发生弃后换购、280店未观察到这种替换；同店可多次，实际27组动作/25局均核新药入栏且金币按价减少。25226ZFLNR1J曾弃掉can_use的AnyTime果汁后买药，但用它与弃它的反事实未知；有害或未知效果不能因可用就喝。满栏时enough_gold曾为false，需同时看实金币、价格与栏位，不只读一个标志。"
+    },
+    {
+      "id": "silent-brain-potion-reserve-terminal-proxy-context",
+      "trigger": {
+        "question_types": [
+          "act_plan",
+          "fight_plan"
+        ],
+        "acts": [
+          3
+        ]
+      },
+      "strategy": "仅Silent A10：第三幕连续Boss备战与场间，以本次实际敌人、当前HP和药栏重评本战可兑现用途及保留理由，不按旧目标名或上一场资源推定下一场。自有版本unknown的48局/48桥接中，地图到下一战首记录HP有43次不变、5次+25；药栏34次空→空、7次同非空ID（沿用代理）、7次出现新ID。新增不全是前战留药，首记录也非原子入场；不据此定留几瓶/安全HP。保留旧外部v0.111.0终局代理非胜447/1247、胜166/492，差+2.11百分点；与自有场间证据端点不同、版本可比性未知，不算留药收益。"
+    },
+    {
+      "id": "silent-brain-act1-rest-smith-resource-proxy",
+      "trigger": {
+        "question_types": [
+          "rest"
+        ],
+        "acts": [
+          1
+        ]
+      },
+      "strategy": "第一幕休息题先按当前真实HP与后继风险比较回血/具名升级，不凭终局胜率选锻造。自有Silent A10、版本unknown：HEAL/SMITH题前HP均33.53/48.97，差15.44血；1039/474次、451/309个组内独立局（组间重叠）。外部v0.111.0前节点HP代理差17.85血，赢家上传372/1254与465/1458，差2.23pp，仅方向对照。适用：两项当前合法；观察关联、SL分层另附，不给固定回血线、升级因果收益或其他进阶结论。"
+    },
+    {
+      "id": "silent-rest-buffer-observation",
+      "trigger": {
+        "question_types": [
+          "rest"
+        ]
+      },
+      "strategy": "休息题若当前缺血小于面板回复，按实际缺口、增上限和附带收益比较回血/具名升级。Silent A10、版本unknown：此类565次/258局，实选HEAL163次/128局；其中最大HP未变的145次/118局，实际回复均等于缺口，含2次回0。另18次伴随上限变化，不能套旧上限；满血题面也可能附带药水收益，回0不等于选项无用。适用：当前HEAL和SMITH合法；这是已执行后继观察，不给统一血线、固定优先级或其他进阶结论。"
+    },
+    {
+      "id": "silent-pumpkin-candle-charge-energy",
+      "trigger": {
+        "question_types": [
+          "rest"
+        ],
+        "acts": [
+          2,
+          3
+        ]
+      },
+      "strategy": "休息题出现KINDLE添火时，把题面充能收益与当场回血分开比较；需要补当前HP时不要把添火计成HEAL。Silent A10、版本unknown：8局11次添火，题面均写为南瓜蜡烛加5层充能，动作后HP净增均0；含28/70和40/86血情境。适用：仅当前合法添火，已观察第二、三幕；全为有SL记录局、小样本，未估额外能量整战收益，也未证明回血、升级或添火的固定优先级。"
+    },
+    {
+      "id": "silent-route-hp-observation",
+      "trigger": {
+        "question_types": [
+          "act_plan",
+          "rest",
+          "event"
+        ]
+      },
+      "strategy": "核路线时先确认当前合法分支及到火前资源，不把未来营火预支为现有HP。Silent A10、版本unknown：精英/火同为备选524次/280局；走火475次平均后继净增14.50血，走精英15次中14次有后继、平均净减25血，另1次缺失；题前HP均37.32/63.27，非同状态对照。每局每幕首次多备选的960个窗口中90未观测到下火；831个已到火且地图标记战斗≥2的段均净减23.26，亦见净增。适用：幕初/带路线复核题；标记战斗数及跨节点净变化是代理，含事件/SL混杂；不作战斗毛伤、绕路收益或安全线。"
+    },
+    {
+      "id": "silent-miniature-tent-two-rest-options",
+      "trigger": {
+        "question_types": [
+          "rest"
+        ]
+      },
+      "strategy": "已持微型帐篷且当前营火仍给出可用的另一个动作时，执行后重新核选项，把回血与具名升级都纳入本火预算。Silent A10、版本unknown：14局70个营火实际完成HEAL与SMITH；70次升级均见牌组升级变化且当步净回血0，70次HEAL均净回22.01（0—50），2次回0；两种先后顺序均已出现。适用：必须核当前遗物、剩余合法选项和目标，不把选完一项当已离火，不承诺可重复同项；含SL/增上限/额外动作混杂，未证最佳顺序或整胜收益。"
+    },
+    {
+      "id": "silent-brain-opening-golden-pearl-external-comparison",
+      "trigger": {
+        "question_types": [
+          "event",
+          "act_plan"
+        ],
+        "acts": [
+          1
+        ],
+        "floor": {
+          "min": 1,
+          "max": 1
+        }
+      },
+      "strategy": "开局实际提供GOLDEN_PEARL时，把已确认的150金币与其他选项的当下资源逐项比较，不把外部整局关联当首Boss收益。自有42次选择后记录均+150金币且HP不变；A10无重试证据选组4/9过首Boss、同台未选1/2（差-5.56点），整局均0胜。外部v0.111.0为34/111对24/110整局胜（+8.81点）；旧v0.108.0差-7.53点，机制对照未知。\n范围：仅Silent开局该原ID；自有版本unknown/A10结局，其他进阶不外推。备选、路线和版本混杂，不作固定必选或因果收益。"
+    },
+    {
+      "id": "silent-brain-first-combat-reward-type-comparison",
+      "trigger": {
+        "question_types": [
+          "card_reward"
+        ],
+        "acts": [
+          1
+        ],
+        "floor": {
+          "min": 2,
+          "max": 2
+        }
+      },
+      "strategy": "确认是首场真实战斗后的卡奖且有Attack选项时，将能补当前用途的攻击牌列入比较，同时按牌文核Skill/Power能做什么，不能把类型当伤害或防御标签。A10无重试证据拿Attack为43/65过首Boss、其他14/33（+23.73点）；有重载且有预判必死证据层152/194对65/78（-4.98点），方向反转。\n范围：Silent/A10/版本unknown/首战实际奖励；98与272局分层机会各一题，不能按未来SL选择策略。观察关联，不保证拿Attack更好；不是首战或无法核战序时不适用。"
+    },
+    {
+      "id": "silent-brain-early-block-after-attack-prefix",
+      "trigger": {
+        "question_types": [
+          "card_reward"
+        ],
+        "acts": [
+          1
+        ],
+        "floor": {
+          "min": 3,
+          "max": 8
+        }
+      },
+      "strategy": "确认第2～3场真实战斗奖励、此前早期卡奖已拿Attack且本题提供写明获得格挡的牌时，不因已补攻击就自动补任意格挡；比较当前牌组、费用、牌文和备选。每局首个合格机会：A10无重试证据取格挡文本牌6/18过首Boss、其他29/46（-29.71点）；重载且预判必死层48/58对110/142（+5.29点）。\n范围：Silent/A10/版本unknown；此前已拿Attack只是奖励前缀代理，非完整输出能力。格挡文本代理也含Attack，非全部防御。分层反向、无因果拿牌顺序；历史不明时不适用。\n新增混合路线窗口：已有猎杀者/回响斩击时，冲刺可按同张牌即时伤挡比较，不把又拿一张攻击视为纯输出扩张。HLAW F6一次机会，牌文2费10伤10挡；次战仍41→26（1局），持有不证明已覆盖防御。"
+    },
+    {
+      "id": "silent-brain-first-three-combat-skip-check",
+      "trigger": {
+        "question_types": [
+          "card_reward"
+        ],
+        "acts": [
+          1
+        ],
+        "floor": {
+          "min": 2,
+          "max": 8
+        }
+      },
+      "strategy": "前三场真实战斗卡奖考虑跳过时，写明放弃本题三张牌后仍能保留哪些现有用途，别将早期跳过直接当安全默认。三次奖励均有记录的A10局，无重试证据有跳过7/15过首Boss、无跳过58/104（-9.10点）；重载且预判必死层14/19对256/318（-6.82点）。本角色各进阶合计已核39次跳过/1510次机会，35个独立局；有成功反例，不据此禁止跳过。\n范围：仅Silent前三战/版本unknown，主关联A10。三次齐全是事后统计纳入条件，不能作当前触发；牌组、备选和后续路线混杂，非跳过的因果损失。"
+    },
+    {
+      "id": "silent-brain-first-boss-power-hp-review",
+      "trigger": {
+        "question_types": [
+          "fight_plan",
+          "act_plan"
+        ],
+        "acts": [
+          1
+        ],
+        "floor": {
+          "min": 15,
+          "max": 17
+        }
+      },
+      "strategy": "首Boss备战时先核当前HP、实际已持牌文、费用和可用药，不用已有Power牌数量代替资源复核。A10重载且预判必死证据层，首记录T1牌组含Power时，HP不高于最大HP一半组10/25过首Boss，高于一半202/226，差-49.38点；首次截止代理7/25对183/226。32/70的08A0GEAL8KQ5过关、41/70且两张Power的01H1533KSS5C失败，均保留。\n范围：Silent/A10/版本unknown首Boss；首记录帧非原子入场，半血仅观察分箱而非安全线。无重试证据的低HP且有Power组为0，不外推。Power类型非机制/成型证明，未来SL不作触发。"
+    },
+    {
+      "id": "silent-brain-poison-cheap-source-with-snakebite",
+      "trigger": {
+        "question_types": [
+          "card_reward"
+        ],
+        "acts": [
+          2,
+          3
+        ]
+      },
+      "strategy": "已有2费蛇咬时，出现致命毒药可比较低费施毒与防护的同回合安排，勿只按毒牌数量追高费。牌文分别1费5毒、2费7毒；升级致命毒药1费7毒。0CLP16ZR4ZZC在F19、F36两次机会都拿，只有1个独立A10局、版本unknown，无不拿反事实；F6早有致命毒药/药瓶仍F33败。外部v0.111代表终局有致命毒药：胜3/5、负4/5，方向反向且选择偏差重。先按本题资源比较，不设固定拿牌令。"
+    },
+    {
+      "id": "silent-brain-poison-late-piercing-wail-review",
+      "trigger": {
+        "question_types": [
+          "card_reward"
+        ],
+        "acts": [
+          3
+        ]
+      },
+      "strategy": "幕3已有触媒和蛇咬时，尖啸可作为一次性的全体降力量防护候选，与本题其他牌/跳过比较；不能只追加输出。牌文1费、本回合所有敌人失去6力量、消耗。0CLP16ZR4ZZC F46的1次机会选择后，F48记录净损35、F49仍净损64，虽胜不等于稳。外部DEADLY_POISON+PIERCING_WAIL配对终局胜13/27、负10/27，+11.11pp但q=.837；负例92f也持两张尖啸却节点25止。具体出牌回合/目标与因果减损未知。"
+    },
+    {
+      "id": "silent-brain-blade-flexible-formation-review",
+      "trigger": {
+        "question_types": [
+          "act_plan",
+          "card_reward"
+        ],
+        "acts": [
+          1,
+          2,
+          3
+        ]
+      },
+      "strategy": "已有刀源时，按当前已持牌分别比较增伤、群伤、防护与过牌，不以刀扇＋精准＋刀舞齐全作成型或安全前提。外部v0.111终局还原一致赢家中，仅25/101观察到这三牌齐全，76/101未观察到；首幕齐全7/101。自有A10无重试证据0/4齐全，重试层1/3到F45齐全而仍败，不能把缺三牌当败因。\n范围：Silent A10；外部还原与自有首次观察均为时序代理，非固定拿牌排序。自有版本unknown，旧版本机制未知另账。\n新增混合路线窗口：已有刀源、再遇蛇咬/匕首雨等签名牌时，可保留跳过并按当前缺口比较，别为凑三牌而收牌。HLAW F27/F30两机会均跳，F33胜80→71但最终仍败（1局）；外部v0.111簇4仅11/68还原赢家观察齐全匕首雨/扫腿/蛇咬，其余57不齐全。"
+    },
+    {
+      "id": "silent-fan-of-knives-capacity",
+      "trigger": {
+        "question_types": [
+          "fight_plan"
+        ],
+        "acts": [
+          3
+        ]
+      },
+      "strategy": "本战已持刀扇时，比较2费启动、实际手位和随后合法出刀，不把产刀直接算成已伤害；普通牌文产4刀。9R916WW0V65N有4次单步施放（1局，含重试），均建立1层群伤并添4刀；F48三次及F45一次，后者整战仍掉20血。外部v0.111所选代表终局刀扇为胜6/10、负1/10，配对有赢家选择偏差。\n范围：Silent A10，实测自有版本unknown；rk仅收窄到当前实验体，未验证拥挤手牌或升级数量，不从这4次定安全启动顺序。"
+    },
+    {
+      "id": "silent-accuracy-shiv-scaling",
+      "trigger": {
+        "question_types": [
+          "fight_plan"
+        ],
+        "acts": [
+          3
+        ]
+      },
+      "strategy": "已持精准与可打小刀时，比较付1费后再出刀与即时攻防，按当前敌能力核实伤。9R916WW0V65N四次带既有小刀施放使牌面4→8或5→9（12次施放中8次当步无刀，均仅1局）。F48末试T12实验体有无实体1：三张群伤9小刀各实扣1，共3并补3余像挡；不能按27伤算斩杀。\n范围：Silent A10、自有版本unknown、含SL。外部v0.111精准＋刀扇终局匹配胜24/63、负27/63，差-4.76pp、q=1，保留反向而非拿牌收益；其他敌人/阶段不外推。"
+    },
+    {
+      "id": "silent-core-shiv-defense-observation",
+      "trigger": {
+        "question_types": [
+          "fight_plan"
+        ],
+        "acts": [
+          3
+        ]
+      },
+      "strategy": "已持斗篷与匕首且当前需要挡时，把其实际格挡与生成刀后继分别和其他合法线比较，不把刀源＋增益当防御已够。9R916WW0V65N F42机甲骑士三次斗篷，挡7→16、23→34、1→13，分别添1/2/2刀，当前攻击30/45/50，均仍有缺口；整战68→37（1局3次机会）。外部v0.111赢家幕1/2正block牌副本代理均8.09/9.63，各n=101。\n范围：Silent A10、自有版本unknown；代理不是防御质量、所需张数或安全线，能力/遗物附挡另源，未证明改出牌可挽回31血。"
+    },
+    {
+      "id": "silent-afterimage-per-card-block",
+      "trigger": {
+        "question_types": [
+          "fight_plan"
+        ],
+        "acts": [
+          3
+        ]
+      },
+      "strategy": "余像已建时，备战把生成动作与后续实出刀分别记挡；刀舞产三刀不等于已打三刀。9R916WW0V65N F48两次刀舞添三刀而当步各只+1挡；F49未建余像的刀舞添三刀、当步+0挡。F48末试T12随后三刀各再+1挡，但仍有敌36攻，不能把生成当四次已出牌。\n范围：Silent A10、自有版本unknown，1局3次刀舞、含SL/不同敌阶段，不是有无余像的整战因果对照；仅已建能力与实际合法后继，不预支抽到但未建立的余像。"
+    },
+    {
+      "id": "silent-brain-blade-no-draw-backflip-review",
+      "trigger": {
+        "question_types": [
+          "fight_plan"
+        ],
+        "acts": [
+          3
+        ]
+      },
+      "strategy": "刀牌备战中若本轮已显示不可抽牌且手有后空翻，按实际格挡比较它和其他合法防护，勿把“抽2”当仍可找刀/能力。9R916WW0V65N F48末试T6，NO_DRAW_POWER=1下后空翻牌文14挡抽2，手8→7且其余牌逐项相同，挡2→17（牌挡14＋已建余像1）。本局另11次无该能力的后空翻手牌净+1；只有1个独立局。\n范围：Silent A10、版本unknown、实验体已观察窗口；单步事实且稀疏，不认证抽牌锁的一般机制、原因、解除时机或整战收益。"
+    },
+    {
+      "id": "silent-brain-effigy-sleep-setup-review",
+      "trigger": {
+        "question_types": [
+          "fight_plan"
+        ],
+        "acts": [
+          1
+        ]
+      },
+      "strategy": "旧日雕像当前为SLEEP_MOVE且灵动步法可打时，把先建敏捷的线与直接输出比较，随后按真实醒转/攻击重算防护。0CLP16ZR4ZZC F8的一次A10机会，实打灵动步法后敏捷0→2，随后迷雾/用药/攻击，至T2仍49血；整战49→30，并非免伤保证。另局2Q6ZYZ6JHM0M也持灵动步法，48血进场仍实际败；未核同一动作窗口。\n范围：Silent/A10/自有版本unknown、仅当前具名敌人和合法手牌；1局1机会，后继观察非因果，不推固定启动顺序或安全血线。"
+    },
+    {
+      "id": "silent-brain-decimillipede-poison-target-review",
+      "trigger": {
+        "question_types": [
+          "fight_plan"
+        ],
+        "acts": [
+          2
+        ]
+      },
+      "strategy": "残杀千足虫三段均在且两张施毒牌可打时，比较前段集中与前/中分配目标，并合计全部仍活实体的来袭与防护。FZT053H9PSC5 F31 T2一次机会，实打偏折+、致命毒药+到中段、防御+、带毒刺击+到前段：毒分别0→7、0→4，合21挡；显示总来袭28，T3玩家70→63。这是实选分配线，未证优于集中线；1913SE84AXQF也持施毒牌却46血进场实际败。\n范围：Silent/A10/版本unknown，1局1窗口；按当前实体索引核目标，不能按部位名字推固定杀序、重连机制或免伤保证。"
+    },
+    {
+      "id": "silent-brain-shop-joint-budget",
+      "trigger": {
+        "question_types": [
+          "shop"
+        ]
+      },
+      "strategy": "购买与删牌共用金币时，既比较互斥方案，也核能一起完成的整套清单。保留旧例100买51后只余49、删100不可付；新例0CLP F37从1080依次付228、257、150删牌、36买牌、74买药，实余335，删牌后牌组28→27再→28。A10无重试证据120机会/80局、重试或判死531/286满足删牌加最便宜商品可付的价格代理。\n范围：Silent A10/版本unknown；代理不表示任意组合都可买，药栏/库存与实付仍逐步核；不固定先买或先删，不证明整套收益。"
+    },
+    {
+      "id": "silent-brain-shop-affordable-stop",
+      "trigger": {
+        "question_types": [
+          "shop"
+        ]
+      },
+      "strategy": "计划购物结束后若删牌仍可付，把继续删牌与离店留金再比较，不因刚买了牌就补一个删牌。VX6 F5买90牌和49、48药，289→102后面对100删牌仍离店；CESK F11余112面对100删牌也停。A10无重试证据2/165个曾满足删牌和商品都可付的店出现该停法，涉及2/97局；重试或判死22/730店、18/323局。\n范围：Silent A10/版本unknown；保留旧可负担离店原则，本次细化购物后剩余预算；两见证终败，未证明留金更优或102为阈值。"
+    },
+    {
+      "id": "silent-brain-shop-golden-reserve",
+      "trigger": {
+        "question_types": [
+          "shop"
+        ]
+      },
+      "strategy": "已持SEAL_OF_GOLD时，把保留金币的战斗用途与本店补强一起比较，避免因为商品买得起就花尽，也不设统一留金线。证据局76金币原样离店；同局另一店仍先买78金币残影，203→125。A10无重试证据有可负担价格代理仍离店5机会/3局、实购2/2；重试或判死组57/24、97/27。\n范围：仅Silent A10/自有版本unknown且实际持黄金印；原遗物牌文含花金币获能量但数值占位未知，不能算固定回合预算。两组局重叠，未证留金胜率收益。"
+    },
+    {
+      "id": "silent-brain-shop-curse-removal",
+      "trigger": {
+        "question_types": [
+          "shop"
+        ]
+      },
+      "strategy": "付费删牌可用且当前确有可删诅咒时，把其当前牌文造成的限制与基础牌、购物的取舍一起比较，别默认删打击。两局实际各付100移除NORMALITY，151→51与189→89；牌文记录每回合不能打出超过3张牌。A10无重试证据删诅咒5机会/5局；重试或判死组24/24。持其他诅咒却删非诅咒另有8/8与31/28，说明目标不可一概而论。\n范围：Silent A10/自有版本unknown，先核实际可删目标；不含不可删诅咒的假设。NORMALITY两例均终败，未证删诅咒因果收益或必优先。"
+    },
+    {
+      "id": "silent-brain-shop-nonbasic-removal",
+      "trigger": {
+        "question_types": [
+          "shop"
+        ]
+      },
+      "strategy": "当前非基础牌的费用、条件或用途不再合适时，也把它列入付费删牌比较，和基础牌、购买及离店一起审查。实际各付100删TORIC_TOUGHNESS或TACTICIAN，328→228、204→104；前者当前2费，后者当前3费且牌文有奇巧，不据名字补机制。A10无重试证据非基础非诅咒移除1机会/1局；重试或判死组9/9，十局最终均败。\n范围：Silent A10/自有版本unknown，仅提示扩展真实目标比较，不固定删除这些牌、不把旧理由或模型推断当收益。基本牌删除另账，不用稀疏样本排名。"
+    },
+    {
+      "id": "silent-brain-shop-upgrade-aware-removal",
+      "trigger": {
+        "question_types": [
+          "shop"
+        ]
+      },
+      "strategy": "同时持有升级和未升级打击、准备付费删牌时，按每张实际费用与牌文分别比较目标，不只按同一ID或升级号决定。证据局付100删未升级打击而留升级版，牌文6/9伤；反例局当前打击却为0费9/12伤并删了MEMENTO_MORI。A10无重试证据混持后删牌4机会/3局，均删未升级打击；重试或判死组20/17中13/10删未升级打击，另7机会选择其他目标。\n范围：Silent A10/自有版本unknown，费用和牌文以当前快照为准；样本终局均败，未证保留升级牌或删打击的收益。"
+    },
+    {
+      "id": "silent-brain-relic-skull-existing-poison",
+      "trigger": {
+        "question_types": [
+          "shop"
+        ],
+        "acts": [
+          1,
+          2,
+          3
+        ]
+      },
+      "strategy": "货架有异蛇头骨、当前已有能施毒的牌时，比较增强现有施毒与另买毒源/防御，并核剩余金币。自有A10版本unknown：10局10次购买均见头骨入栏、牌组张数不变，花95–197金；9局重试/判死、1局无重试证据，均终败。\n范围：按当时牌文和牌组判断；增毒数占位未知，本批未核战斗兑现或对照收益。C7LERZPCRFZ1购买时仅3HP，不能以有毒源证明启动安全或必买。"
+    },
+    {
+      "id": "silent-brain-relic-fan-current-attack-supply",
+      "trigger": {
+        "question_types": [
+          "shop"
+        ],
+        "acts": [
+          1
+        ]
+      },
+      "strategy": "货架有精致折扇、当前有刀源或低费攻击时，比较同轮攻击换挡与直接补防；先核攻击能否同轮兑现。G3TD6JEN47KT F12已有刀刃之舞和两张切割，花208金买折扇，258→50；当时斗篷与匕首标价49。1局1次购买，牌组不变，终F24败。\n范围：Silent A10/版本unknown/无重试证据；原牌文次数和挡量占位未知，本批不重验旧机制，不保证触发、挡够或购买更优。"
+    },
+    {
+      "id": "silent-brain-relic-chemical-x-owned-target",
+      "trigger": {
+        "question_types": [
+          "shop"
+        ],
+        "acts": [
+          1,
+          2,
+          3
+        ]
+      },
+      "strategy": "货架有化学物X时，先区分当前已持X牌与未来才可能拿到的目标，再与当前防御/留金比较。自有A10版本unknown的5局5次购买花152–214金：4次已持萎靡或串刺；0PH64C4AWAX9 F5买时没有X牌，不能算当时已改善牌组。5局均含重试/判死且终败。\n范围：以当前costs_x/牌文核目标；加成数占位未知，未来拿牌不回填当前触发；这不证明无X牌永不该买，也不证明已有X牌必买。"
+    },
+    {
+      "id": "silent-brain-relic-membership-reprice-current-cart",
+      "trigger": {
+        "question_types": [
+          "shop"
+        ],
+        "acts": [
+          1,
+          2,
+          3
+        ]
+      },
+      "strategy": "决定买会员卡时，把卡本身支出与本店实际购物需求一起算；买后读回新价再核清单，不把未来商店折扣当已兑现收益。A10版本unknown的4局4次购买花189–226金，均核同店标价下降；9TG1RP5LFAAK F3先付189，264→75，回响斩标价37→18。\n范围：4局均重试/判死、均终败；ZE2DNC29WWHB在3HP花194买卡，次层终败。未证明折扣回本或应先于保命采购。"
+    },
+    {
+      "id": "silent-brain-relic-potion-belt-current-supply",
+      "trigger": {
+        "question_types": [
+          "shop"
+        ],
+        "acts": [
+          2
+        ]
+      },
+      "strategy": "货架有药水腰带且已持供药遗物时，把新增容量与实际药水内容分开比较，不因未满栏就忽略容量，也不把空格当药。VLZ6CCT8AQ0A F20持白兽雕像、AR523ATD2G4W F21持小邮箱；分别花185/180金，栏位均2→4，占用仍1/0，牌组不变。\n范围：Silent A10/版本unknown；2局2机会均无重试证据、均终败。只证实当步容量，未来补药及收益未知，仍比较当前药水/防御的机会成本。"
+    },
+    {
+      "id": "silent-brain-relic-whetstone-eligible-attack-pool",
+      "trigger": {
+        "question_types": [
+          "shop"
+        ],
+        "acts": [
+          2
+        ]
+      },
+      "strategy": "货架有磨刀石时，先列当前未升级攻击牌池，按随机结果比较升级价值；产刀的技能/能力不能因产刀就算攻击升级目标。YXY2RL1E83HM F28有刀刃之舞/飞刀风暴，花188金，782→594；后继实际只见一张打击和一张切割变为升级，牌组张数不变。1局1次购买，终F48败。\n范围：Silent A10/版本unknown/无重试证据；这次两张升级不保证下次命中核心，也未证明比186金弹珠袋或202金忍术卷轴更优。"
+    },
+    {
+      "id": "silent-brain-relic-exchange-current-sacrifice",
+      "trigger": {
+        "question_types": [
+          "event"
+        ],
+        "acts": [
+          2
+        ]
+      },
+      "strategy": "兰伟德实际给出药水、100金币、具名旧遗物三选时，比较付出物当前用途与随机奖励数，别把两件随机当两件已知强遗物。7X0W3U8TVA2A F29交打击木偶、Y5H4CFAQ2WTG F20交铲子，后继各少旧1件、多新2件，HP/金币不变。\n范围：Silent A10/版本unknown；2局2次机会、均无重试证据且终败。新遗物身份是事后结果，不能回填选项或声称此交换优于付药/金币；未知旧遗物未来兑现与随机分布。"
+    },
+    {
+      "id": "silent-brain-poison-footwork-realization-review",
+      "trigger": {
+        "question_types": [
+          "card_reward",
+          "shop",
+          "rest",
+          "act_plan",
+          "fight_plan"
+        ],
+        "acts": [
+          1,
+          2
+        ],
+        "deck_cards": [
+          {
+            "name": "SNAKEBITE",
+            "count": {
+              "min": 1
+            }
+          },
+          {
+            "name": "ACCELERANT",
+            "count": {
+              "min": 1
+            }
+          },
+          {
+            "name": "FOOTWORK",
+            "count": {
+              "min": 1
+            }
+          }
+        ]
+      },
+      "strategy": "仅Silent A10观察：同时持有蛇咬、触媒、灵动步法时，补牌、购物、营火与备战仍分开核对持牌、实际建立和可重复生存；沿最近赢战的净HP与药槽变化检查下一场资源，不把签名齐备当作停止补强的依据。BKK在F6齐备，F17胜仍77→9，二幕F19胜63→30，F33四试失败；TB在F14齐备，F17胜61→26，二幕F28胜51→17、F30胜38→18，F32休至36后F33四试失败。两局都过首Boss，反对“组件齐备就必败”；终败也不能证明蛇咬、触媒、步法或休息选择导致失败。只复核眼前缺口，不指定必拿牌、血线、杀序或喝药时点；替代选择的整战收益未知，其他进阶和版本未验证。"
+    },
+    {
+      "id": "silent-brain-event-cheese-visible-hp-versus-card-pool",
+      "trigger": {
+        "question_types": [
+          "event"
+        ],
+        "acts": [
+          1,
+          2
+        ]
+      },
+      "strategy": "仅当前事件ROOM_FULL_OF_CHEESE且文本仍为八选二/付14血时，比较真实牌池与即时血价，不预支天选芝士未来回本。自有A10/版本unknown：71局选择大快朵颐，完成后各加2牌、HP不变；40局翻找各减14HP并获CHOSEN_CHEESE。\n范围：幕1/2；外部v0.111.0一幕GORGE为62/191、SEARCH为18/71整局胜，二幕方向相反。自选与路线混杂，无因果收益或安全血线；当前牌池未展示时不能先指定所得牌。"
+    },
+    {
+      "id": "silent-brain-event-bridge-reprice-each-reroll",
+      "trigger": {
+        "question_types": [
+          "event"
+        ],
+        "acts": [
+          1,
+          2,
+          3
+        ]
+      },
+      "strategy": "仅当前事件SLIPPERY_BRIDGE时，每次重掷后重新比较所指移除牌与新血价，并累计已付成本。自有A10/版本unknown：74局178次选择，其中63局共104次重掷，文本价3至7HP，后继净减2至7HP；74次跨越各移除1牌、即时HP不变。\n范围：幕1/2/3；不把重掷数当独立局，也不保证下一次抽中可舍弃牌。外部v0.111.0一幕节点净减代理约5至7HP，涵盖整段，不能当单次费用；文本与实测不一致的记录保留。"
+    },
+    {
+      "id": "silent-brain-event-brain-leech-priced-reward-type",
+      "trigger": {
+        "question_types": [
+          "event"
+        ],
+        "acts": [
+          1,
+          2
+        ]
+      },
+      "strategy": "仅当前事件BRAIN_LEECH且提供五选一与付5HP无色奖励时，按当前缺口比较奖励类型与血价，别由无色标签直接判优。自有A10/版本unknown的88局均选分享知识，完成后各加1牌且HP/金币不变，未观察付血分支后果。\n范围：幕1/2；外部v0.111.0一幕分享为44/137、扯下为39/140整局胜（+4.26点），v0.108.0反向（-6.43点），机制对照未知；不作固定选项或因果收益。"
+    },
+    {
+      "id": "silent-brain-event-statue-current-gold-quote",
+      "trigger": {
+        "question_types": [
+          "event"
+        ],
+        "acts": [
+          1
+        ]
+      },
+      "strategy": "仅当前事件SUNKEN_STATUE时，用本次显示的金币、支付后HP与石剑选项比较，别固定按115金币，也别预支未来精英奖励。自有A10/版本unknown：50局潜水各减7HP并得101至121金币，逐次等于报价；6局拿剑即时HP/金币不变且获SWORD_OF_STONE。\n范围：第一幕；外部v0.111.0潜水17/77、拿剑44/139整局胜，v0.108.0方向相反。路线/牌组自选混杂；未核石剑后续兑现，不给固定拿法或安全HP线。"
+    },
+    {
+      "id": "silent-brain-event-this-or-that-curse-versus-hp-gold",
+      "trigger": {
+        "question_types": [
+          "event"
+        ],
+        "acts": [
+          1,
+          2,
+          3
+        ]
+      },
+      "strategy": "仅当前事件THIS_OR_THAT时，把明示的加笨拙代价与随机遗物、以及本次付血金币替代逐项比较，别按“这个/那个”的名字或未来遗物定优劣。自有A10/版本unknown：89局ORNATE各加1张CLUMSY及1件遗物，另5局PLAIN各减6HP并得58至65金币。\n范围：幕1/2/3；ORNATE另有8局HP/金币同步变化，原因未核。外部v0.111.0一幕ORNATE为64/209、PLAIN为5/20整局胜，二三幕反向；小组稀疏、混杂，不作必拿或因果承诺。"
+    },
+    {
+      "id": "silent-brain-event-lantern-visible-gold-versus-fight",
+      "trigger": {
+        "question_types": [
+          "event"
+        ],
+        "acts": [
+          2
+        ]
+      },
+      "strategy": "仅当前事件THE_LANTERN_KEY时，把交还钥匙的眼前金币与留下钥匙明确需要的额外战斗分开比较；敌人/奖励未核时保留未知。自有A10/版本unknown：43局均交还、HP不变，40局得100金币，3局净增125；未观察留钥匙执行后果。\n范围：第二幕；外部v0.111.0交还43/102、留钥匙16/30整局胜，战斗节点前后HP差约-8.47只是代理。自选幸存混杂，不能由赢家关联固定留钥匙，也不把文本100当所有后继净变化。"
+    },
+    {
+      "id": "silent-brain-lane-b-wail-duration",
+      "trigger": {
+        "question_types": [
+          "card_reward"
+        ],
+        "acts": [
+          1,
+          2,
+          3
+        ]
+      },
+      "strategy": "奖励出现尖啸且牌文仍为1费、所有敌人本回合失6力量时，把本回合窗口与可持续防护分开比较。VPW8YH7A4QFM在31/70血、未持此牌时拿尖啸；已有2张、34/80血时改拿余像；两次均非胜局证据，不设必拿或固定副本数。\n自有A10/版本unknown首次同牌奖励，重试/判死组拿2/120、不拿1/106终胜，差+0.72pp；双方达100局。\n范围：仅Silent A10奖励且现场牌文吻合；牌组为此前快照代理，SL与无重试、版本及外部取得统计分账，无固定拿牌命令。"
+    },
+    {
+      "id": "silent-brain-lane-b-draw-discard-budget",
+      "trigger": {
+        "question_types": [
+          "card_reward"
+        ],
+        "acts": [
+          1,
+          2,
+          3
+        ]
+      },
+      "strategy": "奖励出现早有准备时，按现场牌文比较0费抽1弃1与杂技1费抽3弃1、投掷匕首1费9伤抽1弃1；分别核已有抽弃来源和备选，不把0费当作无条件增牌。U8K28UUGYP3U在52/70血拿早有准备；VPW8YH7A4QFM在43/70血改拿突然一拳。\n自有A10/版本unknown首次同牌奖励，重试/判死组拿0/9、不拿2/217终胜，差-0.92pp；样本稀疏，未达双方100局。\n范围：仅Silent A10奖励且现场牌文吻合；牌组为此前快照代理，SL与无重试、版本及外部取得统计分账，无固定拿牌命令。"
+    },
+    {
+      "id": "silent-brain-lane-b-block-time-and-shiv",
+      "trigger": {
+        "question_types": [
+          "card_reward"
+        ],
+        "acts": [
+          1,
+          2,
+          3
+        ]
+      },
+      "strategy": "奖励比较斗篷与匕首、偏折、闪躲翻滚时，按当前牌文分别记1费6挡加1刀、0费4挡、1费本回合4挡及下回合4挡；后者不能全算即时挡，生成刀也仍需实际打出。CRK2HNYKSCZC在39/70血拿斗篷；U8K28UUGYP3U已持1张、52/70血时同屏选偏折。\n自有A10/版本unknown首次同牌奖励，重试/判死组拿0/64、不拿2/160终胜，差-1.25pp；样本稀疏，未达双方100局。\n范围：仅Silent A10奖励且现场牌文吻合；牌组为此前快照代理，SL与无重试、版本及外部取得统计分账，无固定拿牌命令。"
+    },
+    {
+      "id": "silent-brain-lane-b-two-cost-defense",
+      "trigger": {
+        "question_types": [
+          "card_reward"
+        ],
+        "acts": [
+          1,
+          2,
+          3
+        ]
+      },
+      "strategy": "奖励出现扫腿或冲刺时，先核2费能否与现有出牌配合，再比较扫腿2虚弱11挡与冲刺10挡10伤的不同用途，不因相同费用或更高挡数设固定先后。VPW8YH7A4QFM在43/70血从扫腿、先制打击、后空翻中拿扫腿；QNTW139MGECA在51/70血选致命毒药而非扫腿。\n自有A10/版本unknown首次同牌奖励，重试/判死组拿1/99、不拿0/25终胜，差+1.01pp；样本稀疏，未达双方100局。\n范围：仅Silent A10奖励且现场牌文吻合；牌组为此前快照代理，SL与无重试、版本及外部取得统计分账，无固定拿牌命令。"
+    },
+    {
+      "id": "silent-brain-lane-b-retained-source-budget",
+      "trigger": {
+        "question_types": [
+          "card_reward"
+        ],
+        "acts": [
+          1,
+          2,
+          3
+        ]
+      },
+      "strategy": "奖励出现蛇咬且仍为2费保留施7毒时，结合已持副本、实际费用和防护缺口比较新增毒源与同屏防护及跳过，不把保留当已完成防护或当回合已伤害。U8K28UUGYP3U在12/70血且已有1斗篷时仍拿蛇咬；VPW8YH7A4QFM在24/80血面对蛇咬等选择跳过；两局均败。\n自有A10/版本unknown首次同牌奖励，重试/判死组拿1/113、不拿1/116终胜，差+0.02pp；双方达100局。\n范围：仅Silent A10奖励且现场牌文吻合；牌组为此前快照代理，SL与无重试、版本及外部取得统计分账，无固定拿牌命令。"
+    },
+    {
+      "id": "silent-brain-lane-b-burst-versus-setup",
+      "trigger": {
+        "question_types": [
+          "card_reward"
+        ],
+        "acts": [
+          1,
+          2,
+          3
+        ]
+      },
+      "strategy": "奖励出现肾上腺素或余像时，按现场牌文分开核0费加1能量抽2且消耗的单次资源，与1费建立每次出牌加1挡的后续回报；结合当前牌组，不预支未来连打。P5HT1272P5SB在34/77血、已有冲刺时拿肾上腺素；VPW8YH7A4QFM在二幕23/80血同屏选毒性爆发而非肾上腺素。\n自有A10/版本unknown首次同牌奖励，重试/判死组拿0/41、不拿0/6终胜，差+0.00pp；样本稀疏，未达双方100局。\n范围：仅Silent A10奖励且现场牌文吻合；牌组为此前快照代理，SL与无重试、版本及外部取得统计分账，无固定拿牌命令。"
+    },
+    {
+      "id": "silent-brain-lane-b-discard-payload",
+      "trigger": {
+        "question_types": [
+          "card_reward"
+        ],
+        "acts": [
+          1,
+          2,
+          3
+        ]
+      },
+      "strategy": "奖励出现隐秘匕首、计算下注、钢铁风暴或铭记死亡时，分别核弃2加2刀、弃全手等量抽且消耗、1费弃全手每弃1加1刀、1费9伤且本回合每已弃1牌加4伤。把保留手牌的机会代价和真实备选/跳过一起比较，不能把生成刀当已出刀、未来弃牌当已弃牌。\n本批牌文/备选核验4次/3独立A10局；统计比较未达双方100门。\n范围：仅Silent A10本题有相应牌且牌文同；此前牌组/HP为代理，版本unknown，无固定拿法。"
+    },
+    {
+      "id": "silent-brain-lane-b-attack-target-and-time",
+      "trigger": {
+        "question_types": [
+          "card_reward"
+        ],
+        "acts": [
+          1,
+          2,
+          3
+        ]
+      },
+      "strategy": "奖励比较回响斩击、连续反弹或背刺时，分别核现场牌文的群体10伤且击杀才重复、随机3伤4次、以及固有0费11伤并消耗；不预设击杀链、随机目标或奇巧效果。NB8KCF6HRGVF在54/70血从回响、反弹、带毒刺击中拿回响，下一层已持1张时改拿突然一拳。\n自有A10/版本unknown首次同牌奖励，重试/判死组拿0/76、不拿0/34终胜，差+0.00pp；样本稀疏，未达双方100局。\n范围：仅Silent A10奖励且现场牌文吻合；牌组为此前快照代理，SL与无重试、版本及外部取得统计分账，无固定拿牌命令。"
+    },
+    {
+      "id": "silent-brain-b002-next-turn-resources",
+      "trigger": {
+        "question_types": [
+          "card_reward"
+        ],
+        "acts": [
+          1,
+          2,
+          3
+        ]
+      },
+      "strategy": "奖励比较侧步和猎杀者时，先区分延迟能量与延迟抽牌。原牌文侧步0费、下回合得1能；猎杀者2费、15伤并下回合抽2。已有猎杀者仍拿侧步的原例与跳过侧步的原例都存在。把已有来源和费用纳入比较，不把下回合资源当本回合防护；升级及重放按现场牌文另核。\nSIDESTEP自有A10无重试证据首机会：拿0/0、改选1/22终胜，差不可算；稀疏未过100门。\n范围：仅Silent A10奖励且现场牌文吻合；当前信息用已记牌组代理。自有版本unknown，效果未证，不给固定拿牌命令。"
+    },
+    {
+      "id": "silent-brain-b002-skill-discount-and-draw-lock",
+      "trigger": {
+        "question_types": [
+          "card_reward"
+        ],
+        "acts": [
+          1,
+          2,
+          3
+        ]
+      },
+      "strategy": "奖励遇猛扑或子弹时间仍分别核下一技能减费与全手减费禁抽；新增战斗专注0费抽3后本回合禁抽，头槌1费9伤并从弃牌堆放1牌到抽牌堆顶。按已有抽牌牌比较顺序和真实备选/跳过；放到堆顶不等于已入手，不能把禁抽后的后续抽牌算兑现。\n本批牌文/备选核验3次/3独立A10局；统计比较未达双方100门。\n范围：仅Silent A10本题有相应牌且牌文同；此前牌组/HP为代理，版本unknown，无固定拿法。"
+    },
+    {
+      "id": "silent-brain-b002-three-count-dependent-attacks",
+      "trigger": {
+        "question_types": [
+          "card_reward"
+        ],
+        "acts": [
+          1,
+          2,
+          3
+        ]
+      },
+      "strategy": "奖励出现终结技、精确切击或飞镖时，分别检查构筑可能提供的计数。终结技按本回合已打攻击次数、每次6伤；精确切击0费13伤、每张手牌减2；飞镖按手中技能、每张5伤。不能用牌组总张数替代这三种战斗时计数；原例终结技与飞镖同屏，保留跳过及其他备选。\nFINISHER自有A10无重试证据首机会：拿0/0、改选0/23终胜，差不可算；稀疏未过100门。\n范围：仅Silent A10奖励且现场牌文吻合；当前信息用已记牌组代理。自有版本unknown，效果未证，不给固定拿牌命令。"
+    },
+    {
+      "id": "silent-brain-b002-explicit-keyword-resource-boundary",
+      "trigger": {
+        "question_types": [
+          "card_reward"
+        ],
+        "acts": [
+          1,
+          2,
+          3
+        ]
+      },
+      "strategy": "奖励遇战术大师、本能反应、手上技法或谋划专家时，仅按已核原文分清得能、抽牌与赋予奇巧，不补奇巧定义。新增谋划专家2费、技能打出后该牌得奇巧；武装1费5挡、升级手中1牌，须另核手中合格目标和升级文本。与实际备选/跳过比较，不能把两种改牌效果视为等价。\n本批牌文/备选核验4次/4独立A10局；统计比较未达双方100门。\n范围：仅Silent A10本题有相应牌且牌文同；此前牌组/HP为代理，版本unknown，无固定拿法。"
+    },
+    {
+      "id": "silent-brain-b002-draw-and-discard-timing",
+      "trigger": {
+        "question_types": [
+          "card_reward"
+        ],
+        "acts": [
+          1,
+          2,
+          3
+        ]
+      },
+      "strategy": "奖励比较必备工具与独门技术时，核所缺的是后续回合整理还是打出时补牌。原文必备工具1费、回合开始抽1弃1；独门技术1费抽2、所抽牌本回合获得保留。两者并非同一净增牌量或同一时间窗，勿把回合开始的效果提前；升级及保留的延续范围按现场文本另核。\nTOOLS_OF_THE_TRADE自有A10无重试证据首机会：拿0/7、改选0/5终胜，差+0.00pp；稀疏未过100门。\n范围：仅Silent A10奖励且现场牌文吻合；当前信息用已记牌组代理。自有版本unknown，效果未证，不给固定拿牌命令。"
+    },
+    {
+      "id": "silent-brain-b002-zero-cost-attack-constraints",
+      "trigger": {
+        "question_types": [
+          "card_reward"
+        ],
+        "acts": [
+          1,
+          2,
+          3
+        ]
+      },
+      "strategy": "奖励比较切割与刺杀时，零费只是一项共同事实。原文切割6伤；刺杀10伤并给1易伤，但同时写有固有和消耗。把这些附加条件及现有牌组需求与真实备选一起核，不把两张都归为同样可重复的零费伤害，也不由卡名推定额外机制或固定拿牌顺序。\nSLICE自有A10无重试证据首机会：拿0/19、改选3/49终胜，差-6.12pp；稀疏未过100门。\n范围：仅Silent A10奖励且现场牌文吻合；当前信息用已记牌组代理。自有版本unknown，效果未证，不给固定拿牌命令。"
+    },
+    {
+      "id": "silent-brain-b002-generated-knives-purpose",
+      "trigger": {
+        "question_types": [
+          "card_reward"
+        ],
+        "acts": [
+          1,
+          2,
+          3
+        ]
+      },
+      "strategy": "奖励出现刀扇或袖里乾坤时，区分生成数量和附加效果。原文刀扇2费、加4小刀且小刀攻击所有敌人；袖里乾坤2费、加3小刀且这张牌耗能减1。现有小刀来源只按当时牌组代理核，勿由终局刀牌反推当前；减费持续范围和生成后实际出牌能力本批未验证。\nFAN_OF_KNIVES自有A10无重试证据首机会：拿0/7、改选1/5终胜，差-20.00pp；稀疏未过100门。\n范围：仅Silent A10奖励且现场牌文吻合；当前信息用已记牌组代理。自有版本unknown，效果未证，不给固定拿牌命令。"
+    },
+    {
+      "id": "silent-brain-b002-two-power-trigger-conditions",
+      "trigger": {
+        "question_types": [
+          "card_reward"
+        ],
+        "acts": [
+          1,
+          2,
+          3
+        ]
+      },
+      "strategy": "奖励比较群蛇形态与涂毒时，先核当前构筑能提供哪种触发。原文前者3费、每打牌对随机敌人4伤；后者2费、每次攻击造成未格挡伤害才给1毒。出牌次数不等于未格挡攻击次数；先考虑部署费用和实际触发来源，不把毒标签、最终簇或赢家选择当成已成型。\nSERPENT_FORM自有A10无重试证据首机会：拿0/3、改选1/4终胜，差-25.00pp；稀疏未过100门。\n范围：仅Silent A10奖励且现场牌文吻合；当前信息用已记牌组代理。自有版本unknown，效果未证，不给固定拿牌命令。"
+    },
+    {
+      "id": "silent-brain-b002-all-enemy-printed-damage",
+      "trigger": {
+        "question_types": [
+          "card_reward"
+        ],
+        "acts": [
+          1,
+          2,
+          3
+        ]
+      },
+      "strategy": "奖励出现翻越撑击时，将原文1费、所有敌人7伤、奇巧，与同屏牌逐项比较。原例同屏还有匕首雨1费全体4伤两次和突然一拳1费单体8伤虚弱；曾选择匕首雨，也有选择翻越撑击的记录。保留单次与多次、全体与单体区别，不猜奇巧触发或据7与8直接排名。\nFLICK_FLACK自有A10无重试证据首机会：拿0/16、改选1/47终胜，差-2.13pp；稀疏未过100门。\n范围：仅Silent A10奖励且现场牌文吻合；当前信息用已记牌组代理。自有版本unknown，效果未证，不给固定拿牌命令。"
+    },
+    {
+      "id": "silent-brain-b002-conditional-extra-reward",
+      "trigger": {
+        "question_types": [
+          "card_reward"
+        ],
+        "acts": [
+          1,
+          2,
+          3
+        ]
+      },
+      "strategy": "奖励出现狩猎时，把直接伤害与附带奖励分开。原文1费10伤，只有斩杀才额外得一次卡牌奖励，并消耗。原例有拿狩猎及改拿毒性爆发；本批未核后续斩杀兑现率和额外奖励质量，不能把每次打出都记作稳定加一张牌，或用未来取得牌数触发当前拿牌建议。\nTHE_HUNT自有A10无重试证据首机会：拿0/2、改选1/7终胜，差-14.29pp；稀疏未过100门。\n范围：仅Silent A10奖励且现场牌文吻合；当前信息用已记牌组代理。自有版本unknown，效果未证，不给固定拿牌命令。"
+    },
+    {
+      "id": "silent-brain-mixed-costly-poison-before-rest-review",
+      "trigger": {
+        "question_types": [
+          "card_reward"
+        ],
+        "acts": [
+          1
+        ],
+        "deck_cards": [
+          {
+            "name": "LEG_SWEEP",
+            "count": {
+              "min": 1
+            }
+          },
+          {
+            "name": "PREDATOR",
+            "count": {
+              "min": 1
+            }
+          }
+        ]
+      },
+      "strategy": "已有扫腿与猎杀者、近期连续失血且火前仍有战斗时，蛇咬应与本题后空翻/投掷匕首的即时用途比较，不以补齐毒方向为由固定拿。蛇咬2费7毒且保留，后空翻1费5挡抽2；177AS39M1UPW F4的1次机会选蛇咬，下一战28→0（1局），不能归因为该牌。\n范围：Silent A10；自有版本unknown，火前资源/牌文为当前信息；没有安全HP或因果拿牌结论。"
+    },
+    {
+      "id": "silent-brain-mixed-immediate-aoe-review",
+      "trigger": {
+        "question_types": [
+          "card_reward"
+        ],
+        "acts": [
+          1
+        ],
+        "deck_cards": [
+          {
+            "name": "PREDATOR",
+            "count": {
+              "min": 1
+            }
+          },
+          {
+            "name": "BLADE_DANCE",
+            "count": {
+              "min": 1
+            }
+          }
+        ]
+      },
+      "strategy": "已有猎杀者和刀源时，可将回响斩击的即时群伤与新增毒源/过牌逐项比较，按眼前多敌缺口决定，不追终局三牌签名。牌文1费全体10伤、击杀后重复；HLAW F5一次选择后，F6三敌战40→41且3回合结束（1局，净变化含回复），非该牌单独收益。\n范围：Silent A10、自有版本unknown；外部v0.111还原赢家三牌齐全仅11/68，终局簇不作触发。"
+    },
+    {
+      "id": "silent-grand-finale-empty-draw",
+      "trigger": {
+        "question_types": [
+          "card_reward"
+        ],
+        "acts": [
+          1
+        ],
+        "deck_cards": [
+          {
+            "name": "BLADE_DANCE",
+            "count": {
+              "min": 1
+            }
+          },
+          {
+            "name": "ECHOING_SLASH",
+            "count": {
+              "min": 1
+            }
+          }
+        ]
+      },
+      "strategy": "混合牌组拿到华丽收场的0费群伤选项时，先核空抽牌堆条件及现有过牌，不把60伤无条件算作本轮产出。HLAW F14拿、F16升级，F17仍77→9（1局/1次拿牌），不能归因或反推必不该拿；普通牌文明确抽牌堆无牌才可打。\n范围：Silent A10、自有版本unknown；是原empty-draw知识的拿牌情境补充，未核此战施放次数，不作保证。"
+    },
+    {
+      "id": "silent-brain-insatiable-bite-block-and-weaken",
+      "trigger": {
+        "question_types": [
+          "fight_plan"
+        ],
+        "acts": [
+          2
+        ],
+        "bosses": [
+          "THE_INSATIABLE_BOSS"
+        ]
+      },
+      "strategy": "无厌沙虫当前扑咬且中和、防御可打时，比较补挡兼减攻的整条线，再重算施毒余力。0CLP16ZR4ZZC F33 T3一次机会：76血/10挡面对31攻，实打防御、毒雾+、致命毒药+、中和、后空翻；来袭31→23、挡10→25，T4仍76血。不能把零掉血单归中和，后空翻实际费用/额外效果按当帧重核。\n范围：Silent A10、自有版本unknown、1局1窗口；KHECCYUJ7K48同Boss终败为反例索引，未核同手牌反事实。外部v0.111仅338上传记录的整战背景；不定安全血线、固定顺序或因果收益。"
+    },
+    {
+      "id": "silent-brain-insatiable-salivate-escape",
+      "trigger": {
+        "question_types": [
+          "fight_plan"
+        ],
+        "acts": [
+          2
+        ],
+        "bosses": [
+          "THE_INSATIABLE_BOSS"
+        ]
+      },
+      "strategy": "无厌沙虫当前SALIVATE_MOVE且狂乱逃离可打时，把改变沙坑与推进输出分开比较，不因本轮无攻击就忽略下轮资源。0CLP16ZR4ZZC F33 T4一次机会：实打1费狂乱逃离，沙坑2→3、能量3→2，再打冲刺；T5仍76血但已显示24攻。灵动步法也在手却未打，不能据此否定建立敏捷。\n范围：Silent A10/版本unknown、1局1窗口；只核本次计数变化，不推沙坑全机制、固定逃离次数或长期收益。KHECCYUJ7K48的SALIVATE后仍失败是边界反例；外部v0.111的338上传记录没有逐回合证据。"
+    },
+    {
+      "id": "silent-brain-matriarch-sleep-setup",
+      "trigger": {
+        "question_types": [
+          "fight_plan"
+        ],
+        "acts": [
+          1
+        ],
+        "bosses": [
+          "LAGAVULIN_MATRIARCH_BOSS"
+        ]
+      },
+      "strategy": "乐加维林族母当前SLEEP_MOVE且毒雾、灵动步法可打时，比较先建立持续输出和防护的线，再按真实醒转重算。U1QYLX1AE1WX F17 T3一次机会：实打毒雾+与灵动步法+，毒雾0→3、敏捷0→3；T4转SLASH_MOVE，仍51血并显示21攻。不能承诺还能睡几轮或推固定唤醒阈值。\n范围：Silent A10/版本unknown、1局1窗口；173ARCPHRVSS也经历沉睡准备但重试/预判组终败，非同动作对照。外部v0.111为216/257延续代理，胜者代表前节点34血、Boss后6血，不能当安全入场线。"
+    },
+    {
+      "id": "silent-brain-matriarch-reduced-stats-block",
+      "trigger": {
+        "question_types": [
+          "fight_plan"
+        ],
+        "acts": [
+          1
+        ],
+        "bosses": [
+          "LAGAVULIN_MATRIARCH_BOSS"
+        ]
+      },
+      "strategy": "族母当前SLASH_MOVE且己方力量或敏捷已变化时，用现牌文重算挡和伤害，不沿用睡前数值。U1QYLX1AE1WX F17 T8一次机会：力量-2、敏捷1，防御显示6挡、打击4伤；实打三张防御得18挡，面对23攻，T9由50→45血。已有25毒不代替本轮防护。\n范围：Silent A10/版本unknown、1局1窗口；不将这5点视作最优损失或推固定三防。173ARCPHRVSS能力下降后仍终败为反例索引，首预判与实际死亡不混。外部v0.111总受伤均24.35/257上传，非本窗口损失。"
+    },
+    {
+      "id": "silent-brain-ceremonial-plow-weaken-block",
+      "trigger": {
+        "question_types": [
+          "fight_plan"
+        ],
+        "acts": [
+          1
+        ],
+        "bosses": [
+          "CEREMONIAL_BEAST_BOSS"
+        ]
+      },
+      "strategy": "仪式兽当前PLOW_MOVE且突然一拳、防御可打时，比较减攻、补挡及推进输出的组合，动作后重读实际来袭。Q3R929GHT14R F17 T3一次机会：实打防御、突然一拳、防御，来袭22→13、挡0→13，T4仍51血；同时存在横冲直撞、余像及中毒，不能把9点降幅全归虚弱。扫腿也可打但未选，优劣未知。\n范围：Silent A10/版本unknown、1局1窗口；3UPY3BP2LVS7同Boss终败，未核同条件对照。外部v0.111为218/251延续代理，不证明这条线的收益或固定打断阈值。"
+    },
+    {
+      "id": "silent-brain-ceremonial-cry-output-versus-next-defense",
+      "trigger": {
+        "question_types": [
+          "fight_plan"
+        ],
+        "acts": [
+          1
+        ],
+        "bosses": [
+          "CEREMONIAL_BEAST_BOSS"
+        ]
+      },
+      "strategy": "仪式兽当前BEAST_CRY_MOVE不显示攻击且致命毒药、坚韧之环可打时，比较追加输出与为后轮建立格挡的代价，不把本轮零攻击当持续安全。1913SE84AXQF F17 T5一次机会：实打打击和致命毒药，坚韧之环未选；T6由41→42血（原有再生），敌140→111血并显示17攻。不能把回血归施毒，亦未证放弃坚韧之环更好。\n范围：Silent A10/版本unknown、1局1窗口；本局首Boss通过后F33终败，另3UPY3BP2LVS7在本Boss失败。外部v0.111总受伤均26.04/251上传只作整战背景，不定固定周期或出牌顺序。"
+    },
+    {
+      "id": "silent-brain-b003-skill-count-price",
+      "trigger": {
+        "question_types": [
+          "card_reward"
+        ],
+        "acts": [
+          1,
+          2,
+          3
+        ]
+      },
+      "strategy": "奖励出现精密瞄准时，按原文3费15伤、每已打1张技能减1费，比较当前牌组能提供的技能与同屏杂技、咕嘟冒泡或跳过；牌组有技能不等于战斗当回合已经打出技能，不预支减费。\n本批牌文/备选核验2次/2独立A10局；统计比较未达双方100门。\n范围：仅Silent A10本题有相应牌且牌文同；此前牌组/HP为代理，版本unknown，无固定拿法。"
+    },
+    {
+      "id": "silent-brain-b003-weak-target-amplification",
+      "trigger": {
+        "question_types": [
+          "card_reward"
+        ],
+        "acts": [
+          1,
+          2,
+          3
+        ]
+      },
+      "strategy": "奖励出现跟踪时，原文2费、处于虚弱的敌人受攻击伤害增加50%；先核当前已持的施加虚弱来源、攻击用途与启动费用，再与夜魇、华丽收场或跳过比较。未证实目标有虚弱时，不把50%加成预算进攻击伤害。\n本批牌文/备选核验2次/2独立A10局；统计比较未达双方100门。\n范围：仅Silent A10本题有相应牌且牌文同；此前牌组/HP为代理，版本unknown，无固定拿法。"
+    },
+    {
+      "id": "silent-brain-b003-card-count-trigger",
+      "trigger": {
+        "question_types": [
+          "card_reward"
+        ],
+        "acts": [
+          1,
+          2,
+          3
+        ]
+      },
+      "strategy": "奖励出现紧勒或神气制胜时，分开比较触发对象和门槛：紧勒1费8伤，本回合每出1牌使该敌人失2HP；神气制胜0费，每回合出五牌才全体10伤。按现有牌组核后续出牌能力，和真实备选/跳过比较，不把持有牌数当已出牌数。\n本批牌文/备选核验3次/3独立A10局；统计比较未达双方100门。\n范围：仅Silent A10本题有相应牌且牌文同；此前牌组/HP为代理，版本unknown，无固定拿法。"
+    },
+    {
+      "id": "silent-brain-b003-defense-activation",
+      "trigger": {
+        "question_types": [
+          "card_reward"
+        ],
+        "acts": [
+          1,
+          2,
+          3
+        ]
+      },
+      "strategy": "奖励遇预判、究极防御、耸肩无视或坚定不移时，区分0费仅本回合2敏捷、1费11挡、1费8挡抽1、2费建立后每回合第一次卡牌格挡翻倍。按现有格挡牌、费用和抽牌用途比较备选；敏捷与翻倍均不能当无条件即时格挡，未实核关键词/顺序不补数。\n本批牌文/备选核验5次/5独立A10局；统计比较未达双方100门。\n范围：仅Silent A10本题有相应牌且牌文同；此前牌组/HP为代理，版本unknown，无固定拿法。"
+    },
+    {
+      "id": "silent-brain-b003-next-turn-copy-or-attack",
+      "trigger": {
+        "question_types": [
+          "card_reward"
+        ],
+        "acts": [
+          1,
+          2,
+          3
+        ]
+      },
+      "strategy": "奖励出现夜魇或暗影步时，分开核延迟回报和当前代价：夜魇3费消耗、下回合加所选牌3复制品；暗影步1费弃全手、下回合攻击翻倍。现有牌组只给潜在目标，不证明未来手牌；与融入暗影、萎靡、必备工具等本题备选和跳过比较，不预支复制或倍伤。\n本批牌文/备选核验4次/4独立A10局；统计比较未达双方100门。\n范围：仅Silent A10本题有相应牌且牌文同；此前牌组/HP为代理，版本unknown，无固定拿法。"
+    },
+    {
+      "id": "silent-brain-b003-draw-event-window",
+      "trigger": {
+        "question_types": [
+          "card_reward"
+        ],
+        "acts": [
+          1,
+          2,
+          3
+        ]
+      },
+      "strategy": "奖励出现速行者或腐蚀波时，按现有抽牌来源比较触发时窗：速行者2费建立后，回合进行中每抽1牌全体2伤；腐蚀波1费，打出后仅本回合每抽1牌全体2毒。与同屏即时牌、跟踪或跳过比较，不把回合初抽牌或尚未发生的抽牌算已兑现；附加重放须另核。\n本批牌文/备选核验4次/4独立A10局；统计比较未达双方100门。\n范围：仅Silent A10本题有相应牌且牌文同；此前牌组/HP为代理，版本unknown，无固定拿法。"
+    },
+    {
+      "id": "silent-brain-b003-draw-count-versus-empty-pile",
+      "trigger": {
+        "question_types": [
+          "card_reward"
+        ],
+        "acts": [
+          1,
+          2,
+          3
+        ]
+      },
+      "strategy": "奖励比较谋杀或华丽收场时，分开核本战累计抽牌与抽牌堆为空：谋杀3费1基础伤、每已抽1牌加1伤；华丽收场0费全体60伤但空抽牌堆才能打。奖励时的牌组大小不能代战斗牌堆状态；和腐蚀波、夜魇或跳过比较，不预支累计或可打性。\n本批牌文/备选核验3次/3独立A10局；统计比较未达双方100门。\n范围：仅Silent A10本题有相应牌且牌文同；此前牌组/HP为代理，版本unknown，无固定拿法。"
+    },
+    {
+      "id": "silent-brain-shop-used-removal-service",
+      "trigger": {
+        "question_types": [
+          "shop"
+        ]
+      },
+      "strategy": "本店删牌已用时，把剩余金币用于继续购物或离店，别把price=0当免费再删一次。0CLP F24付100后牌组25→24、金币420→320，服务变used=true/available=false/price=0；随后仍购193遗物及52、51药，余24。A10无重试证据36机会/32局、重试或判死184/148，首个已用状态均未再次删牌。\n范围：Silent A10/版本unknown，必须看当前used/available；不把服务未用但付不起混入，也不证明先删更优。"
+    },
+    {
+      "id": "silent-brain-shop-removal-unaffordable-stock",
+      "trigger": {
+        "question_types": [
+          "shop"
+        ]
+      },
+      "strategy": "未用删牌报价高于现有金币、仍有可付商品时，按现有商品与离店比较，别把此时未删牌记为主动放弃可付删牌。0CLP F42买199遗物后389→190，删牌200不可付，仍买87牌、100药后余3。A10无重试证据157机会/81局中123直接购、33离店、1弃药；重试或判死673/296中524购、138离店、11弃药。\n范围：Silent A10/版本unknown；商品可付为价格代理，药栏等合法性另核；实际动作有后继才算执行，不表示购物胜过留金。"
+    },
+    {
+      "id": "silent-brain-shop-next-removal-quote",
+      "trigger": {
+        "question_types": [
+          "shop"
+        ]
+      },
+      "strategy": "同局前店已确证付费删牌，到后店用当前报价重新比较删牌、购物和留金，别沿用旧价或固定涨幅。0CLP先100删牌，后店报价150，再后200；9TG则50→75。A10无重试证据38后店机会/20局均比最近确证付费价高50；重试或判死213/102中201高50，另有0、25、40、100差值。\n范围：Silent A10/版本unknown、仅已记录后店；遗物/未观测动作可改价，不建立统一涨价公式，报价变化不证明该删哪张。"
+    },
+    {
+      "id": "silent-brain-discard-exchange-after-flick-flack",
+      "trigger": {
+        "question_types": [
+          "card_reward"
+        ],
+        "acts": [
+          1
+        ],
+        "deck_cards": [
+          {
+            "name": "FLICK_FLACK",
+            "count": {
+              "min": 1
+            }
+          }
+        ]
+      },
+      "strategy": "已有翻越撑击时，奖励出现计算下注，应把整手交换与保留可用攻防比较，不把“奇巧”或未来抽牌当已兑现循环。原牌文0费、弃全部手牌后等量抽牌并消耗；4YPG F3在下注/斗篷/预判中选下注，下一战51→51，随后F5仍51→31（1局1次选择）。\n范围：Silent A10、版本unknown，当前牌组为此前快照代理；未核弃牌触发链或替代收益。外部同簇赢家组合并不固定，旧版下注组合存在反向，不能据此必拿。"
+    },
+    {
+      "id": "silent-brain-discard-skewer-versus-shiv-support",
+      "trigger": {
+        "question_types": [
+          "card_reward"
+        ],
+        "acts": [
+          1
+        ],
+        "deck_cards": [
+          {
+            "name": "BACKFLIP",
+            "count": {
+              "min": 1
+            }
+          },
+          {
+            "name": "CALCULATED_GAMBLE",
+            "count": {
+              "min": 1
+            }
+          }
+        ]
+      },
+      "strategy": "已持后空翻与下注、缺直接攻击时，串刺应与先制打击及幻影之刃的实际用途比较，不将面板0费当免费固定伤害。4YPG F8原文为造成8伤X次；另两项是1费3伤添2刀、1费使刀保留且每回合首刀额外9伤。1局1次选串刺后，下一战21→8。\n范围：Silent A10、自有版本unknown、此前牌组快照代理；X的支付规则、实际剩能和刀兑现率未核，不规定出牌顺序。外部五赢家仍有多种后续路线，不能用终局簇预测当前必拿或因果收益。"
+    }
+  ],
+  "same_context_updates": [
+    "silent-brain-lane-b-block-time-and-shiv",
+    "silent-route-hp-observation"
+  ],
+  "nearby_distinct": {
+    "silent-brain-discard-skewer-versus-shiv-support": "已有后空翻/下注、串刺对比；本批G1为切割/回响、无已确认刀源且背刺/幻影/精准同屏，不重复旧场景。",
+    "silent-brain-phantom-blades-external-prefix-context": "旧奖励前缀代理关联保留；G1为实际已持牌与同屏比较，不继承旧比较组分母。",
+    "silent-r2-card-infinite-blades": "旧combat_line数值信号不搬用；G3为随机取得后的rest复核。",
+    "silent-brain-mixed-immediate-aoe-review": "旧奖励选群伤；G4为已持回响的腐化附魔和持续生命成本，不增加拿牌排序。"
+  }
+}

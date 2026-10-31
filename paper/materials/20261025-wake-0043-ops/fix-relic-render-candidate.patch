@@ -1,0 +1,39 @@
+diff --git a/agent/src/knowledge/relic-values.ts b/agent/src/knowledge/relic-values.ts
+index 8ae5f47ae..b83e94efe 100644
+--- a/agent/src/knowledge/relic-values.ts
++++ b/agent/src/knowledge/relic-values.ts
+@@ -39,6 +39,8 @@ export const RELIC_VALUES: Record<string, Record<string, number>> = {
+ export function fillRelicText(relicId: string, text: string): string {
+   const values = RELIC_VALUES[relicId] ?? {};
+   const filled = text.replace(/\{([A-Za-z]+)(?::([A-Za-z]+)\((\d*)\))?\}/g, (_whole, name: string, format: string | undefined, arg: string | undefined) => {
++    // The prefix draws a unit icon after a quantity already present in the template.
++    if (name === "energyPrefix" && format === "energyIcons") return "点能量";
+     const value = arg ? Number(arg) : values[name];
+     if (value === undefined) return UNKNOWN_VALUE;
+     if (format === "energyIcons") return `${value}点能量`;
+diff --git a/agent/tests/relic-energy-prefix.test.ts b/agent/tests/relic-energy-prefix.test.ts
+new file mode 100644
+index 000000000..07de50735
+--- /dev/null
++++ b/agent/tests/relic-energy-prefix.test.ts
+@@ -0,0 +1,20 @@
++import { expect, it } from "vitest";
++import { fillRelicText } from "../src/knowledge/relic-values.js";
++
++// P4ZBYNW92PPK F48 T3, silent-0617: preserve the explicit quantity and unknown Energy.
++it("renders the recorded Spiked Gauntlets cost as one energy without duplicating the icon count", () => {
++  const template = "在每回合开始时获得{Energy:energyIcons()}。能力牌的耗能增加[blue]1[/blue]{energyPrefix:energyIcons(1)}。";
++  expect(fillRelicText("SPIKED_GAUNTLETS", template)).toBe("在每回合开始时获得?(数值未知)。能力牌的耗能增加1点能量。");
++});
++
++it("preserves zero and multi-digit quantities preceding the unit icon", () => {
++  expect(fillRelicText("FIXTURE", "0{energyPrefix:energyIcons(1)}；12{energyPrefix:energyIcons(1)}"))
++    .toBe("0点能量；12点能量");
++});
++
++it("preserves ordinary energy amounts, measured Ironclad values and unknown placeholders", () => {
++  expect(fillRelicText("LANTERN", "获得{Energy:energyIcons()}。" )).toBe("获得1点能量。");
++  expect(fillRelicText("FIXTURE", "获得{Energy:energyIcons(2)}。" )).toBe("获得2点能量。");
++  expect(fillRelicText("BURNING_BLOOD", "回复{Heal}点生命。" )).toBe("回复6点生命。");
++  expect(fillRelicText("FIXTURE", "获得{Unknown}。" )).toBe("获得?(数值未知)。");
++});

@@ -100,7 +100,9 @@ def progress(state):
 def priority_hold(state, character, alive, normal, root=None):
     """Existing ready dispatch attempts and live heavy leases always win."""
     if normal.get("disk_capacity_hold") or normal.get("backfill_hold") or any(
-            value for key, value in normal.items() if key != "backfill_hold"):
+            value for key, value in normal.items() if key not in ("backfill_hold", "own_learning")):
+        return True
+    if normal.get("own_learning", {}).get("busy"):
         return True
     if any(batch.get("state") in ("running", "launching", "awaiting_review")
            and (alive(batch.get("pid")) or batch.get("state") == "launching")
@@ -179,7 +181,7 @@ def stdio_registration(batch_id, batch, directory, complete=False):
     return launch, session, files[0], summary
 
 
-def retired(batch_id, batch, directory):
+def retired(batch_id, batch, directory, *, read_only=False):
     """Recovery needs a verified original exit, including wrapper pre-model failures."""
     folder = Path(directory, "learner")
     no_model = folder / (batch_id + "." + source_kind(batch) + "-not-started.json")
@@ -193,7 +195,7 @@ def retired(batch_id, batch, directory):
     tui = folder / ("learner-" + batch_id + ".tui.json")
     if tui.exists():
         from learner_tui import verified_code
-        verified_code(tui, folder / (batch_id + ".out"), batch["rc"])
+        verified_code(tui, folder / (batch_id + ".out"), batch["rc"], persist_output=not read_only)
         return
     proof = native_start(batch_id, batch, directory)
     _, session, rollout, summary = stdio_registration(batch_id, batch, directory, complete=True)
@@ -497,6 +499,8 @@ def report_proof(report, batch, root):
         if isinstance(candidate, dict) and candidate.get("task") == "strategy-proposal":
             saved = candidate; break
     keys = ("task", "character", "batch", "base", "runs", "fixes", "merged", "tests", kind + "_source", "input_sha256", kind + "_results")
+    if binding.get("stock"):
+        keys += ("external_reading", "external_coverage")
     if not saved or any(saved.get(k) != report.get(k) for k in keys):
         raise ValueError("backfill report differs from preserved output")
     bid = Path(batch["worktree"]).name.removeprefix("codex-strategy-silent-") + "-strategy-proposal"
@@ -520,7 +524,13 @@ def report_proof(report, batch, root):
                 raise ValueError("backfill destination lacks its scratch artifact")
             files.append({("unit_id" if kind == "external" else "old_id"): row["id"], "kind": target["kind"], "id": target["id"],
                           "path": str(candidate), "bytes": candidate.stat().st_size, "sha256": digest(candidate.read_bytes())})
-    return {"destination_files": files, "plan_id": source_value(batch, "source"), "report_sha256": digest(path.read_bytes()), "dispositions": rows}
+    reading = None
+    if binding.get("stock"):
+        from external_stock import reading_proof
+        reading = reading_proof(root, bid, batch, report)
+        batch["external_stock_reading"] = reading
+    return {**({"stock_reading": reading} if reading else {}), "destination_files": files,
+            "plan_id": source_value(batch, "source"), "report_sha256": digest(path.read_bytes()), "dispositions": rows}
 
 
 if __name__ == "__main__":

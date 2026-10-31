@@ -36,13 +36,16 @@ function fixture(label = "reward/card") {
 }
 const answer = (): BrainAnswer => ({ engine: "deepseek", model: "fixed", answer: { choice: "a", reason: "fixture" }, problems: [], attempts: 1, latencyMs: 10, usage: { inputTokens: 1, outputTokens: 1 }, toolCalls: [] });
 
-it.each(["reward/card", "shop/plan", "rest/plan", "event/plan", "event/act-plan", "map/act-start", "fight-plan"])("%s offers a strategy count without mandatory strategy/rk guidance and retains experience cues", async label => {
+it.each(["reward/card", "shop/plan", "rest/plan", "event/plan", "event/act-plan", "map/act-start", "fight-plan"])("%s offers optional strategy tool/input guidance and retains experience cues", async label => {
   const { req, ctx } = fixture(label), before = JSON.stringify(req.payload);
   const result = await attachQueryGuidance(req);
   const cues = JSON.parse(result.question.split("\n").at(-1)!);
-  expect(cues).not.toHaveProperty("strategies"); expect(cues).not.toHaveProperty("rk");
+  expect(cues.strategies).toMatchObject({ status: "ok", count: 1, tool: "kb_strategies", input: { query: "*", limit: 3 } }); expect(cues).not.toHaveProperty("rk");
   expect(result.question).toContain("本题有 1 条相关策略/剧本可查。");
-  for (const prompt of [result.system, result.question]) expect(prompt).not.toMatch(/kb_strategies|kb_reflex|策略\/rk|构筑rk|备战rk/);
+  expect(result.question).not.toMatch(/kb_reflex|策略\/rk|构筑rk|备战rk/);
+  expect(result.question).toContain("只按非空线索及需要查询");
+  expect(result.system).toContain("kb_strategies"); expect(result.system).toContain("kb_reflex");
+  expect(result.system).not.toContain("查相关策略与 rk 后");
   expect(result.tools!.map(t => t.name)).toEqual(expect.arrayContaining(["kb_strategies", "kb_reflex"]));
   expect(result.question).toContain('"relevant":true');
   expect(result.question).not.toContain("strategy-fixture"); expect(result.question).not.toContain("格式策略标题");
@@ -120,13 +123,22 @@ it("retains public lesson conditions and source roles without reading another ch
   expect(result.sources).toContainEqual(expect.objectContaining({ file: "shared-experience.json", version: "shared-fixture", sha256: expect.stringMatching(/^[a-f0-9]{64}$/) }));
 });
 
-it("bounds an oversized strategy provenance envelope without dropping evidence from a returned entry", async () => {
+it("projects oversized strategy provenance and retrieves every original evidence byte explicitly", async () => {
   const { ctx, write, strategy } = fixture();
-  write("strategy-entries.json", { schema: "brain-strategies-v1", character: "silent", entries: [{ ...strategy, evidence: [{ run: "FIXTURE00001", floor: 1, ref: "fixed".repeat(6000) }] }] });
+  const original = { ...strategy, evidence: [{ run: "FIXTURE00001", floor: 1, ref: "fixed".repeat(6000) }] };
+  write("strategy-entries.json", { schema: "brain-strategies-v1", character: "silent", entries: [original] });
   const host = new ToolHost(buildKnowledgeTools(ctx), ctx);
   const result = await host.call("kb_strategies", { query: "*" });
-  expect(result.isError).toBe(true); expect(Buffer.byteLength(result.text)).toBeLessThanOrEqual(24_000);
-  expect(JSON.parse(result.text).entries).toEqual([]);
+  expect(result.isError).not.toBe(true); expect(Buffer.byteLength(result.text)).toBeLessThanOrEqual(24_000);
+  expect(JSON.parse(result.text)).toMatchObject({ returned: 1, entries: [{ id: original.id, trigger: original.trigger,
+    strategy: original.strategy, confidence: original.confidence, truncated: true }] });
+  let offset: number | null = 0, text = "";
+  do {
+    const page = await host.call("kb_strategies", { query: "*", detail: "full", document_id: original.id, document_offset: offset });
+    expect(page.isError).not.toBe(true); expect(Buffer.byteLength(page.text)).toBeLessThanOrEqual(24_000);
+    const parsed = JSON.parse(page.text); text += parsed.json_fragment; offset = parsed.next_document_offset;
+  } while (offset !== null);
+  expect(JSON.parse(text)).toEqual(original);
 });
 
 it("routes production guidance and records actual query identities in brain logs", async () => {

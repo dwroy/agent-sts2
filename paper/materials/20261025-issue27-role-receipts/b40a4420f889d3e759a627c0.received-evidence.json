@@ -1,0 +1,25 @@
+{
+  "at": "2026-10-25T04:19:31+08:00",
+  "actor": "watcher",
+  "notice_id": "b40a4420f889d3e759a627c0",
+  "request_id": "github-issue-27-brain-strategies-20261022",
+  "request_sha256": "6509c5cf33dc772a1316dc70987e96afb7687b197098f7291ee5859cb75b4ce3",
+  "message": "{\n  \"id\": \"q27-b2-ledger-frozen-inventory-boundary\",\n  \"prior\": \"共享账本全量check应全通过。\",\n  \"finding\": \"新增五条show/find均0自有局、外部分母正确。使用本批冻结runs检查共享575项时，有3条其他并行记录引用0VBCQS9V0N87，超出本批冻结清单；原check rc1保留。LEDGER_RUNS=none结构检查575项0问题，并非这些新局的来源验证。\",\n  \"evidence\": [\n    \"ledger-check.stdout.txt\",\n    \"ledger-shape-check.stdout.txt\",\n    \"ledger-commands.json\"\n  ],\n  \"affected_ids\": [\n    \"silent-0571\",\n    \"silent-0572\",\n    \"silent-0573\",\n    \"silent-0574\",\n    \"silent-0575\"\n  ],\n  \"next_step\": \"原ops用其授权当前局清单核三条并行记录；本批不越冻结上限读取新局、不修改他人记录，不代全量来源验证通过。\"\n}",
+  "message_sha256": "08b47c14d33d91feb9a6b627ca07536cdc7f35cad30074f87a2a920616d4e825",
+  "actual_prior_read_record": {
+    "path": "paper/materials/20261025-learning-attention-integrator/verification.json",
+    "sha256": "eb8744918912e863d72cf5683641260edb1c9668074391b49a29067984ff2e31"
+  },
+  "native_read_record": {
+    "path": "paper/materials/20261025-issue27-role-receipts/watcher-native-read.jsonl",
+    "sha256": "f04f219fe7180ec95d33153c6837914ce8973ffd455a1ed2a3e75143cf3f1cdc"
+  },
+  "source_files_and_original_ops_windows_rechecked": true,
+  "ops_forwarded": {
+    "path": "/home/dw/Projects/agent-sts2/ops/codex-ops/learning-notices/receipts/b40a4420f889d3e759a627c0.ops-forwarded.json",
+    "sha256": "bd258b5271e9239c8664aed48192164a7458795267d718a79635140e755816b8",
+    "at": 1792685415.2066395
+  },
+  "original_message": null,
+  "source_evidence": null
+}

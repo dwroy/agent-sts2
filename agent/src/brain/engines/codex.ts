@@ -382,15 +382,16 @@ export function closeCutAnswer(text: string): { json: Record<string, unknown>; t
  * (2026-10-03, RNTVAT76BPV0 / J4S28FRQKD7G: 7 of 27 live calls at high stalled; the replayed ones streamed route_reason
  * as an endless chain of single characters, 「稳。好。走。保。…」, after a short phrase):
  * - routeReason "drop" (BRAIN_CODEX_ROUTE_REASON, default): no route_reason field (it is only logged: the route review's
- *   reason in the decision log); "keep": the field stays, capped at ROUTE_REASON_CHARS.
+ *   reason in the decision log); "keep": the field stays, capped at ROUTE_REASON_CHARS. A question whose
+ *   contract requires a reason on a changed route preserves the optional field even with "drop".
  * - maxFieldChars (BRAIN_CODEX_MAX_FIELD_CHARS, default 600): every free-text string (no enum) gets that maxLength,
  *   which OpenAI's strict mode enforces while it samples: a runaway in any text field ends there. Logged answers' longest
  *   single field is ~180 characters; the act route ~90.
  * DeepSeek's and Claude's schemas and every prompt stay as they are.
  */
-export function codexSchema(kindSchema: JsonSchema, opts: { routeReason: "drop" | "keep"; maxFieldChars: number | null; routePattern?: boolean }): StrictSchema | null {
+export function codexSchema(kindSchema: JsonSchema, opts: { routeReason: "drop" | "keep"; maxFieldChars: number | null; routePattern?: boolean; routeReasonOnChange?: boolean }): StrictSchema | null {
   let schema = kindSchema;
-  if (opts.routeReason === "drop" && schema.properties?.["route_reason"]) {
+  if (opts.routeReason === "drop" && !opts.routeReasonOnChange && schema.properties?.["route_reason"]) {
     const { route_reason: _dropped, ...properties } = schema.properties;
     schema = { ...schema, properties, required: (schema.required ?? []).filter((key) => key !== "route_reason") };
   }
@@ -733,7 +734,7 @@ interface CodexCall {
   entry: Json;
   kindSchema: JsonSchema;
   schema: StrictSchema | null;
-  cacheRequest: CodexCacheObservation;
+  cacheRequest?: CodexCacheObservation;
 }
 
 /** `codex app-server`'s arguments in session mode: stdio, and exec mode's isolation overrides and feature switches. */
@@ -806,18 +807,20 @@ function sessionTrace(
 /* ---- the engine -------------------------------------------------------------------------------- */
 
 export class CodexEngine implements BrainEngine {
+  readonly preparesRequests = true;
   readonly name = "codex" as const;
   /** The model's catalog entry per model slug, read once per process (`codex debug models`). */
   private readonly catalogs = new Map<string, Promise<Json>>();
   private readonly cacheObserver = new CodexCacheObserver();
   private readonly physicalBudget: PhysicalCallBudget;
 
-  private notePhysicalCall(mode: "session" | "exec", req: BrainRequest): void {
+  private notePhysicalCall(mode: "session" | "exec", req: BrainRequest): number | undefined {
     if (!this.physicalBudget.claim()) {
       throw new EngineFailure("isolated Codex probe physical-call budget exhausted", "quota");
     }
     this.opts.beforePhysicalCall?.({ mode, ...(req.questionId ? { questionId: req.questionId } : {}) });
     this.usage.noteCall();
+    return req.evidence?.start(mode, req.evidencePhase ?? "engine");
   }
 
   /** The plan's usage guard (engines/codex-usage.ts): read at process start (Brain.preflight) and before due calls. */
@@ -1013,19 +1016,29 @@ export class CodexEngine implements BrainEngine {
   }
 
   async decide(req: BrainRequest, signal?: AbortSignal): Promise<BrainAnswer> {
+    const abort = () => { if (this.opts.knowledgeAgent) this.session?.abort(); };
+    signal?.addEventListener("abort", abort, { once: true });
+    try { return await this.decidePrepared(req, signal); }
+    finally { signal?.removeEventListener("abort", abort); }
+  }
+
+  private async decidePrepared(req: BrainRequest, signal?: AbortSignal): Promise<BrainAnswer> {
+    if (this.opts.knowledgeAgent && signal?.aborted) throw new Error("codex call cancelled before preparation");
     const { bin, home } = this.opts.codex;
     const agents = instructionFiles(home);
     if (agents.length > 0) throw new EngineFailure(`${agents.join(", ")} would be loaded into the brain call (codex reads it whatever the flags) [unavailable]`, "unavailable", CODEX_REST_MS.unavailable);
     // The plan's usage, when a read is due: a window at the stop or credits in use rest codex for the process.
     await this.usage.beforeCall();
+    if (this.opts.knowledgeAgent && signal?.aborted) throw new Error("codex call cancelled after usage read");
     const model = this.modelFor(req.label);
     const effort = req.effort ?? this.opts.settings.effort ?? DEFAULT_CODEX_EFFORT;
     const env = codexEnv(bin, home);
     mkdirSync(this.stateDir, { recursive: true });
     const entry = await this.catalog(model, effort, env);
+    if (this.opts.knowledgeAgent && signal?.aborted) throw new Error("codex call cancelled after catalog read");
     const kindSchema = codexKindSchema(req.spec, { fields: this.opts.codex.schemaFields, reasonLast: this.opts.codex.reasonLast });
-    const schema = codexSchema(kindSchema, { routeReason: this.opts.codex.routeReason, maxFieldChars: this.opts.codex.maxFieldChars, routePattern: this.opts.codex.routePattern });
-    const cacheRequest = this.cacheObserver.capture({ scope: `${knowledgeCharacter()}|${req.runId ?? ""}`, system: req.system, prompt: promptWithReask(req), schema, serviceTier: this.opts.codex.serviceTier });
+    const schema = codexSchema(kindSchema, { routeReason: this.opts.codex.routeReason, maxFieldChars: this.opts.codex.maxFieldChars, routePattern: this.opts.codex.routePattern, routeReasonOnChange: req.spec.routeReasonOnChange });
+    const cacheRequest = req.prepareForSend ? undefined : this.cacheObserver.capture({ scope: `${knowledgeCharacter()}|${req.runId ?? ""}`, system: req.system, prompt: promptWithReask(req), schema, serviceTier: this.opts.codex.serviceTier });
     const call = { model, effort, env, entry, kindSchema, schema, cacheRequest };
     // The usage guard's changes since the last row (codex back after reads failed, a refreshed token): on this question's row.
     const usageNotes = this.usage.takeNotes();
@@ -1063,6 +1076,7 @@ export class CodexEngine implements BrainEngine {
     const catalogFile = join(catalogDir, `${process.pid}.json`);
     writeFileSync(catalogFile, JSON.stringify({ models: [c.entry] }), "utf8");
     this.session = new CodexSession({
+      knowledgeAgent: this.opts.knowledgeAgent,
       bin,
       home,
       args: sessionArgs({ catalogFile, stateDir: this.stateDir, effort: c.effort, summary, serviceTier }),
@@ -1082,20 +1096,33 @@ export class CodexEngine implements BrainEngine {
    * asked once more (BRAIN_CODEX_STALL_RETRIES); a dead server or a broken stream restarts the session once, then
    * exec mode takes over; an isolation problem (config.toml, instruction sources) turns session mode off at once.
    */
+  private prepareSend(req: BrainRequest, c: CodexCall): void {
+    if (!req.prepareForSend) return;
+    req.prepareForSend(req);
+    c.cacheRequest = this.cacheObserver.capture({ scope: `${knowledgeCharacter()}|${req.runId ?? ""}`, system: req.system,
+      prompt: promptWithReask(req), schema: c.schema, serviceTier: this.opts.codex.serviceTier });
+  }
+
   private async decideSession(req: BrainRequest, signal: AbortSignal | undefined, c: CodexCall): Promise<BrainAnswer> {
     const { home, summary, stallMs, firstTokenMs, stallRetries, maxAnswerChars, maxAnswerBlanks, acceptCut } = this.opts.codex;
-    const prompt = promptWithReask(req);
     let attempt = 1;
     let spentMs = 0;
     for (;;) {
+      if (this.opts.knowledgeAgent && signal?.aborted) throw new Error("codex session cancelled before attempt");
       const began = Date.now();
       let turn: SessionTurn;
+      let evidenceAttempt: number | undefined;
       const session = this.sessionFor(c);
       try {
         await session.ensureThread(req.system, () => [...configProblems(home).map((problem) => `config.toml: ${problem}`), ...instructionFiles(home)]);
-        this.notePhysicalCall("session", req);
-        turn = await session.ask({ observe: req.observe, prompt, schema: c.schema, effort: c.effort, summary, model: c.model, ...(signal ? { signal } : {}), stallMs, firstTokenMs, maxAnswerChars, maxAnswerBlanks });
+        if (this.opts.knowledgeAgent && signal?.aborted) throw new Error("codex session cancelled after thread preparation");
+        this.prepareSend(req, c);
+        const prompt = promptWithReask(req);
+        evidenceAttempt = this.notePhysicalCall("session", req);
+        turn = await session.ask({ evidence: req.evidence, attempt: evidenceAttempt, observe: req.observe, prompt, schema: c.schema, effort: c.effort, summary, model: c.model, ...(signal ? { signal } : {}), stallMs, firstTokenMs, maxAnswerChars, maxAnswerBlanks });
       } catch (error) {
+        if (evidenceAttempt) req.evidence?.attempt({ id: evidenceAttempt, status: "error", ms: Date.now() - began,
+          error: error instanceof Error ? error.message : String(error), cleanup: "pending" });
         if (!(error instanceof SessionError || error instanceof RpcError)) throw error;
         const ms = Date.now() - began;
         spentMs += ms;
@@ -1118,7 +1145,7 @@ export class CodexEngine implements BrainEngine {
       // A runaway cut whose prefix is already a whole answer (BRAIN_CODEX_ACCEPT_CUT): taken instead of asking again.
       const judged = turn.status === "stalled" && acceptCut && turn.stall?.endsWith("(runaway)") ? this.fromCut(req, c, turn.answerText) : null;
       const cut = judged && "text" in judged ? judged.text : null;
-      this.writeTrace({ native_receipt: turn.nativeReceipt ?? null, ...sessionTrace(req, c, attempt, { outcome: turn.status === "completed" ? (turn.text ? "answered" : "failed") : turn.status === "stalled" ? "stalled" : turn.status === "aborted" ? "aborted" : "failed", turn, callMs: spentMs, stderr: session.stderrTail(), serverRequests: session.serverRequests }), ...(cut ? { accepted_from_cut: true } : judged && "rejected" in judged ? { cut_rejected: judged.rejected } : {}) });
+      this.writeTrace({ native_receipt: turn.nativeReceipt ?? null, ...sessionTrace(req, c, attempt, { outcome: turn.status === "completed" ? (turn.text ? "answered" : "failed") : turn.status === "stalled" ? "stalled" : turn.status === "aborted" ? "aborted" : "failed", turn, callMs: spentMs, stderr: session.stderrTail(), serverRequests: turn.serverRequests }), ...(cut ? { accepted_from_cut: true } : judged && "rejected" in judged ? { cut_rejected: judged.rejected } : {}) });
       if (cut) {
         const usage = turn.usage ?? {};
         return this.answer(req, c, {
@@ -1146,7 +1173,8 @@ export class CodexEngine implements BrainEngine {
       if (turn.status === "completed") throw new EngineFailure("codex gave no answer [invalid] (session turn completed without an agent message)", "invalid");
       if (turn.status === "aborted") throw new Error(`codex session turn aborted after ${turn.ms} ms`);
       if (turn.status === "stalled") {
-        if (attempt <= stallRetries && !signal?.aborted) {
+        // A knowledge query hands its recorded returns to the reserved answer phase; do not repeat the lookup turn.
+        if (!(this.opts.knowledgeAgent && this.opts.knowledgeMcpUrl) && attempt <= stallRetries && !signal?.aborted) {
           attempt += 1;
           continue;
         }
@@ -1187,17 +1215,20 @@ export class CodexEngine implements BrainEngine {
       const schemaFile = schema ? join(work, "schema.json") : null;
       if (schemaFile) writeFileSync(schemaFile, JSON.stringify(schema), "utf8");
       const args = codexArgs({ cwd, model, schemaFile, systemFile, catalogFile, stateDir: this.stateDir, effort, summary, serviceTier });
-      const stdin = promptWithReask(req);
+      this.prepareSend(req, c);
+      let stdin = promptWithReask(req);
       let attempt = 1;
       let spentMs = spentBeforeMs;
       this.notePhysicalCall("exec", req);
-      let outcome = await this.runOnce(bin, args, { cwd, env, stdin, signal, req, model, effort, attempt, spentMs, cacheRequest: c.cacheRequest });
+      let outcome = await this.runOnce(bin, args, { cwd, env, stdin, signal, req, model, effort, attempt, spentMs, cacheRequest: c.cacheRequest! });
       spentMs += outcome.ms;
       // A stalled run: killed and asked once more (the router's BRAIN_CODEX_TIMEOUT_MS still caps the whole call).
       while (outcome.kind === "stalled" && attempt <= this.opts.codex.stallRetries && !signal?.aborted) {
         attempt += 1;
+        this.prepareSend(req, c);
+        stdin = promptWithReask(req);
         this.notePhysicalCall("exec", req);
-        outcome = await this.runOnce(bin, args, { cwd, env, stdin, signal, req, model, effort, attempt, spentMs, cacheRequest: c.cacheRequest });
+        outcome = await this.runOnce(bin, args, { cwd, env, stdin, signal, req, model, effort, attempt, spentMs, cacheRequest: c.cacheRequest! });
         spentMs += outcome.ms;
       }
       if (outcome.kind === "stalled") throw new EngineFailure(`codex stalled [timeout]: ${outcome.why} (${attempt} run(s))`, "timeout");

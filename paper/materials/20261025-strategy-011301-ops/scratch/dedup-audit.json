@@ -1,0 +1,180 @@
+{
+  "dispatch_base": "58ccd1293983a7e984743e7acbdd8b61e3a9df3b",
+  "published_files": [
+    {
+      "path": "knowledge/characters/silent/strategy-entries.json",
+      "sha256": "303120262ed547827b2fe4c717e8114aca76358c5beb188899e9c8491f5a36b8"
+    },
+    {
+      "path": "knowledge/characters/silent/reflex.json",
+      "sha256": "7af201275dd2115daf91e2dc63f930ab0be40bcf52a65f583133942c120316cf"
+    },
+    {
+      "path": "knowledge/characters/silent/experience.json",
+      "sha256": "161164c9ed4ccb4a4b3a4875ff6e4ceb2fc570c6fc64637b58817733d8f927c2"
+    },
+    {
+      "path": "knowledge/characters/silent/reflex-vocab.json",
+      "sha256": "6047a92d919a9fea568ee8d336fbfdf78b1e1669054a1b81f11f413228df45e6"
+    }
+  ],
+  "existing_rest_entry": {
+    "id": "silent-brain-act1-rest-smith-resource-proxy",
+    "version": "2026-10-24-own-rest-route-002",
+    "trigger": {
+      "question_types": [
+        "rest"
+      ],
+      "acts": [
+        1
+      ]
+    },
+    "strategy": "第一幕休息题先按当前真实HP与后继风险比较回血/具名升级，不凭终局胜率选锻造。自有Silent A10、版本unknown：HEAL/SMITH题前HP均33.53/48.97，差15.44血；1039/474次、451/309个组内独立局（组间重叠）。外部v0.111.0前节点HP代理差17.85血，赢家上传372/1254与465/1458，差2.23pp，仅方向对照。适用：两项当前合法；观察关联、SL分层另附，不给固定回血线、升级因果收益或其他进阶结论。",
+    "evidence": [
+      {
+        "type": "external_aggregate",
+        "source": "external:sts2fun",
+        "url": "https://sts2.fun/static/sts2_public.db.zst",
+        "version": "v0.111.0",
+        "dataset_sha256": "1f7c0c3d441aedb5c85f04bcd4d8d6a1039b438a8b6fda2d96cfa5c27580cbf5",
+        "downloaded_at": "2026-10-21",
+        "license": "No explicit dataset redistribution license found on public FAQ; aggregate statistics with attribution only; no raw redistribution.",
+        "filters": {
+          "character": "silent",
+          "ascension": 10,
+          "criteria": "单人/有效/非弃局/无modifiers；build v0.111.0；act=1；rooms=[rest_site,null]；rest_site_choices=HEAL；组内distinct上传行"
+        },
+        "statistic": {
+          "name": "HEAL whole_run_winning_uploads / distinct_uploaded_runs",
+          "value": 0.2966507177033493,
+          "unit": "proportion"
+        },
+        "denominator": {
+          "unit": "runs",
+          "n": 1254
+        },
+        "design": "observational",
+        "limitations": [
+          "自选上传、玩家独立性/SL未知，非因果。",
+          "前节点末HP仅代理；组间重叠；无同状态/拒选机会分母。"
+        ],
+        "ref": "knowledge/external/sts2fun/decision-fields-v1/statistics.json#rest_site_choices/v0.111.0/act1/HEAL;sha256=4cf36c85eee760ed8e74495c1758e0228bbe1214789d3d0bd97052d5ca6a1f9d",
+        "role": "support"
+      },
+      {
+        "type": "external_aggregate",
+        "source": "external:sts2fun",
+        "url": "https://sts2.fun/static/sts2_public.db.zst",
+        "version": "v0.111.0",
+        "dataset_sha256": "1f7c0c3d441aedb5c85f04bcd4d8d6a1039b438a8b6fda2d96cfa5c27580cbf5",
+        "downloaded_at": "2026-10-21",
+        "license": "No explicit dataset redistribution license found on public FAQ; aggregate statistics with attribution only; no raw redistribution.",
+        "filters": {
+          "character": "silent",
+          "ascension": 10,
+          "criteria": "单人/有效/非弃局/无modifiers；build v0.111.0；act=1；rooms=[rest_site,null]；rest_site_choices=SMITH；组内distinct上传行"
+        },
+        "statistic": {
+          "name": "SMITH whole_run_winning_uploads / distinct_uploaded_runs",
+          "value": 0.31893004115226337,
+          "unit": "proportion"
+        },
+        "denominator": {
+          "unit": "runs",
+          "n": 1458
+        },
+        "design": "observational",
+        "limitations": [
+          "自选上传、玩家独立性/SL未知，非因果。",
+          "前节点末HP仅代理；组间重叠；无同状态/拒选机会分母。"
+        ],
+        "ref": "knowledge/external/sts2fun/decision-fields-v1/statistics.json#rest_site_choices/v0.111.0/act1/SMITH;sha256=4cf36c85eee760ed8e74495c1758e0228bbe1214789d3d0bd97052d5ca6a1f9d",
+        "role": "support"
+      },
+      {
+        "type": "own",
+        "run": "EQLB6SK9W9H7",
+        "floor": 16,
+        "ref": "logs/decisions.jsonl@4620717499+570326;sha256=7a3c72f676a86b5e4fd637dc4e05c3096907079d997624aaba3f5828e0b8d5bb",
+        "role": "support"
+      },
+      {
+        "type": "own",
+        "run": "QVDR4R3UWKXU",
+        "floor": 8,
+        "ref": "logs/decisions.jsonl@4577763203+432997;sha256=993083101bed355280cf190deb087dde3806123d5f57ab6edd2e77fde08dfd6f",
+        "role": "support"
+      }
+    ],
+    "source": "mixed",
+    "confidence": 0.4,
+    "evidence_status": "unassessed"
+  },
+  "existing_giant_experience": {
+    "id": "silent-giant-explosion-window",
+    "scope": "boss:WATERFALL_GIANT",
+    "asc": [
+      0,
+      20
+    ],
+    "lesson": "巨兽本体、回复与结束后自爆分账，占位血不是需伤。机制：A10已见蒸汽T2=20后每轮+3，本体结束下轮爆，HP读{@10:HP:WATERFALL_GIANT}。搭配：清体时点与爆时实血/合法挡同核。决定胜负的战斗：36主题局，单因未控；旧重打14场58试7赢另账。典型案例：DYB7KFG723QM六试0赢，四试T15清体后T16面对59自爆，两毒加残壳未改HP/挡/爆；末试T15结18毒仍本体2血即死，未入爆。旧ATP5MCMJDMQY三敏无挡牌，T12爆47仍败；没有提前清体实胜对照。",
+    "evidence": [
+      "C48LLXBGKXQ9",
+      "R0HEV5E3QT6G",
+      "XYYQYBRM2A01",
+      "CSBR5CRDWQNB",
+      "1LMBFGSMCWKU",
+      "ZE8F192FKX24",
+      "VN7RQJMJEFMX",
+      "6EV5V6PJJS9D",
+      "2L1BNN9ZJEFU",
+      "53FLQ68CETW0",
+      "JLN5SK17W4FQ",
+      "TD1HVGS7H6LB",
+      "L9SGRBB5R698",
+      "4ANT8D00TP72",
+      "PU80F84P6HPN",
+      "5X2GHKJ89PN1",
+      "8R5CXD5C8PW8",
+      "TKXQ6L4N9A6U",
+      "2K4H3JEJHRSB",
+      "YQL8RZ8BWN1E",
+      "G8NHLL09DLBX",
+      "Y5H4CFAQ2WTG",
+      "PF90JTU0UZ5M",
+      "456MRNGCPD8E",
+      "0DJ6GFZZ0TG9",
+      "SDY5T9XCSQN2",
+      "R6WDLYS19ZTY",
+      "V3PJA3FV92BG",
+      "MR7EBRYRJ5R6",
+      "UV5YK5721RPB",
+      "6D0M76419BU7",
+      "NYQW6JAD30K4",
+      "PUY011SBWSSU",
+      "3DSZM9BL9B0B",
+      "ATP5MCMJDMQY",
+      "DYB7KFG723QM"
+    ],
+    "n_support": 36,
+    "n_contradict": 0,
+    "confidence": "high",
+    "last_seen": "2026-10-16",
+    "status": "active",
+    "cores": [
+      "P",
+      "R"
+    ],
+    "combos": [
+      "P-toxin-footwork",
+      "P-flask-footwork",
+      "R-acro-tingsha"
+    ]
+  },
+  "decisions": [
+    "末火取舍并入既有silent-brain-act1-rest-smith-resource-proxy；不算新增情境。",
+    "爆炸窗口并入既有silent-giant-explosion-window经验；对应文字/rk是新表示，不算新增情境。",
+    "开场、STOMP建立兼防护、具名末店步法购物没有发现同Boss/同当前条件正式条目；分别保留。",
+    "未重派boss003、Boss002、182343或双Boss；旧产出不计新增。"
+  ]
+}

@@ -1,0 +1,44 @@
+.F....
+======================================================================
+FAIL: test_original_callback_publishes_once_and_real_local_tool_reads_source_without_network (ops.tests.test_public_web.Completion.test_original_callback_publishes_once_and_real_local_tool_reads_source_without_network)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/dw/Projects/agent-sts2/.worktrees/issue-69-a10-learning-web/ops/tests/test_public_web.py", line 116, in checked
+    return run(*args, **kwargs)
+  File "/usr/lib/python3.14/subprocess.py", line 578, in run
+    raise CalledProcessError(retcode, process.args,
+                             output=stdout, stderr=stderr)
+subprocess.CalledProcessError: Command '['/home/dw/.local/node/bin/node', '--import', 'tsx', '/tmp/public-web-callback-x1aj8o1x/agent/tools/knowledge-runtime.ts', 'complete', '--runtime', '/tmp/public-web-callback-x1aj8o1x/data/runtime', '--candidate', '/tmp/public-web-callback-x1aj8o1x/.worktrees/fixed/learner/runs/fixed/knowledge-candidate.json', '--id', '20261025-220000-strategy-proposal', '--code', '232149bcd55173ef72083853589c70c109d3f370']' returned non-zero exit status 1.
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/home/dw/Projects/agent-sts2/.worktrees/issue-69-a10-learning-web/ops/tests/test_public_web.py", line 163, in test_original_callback_publishes_once_and_real_local_tool_reads_source_without_network
+    self.finish(); self.assertEqual(self.batch["state"], "done", self.inbox)
+    ~~~~~~~~~~~^^
+  File "/home/dw/Projects/agent-sts2/.worktrees/issue-69-a10-learning-web/ops/tests/test_public_web.py", line 120, in finish
+    self.assertTrue(complete(BID, self.batch, self.report, 0, str(self.root), lambda *e: self.events.append(e), self.inbox.append))
+                    ~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/dw/Projects/agent-sts2/.worktrees/issue-69-a10-learning-web/ops/knowledge_runtime.py", line 73, in complete
+    return _complete(batch_id, batch, report, rc, root, enqueue, inbox, independent=independent)
+  File "/home/dw/Projects/agent-sts2/.worktrees/issue-69-a10-learning-web/ops/knowledge_runtime.py", line 146, in _complete
+    result = subprocess.run(command, cwd=str(Path(root, "agent")), capture_output=True, text=True, timeout=120, check=True)
+  File "/usr/lib/python3.14/unittest/mock.py", line 1176, in __call__
+    return self._mock_call(*args, **kwargs)
+           ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.14/unittest/mock.py", line 1180, in _mock_call
+    return self._execute_mock_call(*args, **kwargs)
+           ~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.14/unittest/mock.py", line 1247, in _execute_mock_call
+    result = effect(*args, **kwargs)
+  File "/home/dw/Projects/agent-sts2/.worktrees/issue-69-a10-learning-web/ops/tests/test_public_web.py", line 118, in checked
+    raise AssertionError("isolated CLI fixture failed: " + str(error.stderr)) from error
+AssertionError: isolated CLI fixture failed: invalid external aggregate statistic/denominator
+(node:2311617) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+
+----------------------------------------------------------------------
+Ran 6 tests in 1.076s
+
+FAILED (failures=1)

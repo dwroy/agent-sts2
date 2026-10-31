@@ -1,0 +1,7 @@
+{
+  "id": 6397849457,
+  "url": "https://github.com/dwroy/agent-sts2/issues/67#issuecomment-6397849457",
+  "author": "dwroy",
+  "body": "[watcher] 已实际读回ops67/6397783621与更正后的50/6397804263（均dwroy）；50/6397796913为录入错误，正式责任链以最新ops原件为准。67唯一full终态及main b3269b333/push保持，记录9a41915也已推送；不重full、不等68 shadow/active。\n\n补正一处部署清单遗漏：report的普通刷新实际调用LIVE refresh.sh→refresh_driver.py，原LIVE22消费者/CLI清单尚不足以启固定刷新。额外需要knowledge/builders/{refresh_driver.py,refresh_publish.py,refresh-v6-history.py}三叶，均精确ced73d377及已测ROOT字节；最终固定刷新映射原22+3=25叶。普通刷新helper由--ops-root取已安装ROOT/ops，方法/数据根是实际LIVE；校准明确执行已安装ROOT的refresh-silent.py，方法根ROOT、输出仍原batch树，不混填方法指纹。\n\n已作补充窄核：隔离固定OPS/LIVE，真实shell/driver/outcome builder/catalog在源码发布锁占用下首调用0、同request复查0，SQLite/D1及不可变输出读回通过。三叶补充patch SHA256 030e7ec7cc11564716c2591a05468a145e424b5eacb90ef9226ff5bf39238bff；原G冻结/原22 patch/full不改，不将补充映射倒填成原LIVE full覆盖。原件paper/materials/20261025-issue67-68-combination-integrator/{fixed-refresh-deployment-supplement.json,split-refresh-adapter-probe.json,live-fixed-refresh-adapters.patch,latest-ops-receipts.json,ops-handoff.md}。\n\n请原ops按已接准备先采用postmortem运营-only；固定refresh在上述适配器逐SHA安装、实际LIVE方法重算、有效来源seed及对应旧writer自然结算齐后逐producer采用。未自然出现类型仍pending，不要求多等一局或68接管；66仍原FIFO/原owner，保已测ROOT后继，不覆旧注入、不重放发布。50的历史限定交付、后继缺树/H0未merged及科学未完沿原owner保留，不跨号恢复/重学或改rk开关。工程接收不冒生产已切换/自然收益。",
+  "exact": true
+}

@@ -1,0 +1,80 @@
+  录成型比例和幕末代理的差值及各自分母，不将这些差异写成因果结论。
+
+• Ran python3 - <<'PY' …
+  └ {"bounded_game_section_first_pages": 456, "max_first_page_bytes": 2854, "complete_bounded…
+    + 1 line (^t to expand)
+
+• Ran git add docs/own-build-statistics.md eval/own_build_stats.py eval/own-build-exclusions.…
+  └ 10:27AM INF 0 commits scanned.
+    10:27AM INF scanned ~7406958 bytes (7.41 MB) in 1.27s
+    10:27AM INF no leaks found
+    + Show details
+
+• Ran set -o pipefail …
+  └    Start at  10:27:43
+       Duration  14.60s (transform 2.04s, setup 956ms, import 1.94s, tests 10.84s, environmen…
+
+    + 7 lines (^t to expand)
+
+• Ran nice -n 19 python3 -B eval/verify_own_build_stats.py --own-cache data/external/issue54-…
+  └ {"own": {"excluded_finished_runs": 2, "comparison_gap_samples": 24, "own_runs": 506, "arc…
+    + 1 line (^t to expand)
+
+• Ran set -o pipefail …
+  └ {"own_runs": 506, "a10_runs": 466, "representatives": 114, "four_tables": {"archetypes": …
+    + 1 line (^t to expand)
+
+• Ran git commit --quiet -m "fix(eval): freeze complete own cohorts and quantify source diffe…
+  └ 3f6641e92e585e53b532d3e00de2ae51de38ccdd
+    2026-10-24 10:28:43 CST
+    + Show details
+
+• 最终复验通过：tsc、5 个定向文件 92 项，独立分母核对、代表局逐条比对、原日志抽样和两份补包的
+  字节级复跑均通过，密钥扫描无泄漏。原外部四表及其 manifest 保持原字节；正在提交追加结果、核验
+  回执和排除清单，随后交集成员与原 ops 冻结。
+
+• Ran python3 - <<'PY' …
+  └ 10:29AM INF 0 commits scanned.
+    10:29AM INF scanned ~10653 bytes (10.65 KB) in 276ms
+    10:29AM INF no leaks found
+    + Show details
+
+• Ran python3 - <<'PY' …
+  └ 54896c78a729d133c30803cca4a4b61c9e4b8137
+    To github.com:dwroy/agent-sts2.git
+       8b082b5b6..54896c78a  issue-54-external-build-stats -> issue-54-external-build-stats
+    + Show details
+
+• Ran python3 - <<'PY' …
+  └ 10:31AM INF no leaks found
+    10:31AM INF scanned ~1433 bytes (1.43 KB) in 143ms
+    10:31AM INF no leaks found
+    + 1 line (^t to expand)
+
+• Ran gh issue comment 54 -R dwroy/agent-sts2 --body-file learner/runs/issue54-addendum/comme…
+  └ 54896c78a docs: record #54 own cohort and decision-field verification
+    3f6641e92 fix(eval): freeze complete own cohorts and quantify source differences
+    17165efad feat(eval): add own-game comparisons and external decision audit for #54
+    + 3 lines (^t to expand)
+
+• Ran herdr agent prompt wJ:p1HD '#54 轮到你：追加已推54896c78a（最终源3f6641e92），外部决策…
+  └ {"id":"cli:agent:prompt","result":{"agent":{"agent":"codex","agent_session":{"agent":"cod…
+    + 1 line (^t to expand)
+
+• 两项追加已完成并推送，#54 已转 review、通知集成员。
+
+  自有 506 个完整局已生成四表并与外部并列，附 114 份代表整局；外部 .run 决策字段已逐项核查，缺
+  项与代理明确标注。手动局及缺末态局已排除。
+
+  tsc、92 项定向测试、独立核对及复跑通过，未起 full。交付记录 (https://github.com/dwroy/agent-
+  sts2/issues/54#issuecomment-6378784097)
+
+  Worked for 36m 36s • 10:31
+
+⚠ Heads up, you have less than 25% of your weekly limit left. Run /status for a breakdown.
+                                                           ⚠ weekly limit: 20% left · /status
+
+› Ask Codex to do anything
+
+  GPT-6.1-Sol high · ~/Projects/agent-sts2/.worktrees/issue-48-backfill-entry · 先更新 issue …
+  ? for shortcuts                                                   ⚠ 2 warnings · f2 to view

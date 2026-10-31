@@ -1,0 +1,63 @@
+{
+  "context_id": "G5",
+  "source": "mixed",
+  "own_support_runs": [
+    "HLAWCGM3KHVB"
+  ],
+  "own_game_version": "unknown",
+  "own_ascension": 10,
+  "attempt_scope": "no_retry_evidence",
+  "opportunities": 1,
+  "own_full_game_result": "defeat",
+  "raw_decision": {
+    "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261024-214314/learner/runs/20261024-214947-4ffac8b1-2eb8-46c3-93a3-cdbc651a44a1-strategy-proposal/scratch/raw/HLAWCGM3KHVB-q119.json",
+    "sha256": "e0e8b5b4a5e28b5a5de97b4a86509cb38f7f0edb73ff347601860213935ce9df"
+  },
+  "raw_state": {
+    "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261024-214314/learner/runs/20261024-214947-4ffac8b1-2eb8-46c3-93a3-cdbc651a44a1-strategy-proposal/scratch/raw/HLAWCGM3KHVB-state-q119.json",
+    "sha256": "ea1832edf67aca53d2ccdd269c767ac40168bc0f74ceaf4e55369068525e0d72"
+  },
+  "external_evidence": {
+    "type": "external_aggregate",
+    "source": "external:sts2fun",
+    "url": "https://sts2.fun/static/sts2_public.db.zst",
+    "version": "v0.111",
+    "dataset_sha256": "1f7c0c3d441aedb5c85f04bcd4d8d6a1039b438a8b6fda2d96cfa5c27580cbf5",
+    "downloaded_at": "2026-10-21",
+    "license": "许可未明确；保留sts2.fun来源，不再分发原库或标识。",
+    "filters": {
+      "character": "silent",
+      "ascension": 10,
+      "criteria": "冻结builds-v1簇4；timeline.json / v0.111 cluster4 formation; denominator=terminal-consistent winners"
+    },
+    "statistic": {
+      "name": "observed_three_card_bundle",
+      "value": 11,
+      "unit": "count"
+    },
+    "denominator": {
+      "unit": "runs",
+      "n": 68
+    },
+    "design": "observational",
+    "limitations": [
+      "自选上传，独立玩家与重复上传未知；上传记录不是本系统局。",
+      "终局聚类含未来信息，仅定位证据，不作触发；赢家选择与路线/遗物/重试混杂。",
+      "各版本机改对照未知，逐版保留，不合并。",
+      "外部选牌前缀与前节点结束HP均是代理；非真实战前全字段快照。",
+      "自有版本unknown；本次两个完整局均A10/no_retry_evidence且败，缺重试证据不证明无SL。",
+      "牌文和单局动作可描述，未隔离拿牌或固定排序的因果收益；缺留出回放。"
+    ],
+    "ref": "timeline.json / v0.111 cluster4 formation; denominator=terminal-consistent winners"
+  },
+  "limitations": [
+    "自选上传，独立玩家与重复上传未知；上传记录不是本系统局。",
+    "终局聚类含未来信息，仅定位证据，不作触发；赢家选择与路线/遗物/重试混杂。",
+    "各版本机改对照未知，逐版保留，不合并。",
+    "外部选牌前缀与前节点结束HP均是代理；非真实战前全字段快照。",
+    "自有版本unknown；本次两个完整局均A10/no_retry_evidence且败，缺重试证据不证明无SL。",
+    "牌文和单局动作可描述，未隔离拿牌或固定排序的因果收益；缺留出回放。"
+  ],
+  "formal_publication": "pending",
+  "consumer_readback": "pending"
+}
