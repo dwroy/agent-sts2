@@ -22,8 +22,11 @@
 
 这五个首试末帧都仍双体存活，**没有证据把“先杀一边触发狂怒”说成这五局共同死因**。末帧名义攻击不是实际扣血，缺乏未执行后继不能确定反事实。两局入战仅27/28HP；危险点覆盖T4激光、T6双攻和T9激光，因此构筑档案需提醒按已知HP、当前牌组准备跨回合防守/虚弱与双体输出推进。不能只加一个“平衡血量”口号，也不能由这五局推出某张牌必选。
 
-#87紧凑观察档案为boss-profile-for-87-observation-draft.json，序列化1219B；事实带上述来源，策略ID明确draft/已发布K1待真实读回，不把候选混成已发布知识。KNOWLEDGE_DEMON继续排第二。
+#87紧凑观察档案为boss-profile-for-87-observation-draft.json，序列化1361B；事实带上述来源，策略ID明确draft/已发布K1待真实读回，不把候选混成已发布知识。KNOWLEDGE_DEMON继续排第二。
 
 正式校准保原107 tune精确键不动：70首试+37原重试训练另标；val全部首试，后补只val。前轮70训练敏感性原红保留（CR Brier约0.107/门限0.036），恢复正式训练池的理由和先行提交见calibration-pool-audit.md；不能按val较绿选择口径。200样本、两起点、固定seed1补37 tune与新30个全Boss首试val正在两个nice19单进程上运行，无Jev或游戏调用。
 
 原题面可得性也已核：五局F33共有238个原plan/pick题面，但完整候选Plan映射记录为0。不能从plays文案重建冒原Plan。原边界区间4596371045–4829252430及每行SHA保存在.artifacts/issue83/crusher-rocket/original-plan-availability.json。后续若用冻结原状态重新跑离线planner，必须明确标“新生成后冻结的完整候选集合”，两臂只在这个相同集合上比较，不能宣称重现旧自然局Jev选择；未取得可验证Plan之前不花调用。
+
+
+外部统计补账：现有只读sts2fun聚合matchups.json（SHA516f03137d3ca0182f3a308e711d933d4d8a0f4a6398ade2569a8a450677414b，下载2026-10-21）v0.111/Silent A10/单人/valid/未放弃/无modifier共8个事后牌组簇。CRUSHER为340上传访问、280延续或终止HP“通过”代理；KD为360、290代理。不是已认证单战胜率或首次尝试，玩家独立性、与Spire样本重叠均未知，不相加或计自有val。所有真实战前快照缺失，前节点HP只是代理；不能从最终牌组簇推出某构筑有因果增益。逐簇原聚合与限制另存external-statistics-v0111.json，未读原始13GB数据库或玩家字段。
