@@ -1,0 +1,61 @@
+{
+  "base": "39e48ce9d09248b86c0eec1bf2339c4b453ec253",
+  "at": "2026-10-31T00:00:27.155662+08:00",
+  "code_cut_sha256": "63c67438b7f0b585e05ba9ad2ca8a9614c50c4b427ca98da462ee62c0bb03f16",
+  "all_six_source_inputs_unchanged": true,
+  "sandbox": {
+    "exit": 0,
+    "production_tsc_included": true,
+    "workers": 1,
+    "nice": 19,
+    "files": 655,
+    "tests": 6073,
+    "log": "sandbox-final.log"
+  },
+  "paths": {
+    "exit": 0,
+    "files": 1,
+    "tests": 11,
+    "log": "sandbox-final.log"
+  },
+  "targeted_vitest": {
+    "exit": 0,
+    "files": 5,
+    "tests": 11,
+    "log": "targeted-vitest-final.log"
+  },
+  "runtime_python": {
+    "exit": 0,
+    "tests": 30,
+    "log": "runtime-final.log"
+  },
+  "producer_admission_python": {
+    "exit": 0,
+    "tests": 24,
+    "log": "fixed-producer-admission-final.log"
+  },
+  "poll_fixture_python": {
+    "exit": 0,
+    "tests": 9,
+    "log": "board-poll-fixture-fixed.log"
+  },
+  "handoff_fixture_python": {
+    "exit": 0,
+    "tests": 17,
+    "log": "account-handoff-fixture-fixed.log"
+  },
+  "first_sandbox": {
+    "exit": 1,
+    "passed_files": 653,
+    "failed_files": 2,
+    "passed_tests": 6071,
+    "failed_tests": 2,
+    "log": "sandbox-first-red.log",
+    "base_fixture_reproduction": "baseline-fixture-reproduction.json"
+  },
+  "actual_204303_validation": "204303-read-only-validation.json",
+  "production_completions_written": 0,
+  "production_state_writes": 0,
+  "production_signals": 0,
+  "game_or_model_calls": 0
+}

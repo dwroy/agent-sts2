@@ -3,6 +3,8 @@ import { basename, dirname, join, resolve } from "node:path";
 import { KNOWLEDGE_DIR } from "../core/paths.js";
 import { createHash } from "node:crypto";
 import { createRequire } from "node:module";
+import { assetsSelection } from './assets-binding.js';
+import { statsResourceKey } from './runtime/stats-schema.js';
 
 const names = new Set(["monster-db.json", "move-model.json", "card-upgrades.json", "monster-records.json", "outcome-stats.json",
   "construction-opportunities.json", "room-costs.json", "boss-damage.json", "potion-equivalents.json", "v6-history.json",
@@ -37,6 +39,7 @@ function checkDependencies(): void {
 }
 
 export function runtimeDataFile(dir: string, path: string): string | null {
+  if (assetsSelection() && statsResourceKey(path) && resolve(dir) === resolve(KNOWLEDGE_DIR)) return null;
   if (!snapshot || resolve(dir) !== resolve(KNOWLEDGE_DIR) || !selected(path)) return null;
   checkDependencies();
   return join(snapshot, path);
@@ -47,6 +50,7 @@ export function runtimeDataRoot(dir: string, path: string): string {
 }
 
 export function runtimeDataIdentity(): { version: string; directory: string; run: string; managed_paths: string[] } | null {
+  if (assetsSelection() && managedPaths.every(path => statsResourceKey(path.replace('{character}', 'silent')))) return null;
   if (!snapshot || !version) return null;
   // The outer K1 CLI imports this module before it binds its child. Validate
   // only when a gameplay consumer/run-config uses D1, after both bindings exist.

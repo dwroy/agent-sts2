@@ -33,6 +33,19 @@ class RegistrationPipeline(unittest.TestCase):
                     row["pid"]=124
                     registration.checkpoint({"batches":{}})
             with open(row["path"],"a") as probe:fcntl.flock(probe,fcntl.LOCK_EX|fcntl.LOCK_NB)
+            # A new capacity registration also publishes its actual slot before release.
+            with registration.transaction(directory,persist):
+                row=registration.reserve(directory,"learner-20260101-000003-strategy-proposal")
+                row["pid"]=125
+                state["batches"][row["batch"]]={"pid":125,"state":"running","external_source":"fixed-plan",
+                    "external_binding":{"plan_id":"fixed-plan","dispatch_base":"a"*40},"external_lane":"A",
+                    "external_policy":{"service_tier":"default","admission":"learning-concurrency-v1"}}
+                with open(row["path"],"a") as probe:
+                    registration.checkpoint(state)
+                    with self.assertRaises(BlockingIOError):fcntl.flock(probe,fcntl.LOCK_EX|fcntl.LOCK_NB)
+                    state["batches"][row["batch"]]["external_slot"]="ext2"
+                    registration.checkpoint(state)
+                    fcntl.flock(probe,fcntl.LOCK_EX|fcntl.LOCK_NB)
 
     def test_four_external_and_own_publish_before_next_slow_source_under_same_tick_lock(self):
         from publication_registration_fixture import World

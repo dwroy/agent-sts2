@@ -1,6 +1,6 @@
 /** Frozen observations, built between runs and loaded once without accessing historical logs. */
 import { createHash } from "node:crypto";
-import { readFileSync, realpathSync, statSync } from "node:fs";
+import { readFileSync, realpathSync, statSync, rethrowStatsResourceError } from "../knowledge/resource-fs.js";
 import { isAbsolute, join, relative } from "node:path";
 import { array, boolean, custom, literal, nullable, number, object, optional, refine, text, validate, type Infer } from "../v6/schema.js";
 import { characterSchema, type Character } from "../v6/formats.js";
@@ -134,7 +134,7 @@ export function loadV6HistoryPack(knowledgeDir: string, rawCharacter: string, co
     if (pack.data.character !== character || pack.content_sha256 !== digest(pack.data)
       || Date.parse(pack.generated_at) < Date.parse(pack.data.cutoff)) throw new Error("history scope/hash/time mismatch");
     return { status: "loaded", path, value: pack };
-  } catch (e) {
+  } catch (e) { rethrowStatsResourceError(e);
     return (e as NodeJS.ErrnoException).code === "ENOENT" ? { status: "missing", path, reason: "no own frozen history" }
       : { status: "invalid", path, reason: e instanceof Error ? e.message : "invalid frozen history" };
   }

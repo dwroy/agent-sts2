@@ -26,7 +26,8 @@ class EntrypointTest(unittest.TestCase):
                 shutil.copyfile(source, self.builders / source.name)
         helpers = self.ops_root / 'ops'
         helpers.mkdir(parents=True)
-        for name in ('refresh_health.py', 'learning_runtime.py', 'learning_runtime_store.py', 'learning_runtime_data.py'):
+        for name in ('refresh_health.py', 'learning_runtime.py', 'learning_runtime_store.py', 'learning_runtime_data.py',
+                     'stats_runtime.py', 'stats_launch.py'):
             shutil.copyfile(HERE.parents[1] / 'ops' / name, helpers / name)
         learner = self.live / 'learner'
         learner.mkdir()

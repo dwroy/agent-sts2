@@ -146,8 +146,22 @@ def fixture(root):
     b.mkdir(parents=True)
     for name in ('build-combo-metrics.py', 'combo_metrics.py', 'combo_pooled.py', 'combo_normalization.py', 'history_boundary.py', 'appearance_stats.py', 'incremental_evidence.py', 'combo-prerequisites.mts', 'check-v6-refresh.mts', 'build-v6-history.py', 'refresh-v6-history.py', 'refresh.sh', 'refresh-step.py', 'refresh_driver.py', 'refresh_publish.py', 'characters.py'):
         shutil.copy2(ROOT / 'knowledge/builders' / name, b / name)
-    # Production Node CLI and schemas are used read-only; no copy of a checkout.
-    (root / 'agent').symlink_to(ROOT / 'agent', target_is_directory=True)
+    # Link only executable inputs, keeping the legacy retirement policy an
+    # ordinary local file. The production guard rejects redirected policies.
+    def code_links(source, target, policy):
+        target.mkdir()
+        for child in source.iterdir():
+            if child.name.startswith('.'):
+                continue
+            dest = target / child.name
+            if child.name == policy[0]:
+                if len(policy) == 1:
+                    dest.write_text('export const STATS_REQUIRED = false;\n')
+                else:
+                    code_links(child, dest, policy[1:])
+            elif source != ROOT / 'agent' or child.name in {'tools', 'node_modules', 'package.json', 'tsconfig.json', 'tsconfig.knowledge-runtime.json'}:
+                dest.symlink_to(child, target_is_directory=child.is_dir())
+    code_links(ROOT / 'agent', root / 'agent', ['src', 'knowledge', 'stats-required.ts'])
     (root / 'learner').symlink_to(ROOT / 'learner', target_is_directory=True)
     (root / 'ops').mkdir()
     logs = root / 'logs'
@@ -539,8 +553,16 @@ class RefreshTest(unittest.TestCase):
         with tempfile.TemporaryDirectory() as d:
             root = Path(d)
             target = fixture(root)
-            for name in ('refresh_health.py', 'learning_runtime.py', 'learning_runtime_store.py', 'learning_runtime_data.py'):
-                shutil.copyfile(ROOT / 'ops' / name, root / 'ops' / name)
+            declaration = json.loads((ROOT / 'ops/fixed-producer-dependencies.json').read_text())
+            nodes = {**declaration['common'], **declaration['producers']['v6-history']['inputs']}
+            for identity in nodes:
+                if identity.startswith('runtime:'):
+                    name = identity.split(':', 1)[1]
+                    dest = root / name
+                    dest.parent.mkdir(parents=True, exist_ok=True)
+                    shutil.copyfile(ROOT / name, dest)
+            (root / 'eval').mkdir()
+            shutil.copyfile(ROOT / 'eval/jsonl_cache.py', root / 'eval/jsonl_cache.py')
             # Stub unrelated historical refresh steps; execute the real shell and V6 helper/CLIs.
             b = root / 'knowledge/builders'
             for name in ('build-monster-db.py', 'monster-db-check.py', 'build-card-upgrades.py', 'build-outcome-stats.py',
@@ -579,7 +601,7 @@ class RefreshTest(unittest.TestCase):
                 result = namespace['refresh_knowledge']('silent')
             self.assertTrue(all(wait.call_count == 0 for wait in waits))
             for child in spawned:
-                child.wait(timeout=60)
+                self.assertEqual(child.wait(timeout=60), 0, (root / 'ops/refresh.log').read_text())
             self.assertIsNone(result['exit'])
             self.assertEqual(result['status'], 'background')
             self.assertFalse(result['admission_wait'])

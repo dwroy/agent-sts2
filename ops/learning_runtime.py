@@ -76,7 +76,66 @@ def git(tree, *args):
     return subprocess.check_output(["git", "-C", str(tree), *args], timeout=20).decode().strip()
 
 
-def validate(root, batch_id, batch, report, rc):
+def source_rebase(root, tree, body, report, head, changed):
+    """Use registered file/SHA inputs, never a guessed knowledge directory."""
+    if subprocess.run(["git", "-C", str(tree), "merge-base", "--is-ancestor", body["base"], head],
+                      capture_output=True, timeout=20).returncode:
+        raise ValueError("source overlap unknown: original base is not an ancestor")
+    inputs = []
+
+    def registered(ref, origin, base=root):
+        if (not isinstance(ref, dict) or not isinstance(ref.get("path"), str)
+                or not SHA.fullmatch(ref.get("sha256", ""))):
+            raise ValueError("source overlap unknown: missing fixed input registration at " + origin)
+        path = Path(ref["path"])
+        # These are file identities in this repository, not directory families.
+        if ".." in path.parts:
+            raise ValueError("source overlap unknown: invalid fixed input path at " + origin)
+        path = path if path.is_absolute() else base / path
+        within = tree if path.is_relative_to(tree) else root
+        if not path.is_relative_to(within):
+            raise ValueError("source overlap unknown: foreign fixed input at " + origin)
+        inputs.append(dict(path=path.relative_to(within).as_posix(), sha256=ref["sha256"], registration=origin,
+                           **{k: ref[k] for k in ("offset", "length") if k in ref}))
+
+    allowed = tree / "learner/runs"
+    registered(body.get("report"), "report", allowed)
+    records = body.get("records")
+    if not isinstance(records, list) or not records:
+        raise ValueError("source overlap unknown: missing fixed input records")
+    for index, record in enumerate(records):
+        refs = record.get("evidence") if isinstance(record, dict) else None
+        if not isinstance(refs, list) or not refs:
+            raise ValueError("source overlap unknown: missing fixed input evidence for record " + str(index))
+        for ordinal, ref in enumerate(refs):
+            registered(ref, f"records[{index}].evidence[{ordinal}]")
+        payload = record.get("payload", {})
+        for name in ("knowledge_inputs", "method_inputs"):
+            if isinstance(payload, dict) and name in payload:
+                mapping = payload[name]
+                if not isinstance(mapping, dict) or not mapping:
+                    raise ValueError("source overlap unknown: invalid " + name)
+                for path, digest in mapping.items():
+                    registered(dict(path=path, sha256=digest), f"records[{index}].payload.{name}")
+        if isinstance(payload, dict) and any(payload.get(k) for k in ("method_sha256", "knowledge_sha256")):
+            raise ValueError("source overlap unknown: opaque method/knowledge SHA requires its original input manifest")
+    writes = [Path(report["operational_candidate"]), Path(body["report"]["path"])]
+    writes = [path if path.is_absolute() else allowed / path for path in writes]
+    if any(not path.is_relative_to(tree) or ".." in path.parts for path in writes):
+        raise ValueError("source overlap unknown: candidate output path")
+    writes = sorted({path.relative_to(tree).as_posix() for path in writes})
+    protected = {ref["path"] for ref in inputs} | set(writes)
+    overlap = sorted(path for path in changed if any(
+        path == ref or path.startswith(ref + "/") or ref.startswith(path + "/") for ref in protected))
+    if overlap:
+        raise ValueError("source/knowledge changes require engineering delivery; intersecting leaves: " + ", ".join(overlap))
+    return dict(schema="operational-source-revalidation-v1", original_base=body["base"], new_base=head,
+                changed_paths=sorted(changed), write_paths=writes, fixed_inputs=inputs,
+                input_registration="operational-candidate-v1 report/evidence and explicit payload input SHA maps",
+                intersection=[], decision="disjoint", original_candidate_base_preserved=True)
+
+
+def validate(root, batch_id, batch, report, rc, *, revalidation=None):
     root = Path(root).resolve()
     chosen = selection(root, batch)
     if rc != 0 or not ID.fullmatch(batch_id):
@@ -99,6 +158,8 @@ def validate(root, batch_id, batch, report, rc):
     # A mixed task may store its independent operational records, but its source
     # completion still goes through the engineering path below the caller.
     engineering = any(report.get(k) for k in ("commit", "merged", "fixes", "source_commit", "implementation_domains"))
+    rebased = None
+    head = git(tree, "rev-parse", "HEAD")
     if not engineering:
         exclusions = [":(exclude)notes/lessons.md", ":(exclude)paper/materials/learning/ledger.jsonl", ":(exclude)paper/materials/learning/code-proposals.jsonl"]
         if task == "silent-boss-calibration":
@@ -118,9 +179,15 @@ def validate(root, batch_id, batch, report, rc):
         from learner_checks import SOURCE_PATHS
         guarded = [*SOURCE_PATHS, ".agents", "knowledge/common", "knowledge/characters"] if tree == root else ["."]
         dirty = git(tree, "status", "--porcelain", "--untracked-files=all", "--", *guarded, *exclusions)
-        advanced = subprocess.run(["git", "-C", str(tree), "diff", "--quiet", body["base"], "HEAD", "--", *guarded, *exclusions], capture_output=True, timeout=20).returncode
-        if dirty or advanced:
+        if dirty:
             raise ValueError("source/knowledge changes require engineering delivery")
+        changed = git(tree, "diff", "--name-only", "--no-renames", "-z", body["base"], head,
+                      "--", *guarded, *exclusions).split("\0")
+        changed = [path for path in changed if path]
+        if body["base"] != head:
+            if changed and task == "silent-boss-calibration":
+                raise ValueError("source overlap unknown: fixed producer needs its original method/input manifest")
+            rebased = source_rebase(root, tree, body, report, head, changed)
     for key in ("runs", "parents", "proposals", "ledger_ids"):
         if not isinstance(body[key], list) or len(set(body[key])) != len(body[key]) or any(not isinstance(x, str) or not ID.fullmatch(x) for x in body[key]):
             raise ValueError("invalid stable links: " + key)
@@ -215,8 +282,17 @@ def validate(root, batch_id, batch, report, rc):
         # Payloads are archival JSON. No interpreter, rule loader or brain tool reads them.
         for ref in record["evidence"]:
             artifact(ref, root)
+        if rebased:
+            for name in ("knowledge_inputs", "method_inputs"):
+                for path, digest in record["payload"].get(name, {}).items():
+                    artifact(dict(path=path, sha256=digest), root)
     if set(body["runs"]) - evidence_runs:
         raise ValueError("dispatched runs missing explicit evidence references")
+    if not engineering:
+        if git(tree, "rev-parse", "HEAD") != head or git(tree, "status", "--porcelain", "--untracked-files=all", "--", *guarded, *exclusions):
+            raise ValueError("source base or guarded workspace changed during candidate revalidation")
+        if rebased and revalidation is not None:
+            revalidation.update(rebased)
     return chosen, body, objects, engineering
 
 
@@ -244,10 +320,11 @@ def complete(batch_id, batch, report, rc, root, enqueue, inbox):
             store.report(batch_id)
             engineering = receipt.get("engineering_required", False) or any(report.get(k) for k in ("commit", "merged", "fixes", "source_commit", "implementation_domains"))
         else:
-            chosen, body, objects, engineering = validate(root, batch_id, batch, report, rc)
+            revalidation = {}
+            chosen, body, objects, engineering = validate(root, batch_id, batch, report, rc, revalidation=revalidation)
             if packed(body) != packed(json.loads(raw)):
                 raise ValueError("candidate changed during validation")
-            receipt = store.complete(body, objects, engineering)
+            receipt = store.complete(body, objects, engineering, source_revalidation=revalidation or None)
         if body["task"] == "silent-boss-calibration":
             data_result = store.data_receipt(batch_id + ":calibration")
             if not data_result:

@@ -218,7 +218,7 @@ class Recovery:
                 with dest.open("x") as out: out.write((attempt / "report.md").read_text())
                 receipt.update(status="refreshing", report=str(dest), report_sha256=digest(dest), report_exit=0, summary=indexed[0])
                 save()
-                receipt["refresh"] = report.refresh_knowledge(character)
+                receipt["refresh"] = report.refresh_knowledge(character, run_id)
                 save()
                 if receipt["refresh"].get("exit") != 0 and receipt["refresh"].get("status") != "background":
                     raise ValueError("refresh dispatch failed; retain indexed run")

@@ -1,0 +1,70 @@
+diff --git a/ops/codex-ops-learn.py b/ops/codex-ops-learn.py
+index f577b34ff..5a604bbbe 100644
+--- a/ops/codex-ops-learn.py
++++ b/ops/codex-ops-learn.py
+@@ -579,8 +579,18 @@ def cmd_write(args):
+     if getattr(args, "public_web", False):
+         if args.task != "strategy-proposal" or args.character != "silent" or args.runs or args.request:
+             return 2
++        question = None
++        if getattr(args, "public_web_question", ""):
++            from public_web_jobs import load_question, question_key
++            try:
++                question = load_question(ROOT, args.public_web_question, args.public_web_question_sha256)
++            except (OSError, ValueError, TypeError, KeyError, UnicodeError):
++                print(json.dumps({"dispatched": None, "reason": "invalid_public_web_question_input"}))
++                return 2
++        kwargs = {"public_web_question": question} if question is not None else {}
+         result = dispatch_write(state, ROOT, SCRIPTS, args.task, args.character, [],
+-                                "public-web:issue69", "ops", alive, dt.datetime.now().strftime("%Y%m%d-%H%M%S"), public_web=True)
++                                question_key(question) if question is not None else "public-web:issue69", "ops", alive,
++                                dt.datetime.now().strftime("%Y%m%d-%H%M%S"), public_web=True, **kwargs)
+         save_state(state)
+         print(json.dumps({"dispatched": result}, ensure_ascii=False))
+         return 0 if result else 1
+@@ -750,11 +760,16 @@ def main():
+     parser.add_argument("--runs", default="")
+     parser.add_argument("--request", default="")
+     parser.add_argument("--public-web", action="store_true", help="explicit Silent content research, original strategy slot/runtime")
++    parser.add_argument("--public-web-question", default="", help="fixed JSON under learner/requests/public-web/")
++    parser.add_argument("--public-web-question-sha256", default="", help="required SHA256 of the exact question input")
+     parser.add_argument("--batch", default="")
+     parser.add_argument("--rc", type=int, default=1)
+     args = parser.parse_args()
+     if args.public_web and args.command != "write":
+         parser.error("--public-web requires write")
++    if (bool(args.public_web_question) != bool(args.public_web_question_sha256)
++            or (args.public_web_question and (not args.public_web or args.task != "strategy-proposal" or args.character != "silent" or args.runs or args.request))):
++        parser.error("question input and SHA require explicit Silent public-web write without runs/request")
+     args.character = character_key(args.character) or "silent"
+     if args.command in ("tick", "dispatch", "write", "boss-check"):
+         try:
+diff --git a/ops/learner_jobs.py b/ops/learner_jobs.py
+index fd889b45a..a804b3a03 100644
+--- a/ops/learner_jobs.py
++++ b/ops/learner_jobs.py
+@@ -311,17 +311,21 @@ def fix_key(root, character):
+     return hashlib.sha256(json.dumps([text, accepted], ensure_ascii=False).encode()).hexdigest()
+ 
+ 
+-def dispatch_write(state, root, scripts, task, character, runs, key, reason, alive, stamp, research_request=None, implementation_request=None, backfill_source=None, external_source=None, public_web=False):
++def dispatch_write(state, root, scripts, task, character, runs, key, reason, alive, stamp, research_request=None, implementation_request=None, backfill_source=None, external_source=None, public_web=False, public_web_question=None):
+     directory = publication_gate.directory(root)
+     if publication_gate.learners_held(root, directory) or (publication_gate.candidates_only(root, directory) and not external_source):
+         return None
+     web_contract = None
++    if public_web_question is not None and not public_web:
++        return None
+     if public_web:
+         if (public_web is not True or task != "strategy-proposal" or character != "silent" or reason != "ops" or runs
+                 or research_request or implementation_request or backfill_source or external_source):
+             return None
+-        from public_web_jobs import contract
+-        web_contract = contract(root)
++        from public_web_jobs import contract, question_key
++        web_contract = contract(root, public_web_question)
++        if public_web_question is not None and (key != question_key(public_web_question) or not retryable(state, task, key)):
++            return None
+     if external_source is not None:
+         from strategy_backfill_jobs import ID
+         if (not isinstance(external_source, str) or not ID.fullmatch(external_source)

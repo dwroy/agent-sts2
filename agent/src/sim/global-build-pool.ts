@@ -1,6 +1,6 @@
 /** Character-scoped observed encounter frequencies; never a claim about the game's spawn distribution. */
 import { createHash } from "node:crypto";
-import { readFileSync } from "node:fs";
+import { readFileSync } from "../knowledge/resource-fs.js";
 import { asRecord } from "../core/util/json.js";
 import { KNOWLEDGE_DIR, knowledgeFile } from "../knowledge/files.js";
 

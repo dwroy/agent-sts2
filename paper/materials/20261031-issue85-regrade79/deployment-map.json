@@ -1,0 +1,26 @@
+{
+  "schema": "issue85-regrade79-deployment-map-v1",
+  "root_only": [
+    {
+      "path": "agent/tools/grade-strategies.ts",
+      "scope": "ROOT-only offline CLI and fixed tests; no LIVE deployment",
+      "before_blob": "492197a1efcdeea1ea2904c214ee328a48e14f72",
+      "after_blob": "b6b3405bf69bc17d779eb7a21b28911db140d1a4",
+      "after_sha256": "bc8aa1fb90cf1daf2b74bcb269229e8a567e1e5cf6d3d21d0887af46e568f7b2",
+      "mode": "100644",
+      "rollback": "restore before_blob for existing tool; remove new test; knowledge/runtime unchanged"
+    },
+    {
+      "path": "agent/tests/grade-strategies-frozen.test.ts",
+      "scope": "ROOT-only offline CLI and fixed tests; no LIVE deployment",
+      "before_blob": null,
+      "after_blob": "f0e0f0a460c250fa9cc157bf0a38c7c9b375400c",
+      "after_sha256": "00b12414dc09b4b0fb814a82124dedc666c2989ec1851c1b4ff5d4298e7ea5f8",
+      "mode": "100644",
+      "rollback": "restore before_blob for existing tool; remove new test; knowledge/runtime unchanged"
+    }
+  ],
+  "live": [],
+  "runtime_change": false,
+  "note": "Parent branch also carries already-adopted #85 r2 and the separate schema audit. Integrate this CLI delta against current main, not the original branch history; no edit to #77/#79 engineering batch."
+}

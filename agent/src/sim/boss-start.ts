@@ -16,7 +16,7 @@
  * Offline and deterministic: no clock, no files written, no model call. The live planner's code is only called.
  */
 
-import { readFileSync } from "node:fs";
+import { readFileSync, rethrowStatsResourceError } from "../knowledge/resource-fs.js";
 
 import { loadConfig } from "../core/config.js";
 import type { Knowledge } from "../knowledge/index.js";
@@ -163,7 +163,7 @@ export function loadMonsterDb(): MonsterDb {
   try {
     const parsed = readMonsterDbJson() as Partial<MonsterDb>;
     dbCache = { bosses: parsed.bosses ?? {}, encounters: parsed.encounters ?? {}, monsters: parsed.monsters ?? {} };
-  } catch {
+  } catch (statsReadError) { rethrowStatsResourceError(statsReadError);
     dbCache = { bosses: {}, encounters: {}, monsters: {} };
   }
   return dbCache;
@@ -174,7 +174,7 @@ export function loadMoveModel(): MoveModelData {
   if (mmCache) return mmCache;
   try {
     mmCache = JSON.parse(readFileSync(knowledgeFile(KNOWLEDGE_DIR, "move-model.json"), "utf8")) as MoveModelData;
-  } catch {
+  } catch (statsReadError) { rethrowStatsResourceError(statsReadError);
     mmCache = {};
   }
   return mmCache;

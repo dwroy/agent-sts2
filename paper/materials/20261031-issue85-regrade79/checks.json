@@ -1,0 +1,54 @@
+{
+  "schema": "issue85-regrade79-checks-v1",
+  "production_tsc": {
+    "exit_code": 0,
+    "command": "PATH=$HOME/.local/node/bin:$PATH nice -n 19 npx tsc -p tsconfig.json --noEmit",
+    "run_by": "tools/test-sandbox.sh"
+  },
+  "knowledge_runtime_tsc": {
+    "exit_code": 0,
+    "command": "nice -n 19 node node_modules/typescript/bin/tsc -p tsconfig.knowledge-runtime.json --noEmit"
+  },
+  "targeted_vitest": {
+    "exit_code": 0,
+    "files": 4,
+    "tests": 31,
+    "worker": 1,
+    "log": "targeted-tests.log",
+    "sha256": "25fe6be36eec4723934747f79f8455d0675eaebb0169cf1c807efca763472464",
+    "raw_log_sha256": "facf65618f59d72038b7e76a04262018c21bae7536918263c6aefa5344244fab",
+    "public_log_normalization": "trailing blank lines removed; raw log retained in .artifacts/issue85/regrade79/"
+  },
+  "sandbox": {
+    "command": "nice -n 19 env SANDBOX_WORKERS=1 bash tools/test-sandbox.sh",
+    "exit_code": 0,
+    "files": 653,
+    "tests": 6035,
+    "paths_files": 1,
+    "paths_tests": 11,
+    "duration_seconds": 1383.7,
+    "log": "sandbox.log",
+    "sha256": "60308eb3a4245c245695d6968ee852a70ddc2f6b1ba061b317c8c334c3e14d96",
+    "scope": "fixed repository sandbox exclusions; not the integrator original #77/#79 combined full",
+    "raw_log_sha256": "76bda59d3432ef3b9cd0b969ecad2d74af920aa29ed7289c55ff29ea5798c507",
+    "public_log_normalization": "trailing blank lines removed; raw log retained in .artifacts/issue85/regrade79/"
+  },
+  "legacy_candidate": {
+    "new_sha256": "6a928688762544a624425d750d26525d6f3838dc0df522505a61f6d2452a9bb1",
+    "original_sha256": "6a928688762544a624425d750d26525d6f3838dc0df522505a61f6d2452a9bb1",
+    "unchanged": true
+  },
+  "evidence_reaudit": {
+    "exit_code": 0,
+    "historical_own_runs": 280,
+    "selected_external_uploads": 20,
+    "pages": 10,
+    "reverified_own_windows": 7
+  },
+  "isolated_consumer_proof": {
+    "exit_code": 0,
+    "sha256": "f33e13c96ca470ed435107e8fceaa1a1fa1ab335847504a434c83c42b235e985",
+    "production_write": false,
+    "original_79_admission_tested": false
+  }
+}

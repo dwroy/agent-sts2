@@ -1,10 +1,12 @@
 /** Per-query input bytes and provenance. Ordinary gameplay loaders keep their existing caches and paths. */
 import { AsyncLocalStorage } from "node:async_hooks";
+import { assetsSelection } from './assets-binding.js';
+import { statsResourceKey } from './runtime/stats-schema.js';
 import { createHash } from "node:crypto";
-import { readFileSync } from "node:fs";
+import { readFileSync, rethrowStatsResourceError } from "./resource-fs.js";
 import { join, relative, resolve } from "node:path";
 import { readCompatibleKnowledgeText } from "./catalog.js";
-import { knowledgeCharacter, knowledgeFile, knowledgeSubdir } from "./files.js";
+import { KNOWLEDGE_DIR, knowledgeCharacter, knowledgeFile, knowledgeSubdir } from "./files.js";
 import { runtimeKnowledgeIdentity, runtimeKnowledgeRoot } from "./runtime-paths.js";
 import { runtimeDataFile, runtimeDataIdentity } from "./runtime-data.js";
 
@@ -22,6 +24,14 @@ function input(query: Query, name: string): Input {
   if (hit) return hit;
   const path = knowledgeFile(query.dir, name, query.character);
   const source: Row = { source: "own", character: query.character, file: name, path: relative(query.dir, path).split("\\").join("/") };
+  const assetKey = relative(query.dir, join(knowledgeSubdir(name, query.dir, query.character), name)).split('\\').join('/');
+  if (assetsSelection() && resolve(query.dir) === resolve(KNOWLEDGE_DIR) && statsResourceKey(assetKey)) {
+    const selected = assetsSelection()!;
+    source['data_version'] = selected.binding.bundle.stats_version;
+    source['bundle_sha256'] = selected.binding.bundle_sha;
+    source['backend'] = selected.mode;
+    source['path'] = assetKey;
+  }
   const fixed = runtimeDataFile(query.dir, relative(query.dir, join(knowledgeSubdir(name, query.dir, query.character), name)));
   if (fixed) source["data_version"] = runtimeDataIdentity()?.version;
   const snapshot = runtimeKnowledgeRoot(query.dir);
@@ -33,7 +43,7 @@ function input(query: Query, name: string): Input {
   try {
     let text: string, bytes: string | Buffer;
     try { bytes = readFileSync(path); text = bytes.toString("utf8"); }
-    catch (error) {
+    catch (error) { rethrowStatsResourceError(error);
       if ((error as NodeJS.ErrnoException).code !== "ENOENT" || name !== "monster-db.json" || fixed) throw error;
       text = readCompatibleKnowledgeText(query.dir, name, query.character);
       bytes = text;
@@ -45,10 +55,10 @@ function input(query: Query, name: string): Input {
     result.text = text;
     source["sha256"] = sha(bytes);
     let value: Row = {};
-    try { const parsed: unknown = JSON.parse(text); if (object(parsed)) value = parsed; result.json = object(parsed) ? parsed : null; } catch { result.json = null; }
+    try { const parsed: unknown = JSON.parse(text); if (object(parsed)) value = parsed; result.json = object(parsed) ? parsed : null; } catch (statsReadError) { rethrowStatsResourceError(statsReadError); result.json = null; }
     const meta = object(value["meta"]) ? value["meta"] : {};
     source["version"] = String(value["version"] ?? value["schema"] ?? value["generated"] ?? meta["generated"] ?? `sha256:${source["sha256"]}`);
-  } catch (error) {
+  } catch (error) { rethrowStatsResourceError(error);
     result.error = error;
     source["status"] = (error as NodeJS.ErrnoException).code === "ENOENT" ? "missing" : "unreadable";
     source["version"] = source["status"]; source["sha256"] = null;

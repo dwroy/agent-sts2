@@ -70,7 +70,7 @@ class ReportRecovery(unittest.TestCase):
         self.assertTrue(Path(result["report"]).is_file())
         self.state["run_id"] = "ANOTHER00001"
         self.assertTrue(self.recovery.run(RUN)["reused"])
-        self.refresh.assert_called_once_with("silent")
+        self.refresh.assert_called_once_with("silent", RUN)
         self.cost.assert_called_once(); self.boss.assert_called_once_with("silent")
         self.assertEqual(len(rows_for(self.root / "logs/runs.jsonl", RUN)), 1)
 
@@ -116,7 +116,7 @@ class ReportRecovery(unittest.TestCase):
     def test_background_refresh_does_not_block_recovery_completion(self):
         self.refresh.return_value = {"exit": None, "status": "background", "admission_wait": False}
         self.assertEqual(self.recovery.run(RUN)["status"], "complete")
-        self.refresh.assert_called_once_with("silent")
+        self.refresh.assert_called_once_with("silent", RUN)
         self.cost.assert_called_once()
         self.boss.assert_called_once()
 

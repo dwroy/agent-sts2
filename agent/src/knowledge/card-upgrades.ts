@@ -5,7 +5,7 @@
  * Blessing of the Forge (card-model upgradeDelta).
  */
 
-import { readFileSync } from "node:fs";
+import { readFileSync, rethrowStatsResourceError } from "./resource-fs.js";
 import { bumpDataVersion } from "../core/util/data-version.js";
 import { KNOWLEDGE_DIR, knowledgeFile } from "./files.js";
 
@@ -36,7 +36,7 @@ function load(): Record<string, CardUpgrade> {
   if (cached) return cached;
   try {
     cached = JSON.parse(readFileSync(knowledgeFile(KNOWLEDGE_DIR, "card-upgrades.json"), "utf8")) as Record<string, CardUpgrade>;
-  } catch {
+  } catch (statsReadError) { rethrowStatsResourceError(statsReadError);
     cached = {};
   }
   return cached;

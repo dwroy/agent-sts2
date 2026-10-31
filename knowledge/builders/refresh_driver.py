@@ -50,7 +50,7 @@ def step(ops_root, name, argv):
     stamp = datetime.now(timezone.utc).isoformat()
     before = resource.getrusage(resource.RUSAGE_CHILDREN)
     try:
-        lease_fd = os.environ.get('STS2_FIXED_DATA_LOCK_FD')
+        lease_fd = os.environ.get('STS2_FIXED_DATA_LOCK_FD') or os.environ.get('STS2_STATS_LOCK_FD')
         code = subprocess.run([str(a) for a in argv], check=False,
                               env={**os.environ, 'STS2_REFRESH_STEP': name},
                               pass_fds=(int(lease_fd),) if lease_fd else ()).returncode
@@ -71,6 +71,8 @@ def step(ops_root, name, argv):
 
 
 def main():
+    from refresh_publish import validate_stats_projection
+    validate_stats_projection()
     p = argparse.ArgumentParser(description=__doc__)
     p.add_argument('--ops-root', type=Path, default=ROOT)
     p.add_argument('--character')
@@ -99,6 +101,11 @@ def main():
         os.environ['STS2_REFRESH_ORIGIN_PID'] = str(os.getpid())
         os.environ['STS2_REFRESH_REQUESTED_MONOTONIC'] = str(time.monotonic())
         os.environ['STS2_REFRESH_REQUESTED_AT'] = datetime.now(timezone.utc).isoformat()
+        sys.path.insert(0, str(root / 'ops'))
+        from stats_runtime import bind_refresh as bind_stats_refresh
+        bind_stats_refresh(root, ROOT, os.environ['STS2_REFRESH_CYCLE'],
+                           dict(character=args.character, fight_value=args.fight_value, all=args.all, idle=args.idle,
+                                only_producer=args.only_producer, outcome_logdb=args.outcome_logdb, outcome_since=args.outcome_since))
         control = Path(os.environ.get('CODEX_OPS_DIR') or root / 'ops/codex-ops') / 'learning-runtime.json'
         receipt = root / 'data/learning-runtime-launches' / (hashlib.sha256(os.environ['STS2_REFRESH_CYCLE'].encode()).hexdigest() + '.json')
         if control.exists() or receipt.exists():
@@ -113,6 +120,26 @@ def main():
         os.execv(queued[0], queued)
     from characters import characters_with_runs
     characters = [args.character.lower()] if args.character else characters_with_runs(ROOT / 'logs/runs.jsonl')
+    if not os.environ.get('STS2_STATS_STAGING_ROOT'):
+        sys.path.insert(0, str(root / 'ops'))
+        from stats_runtime import bind_refresh as bind_stats_refresh, capture as stats_control
+        cycle = os.environ.get('STS2_REFRESH_CYCLE') or args.request
+        original = root / 'data/stats-launches' / (hashlib.sha256((cycle or '').encode()).hexdigest() + '.json')
+        if stats_control(root).get('enabled') and not original.is_file():
+            raise ValueError('original queued stats/legacy selection unavailable; do not hot-migrate')
+        selected_stats = bind_stats_refresh(root, ROOT, cycle, dict(character=args.character, fight_value=args.fight_value,
+            all=args.all, idle=args.idle, only_producer=args.only_producer,
+            outcome_logdb=args.outcome_logdb, outcome_since=args.outcome_since)) if cycle else {'enabled': False}
+        if selected_stats['enabled']:
+            from stats_refresh import run as run_stats_refresh
+            result = run_stats_refresh(root, ROOT, cycle, dict(character=args.character, fight_value=args.fight_value,
+                all=args.all, idle=args.idle, only_producer=args.only_producer,
+                outcome_logdb=args.outcome_logdb, outcome_since=args.outcome_since), characters)
+            print(json.dumps(result))
+            return 0
+        from stats_launch import requires_stats
+        if requires_stats(ROOT):
+            raise ValueError('retired A data cannot use the legacy source-file writer')
     os.environ['STS2_REFRESH_CACHE_DIR'] = str(root / 'ops/legacy-refresh-cache')
     os.environ['STS2_REFRESH_OPS_ROOT'] = str(root)
     for key in ('OMP_NUM_THREADS', 'OPENBLAS_NUM_THREADS', 'MKL_NUM_THREADS', 'NUMEXPR_NUM_THREADS'):

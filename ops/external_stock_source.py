@@ -17,6 +17,14 @@ COLUMNS = ['node', 'act', 'node_in_act', 'rooms_kind_id_turns', 'hp_end', 'max_h
            'gold_spent', 'card_choices_id_picked', 'gained', 'removed', 'transformed', 'upgraded',
            'relic_picks', 'bought_relics', 'removed_relics', 'partial_projection']
 MAX_SOURCE_BYTES = 128 * 1024 * 1024
+# Observed in the pinned #54 cache; this is an ID syntax exception, not game knowledge.
+ROOM_NAMESPACE = 'ACTSFROMTHEPAST'
+
+
+def namespaced_room(kind, ident):
+    prefix = {'monster': 'ENCOUNTER', 'elite': 'ENCOUNTER', 'boss': 'ENCOUNTER', 'event': 'EVENT'}.get(kind)
+    return isinstance(ident, str) and prefix is not None and bool(re.fullmatch(
+        re.escape(prefix + '.' + ROOM_NAMESPACE + '-') + r'[A-Z][A-Z0-9_]*', ident))
 
 
 def canonical(value):
@@ -67,7 +75,8 @@ def validate_record(row):
             if not isinstance(room, list) or len(room) != 3 or room[0] not in ('event', 'monster', 'elite', 'boss', 'shop', 'treasure', 'rest_site', 'ancient', 'unknown'):
                 raise ValueError('invalid projected room')
             if room[1] is not None:
-                model_id(room[1])
+                if not namespaced_room(room[0], room[1]):
+                    model_id(room[1])
             numeric(room[2])
         for choice in point[9]:
             if not isinstance(choice, list) or len(choice) != 2 or type(choice[1]) is not bool:

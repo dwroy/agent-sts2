@@ -1,0 +1,35 @@
+{
+  "checked_at": "2026-10-31T19:59:00.796883+08:00",
+  "requested_window": "2026-10-31 19:48:26–27 CST",
+  "claim": {
+    "id": "ccab7ea9c54b46b9916b01b67325093c",
+    "role": "dev",
+    "state": "running",
+    "runner_pid": 793077,
+    "runner_start": "87041120",
+    "slot": 0,
+    "queued_at": 1793445911.0682282,
+    "started_at": 1793447332.6136549,
+    "started_at_cst": "2026-10-31T19:48:52.613655+08:00"
+  },
+  "entry": "python3 ROOT/ops/board_heavy.py --root ROOT dev -- bash OWN/data/issue86-delivery/check-a1-assembled.sh",
+  "entry_script_sha256": "099d837bf50a33bdaccdd8ded7f579eb377a17905ef1784271b05df6c3f0101e",
+  "board_heavy_sha256": "d504d3b96e84a066a8e20ba0646569f2bcd8c23de129cce47c017e43e2f61d68",
+  "root_lock_inode": 5925863,
+  "historical_kernel_snapshot_available": false,
+  "conclusion": "No positive evidence that this session held ROOT full lock during requested window. Own final dev admission began 19:48:52.613655. Entry main/dev does not enter source_lock. Current descriptors are not historical proof. Historical holder cannot be identified from these records.",
+  "runner_now": {
+    "pid": 793077,
+    "start": "87041120",
+    "cwd": "/home/dw/Projects/agent-sts2/.worktrees/issue-86-knowledge-data-sqlite-unification/agent",
+    "argv": "bash agent/tools/test-sandbox.sh ",
+    "fds": {
+      "0": "/dev/null",
+      "1": "/home/dw/Projects/agent-sts2/.worktrees/issue-86-knowledge-data-sqlite-unification/data/issue86-delivery/assembled-sandbox.log",
+      "2": "/home/dw/Projects/agent-sts2/.worktrees/issue-86-knowledge-data-sqlite-unification/data/issue86-delivery/assembled-sandbox.log",
+      "5": "/home/dw/.local/state/agent-board/leases/ccab7ea9c54b46b9916b01b67325093c",
+      "7": "/home/dw/.local/state/agent-board/slots/0",
+      "255": "/home/dw/Projects/agent-sts2/.worktrees/issue-86-knowledge-data-sqlite-unification/agent/tools/test-sandbox.sh"
+    }
+  }
+}

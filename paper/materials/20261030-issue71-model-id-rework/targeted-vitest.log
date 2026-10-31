@@ -1,0 +1,32 @@
+
+ RUN  v4.1.11 /home/dw/Projects/agent-sts2/.worktrees/issue-71-a10-continuous-learning/agent
+
+............................ ❯ tests/external-stock.test.ts (1 test | 1 failed) 20013ms
+   × replenishes anonymous stock through original dispatch, native reading and content callbacks 20012ms
+(node:2999553) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+ ✓ tests/external-strategy-evidence.test.ts (43 tests) 338ms
+   ✓ registers a precise #24 aggregate then retrieves it in the actual prompt and knowledge tool  312ms
+ ✓ tests/strategy-backfill.test.ts (1 test) 467ms
+   ✓ admits frozen backfill only after normal work and consumes actual native starts once  465ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/external-stock.test.ts > replenishes anonymous stock through original dispatch, native reading and content callbacks
+Error: spawnSync nice ETIMEDOUT
+ ❯ tests/external-stock.test.ts:5:10
+      3|
+      4| it("replenishes anonymous stock through original dispatch, native read…
+      5|   expect(execFileSync("nice", ["-n", "19", "python3", "-B", "../ops/te…
+       |          ^
+      6|     encoding: "utf8", timeout: 20_000,
+      7|   })).toBe("");
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed | 2 passed (3)
+      Tests  1 failed | 44 passed (45)
+   Start at  21:34:58
+   Duration  23.71s (transform 1.87s, setup 892ms, import 1.46s, tests 20.82s, environment 0ms)
+

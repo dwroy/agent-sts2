@@ -241,6 +241,162 @@ class LearningRuntimeTest(unittest.TestCase):
         self.assertIn("operational_publication", self.batch)
         self.assertFalse(self.batch["operational_publication"]["source_delivery"])
 
+    def advance(self, name=".agents/board.yaml", content="parallel engineering\n"):
+        path = self.root / name
+        path.parent.mkdir(parents=True, exist_ok=True)
+        path.write_text(content)
+        self.git("add", name)
+        self.git("commit", "-qm", "Independent fixed engineering fixture")
+        return self.git("rev-parse", "HEAD")
+
+    def test_unrelated_committed_changes_revalidate_without_rewriting_original_candidate(self):
+        self.write()
+        original = self.path.read_bytes()
+        current = self.advance()
+        self.assertTrue(self.complete())
+        self.assertEqual(self.batch["state"], "done", self.batch.get("operational_attempts"))
+        receipt = self.batch["operational_publication"]["source_revalidation"]
+        self.assertEqual((receipt["original_base"], receipt["new_base"]), (self.base, current))
+        self.assertEqual(receipt["changed_paths"], [".agents/board.yaml"])
+        self.assertEqual(receipt["intersection"], [])
+        self.assertTrue(receipt["fixed_inputs"])
+        self.assertEqual(self.path.read_bytes(), original)
+        self.assertEqual(self.body["base"], self.base)
+        self.assertEqual(self.report["base"], self.base)
+        store = Store(self.directory, readonly=True)
+        try:
+            self.assertEqual(store.completion(self.ident), self.batch["operational_publication"])
+        finally:
+            store.close()
+
+    def test_registered_knowledge_input_intersection_names_the_leaf_and_preserves_failure(self):
+        name = "knowledge/common/fixed-input.json"
+        self.advance(name, '{}\n')
+        self.base = self.git("rev-parse", "HEAD")
+        self.body["base"] = self.report["base"] = self.base
+        path = self.root / name
+        self.body["records"][0]["evidence"].append({"path": str(path), "sha256": sha(path.read_bytes())})
+        self.advance(name, '{"changed":true}\n')
+        self.assertTrue(self.complete())
+        self.assertEqual(self.batch["state"], "awaiting_review")
+        self.assertIn("intersecting leaves: " + name, self.batch["operational_attempts"][-1]["reason"])
+        self.assertNotIn("operational_publication", self.batch)
+        self.assertEqual(json.loads(self.path.read_bytes())["base"], self.base)
+
+    def test_unguarded_main_progress_still_records_the_new_validation_base(self):
+        current = self.advance("docs/parallel.md", "unrelated documentation\n")
+        self.complete()
+        self.assertEqual(self.batch["state"], "done", self.batch.get("operational_attempts"))
+        proof = self.batch["operational_publication"]["source_revalidation"]
+        self.assertEqual(proof["changed_paths"], [])
+        self.assertEqual((proof["original_base"], proof["new_base"]), (self.base, current))
+
+    def test_missing_fixed_input_registration_is_unknown_overlap(self):
+        self.body["records"][0]["evidence"] = []
+        self.advance()
+        self.assertTrue(self.complete())
+        self.assertEqual(self.batch["state"], "awaiting_review")
+        self.assertIn("overlap unknown: missing fixed input", self.batch["operational_attempts"][-1]["reason"])
+
+    def test_original_schema_and_denominator_validation_still_runs_on_new_base(self):
+        self.advance()
+        self.report["ledger"]["check"] = 1
+        self.assertTrue(self.complete())
+        self.assertEqual(self.batch["state"], "awaiting_review")
+        self.assertIn("postmortem/ledger validation", self.batch["operational_attempts"][-1]["reason"])
+        store = Store(self.directory, readonly=True)
+        try:
+            self.assertIsNone(store.completion(self.ident))
+        finally:
+            store.close()
+
+    def test_new_base_completion_is_idempotent_and_retains_prior_failure_history(self):
+        path = self.root / "agent/src/parallel.ts"
+        path.write_text("export const fixed = true;\n")
+        self.complete()
+        failed = copy.deepcopy(self.batch["operational_attempts"])
+        self.git("add", "agent/src/parallel.ts")
+        self.git("commit", "-qm", "Commit the unrelated fixture")
+        self.complete()
+        self.assertEqual(self.batch["state"], "done", self.batch.get("operational_attempts"))
+        receipt = copy.deepcopy(self.batch["operational_publication"])
+        self.advance()
+        self.batch.pop("operational_publication")
+        self.complete()
+        self.assertEqual(self.batch["operational_publication"], receipt)
+        self.assertEqual(self.batch["operational_attempts"], failed)
+        store = Store(self.directory, readonly=True)
+        try:
+            self.assertEqual(store.db.execute("SELECT count(*) FROM completions").fetchone()[0], 1)
+            self.assertEqual([v["state"] for v in store.submission_history(self.ident)], ["received", "pending", "published"])
+        finally:
+            store.close()
+
+    def test_two_batches_have_independent_revalidation_inputs_and_receipts(self):
+        self.advance()
+        self.write()
+        second_id = "20261025-000001"
+        second_body = copy.deepcopy(self.body)
+        second_body["id"] = second_id
+        second_body["records"][0]["id"] = second_id + ":report"
+        second_path = self.scratch / "second-candidate.json"
+        second_report_path = self.scratch / "second-report.md"
+        second_report_path.write_bytes(self.report_file.read_bytes())
+        second_body["report"] = {"path": str(second_report_path), "sha256": sha(second_report_path.read_bytes())}
+        second_path.write_text(packed(second_body))
+        second_report = {**copy.deepcopy(self.report), "report": str(second_report_path), "operational_candidate": str(second_path)}
+        second_batch = copy.deepcopy(self.batch)
+        self.complete()
+        self.assertTrue(runtime.complete(second_id, second_batch, second_report, 0, self.root,
+                                         lambda k,t: self.events.append((k,t)), self.notices.append))
+        self.assertEqual((self.batch["state"], second_batch["state"]), ("done", "done"))
+        first = self.batch["operational_publication"]["source_revalidation"]
+        second = second_batch["operational_publication"]["source_revalidation"]
+        self.assertEqual(first["new_base"], second["new_base"])
+        self.assertNotEqual(first["write_paths"], second["write_paths"])
+        self.assertNotEqual(first["fixed_inputs"], second["fixed_inputs"])
+        store = Store(self.directory, readonly=True)
+        try:
+            self.assertEqual(store.db.execute("SELECT count(*) FROM completions").fetchone()[0], 2)
+            self.assertEqual(store.completion(self.ident)["source_revalidation"], first)
+            self.assertEqual(store.completion(second_id)["source_revalidation"], second)
+        finally:
+            store.close()
+
+    def test_explicit_method_input_registration_is_required_and_hash_checked(self):
+        self.advance()
+        payload = self.body["records"][0]["payload"]
+        payload["method_sha256"] = "a" * 64
+        self.complete()
+        self.assertIn("opaque method/knowledge SHA", self.batch["operational_attempts"][-1]["reason"])
+        payload.pop("method_sha256")
+        payload["method_inputs"] = {str(self.report_file): "0" * 64}
+        self.complete()
+        self.assertIn("evidence hash mismatch", self.batch["operational_attempts"][-1]["reason"])
+        payload["method_inputs"] = {str(self.report_file): sha(self.report_file.read_bytes())}
+        self.complete()
+        self.assertEqual(self.batch["state"], "done", self.batch.get("operational_attempts"))
+
+    def test_relative_registered_evidence_uses_original_root(self):
+        self.body["records"][0]["evidence"][0]["path"] = "logs/runs.jsonl"
+        self.advance()
+        self.complete()
+        self.assertEqual(self.batch["state"], "done", self.batch.get("operational_attempts"))
+        refs = self.batch["operational_publication"]["source_revalidation"]["fixed_inputs"]
+        self.assertIn("logs/runs.jsonl", [r["path"] for r in refs])
+
+    def test_renamed_registered_leaf_intersects_its_old_name(self):
+        name = "knowledge/common/fixed-input.json"
+        self.advance(name, '{}\n')
+        self.base = self.git("rev-parse", "HEAD")
+        self.body["base"] = self.report["base"] = self.base
+        path = self.root / name
+        self.body["records"][0]["evidence"].append({"path": str(path), "sha256": sha(path.read_bytes())})
+        self.git("mv", name, "knowledge/common/renamed-input.json")
+        self.git("commit", "-qm", "Rename the fixed fixture")
+        self.complete()
+        self.assertIn("intersecting leaves: " + name, self.batch["operational_attempts"][-1]["reason"])
+
     def test_data_versions_rebind_rollback_backup_and_foreign_paths(self):
         store = Store(self.directory)
         try:

@@ -1,4 +1,4 @@
-import { readFileSync, statSync } from "node:fs";
+import { readFileSync, statSync, rethrowStatsResourceError } from "../knowledge/resource-fs.js";
 import { createHash } from "node:crypto";
 import { knowledgeFile, KNOWLEDGE_DIR } from "../knowledge/files.js";
 import type { CoreTemplate, OpportunityModel } from "./types.js";
@@ -26,5 +26,5 @@ export function loadConstructionData(character: string, dir = KNOWLEDGE_DIR): { 
       || !["reward", "shop"].includes(r.kind) || typeof r.run !== "string" || typeof r.ts !== "string"
       || !Array.isArray(r.offers) || r.offers.some((o) => !o.id || typeof o.upgraded !== "boolean" || !Number.isFinite(o.price) || o.price < 0))) return null;
     return { templates, model, signature: createHash("sha256").update(JSON.stringify({ templates, digest: model.digest })).digest("hex") };
-  } catch { return null; }
+  } catch (statsReadError) { rethrowStatsResourceError(statsReadError); return null; }
 }

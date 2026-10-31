@@ -2,9 +2,9 @@
 import { createHash } from "node:crypto";
 import { readFileSync, writeFileSync } from "node:fs";
 import { resolve } from "node:path";
-import { classificationDigest } from "../src/knowledge/runtime/classification.js";
+import { canonical, classificationDigest } from "../src/knowledge/runtime/classification.js";
 import { validateDocuments, validateUpdate } from "../src/knowledge/runtime/validation.js";
-import { gradingDigest, type StrategyGrading } from "../src/knowledge/strategy-grading.js";
+import { gradingDigest, strategyGrading, type StrategyGrading } from "../src/knowledge/strategy-grading.js";
 import type { Candidate } from "../src/knowledge/runtime/store.js";
 
 export const ISSUE85_BASE = "K1-0725587f50e671013f48f93e6c3e6b7f27d3d05638c40f33b460c9aeda7c7c46";
@@ -85,10 +85,73 @@ export function gradeCandidate(files: Record<string, string>, checkpointText: st
   validateDocuments(after); validateUpdate(files, after);
   return { schema: "knowledge-candidate-v1", id: "issue85-grading-v1", base: ISSUE85_BASE, character: "silent", source: authority.url, files: changed };
 }
+
+/** A separately authorized content revision never inherits the old checkpoint's judgment. */
+export function regradeFrozen(inputText: string, assessmentsText: string, authority: Row): Row {
+  const input = JSON.parse(inputText), assessments = JSON.parse(assessmentsText);
+  const allowedUrl = "https://github.com/dwroy/agent-sts2/issues/85#issuecomment-6539128264";
+  const forbidden = ["confidence", "grading", "grading_origin", "grading_population", "grading_limitations", "evidence_type", "formal_publication", "prior_strategy", "prior_review_display"];
+  if (authority.schema !== "strategy-regrading-authority-v1" || authority.url !== allowedUrl || authority.author !== "dwroy"
+    || typeof authority.body !== "string" || !authority.body.startsWith("[Claude] #85 重判两条合并对象")
+    || authority.body_sha256 !== sha(authority.body) || authority.input?.sha256 !== sha(inputText)
+    || authority.assessments_sha256 !== sha(assessmentsText)
+    || input.schema !== "issue79-regrading-input-v1" || input.fixed_base !== authority.input.base
+    || input.source_document_sha256 !== authority.input.document_sha256 || input.original_batch !== authority.input.original_batch
+    || assessments.schema !== "strategy-reassessments-v1" || !Array.isArray(input.entries) || !Array.isArray(assessments.entries)
+    || !Array.isArray(authority.entries) || input.entries.length !== authority.entries.length || input.entries.length !== assessments.entries.length)
+    throw Error("unapproved or mismatched regrading input");
+  const bindings = new Map<string, Row>(authority.entries.map((a: Row) => [a.id, a]));
+  const judgments = new Map<string, Row>(assessments.entries.map((a: Row) => [a.id, a]));
+  if (!input.entries.length || bindings.size !== input.entries.length || judgments.size !== input.entries.length
+    || new Set(input.entries.map((e: Row) => e.id)).size !== input.entries.length) throw Error("incomplete regrading identities");
+  const revisions: Row[] = [];
+  const entries = input.entries.map((original: Row) => {
+    const binding = bindings.get(original.id), a = judgments.get(original.id), sourceSha = classificationDigest(original);
+    if (!binding || !a || forbidden.some(k => Object.hasOwn(original, k)) || sourceSha !== binding.source_sha256
+      || a.source_sha256 !== sourceSha || classificationDigest(a) !== binding.assessment_sha256) throw Error("unbound regrading object or assessment");
+    const p = a.claim_population;
+    let confidence: number | null;
+    if (a.grade === "B−") confidence = 0;
+    else if (a.grade === "B+" && a.evidence_type === "机制事实" && a.original_verified === true) confidence = null;
+    else {
+      if (a.consistency !== 1 || !p || !Number.isInteger(p.n) || p.n <= 0) throw Error("unverified scoring population");
+      if (a.grade === "B+") {
+        if (p.n < (p.source === "own" ? 10 : 50)) throw Error("descriptive population below threshold");
+        confidence = Number((.35 * p.n / (p.n + 50)).toFixed(6));
+      } else if (a.grade === "A" && Array.isArray(p.arms) && p.arms.length >= 2 && p.arms.every((v: Row) => Number.isInteger(v.n) && v.n >= 200)
+        && p.n === Math.min(...p.arms.map((v: Row) => v.n))) confidence = Number((.49 * p.n / (p.n + 200)).toFixed(6));
+      else throw Error("unsupported regrading judgment");
+    }
+    const grading: StrategyGrading = { schema: "strategy-grading-v1", grade: a.grade, category: a.category,
+      evidence_type: a.evidence_type, summary: a.summary, single_observation_window: a.single_observation_window,
+      basis: { checkpoint_sha256: sha(assessmentsText), original_entry_sha256: sourceSha, assessment_sha256: classificationDigest(a) } };
+    const e: Row = { ...original, confidence, evidence_type: a.evidence_type, grading, grading_population: p ?? null,
+      grading_limitations: a.limitations, grading_origin: { knowledge_version: input.fixed_base, path,
+        document_sha256: input.source_document_sha256, id: original.id, source_content_sha256: sourceSha, source_input_sha256: sha(inputText) },
+      formal_publication: { schema: "strategy-publication-v1", status: a.grade === "B−" ? "reference_only" : "published",
+        authorization: authority.url, authorization_sha256: authority.body_sha256, grading_sha256: gradingDigest(grading) } };
+    if (!strategyGrading(e) || !Array.isArray(a.limitations) || !a.limitations.length) throw Error("invalid new grading");
+    if (Object.keys(original).some(k => canonical(original[k]) !== canonical(e[k]))) throw Error("non-grading content changed");
+    const finalSha = classificationDigest(e);
+    revisions.push({ id: e.id, version: e.version, source_sha256: sourceSha, assessment_sha256: classificationDigest(a),
+      final_sha256: finalSha, runtime_revision: sha(path + "\n" + canonical(e)), grade: a.grade, confidence,
+      formal_status: e.formal_publication.status, production_published: false });
+    return e;
+  });
+  const doc = (values: Row[]) => ({ [path]: JSON.stringify({ schema: "brain-strategies-v1", character: "silent", entries: values }) });
+  validateDocuments(doc(entries)); validateUpdate(doc(input.entries), doc(entries));
+  return { schema: "strategy-regrading-receipt-v1", original_batch: input.original_batch, base: input.fixed_base,
+    source_input_sha256: sha(inputText), assessments_sha256: sha(assessmentsText), authority_sha256: classificationDigest(authority),
+    authorization: authority.url, status: "graded-awaiting-original-79-admission", production_published: false,
+    classifications_unchanged: true, source_classifications_sha256: classificationDigest(input.classifications), entries, revisions };
+}
 if (process.argv[1] && resolve(process.argv[1]) === resolve(new URL(import.meta.url).pathname)) {
-  const [base, checkpoint, authority, destination] = process.argv.slice(2);
-  if (!base || !checkpoint || !authority || !destination) throw Error("expected base-files checkpoint authority destination");
-  const candidate = gradeCandidate(JSON.parse(readFileSync(base, "utf8")), readFileSync(checkpoint, "utf8"), JSON.parse(readFileSync(authority, "utf8")));
-  writeFileSync(destination, JSON.stringify(candidate, null, 2) + "\n", { flag: "wx", mode: 0o600 });
-  console.log(JSON.stringify({ id: candidate.id, documents: Object.keys(candidate.files), entries: 173, production_write: false }));
+  const args = process.argv.slice(2), regrading = args[0] === "regrade-frozen";
+  const [base, checkpoint, authority, destination] = regrading ? args.slice(1) : args;
+  if (!base || !checkpoint || !authority || !destination || args.length !== (regrading ? 5 : 4)) throw Error("expected regrade-frozen input assessments authority destination; legacy: base-files checkpoint authority destination");
+  const result: Row = regrading ? regradeFrozen(readFileSync(base, "utf8"), readFileSync(checkpoint, "utf8"), JSON.parse(readFileSync(authority, "utf8")))
+    : gradeCandidate(JSON.parse(readFileSync(base, "utf8")), readFileSync(checkpoint, "utf8"), JSON.parse(readFileSync(authority, "utf8")));
+  writeFileSync(destination, JSON.stringify(result, null, 2) + "\n", { flag: "wx", mode: 0o600 });
+  console.log(JSON.stringify(regrading ? { schema: result.schema, entries: result.entries.length, production_write: false }
+    : { id: result.id, documents: Object.keys(result.files), entries: 173, production_write: false }));
 }

@@ -1,3 +1,4 @@
+import { knowledgeFixtureFile } from "./knowledge-fixtures.js";
 /**
  * Monster DB (knowledge/builders/build-monster-db.py -> knowledge/common/monster-db.json): data only, nothing in src/ reads
  * it yet. The parser is checked on a tiny synthetic states sample (the script's --self-test: fight
@@ -45,7 +46,7 @@ describe("monster db generator", () => {
 
 describe("committed monster-db.json", () => {
   // The common facts with the Ironclad's records (split 2026-10-04: knowledge/characters/ironclad/monster-records.json).
-  const db = mergeMonsterRecords(JSON.parse(readFileSync(join(ROOT, "..", "knowledge/common/monster-db.json"), "utf8")), JSON.parse(readFileSync(join(ROOT, "..", "knowledge/characters/ironclad/monster-records.json"), "utf8"))) as unknown as MonsterDb;
+  const db = mergeMonsterRecords(JSON.parse(readFileSync(knowledgeFixtureFile("common/monster-db.json"), "utf8")), JSON.parse(readFileSync(knowledgeFixtureFile("characters/ironclad/monster-records.json"), "utf8"))) as unknown as MonsterDb;
 
   it("has monsters, bosses and encounters with sample sizes", () => {
     expect(Object.keys(db.monsters).length).toBeGreaterThan(50);

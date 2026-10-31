@@ -497,7 +497,7 @@ def ablation_arm():
     return {"arm": cur.get("arm")}
 
 
-def refresh_knowledge(character=None) -> None:
+def refresh_knowledge(character=None, run_id=None) -> None:
     """Dispatch after-run statistics without delaying admission of the next run.
     `character`: the finished run's (its knowledge alone is rebuilt; None: every character with runs)."""
     import subprocess
@@ -526,8 +526,13 @@ def refresh_knowledge(character=None) -> None:
     # Even legacy REFRESH_WAIT callers must not block the next game (Roy 2026-10-20).
     if character:
         try:
-            with open(os.path.join(LIVE, "knowledge", "characters", character.lower(), "v6-history.json")) as source:
-                pack = json.load(source)
+            from stats_runtime import report_environment, read_selected
+            inherited = report_environment(ROOT, run_id) if run_id else {}
+            if inherited:
+                pack = read_selected(LIVE, json.loads(inherited['STS2_ASSETS_SELECTION']), 'characters/' + character.lower() + '/v6-history.json')
+            else:
+                with open(os.path.join(LIVE, "knowledge", "characters", character.lower(), "v6-history.json")) as source:
+                    pack = json.load(source)
             result["previous_history"] = {"cutoff": pack["data"]["cutoff"],
                                           "generated_at": pack["generated_at"], "sha256": pack["content_sha256"]}
         except (OSError, ValueError, KeyError, TypeError):
@@ -594,7 +599,7 @@ if __name__ == "__main__":
         sys.exit(0)
     run_char = main()
     try:
-        refresh_knowledge(run_char)
+        refresh_knowledge(run_char, sys.argv[1])
     except Exception:
         pass
     try:

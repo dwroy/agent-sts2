@@ -36,12 +36,13 @@ class FixedMethodTest(unittest.TestCase):
     def test_unrelated_live_release_keeps_outcome_identity(self):
         old = method(self.root, 'outcome', self.root)
         path = self.root / 'agent/src/brain/unrelated.ts'
-        path.parent.mkdir(parents=True)
+        path.parent.mkdir(parents=True, exist_ok=True)
         path.write_text('export const unrelated = true;\n')
         self.assertEqual(method(self.root, 'outcome', self.root), old)
         path.write_text('export const unrelated = false;\n')
         self.assertEqual(method(self.root, 'outcome', self.root), old)
-        self.assertFalse(any('agent/src/' in p for p in manifest(self.root, 'outcome', self.root)['inputs']))
+        self.assertNotIn('code:agent/src/brain/unrelated.ts', manifest(self.root, 'outcome', self.root)['inputs'])
+        self.assertIn('code:agent/src/knowledge/runtime/stats-store.ts', manifest(self.root, 'outcome', self.root)['inputs'])
 
     def test_actual_input_edit_requires_explicit_review_then_changes_method(self):
         old = method(self.root, 'outcome', self.root)
@@ -339,7 +340,7 @@ class PublicationTest(unittest.TestCase):
         self.marker = gate.begin(self.root, self.dest, 'issue84', os.getpid())
         with self.writing():
             path = self.live / 'agent/src/unrelated.ts'
-            path.parent.mkdir(parents=True)
+            path.parent.mkdir(parents=True, exist_ok=True)
             path.write_text('export const unrelated = true;\n')
         gate.release(self.root, self.dest, 'issue84', self.marker['token'], os.getpid())
         self.assertEqual(method(self.live, 'outcome', self.root), old_method)

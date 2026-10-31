@@ -1,3 +1,5 @@
+import { approvalEvidence, auditApprovedChanges, type Approval } from "./approval.js";
+export { auditApprovedChanges, type Approval } from "./approval.js";
 import { mergeApprovedDelta } from "./continuation.js";
 import { RESEARCH_SCHEMA, projectResearch } from "./build-research.js";
 /** Host-local publisher. The gameplay process never imports this writable adapter. */
@@ -23,7 +25,6 @@ export interface Candidate {
  source: string;
  files: Record<string, string>;
 }
-export type Approval = Array<{ id: string; path: string; sha256?: string; bytes?: number } & Row>;
 export interface Manifest { schema: "knowledge-release-v1"; version: string; files: Record<string, string> }
 const canonical = (value: unknown): string => {
   if (Array.isArray(value)) return `[${value.map(canonical).join(",")}]`;
@@ -31,25 +32,6 @@ const canonical = (value: unknown): string => {
   return JSON.stringify(value);
 };
 
-/** External callbacks may publish only the actual artifacts verified by the original source protocol. */
-export function auditApprovedChanges(before: Record<string, string>, changes: Record<string, string>, approved: Array<{ id: string; path: string }>): void {
-  const permitted = new Set(approved.flatMap(item => {
-    const body = JSON.parse(readFileSync(item.path, "utf8")) as Row;
-    const entries = Array.isArray(body) ? body : Array.isArray(body.entries) ? body.entries : [body];
-    return entries.filter(e => e.id === item.id).map(e => canonical(e));
-  }));
-  let count = 0;
-  for (const [path, text] of Object.entries(changes)) {
-    const next = JSON.parse(text) as Row;
-    if (!Array.isArray(next.entries)) throw new Error("reference-artifact updates require owner review");
-    const old = new Map(rows(JSON.parse(before[path] ?? '{"entries":[]}') as Row).map(e => [e.id, canonical(e)]));
-    for (const entry of rows(next)) if (old.get(entry.id) !== canonical(entry)) {
-      if (!permitted.has(canonical(entry))) throw new Error(`change is absent from frozen-source artifacts: ${entry.id}`);
-      count++;
-    }
-  }
-  if (!count) throw new Error("no new content; use original no-change completion");
-}
 function durable(path: string, text: string | Buffer): void {
   mkdirSync(dirname(path), { recursive: true, mode: 0o700 });
   writeFileSync(path, text, { mode: 0o600, flag: "wx" });
@@ -228,22 +210,13 @@ export class KnowledgeStore {
     return version;
   });
  }
- /** Approval snapshots bind both the exact reviewed bytes and each declared artifact identity. */
- private approvalEvidence(approved: Approval): Row[] {
-  if (!Array.isArray(approved) || !approved.length) throw Error("continuation requires original approved artifacts");
-  return approved.map(item => {
-   const raw = readFileSync(item.path), sha256 = digest(raw.toString("utf8"));
-   if (item.sha256 !== undefined && item.sha256 !== sha256 || item.bytes !== undefined && item.bytes !== raw.length) throw Error("continuation approval changed");
-   return { ...item, sha256, bytes: raw.length };
-  });
- }
  admitContinuation(id: string, batch: string, expected: string, approved: Approval): Row {
   return this.attempt(id, "admit-continuation", () => this.admit(id, batch, expected, approved));
  }
  private admit(id: string, batch: string, expected: string, approved: Approval): Row {
   const original = this.prepared(id), saved = this.status(id);
   if (batch !== id || saved.status !== "validated" || !original.candidate.base || original.candidate.base === expected) throw Error("continuation requires original validated conflicting batch");
-  const evidence = this.approvalEvidence(approved);
+  const evidence = approvalEvidence(approved);
   const existing = saved.continuation;
   if (existing) {
    if (existing.new_base !== expected || canonical(JSON.parse(existing.evidence).approved) !== canonical(evidence)) throw Error("continuation admission differs from preserved relation");
@@ -286,7 +259,7 @@ export class KnowledgeStore {
   const status = this.status(candidate.id), relation = status.continuation;
   if (relation) {
    if (relation.original !== candidate.id) throw Error("completion must retain original batch identity");
-   if (!approved || canonical(this.approvalEvidence(approved)) !== canonical(JSON.parse(relation.evidence).approved)) throw Error("continuation approval changed or unavailable");
+   if (!approved || canonical(approvalEvidence(approved)) !== canonical(JSON.parse(relation.evidence).approved)) throw Error("continuation approval changed or unavailable");
    const prepared = this.prepared(String(relation.successor));
    const head = this.files(String(relation.new_base));
    validateDocuments(prepared.files); validateUpdate(head, prepared.files);
@@ -355,12 +328,16 @@ export class KnowledgeStore {
   });
  }
  /** Persist before launching the brain. A restart of this run reuses its original version. */
- bind(runId: string, code: string): Row {
+ bind(runId: string, code: string, selectedVersion?: string): Row {
   if (!runId.trim() || !code.trim()) throw new Error("run/code identity required");
   const binding = this.transaction(() => {
     const old = this.db.prepare("SELECT * FROM run_bindings WHERE run_id=?").get(runId);
-    if (old) return old;
-    const version = this.current(); if (!version) throw new Error("no published knowledge");
+    if (old) {
+     if (selectedVersion !== undefined && old['version'] !== selectedVersion) throw new Error('original K1/resource bundle binding mismatch');
+     return old;
+    }
+    const version = selectedVersion ?? this.current(); if (!version) throw new Error("no published knowledge");
+    if (!/^K1-[a-f0-9]{64}$/.test(version) || !this.db.prepare('SELECT 1 FROM releases WHERE version=?').get(version)) throw new Error('selected K1 resource version unavailable');
     this.db.prepare("INSERT INTO run_bindings(run_id,version,code) VALUES(?,?,?)").run(runId, version, code);
     return this.db.prepare("SELECT * FROM run_bindings WHERE run_id=?").get(runId)!;
   });

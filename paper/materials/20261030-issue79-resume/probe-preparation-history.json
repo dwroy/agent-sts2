@@ -1,0 +1,15 @@
+[
+  {
+    "stage": "historical replay helper materialization",
+    "evidence": "replay-cold-recovery.json",
+    "runtime_source_changed": false
+  },
+  {
+    "stage": "consumer probe full-object assertion",
+    "reason": "Existing presentStrategy adds evidence_summary and limitation_notice; corrected probe checks every original stored field exactly and independently verifies only these two existing additions",
+    "preserved_script": ".artifacts/issue79/resume-20261030/probe-r1.mjs",
+    "preserved_log": ".artifacts/issue79/resume-20261030/probe-r1.log",
+    "log_sha256": "49bdfa1e627fd69e88c583bac5e3d96c4e2f82285a622748a2f83af521da0c86",
+    "runtime_source_changed": false
+  }
+]

@@ -1,0 +1,37 @@
+{
+  "schema": "issue79-resume-preflight-v1",
+  "source_preserved": "e08a2365b42c60df59899fb2feff04cb9771a909",
+  "main": "1b7c652cbd5ef2355687e1e159fccacb2a73da06",
+  "main_is_actual_root_head": true,
+  "supervisor": "https://github.com/dwroy/agent-sts2/issues/20#issuecomment-6523733863",
+  "conflict_resolution": {
+    "path": "paper/materials/decision-log.md",
+    "main_bytes_preserved": true,
+    "old_issue79_append_preserved": true
+  },
+  "guard_204303": {
+    "path": "paper/materials/20261030-2117-events-ops/204303-operational-guard-readback.json",
+    "sha256": "2aad72ab970363f1108dd7586b9e17f8588ef6ba23301b0a70e6565fe81b77f4",
+    "value": {
+      "at": "2026-10-30T21:19:51+08:00",
+      "base": "1b7c652cbd5ef2355687e1e159fccacb2a73da06",
+      "head": "1b7c652cbd5ef2355687e1e159fccacb2a73da06",
+      "guarded_dirty": [
+        " M .agents/board.yaml"
+      ],
+      "advanced_guarded_paths": [],
+      "operational_attempts": [
+        {
+          "error": "ValueError",
+          "reason": "source/knowledge changes require engineering delivery"
+        }
+      ],
+      "operational_pending": true,
+      "state_preserved": "awaiting_review"
+    },
+    "excluded_from_issue79_rework": true,
+    "route": "https://github.com/dwroy/agent-sts2/issues/20#issuecomment-6524090002; integrator board record, then original ops operational retry"
+  },
+  "old_request": "issue-79-r1 retained, not resubmitted",
+  "production_writes": false
+}

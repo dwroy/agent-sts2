@@ -1,9 +1,7 @@
 {
   "schema": "sts2-queue-checks-v1",
   "repo": "dwroy/agent-sts2",
-  "runtime_install_paths": [
-    "agent/src/core/config.ts"
-  ],
+  "runtime_install_paths": [],
   "root_only_prefixes": [
     "ops/",
     ".agents/",
@@ -58,7 +56,12 @@
     "ops.tests.test_strategy_backfill",
     "ops.tests.test_learner_registration_pipeline",
     "ops.tests.test_learner_supervisor_close",
-    "ops.tests.test_learner_tui_recovery"
+    "ops.tests.test_learner_tui_recovery",
+    "ops.tests.test_learning_runtime",
+    "ops.tests.test_fixed_producer_admission",
+    "ops.tests.test_llm_handoff",
+    "ops.tests.test_learning_concurrency",
+    "ops.tests.test_public_web_question"
   ],
   "consumer_commands": [
     {
@@ -211,7 +214,7 @@
       ]
     },
     {
-      "tree": "live",
+      "tree": "root",
       "cwd": "agent",
       "argv": [
         "node",
@@ -219,9 +222,44 @@
         "--eval",
         "/** Isolated installed brain-tier contract; no models or production writes. */\nimport assert from 'node:assert/strict';\nimport {loadConfig,CODEX_SERVICE_TIER,ConfigError} from './src/core/config.ts';\nimport {codexConfig,sessionArgs} from './src/brain/engines/codex.ts';\nconst normal=loadConfig({});\nfor (const tier of [undefined,'default','fast','priority']) {\n const cfg=loadConfig(tier ? {BRAIN_CODEX_SERVICE_TIER:tier} : {});\n const expected=tier ?? 'default';\n assert.equal(cfg.brain.codex.serviceTier,expected);\n assert.equal(CODEX_SERVICE_TIER,'default');\n assert.deepEqual(cfg.brain.engines,normal.brain.engines);\n assert.deepEqual(cfg.jev,normal.jev);\n const opts={systemFile:'/fixture/system',catalogFile:'/fixture/catalog',stateDir:'/fixture/state',effort:'xhigh',summary:'auto',serviceTier:expected};\n assert.deepEqual(codexConfig(opts).filter(s=>s.startsWith('service_tier=')),[`service_tier=\"${expected}\"`]);\n assert.ok(sessionArgs(opts).includes(`service_tier=\"${expected}\"`));\n}\nfor(const tier of ['auto','flex','ultrafast','FAST','none','not-a-tier']) assert.throws(()=>loadConfig({BRAIN_CODEX_SERVICE_TIER:tier}),ConfigError);\nconsole.log(JSON.stringify({brainTiers:['default','fast','priority'],commonDefault:true,invalidFailClosed:true,engineEquivalent:true,productionWrites:0,modelCalls:0}));\n"
       ]
+    },
+    {
+      "tree": "live",
+      "cwd": "agent",
+      "argv": [
+        "node",
+        "node_modules/tsx/dist/cli.mjs",
+        "--eval",
+        "import assert from 'node:assert/strict';\nimport {createHash} from 'node:crypto';\nimport {mkdtempSync,writeFileSync,readFileSync,rmSync} from 'node:fs';\nimport {tmpdir} from 'node:os';import {join} from 'node:path';\nimport {approvalEvidence,auditApprovedChanges} from './src/knowledge/runtime/approval.ts';\nimport {KnowledgeStore} from './src/knowledge/runtime/store.ts';\nimport {KnowledgeReader} from './src/knowledge/runtime/reader.ts';\nimport {classificationDigest} from './src/knowledge/runtime/classification.ts';\nconst dir=mkdtempSync(join(tmpdir(),'installed-approval-'));\nlet store;\ntry {\nconst entry={id:'approval-format-fixture',version:'fixture',trigger:{question_types:['card_reward'],acts:[1]},strategy:'固定格式夹具',source:'own',evidence:[{run:'SILENT000001',floor:4}],confidence:.25};\nconst sp='characters/silent/strategy-entries.json',cp='characters/silent/classification.json';\nconst cls={id:'classification-fixture',target:{path:sp,type:'strategy',id:entry.id,sha256:classificationDigest(entry)},topics:['build_route'],entities:[],aliases:[],evidence:['SILENT000001'],rationale:'固定格式夹具'};\nconst archive=join(dir,'archive.md'),artifact=join(dir,'approved.json');writeFileSync(archive,'# 固定历史格式夹具\\n');writeFileSync(artifact,JSON.stringify({entries:[entry]}));\nconst approved=[{path:archive,id:'archive'},{path:artifact,id:entry.id}].map(x=>({...x,bytes:readFileSync(x.path).length,sha256:createHash('sha256').update(readFileSync(x.path)).digest('hex')}));\nconst files={[sp]:JSON.stringify({schema:'brain-strategies-v1',character:'silent',entries:[entry]}),[cp]:JSON.stringify({schema:'knowledge-classification-v1',character:'silent',entries:[cls]})};\nassert.deepEqual(approvalEvidence(approved),approved);auditApprovedChanges({},files,approved);\nassert.throws(()=>auditApprovedChanges({},files,[approved[0]]),/absent from frozen-source/);\nassert.throws(()=>auditApprovedChanges({},files,[{path:archive,id:'archive'},approved[1]]),/missing archive checksum/);\nstore=new KnowledgeStore(join(dir,'runtime'));\nconst candidate={schema:'knowledge-candidate-v1',id:'original-format-id',base:null,character:'silent',source:'fixture',files};\nassert.throws(()=>store.complete(candidate,'a'.repeat(40),[approved[0]]),/absent from frozen-source/);\nconst receipt=store.complete(candidate,'a'.repeat(40),approved);assert.deepEqual(store.complete(candidate,'b'.repeat(40),approved),receipt);assert.equal(store.status(candidate.id).failures.length,1);\nconst reader=new KnowledgeReader(store.root,receipt.version);try{const result=JSON.stringify(reader.query({type:'strategy',character:'silent',topic:'build_route',limit:10}));assert.ok(result.includes(entry.id)&&result.includes(cls.id));}finally{reader.close();}\nwriteFileSync(archive,'# changed\\n');assert.throws(()=>auditApprovedChanges({},files,approved),/approval changed/);\nconsole.log(JSON.stringify({installedApproval:true,installedStore:true,releaseBoundReader:true,originalIdRetry:true,archivesEvidenceOnly:true,immutableChecksum:true,productionWrites:0,modelCalls:0}));\n}finally{store?.close();rmSync(dir,{recursive:true,force:true});}\n"
+      ]
+    },
+    {
+      "tree": "root",
+      "cwd": "agent",
+      "argv": [
+        "node",
+        "node_modules/vitest/vitest.mjs",
+        "run",
+        "tests/learning-concurrency.test.ts",
+        "tests/grade-strategies-frozen.test.ts",
+        "--maxWorkers=1"
+      ]
+    },
+    {
+      "tree": "root",
+      "cwd": "agent",
+      "argv": [
+        "node",
+        "node_modules/vitest/vitest.mjs",
+        "run",
+        "tests/learner-public-web.test.ts",
+        "tests/learner-public-web-launcher.test.ts",
+        "tests/external-stock.test.ts",
+        "--maxWorkers=1"
+      ]
     }
   ],
-  "consumer_scope": "Issue81 brain fast 68fd783d normalized on published main1b7c652c; issue77 supervisor-close already adopted. ROOT config plus producer declaration; LIVE config only. Preserve consumers0-13 and all host modules exactly; add isolated installed LIVE tier contract. Original six gates, single full worker, fixtures, historical skips and workspace admission unchanged. Two producer config input SHA/opaque-site updates change method identities; ops must use new terminal-bound admission/CAS in original publication transaction. No production configuration, models, account/home, learner/ops tier changes; natural game boundary activation only.",
+  "consumer_scope": "Approved #56 c0075dfa (56/6538878220) + #85 offline regrade 8985dcafa (85/6539507824; Claude explicitly approved), normalized as one ROOT-only batch on adopted main e959bea7. Exact source deltas with two fixture conflict reconciliations retaining adopted queue/heavy isolation, production board unchanged. LIVE runtime delta empty. Preserve prior consumers0-15 and host modules, add learning concurrency host and fixed ROOT concurrency/regrade consumer16. Source tests are not this candidate full. Original six gates, unique full, strict LIVE byte gate, publication and all scientific parents retained. Actual learning configuration and current-method admission/CAS remain original ops natural-boundary work; no interruption, no claimed production knowledge delivery or outcome. New explicit Claude approval 69/6540062084 and 71/6540061806 adds exact ea6d7cd3/d0579bd5 deltas to this same batch on e959bea7. Keep #56 shared learner dispatch/concurrency, #77 successor; 71 fixture child/outer60s approved source wins over adopted25s. ROOT public-web question host+consumer17 covers frozen question and namespaced-room stock; no LIVE runtime delta, no authority/capacity/data publication. All four use one candidate full.",
   "allowed_skips": [
     "third_party/jev-sts2 checked out, it is 002e873 untouched",
     "third_party/jev-sts2 the files docs/upstream-files.tsv calls identical are the submodule's, byte for byte"

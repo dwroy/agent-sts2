@@ -13,7 +13,7 @@
  * falling back to fight kind x act; `confidence` = n / (n + k).
  */
 
-import { readFileSync } from "node:fs";
+import { readFileSync, rethrowStatsResourceError } from "../knowledge/resource-fs.js";
 import { KNOWLEDGE_DIR, knowledgeFile } from "../knowledge/files.js";
 
 /** A tree node: [featureIndex, threshold, left (x < threshold), right] or a leaf value. */
@@ -74,7 +74,7 @@ export function loadFightValueModel(): FightValueModel | null {
   try {
     const path = knowledgeFile(KNOWLEDGE_DIR, "fight-value.json");
     cached = JSON.parse(readFileSync(path, "utf8")) as FightValueModel;
-  } catch {
+  } catch (statsReadError) { rethrowStatsResourceError(statsReadError);
     cached = null;
   }
   return cached;

@@ -1,0 +1,222 @@
+{
+  "schema": "issue86-a1-validation-v1",
+  "checked_at": "2026-10-31T20:15:41.356149+08:00",
+  "scope": "A1 default-off engineering only; not full batch A or production activation",
+  "base_main": "caa8a54598d82d55f1593d6650c6987007b84223",
+  "original_plan": "892d7768ab03f08735beace06d5f5395f2efb9e3",
+  "production_tsc": {
+    "exit_code": 0,
+    "log": "assembled-tsc.log"
+  },
+  "runtime_tsc": {
+    "exit_code": 0,
+    "log": "assembled-runtime-tsc.log"
+  },
+  "targeted": {
+    "files": 14,
+    "tests": 79,
+    "exit_code": 0
+  },
+  "python": {
+    "tests": 85,
+    "exit_code": 0
+  },
+  "method_manifests": {
+    "count": 15,
+    "all_verified": true
+  },
+  "native_mcp": {
+    "cases": 3,
+    "passed": true,
+    "scope": "sanitized MCP environment and legacy/S1/D1 file reader in a real child; synthetic fixtures, not production K1 adoption"
+  },
+  "official_sandbox": {
+    "exit_code": 0,
+    "main_files": 661,
+    "main_tests": 6113,
+    "paths_files": 1,
+    "paths_tests": 11,
+    "log": "assembled-sandbox.log",
+    "original_exclusions_unchanged": true,
+    "original_entry": "agent/tools/test-sandbox.sh",
+    "single_worker": true,
+    "nice": 19
+  },
+  "fixed_source": {
+    "count": 2253,
+    "drift": [],
+    "manifest": "assembled-source-before.json"
+  },
+  "A_data": {
+    "paths": 232,
+    "tracked": 232,
+    "changed": 0
+  },
+  "own_policy_release_changes": 0,
+  "historical_complete_failures": [
+    {
+      "files_passed": 654,
+      "files": 658,
+      "tests_passed": 6085,
+      "tests": 6089,
+      "exit_code": 1
+    },
+    {
+      "files_passed": 657,
+      "files": 658,
+      "tests_passed": 6088,
+      "tests": 6089,
+      "exit_code": 1
+    },
+    {
+      "files_passed": 657,
+      "files": 658,
+      "tests_passed": 6088,
+      "tests": 6089,
+      "exit_code": 1
+    }
+  ],
+  "historical_owned_terminations": [
+    {
+      "pid": 3629729,
+      "start": "85816994",
+      "exit_code": 143,
+      "reason": "repair global legacy fixture isolation"
+    },
+    {
+      "pid": 641390,
+      "start": "86906562",
+      "exit_code": 143,
+      "reason": "fix actual declared JSON missing-resource/shadow audit defect"
+    }
+  ],
+  "not_performed": [
+    "production statistics initialization/migration/activation",
+    "232-path retirement",
+    "K/strict/source-lock policy change",
+    "full decision CPU acceptance",
+    "five natural shadow games",
+    "original integrator actual ROOT/LIVE combined full1"
+  ],
+  "resource_handoff": "https://github.com/dwroy/agent-sts2/issues/86#issuecomment-6543074534; no further heavy/full before77 combination finishes",
+  "evidence_directory": "batch-a1-evidence",
+  "evidence_files": {
+    "assembled-completion.json": {
+      "bytes": 220,
+      "sha256": "bba37afc549e5735533866607b178e06fa1786e6bdbd57cdd6c6771bf09ca51f"
+    },
+    "assembled-host.log": {
+      "bytes": 10662,
+      "sha256": "80d5f263451e8bf7d64876aea3baf13ac81d6a20bcde60ef5592866840dc21f8"
+    },
+    "assembled-mcp.err": {
+      "bytes": 279,
+      "sha256": "0d05a26f21134a48313beb236c4c23f1b1d19b247112da81904e5842c5403a0a"
+    },
+    "assembled-mcp.json": {
+      "bytes": 1956,
+      "sha256": "ae0e6c7490ec14ce4dbe74848256e6609561246f119e2240f657bcf019941a4a"
+    },
+    "assembled-methods.json": {
+      "bytes": 480855,
+      "sha256": "560fb87ddae42e7859eb699c08b1cf7c3f29ba5c2ea22179e15e0e0f814e3252"
+    },
+    "assembled-resource-admission.json": {
+      "bytes": 280,
+      "sha256": "06deb272504d2e05b8f239f048ed525fd105bebd1b87a592a48e98c2bed1e673"
+    },
+    "assembled-runtime-tsc.log": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "assembled-sandbox.log": {
+      "bytes": 121663,
+      "sha256": "fcc125f86ededc70258d00a0fedfbed980e66f0ba168aeff78b1dea08dad5f79"
+    },
+    "assembled-source-before.json": {
+      "bytes": 344458,
+      "sha256": "40f8d0887f12c4d4c67b4f3cd70315fce57d190cc871fe54b4a4946f0e616635"
+    },
+    "assembled-targeted.log": {
+      "bytes": 2791,
+      "sha256": "9b9af7beddeb9777f9b04a22a00f5098b164b6f97f945a7f3d189f72755660bf"
+    },
+    "assembled-tsc.log": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "external-stock-timeout-repaired-pass.log": {
+      "bytes": 573,
+      "sha256": "7da85d4d94e0a8167b4dfe9bd4b0b25a780385b8f523601085b977dcd152d8fc"
+    },
+    "first-complete-sandbox-rc1.log": {
+      "bytes": 137804,
+      "sha256": "b31051dfc8dd8ffc42588a4f51e56959b248fbbbbfd89407619fc1a4c011ab4e"
+    },
+    "gitleaks-pre-final.log": {
+      "bytes": 79,
+      "sha256": "fb7d49d12d2f0fd06244212d0e306b5fe7dd39da6ef8eb1aceccabdb782138e0"
+    },
+    "historical-stream-six-pass.log": {
+      "bytes": 1684,
+      "sha256": "784b1c3cb605f9e68ba7fd7732c3e2fdeb1808accf88292be1e3fd275af74853"
+    },
+    "host-85-pass.log": {
+      "bytes": 10663,
+      "sha256": "e79e963720194e9037cea68300e617502b2e7ca65472fcd94e8f171c8da69b19"
+    },
+    "json-failure-repair-targeted.log": {
+      "bytes": 787,
+      "sha256": "11d76b08f6aac9575ed4c7b2cb37b607ff51c4071de3b03822325d0f4810a263"
+    },
+    "legacy-pipeline-six-repaired-pass.log": {
+      "bytes": 443,
+      "sha256": "ca09fe2e867690f45f4b80795e891103ac651da2671293a88b27b49dc74e9216"
+    },
+    "mcp-three-modes-pass.json": {
+      "bytes": 1956,
+      "sha256": "d87728af253e7938f9880248084f802915fb86a0cc466656fdee7e61e53cb1e0"
+    },
+    "method-manifests.json": {
+      "bytes": 480368,
+      "sha256": "9d389031b8105e04e6c57f8bf3f6d46578b0c29b58dbc960ef0bf9b3dc7edd83"
+    },
+    "missing-json-probe-fixed.json": {
+      "bytes": 345,
+      "sha256": "c8517f32d00b706358373ce4d3fe0027a335494b25a5fad9c8747e956fa27837"
+    },
+    "missing-json-probe-result.json": {
+      "bytes": 346,
+      "sha256": "cf60255583b31967c0869ee04a563eaa5e3c4b9925b3ecbbbee5dfda1f0ea5bc"
+    },
+    "nine-targeted-42-pass.log": {
+      "bytes": 1818,
+      "sha256": "24d86ebbb98b2b9947df9411e7d42d166a04c3db337a228f8cf565a48effb154"
+    },
+    "own-delivery3-stop.json": {
+      "bytes": 3285,
+      "sha256": "6c140df6054aee4294ea10a789b0f4d17a4a19a9bff9a3f79843dc2053f9cb7e"
+    },
+    "root-full-lock-audit.json": {
+      "bytes": 1915,
+      "sha256": "f98a23940d0ad1dfdac7bd76852b45d02960bea8f4ba3802b5ab1d3707f2c755"
+    },
+    "runtime-tsc-pass.log": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "sandbox-a1-owned-stop.json": {
+      "bytes": 602,
+      "sha256": "e925e71c0ccb24d4f8995667b124ffc2460729314cec63339a9a61febff09d4d"
+    },
+    "second-complete-sandbox-rc1.log": {
+      "bytes": 132102,
+      "sha256": "47829e37578ec370250e9ed933a3bd751cf7ab365fb5d0129f432910cf288ce6"
+    },
+    "third-complete-sandbox-rc1.log": {
+      "bytes": 120827,
+      "sha256": "c58ef4c881b3b02c557557a4d8ad3d960946e99dd179bdeb028d7237e4a41d60"
+    }
+  },
+  "gitleaks_source_manifest_encoding": "lossless path/sha256 rows; a SHA256 beside learner-keycheck-retry.test.ts was a generic-api-key false positive in the original map encoding; original immutable source map retained privately; no rule suppression"
+}

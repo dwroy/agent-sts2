@@ -1974,7 +1974,7 @@ def main(argv=None):
                         ready.append((temporary, target))
                         shutil.copyfile(source, temporary)
                         os.chmod(temporary, 0o644)
-                    with publication():
+                    with publication(target=args.out):
                         for temporary, target in ready:
                             os.replace(temporary, target)
                 finally:

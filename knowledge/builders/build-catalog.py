@@ -149,7 +149,7 @@ def build(root):
                 path = checked(root, root / name)
                 if not path.is_file() or path.read_bytes() != raw:
                     ready.append((path, staged(path, raw)))
-            with publication():
+            with publication(target=root / 'catalog.json'):
                 # Revalidate the source cut under the original publication lock.
                 for name, raw in originals.items():
                     if checked(root, root / name).read_bytes() != raw:

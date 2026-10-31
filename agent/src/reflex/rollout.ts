@@ -42,7 +42,7 @@
  * (which takes the drinks' cost off already) is put on it as score / its HP weight.
  */
 
-import { readFileSync } from "node:fs";
+import { readFileSync, rethrowStatsResourceError } from "../knowledge/resource-fs.js";
 import type { CoreTurnTrace } from "../sim/core-window.js";
 import type { BossMarginReference } from "../sim/boss-margin.js";
 import { continuationCost, continuationUtility, type ContinuationValue } from "./continuation-value.js";
@@ -343,7 +343,7 @@ export function loadFightValueGates(): FightValueGates | null {
   try {
     const path = knowledgeFile(KNOWLEDGE_DIR, "fight-value-gates.json");
     gatesCache = JSON.parse(readFileSync(path, "utf8")) as FightValueGates;
-  } catch {
+  } catch (statsReadError) { rethrowStatsResourceError(statsReadError);
     gatesCache = null;
   }
   return gatesCache;
@@ -3560,7 +3560,7 @@ const ORDER_SCHEDULE: { horizon: number; samples: number }[] = [
 export function rolloutDecision(input: RolloutInput): RolloutResult {
   try {
     return evaluateRollout(input);
-  } catch (error) {
+  } catch (error) { rethrowStatsResourceError(error);
     if (!(error instanceof MissingStunModel) && !(error instanceof MissingReattachModel)) throw error;
     return { unavailable: error.message, lines: [], orders: [], horizon: 0, samples: 0, elapsedMs: 0,
       degraded: [error instanceof MissingStunModel ? "missing stun model" : "missing reattach model"], policyTurns: 0, policyMs: 0, policyNodes: 0 };

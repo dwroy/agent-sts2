@@ -34,7 +34,7 @@ import { checkCodex, type CodexCheck } from "../../agent/src/brain/engines/codex
 import { AUTH_ERROR, refreshCodexAuth } from "../../agent/src/brain/engines/codex-usage.js";
 import { ENGINES, EngineUnavailableError, childEnv, codexChildEnv, codexKeyCheck, learnerInteractiveArgs, withCodexKeys, type KeyCheck, engineBinary, engineCommand, engineDefaults, learnerCodexHome, mainCheckout, shellQuote, strippedEnvNames, unavailableMessage, type EngineName, type EngineRequest } from "./engines.js";
 import { SummaryTracker, findRollout, formatSummary, progressLine, rolloutStats } from "./summary.js";
-import { publicWebEvent, publicWebPermission } from "./public-web.js";
+import { publicWebEvent, publicWebPermission, publicWebQuestionInstructions, registeredPublicWebQuestion, type PublicWebQuestion } from "./public-web.js";
 import { highestAscension, runCharacters } from "./runs.js";
 import { LearnerUsageError, characterBuiltins, loadTask, parseSets, renderTask } from "./task.js";
 import { captureStartupLease, StartupEvidence } from "./startup-recovery.js";
@@ -373,7 +373,7 @@ export function checkRunCharacters(sets: Record<string, string>, character: stri
 export async function main(argv: string[], overrides: Partial<LauncherDeps> = {}): Promise<number> {
   const deps = { ...defaultDeps(), ...overrides };
   let options: LauncherOptions;
-  let prepared: { request: EngineRequest; prompt: string; values: Record<string, string>; taskName: string; timeoutMin?: number; logPath: string; scratch: string; operationalRuntime?: Record<string, unknown> };
+  let prepared: { request: EngineRequest; prompt: string; values: Record<string, string>; taskName: string; timeoutMin?: number; logPath: string; scratch: string; operationalRuntime?: Record<string, unknown>; publicWebQuestion?: PublicWebQuestion };
   try {
     options = parseArgs(argv);
     if (options.help) {
@@ -419,6 +419,7 @@ export async function main(argv: string[], overrides: Partial<LauncherDeps> = {}
     const model = options.model ?? spec.models[options.engine] ?? engineDefaults(options.engine).model;
     const effort = options.effort ?? spec.efforts[options.engine] ?? engineDefaults(options.engine).effort;
     const maxTurns = options.maxTurns ?? spec.maxTurns;
+    const publicWebQuestion = spec.publicWeb ? registeredPublicWebQuestion(deps.env) : undefined;
     const request: EngineRequest = withCodexKeys({
       engine: options.engine,
       cwd,
@@ -446,7 +447,7 @@ export async function main(argv: string[], overrides: Partial<LauncherDeps> = {}
       ? `\n\n工作树存储：历史 paper/materials、paper/raw、experiments 与 paper/data/history 的干净副本可能按需展开，当前交接和学习账本保留。缺文件不代表证据不存在；用 git ls-tree HEAD -- <路径> 核基线，再运行 python3 ${join(deps.projectRoot, "ops/worktree_storage.py")} materialize --root ${deps.projectRoot} --workspace ${cwd.split("/").at(-1)} --path <精确文件路径> 恢复，检查返回的提交及 blob。只恢复任务需要的文件，每棵树历史输入缓存最多256 MiB，空闲时由原调度器回收；修改过的材料不回收。原日志仍从 logs_dir 读取。固定源码对照记录 Git 提交、git diff --binary 和必要输入，禁止把整个仓库归档后再完整展开成 source-checkout/before-checkout；避免同时保存完整 tar 和展开副本。已有过程副本如需恢复，按 docs/learner-retention.md 的 restore-copies 流程操作，不更改任务状态、原线程或账号。`
       : "";
     const operationalReads = operationalModule.operationalReadInstructions(deps.env, character, scratch, deps.projectRoot);
-    prepared = { request, prompt: rendered.prompt + storageRules + operationalReads + runtimeInstructions + operationalInstructions, values: rendered.values, taskName: spec.name, ...(timeoutMin !== undefined ? { timeoutMin } : {}), logPath: join(deps.runsDir, `${stem}.jsonl`), scratch, operationalRuntime: operationalModule.operationalLaunchRecord(deps.env) };
+    prepared = { request, prompt: rendered.prompt + storageRules + operationalReads + runtimeInstructions + operationalInstructions + publicWebQuestionInstructions(publicWebQuestion), values: rendered.values, taskName: spec.name, ...(timeoutMin !== undefined ? { timeoutMin } : {}), logPath: join(deps.runsDir, `${stem}.jsonl`), scratch, operationalRuntime: operationalModule.operationalLaunchRecord(deps.env), publicWebQuestion };
   } catch (error) {
     if (error instanceof LearnerUsageError) {
       deps.err(`${error.message}\n${USAGE}\n`);
@@ -511,6 +512,7 @@ export async function main(argv: string[], overrides: Partial<LauncherDeps> = {}
   }
 
   mkdirSync(scratch, { recursive: true });
+  if (prepared.publicWebQuestion) writeFileSync(join(scratch, "public-web-question.json"), prepared.publicWebQuestion.content, { flag: "wx", mode: 0o600 });
   mkdirSync(deps.runsDir, { recursive: true });
   const started = deps.now();
   const log = (event: Record<string, unknown>): void => {
@@ -527,6 +529,8 @@ export async function main(argv: string[], overrides: Partial<LauncherDeps> = {}
   log({
     type: "learner_launch",
     ...(request.publicWeb ? { public_web: { schema: "public-web-research-v1", requested: "live", observed: null,
+      ...(prepared.publicWebQuestion ? { question: { id: prepared.publicWebQuestion.document.id, input_sha256: prepared.publicWebQuestion.sha256,
+        path: prepared.publicWebQuestion.path, source_intent: prepared.publicWebQuestion.document.source_intent } } : {}),
       shell_network: false, native_events: join(scratch, "public-web-events.jsonl"), sources: join(scratch, "public-web-sources.json") } } : {}),
     ...(prepared.operationalRuntime ? { operational_runtime: prepared.operationalRuntime } : {}),
     ...(deps.env.STS2_KNOWLEDGE_RUNTIME ? { knowledge_runtime: { directory: deps.env.STS2_KNOWLEDGE_RUNTIME,

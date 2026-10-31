@@ -8,7 +8,7 @@
 
 import { readCompatibleKnowledgeText } from "../catalog.js";
 import { knowledgeQueryActive, queryKnowledgeText } from "../query-sources.js";
-import { existsSync, readFileSync, statSync } from "node:fs";
+import { existsSync, readFileSync, statSync, rethrowStatsResourceError } from "../resource-fs.js";
 import { join, resolve } from "node:path";
 
 import { loadSharedExperience, SHARED_EXPERIENCE_FILE, type SharedExperienceFile } from "../shared-experience.js";
@@ -121,7 +121,7 @@ function readText(dir: string, name: string): string {
   let text: string;
   try {
     text = queryKnowledgeText(dir, name) ?? readCompatibleKnowledgeText(dir, name);
-  } catch (error) {
+  } catch (error) { rethrowStatsResourceError(error);
     throw new KnowledgeLoadError(`知识文件读取失败 ${path}: ${(error as Error).message}`);
   }
   if (text.trim().length === 0) throw new KnowledgeLoadError(`知识文件为空 ${path}`);
@@ -147,7 +147,7 @@ function readJson(dir: string, name: string): Record<string, unknown> {
   let parsed: unknown;
   try {
     parsed = JSON.parse(text);
-  } catch (error) {
+  } catch (error) { rethrowStatsResourceError(error);
     throw new KnowledgeLoadError(`知识文件不是合法 JSON ${knowledgeFile(dir, name)}: ${(error as Error).message}`);
   }
   if (!isRecord(parsed)) throw new KnowledgeLoadError(`知识文件顶层不是对象 ${join(dir, name)}`);
@@ -166,7 +166,7 @@ function parseAll(dir: string): KnowledgeData {
   let records: Record<string, unknown> | null;
   try {
     records = readMonsterRecords(dir);
-  } catch (error) {
+  } catch (error) { rethrowStatsResourceError(error);
     throw new KnowledgeLoadError(`知识文件读取失败 ${knowledgeFile(dir, MONSTER_RECORDS_FILE)}: ${(error as Error).message}`);
   }
   const db = mergeMonsterRecords(readJson(dir, KNOWLEDGE_FILES.monsterDb), records);
@@ -229,12 +229,12 @@ function stamp(dir: string): string {
       try {
         const info = statSync(knowledgeFile(dir, name));
         return `${name}:${info.mtimeMs}:${info.size}`;
-      } catch {
+      } catch (statsReadError) { rethrowStatsResourceError(statsReadError);
         if (name === "monster-db.json") {
           try {
             const info = statSync(join(dir, "catalog.json"));
             return `${name}:catalog:${info.mtimeMs}:${info.size}`;
-          } catch { /* The existing missing-file error remains authoritative. */ }
+          } catch (statsReadError) { rethrowStatsResourceError(statsReadError); /* The existing missing-file error remains authoritative. */ }
         }
         return `${name}:missing`;
       }
@@ -336,7 +336,7 @@ export function loadPostmortems(path: string = lessonsPath()): Postmortems {
   try {
     const info = statSync(path);
     fileStamp = `${info.mtimeMs}:${info.size}`;
-  } catch (error) {
+  } catch (error) { rethrowStatsResourceError(error);
     return { path, sections: null, missing: `找不到复盘文件 ${path}（${(error as NodeJS.ErrnoException).code ?? (error as Error).message}）` };
   }
   const hit = postmortemCache.get(path);
@@ -344,7 +344,7 @@ export function loadPostmortems(path: string = lessonsPath()): Postmortems {
   let value: Postmortems;
   try {
     value = parsePostmortems(readFileSync(path, "utf8"), path);
-  } catch (error) {
+  } catch (error) { rethrowStatsResourceError(error);
     value = { path, sections: null, missing: `复盘文件读取失败 ${path}（${(error as Error).message}）` };
   }
   postmortemCache.set(path, { stamp: fileStamp, value });

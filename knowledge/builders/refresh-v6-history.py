@@ -372,7 +372,7 @@ def refresh(root, ops_root, character, run_command=None):
                     os.fsync(out.fileno())
                     os.fchmod(out.fileno(), 0o644)
                 from refresh_publish import publication
-                with publication(ops_root):
+                with publication(ops_root, target=target):
                     if receipt.get('spec_source') and descriptor(spec)['sha256'] != receipt['spec_source']['sha256']:
                         raise ValueError('formal core changed while computing; retain previous packet')
                     receipt['previous'] = descriptor(target) if target.exists() else None

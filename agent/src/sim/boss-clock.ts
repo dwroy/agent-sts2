@@ -20,7 +20,7 @@
  * The deck estimate's overall scale is fitted on the logged A8 boss fights (tools/boss-clock-calibrate.ts).
  */
 
-import { readFileSync } from "node:fs";
+import { readFileSync, rethrowStatsResourceError } from "../knowledge/resource-fs.js";
 import { queryKnowledgeJson } from "../knowledge/query-sources.js";
 
 import { loadOutcomeStats, type OutcomeStats } from "../knowledge/experience.js";
@@ -201,7 +201,7 @@ export function unblockedShare(bossKey: string): UnblockedShare | null {
   if (!unblockedCache) {
     try {
       unblockedCache = JSON.parse(readFileSync(knowledgeFile(KNOWLEDGE_DIR, "boss-damage.json"), "utf8")) as Record<string, UnblockedShare>;
-    } catch {
+    } catch (statsReadError) { rethrowStatsResourceError(statsReadError);
       unblockedCache = {};
     }
   }

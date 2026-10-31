@@ -263,7 +263,8 @@ class PipelineTest(unittest.TestCase):
         live = self.root / 'live'
         helpers = self.root / 'ops'
         helpers.mkdir(parents=True, exist_ok=True)
-        for name in ('refresh_health.py', 'learning_runtime.py', 'learning_runtime_store.py', 'learning_runtime_data.py'):
+        for name in ('refresh_health.py', 'learning_runtime.py', 'learning_runtime_store.py', 'learning_runtime_data.py',
+                     'stats_runtime.py', 'stats_launch.py'):
             shutil.copyfile(HERE.parents[1] / 'ops' / name, helpers / name)
         calls = []
         def step(_root, name, argv):
@@ -316,11 +317,13 @@ class PipelineTest(unittest.TestCase):
         namespace = dict(os=os, re=re, json=json, ROOT=str(self.root), LIVE=str(self.root))
         exec(compile(ast.Module(body=[function], type_ignores=[]), '<report-entry>', 'exec'), namespace)
         (self.root/'ops').mkdir()
+        shutil.copyfile(HERE.parents[1] / 'ops/stats_runtime.py', self.root / 'ops/stats_runtime.py')
         commands = []
         def spawn(argv, **_kw):
             commands.append(argv)
             return SimpleNamespace(pid=len(commands))
-        with patch.object(subprocess, 'Popen', side_effect=spawn):
+        with patch.object(sys, 'path', [str(self.root / 'ops'), *sys.path]), \
+                patch.object(subprocess, 'Popen', side_effect=spawn):
             old = namespace['refresh_knowledge']('silent')
             self.assertEqual(old['refresh_worker'], 'legacy')
             self.assertEqual(len(commands), 2)

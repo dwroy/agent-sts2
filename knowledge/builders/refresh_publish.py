@@ -2,15 +2,52 @@
 from contextlib import contextmanager
 from datetime import datetime, timezone
 import fcntl
+import hashlib
 import json
 import os
 from pathlib import Path
 import tempfile
 import time
+import sys
+
+
+def validate_stats_projection():
+    """Reject a forged staging flag before the original pipeline starts any step."""
+    staging = os.environ.get('STS2_STATS_STAGING_ROOT')
+    if staging:
+        stage = Path(staging)
+        if (stage.resolve() != stage or stage != Path(__file__).resolve().parents[2] or stage.name != 'root'
+                or stage.parent.parent.name != 'stats-refresh' or stage.parent.parent.parent.name != 'data'):
+            raise ValueError('stats staging capability does not match executing producer root')
+        raw = (stage.parent / 'projection.json').read_bytes()
+        body = json.loads(raw)
+        if (hashlib.sha256(raw).hexdigest() != os.environ.get('STS2_STATS_STAGING_CONTRACT_SHA256')
+                or body.get('schema') != 'stats-projection-v1' or body.get('root') != str(stage)
+                or body.get('original_root') != str(stage.parents[3])):
+            raise ValueError('stats projection contract differs')
+        fd = int(os.environ['STS2_STATS_LOCK_FD'])
+        inherited, original = os.fstat(fd), (stage.parents[3] / 'ops/knowledge-refresh.lock').stat()
+        if (inherited.st_dev, inherited.st_ino) != (original.st_dev, original.st_ino):
+            raise ValueError('stats worker lock descriptor differs')
+        return True
+    return False
 
 
 @contextmanager
-def publication(ops_root=None):
+def publication(ops_root=None, target=None):
+    # A copied fixed pipeline may publish only inside its own ignored projection.
+    if validate_stats_projection():
+        yield
+        return
+    source_root = Path(__file__).resolve().parents[2]
+    runtime_root = Path(ops_root or os.environ.get('STS2_REFRESH_OPS_ROOT') or os.environ.get('CODEX_OPS_ROOT') or source_root)
+    control = Path(os.environ.get('CODEX_OPS_DIR') or runtime_root / 'ops/codex-ops') / 'stats-runtime.json'
+    if target is not None and Path(target).absolute().is_relative_to(source_root / 'knowledge') and os.path.lexists(control):
+        sys.path.insert(0, str(runtime_root / 'ops'))
+        from stats_runtime import capture
+        from stats_refresh import resource_key
+        if resource_key(str(Path(target).absolute().relative_to(source_root / 'knowledge'))) and capture(runtime_root).get('enabled'):
+            raise ValueError('A output must use the captured S1 refresh driver; preserve original source data')
     if os.environ.get('STS2_FIXED_DATA_LEASE'):
         # The admitted fixed producer is enclosed by refresh_step's durable
         # preimage journal and data lock. Never take the unrelated source lock.
@@ -34,7 +71,6 @@ def publication(ops_root=None):
         return
     control = Path(os.environ.get('CODEX_OPS_DIR') or Path(root) / 'ops/codex-ops') / 'learning-runtime.json'
     if os.environ.get('STS2_REFRESH_STEP') == 'catalog' and (control.exists() or os.environ.get('STS2_REFRESH_SELECTION_FILE')):
-        import sys
         sys.path.insert(0, str(Path(root) / 'ops'))
         from learning_runtime_data import launch_selection
         selected = launch_selection(root)
@@ -69,7 +105,7 @@ def publication(ops_root=None):
 
 
 def replace(temporary, target):
-    with publication():
+    with publication(target=target):
         os.replace(temporary, target)
 
 

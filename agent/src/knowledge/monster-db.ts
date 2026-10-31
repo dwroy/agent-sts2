@@ -9,7 +9,7 @@ import { queryKnowledgeJson, queryKnowledgeText, recordKnowledgeQuerySource } fr
  * nearest logged ascension, labelled as such.
  */
 
-import { readFileSync } from "node:fs";
+import { readFileSync, rethrowStatsResourceError } from "./resource-fs.js";
 
 import type { ObservedDb, ObservedMonster } from "./mechanics.js";
 import { bumpDataVersion } from "../core/util/data-version.js";
@@ -163,7 +163,7 @@ export function readMonsterRecords(dir: string = KNOWLEDGE_DIR): Record<string, 
   let text: string;
   try {
     text = queryKnowledgeText(dir, MONSTER_RECORDS_FILE) ?? readFileSync(knowledgeFile(dir, MONSTER_RECORDS_FILE), "utf8");
-  } catch (error) {
+  } catch (error) { rethrowStatsResourceError(error);
     if ((error as NodeJS.ErrnoException).code === "ENOENT") return null;
     throw error;
   }
@@ -191,7 +191,7 @@ function load(): MonsterDb {
   try {
     const parsed = readMonsterDbJson() as Partial<MonsterDb>;
     cached = { bosses: parsed.bosses ?? {}, encounters: parsed.encounters ?? {}, monsters: parsed.monsters ?? {}, ...(parsed.observed ? { observed: parsed.observed } : {}) };
-  } catch {
+  } catch (statsReadError) { rethrowStatsResourceError(statsReadError);
     cached = { bosses: {}, encounters: {}, monsters: {} };
   }
   return cached;

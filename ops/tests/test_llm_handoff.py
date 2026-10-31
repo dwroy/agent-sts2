@@ -14,6 +14,7 @@ sys.path.insert(0, str(ROOT / "ops"))
 from llm_handoff import Handoff, locked
 from llm_switch import cron_home, validate_profile, CodexAdapter
 from ops_assist import Assist
+from issue_session_support import Board
 
 
 class Protocol(unittest.TestCase):
@@ -158,10 +159,14 @@ class Protocol(unittest.TestCase):
         ops = self.root / "ops"
         for name in ("paths.sh", "run.sh", "publication_gate.py", "knowledge_runtime_env.py", "learning_runtime_launch.py",
                      "learning_runtime.py", "learning_runtime_data.py", "learning_runtime_store.py",
-                     "board_heavy.py", "board_queue_pin.py", "issue_session_support.py"):
+                     "board_heavy.py", "board_queue_pin.py", "issue_session_support.py", "stats_launch.py", "stats_runtime.py"):
             shutil.copy(ROOT / "ops" / name, ops / name)
         (self.root / ".agents").mkdir()
-        shutil.copy(ROOT / ".agents/board.yaml", self.root / ".agents/board.yaml")
+        # This selector fixture has no pinned queue/lease installation.
+        config = Board(ROOT).data
+        config["dispatcher"]["heavy"]["enabled"] = False
+        config["dispatcher"]["merge_queue"]["enabled"] = False
+        (self.root / ".agents/board.yaml").write_text(json.dumps(config))
         live = self.root / "live/agent"
         live.mkdir(parents=True)
         home = self.root / "brain"
@@ -176,7 +181,8 @@ class Protocol(unittest.TestCase):
             exe.chmod(0o755)
         env = {"PATH": str(bin_dir) + ":/usr/bin:/bin", "HOME": str(self.root), "STS2_LIVE": str(live.parent)}
         result = subprocess.run(["bash", str(ops / "run.sh")], env=env, capture_output=True, text=True, timeout=5)
-        self.assertEqual(result.returncode, 0, result.stderr)
+        console = '\n'.join(p.read_text() for p in (self.root / 'logs/console').glob('*.log'))
+        self.assertEqual(result.returncode, 0, result.stderr + console)
         self.assertEqual((self.root / "observed").read_text(), str(home))
         self.assertFalse((self.root / "data/learning-runtime/learning.sqlite").exists())
         (self.tx.runtime / "brain-home").write_text("relative\n")

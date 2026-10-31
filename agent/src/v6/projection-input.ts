@@ -1,5 +1,5 @@
 /** Read-only run snapshots and live choices feed W3's shared factory; no evidence is derived here. */
-import { existsSync } from "node:fs";
+import { existsSync, rethrowStatsResourceError } from "../knowledge/resource-fs.js";
 import { join } from "node:path";
 import type { DecisionEnv } from "../memory/types.js";
 import { asArray, asRecord, bool, numOrNull, str } from "../core/util/json.js";
@@ -37,7 +37,7 @@ export function v6ProjectionInputs(dir = KNOWLEDGE_DIR, now = () => new Date().t
       generated_at: history.value.generated_at, content_sha256: history.value.content_sha256,
       age_ms: Math.max(0, Date.parse(asOf) - Date.parse(history.value.data.cutoff)), policy: "last_completed_packet",
     } : { run_id: run, character, status: history.status, loaded_at: asOf, policy: "last_completed_packet" };
-    try { onSnapshot(freshness); } catch { /* Telemetry cannot invalidate a completed packet. */ }
+    try { onSnapshot(freshness); } catch (statsReadError) { rethrowStatsResourceError(statsReadError); /* Telemetry cannot invalidate a completed packet. */ }
     // The legacy loader can fall back. Only character-owned adapter inputs are admitted here.
     const construction = ["construction-templates.json", "construction-opportunities.json"].every(f => existsSync(knowledgeFile(dir, f, character)))
       ? loadConstructionData(character, dir) : null;

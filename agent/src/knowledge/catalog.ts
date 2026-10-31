@@ -1,6 +1,6 @@
 /** Read-only catalogue/query facade. Existing gameplay reads retain their exact legacy bytes. */
 import { createHash } from "node:crypto";
-import { existsSync, readFileSync, readdirSync, realpathSync } from "node:fs";
+import { existsSync, readFileSync, readdirSync, realpathSync } from "./resource-fs.js";
 import { extname, isAbsolute, join, relative, resolve, sep } from "node:path";
 import { characterKey, knowledgeCharacter, knowledgeFile, knowledgeSubdir } from "./files.js";
 import { runtimeDataFile } from "./runtime-data.js";

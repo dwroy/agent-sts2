@@ -1,3 +1,4 @@
+import { knowledgeFixtureFile } from "./knowledge-fixtures.js";
 /**
  * Fight value stub (src/reflex/fight-value.ts): offline, not called by decision code. Checks the loader
  * reproduces the Python builder's golden examples, the pure function on a tiny hand-made model, and that
@@ -70,7 +71,7 @@ describe("fight value (offline stub)", () => {
   it("reproduces the builder's golden examples from the committed model", () => {
     const model = loadFightValueModel();
     expect(model).not.toBeNull();
-    const examples = (JSON.parse(readFileSync(join(ROOT, "..", "knowledge/characters/ironclad/fight-value.json"), "utf8")) as { examples: Example[] }).examples;
+    const examples = (JSON.parse(readFileSync(knowledgeFixtureFile("characters/ironclad/fight-value.json"), "utf8")) as { examples: Example[] }).examples;
     expect(examples.length).toBeGreaterThan(0);
     for (const example of examples) {
       const v = valueOf(example.input, model)!;
@@ -94,7 +95,8 @@ describe("fight value (offline stub)", () => {
           const source = readFileSync(path, "utf8");
           // The D1 resolver registers filenames; imports or uses outside that
           // exact registry still violate the original reader restriction.
-          const content = path === join(ROOT, "src", "knowledge", "runtime-data.ts")
+          const content = [join(ROOT, "src", "knowledge", "runtime-data.ts"),
+            join(ROOT, "src", "knowledge", "runtime", "stats-schema.ts")].includes(path)
             ? source.replace(/const names = new Set\(\[[\s\S]*?\]\);/, "") : source;
           if (content.includes("fight-value")) offenders.push(path);
         }

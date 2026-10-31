@@ -1,3 +1,4 @@
+import { knowledgeFixtureFile } from "./knowledge-fixtures.js";
 /**
  * The outcome-stats layer: knowledge/builders/build-outcome-stats.py (self-test on synthetic logs: one table per ascension from A8 up,
  * A8's table what the whole file was before) and the shape of its output.
@@ -26,7 +27,7 @@ describe("outcome stats", () => {
       events: Record<string, { options: Record<string, { n: number; low_n?: boolean }> }>;
       rest: Record<string, Record<string, { n: number; low_n?: boolean }>>;
     };
-    const file = JSON.parse(readFileSync(join(ROOT, "..", "knowledge/characters/ironclad/outcome-stats.json"), "utf8")) as Table & { by_ascension?: Record<string, Table> };
+    const file = JSON.parse(readFileSync(knowledgeFixtureFile("characters/ironclad/outcome-stats.json"), "utf8")) as Table & { by_ascension?: Record<string, Table> };
     const tables = file.by_ascension ? Object.values(file.by_ascension) : [file];
     expect(tables.length).toBeGreaterThan(0);
     for (const stats of tables) expect(stats.baseline.runs).toBeGreaterThan(0);

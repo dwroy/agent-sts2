@@ -7,7 +7,7 @@
  * combat question. Facts only: nothing here decides a drink.
  */
 
-import { existsSync, readFileSync, statSync } from "node:fs";
+import { existsSync, readFileSync, statSync, rethrowStatsResourceError } from "./resource-fs.js";
 import { queryKnowledgeText } from "./query-sources.js";
 import { resolve } from "node:path";
 
@@ -140,7 +140,7 @@ export function parsePotionEquivalents(text: string, path: string, allowUnmeasur
   let parsed: unknown;
   try {
     parsed = JSON.parse(text);
-  } catch (error) {
+  } catch (error) { rethrowStatsResourceError(error);
     throw new KnowledgeLoadError(`药水换算表不是合法 JSON ${path}: ${(error as Error).message}`);
   }
   const fail = (what: string): never => {
@@ -196,7 +196,7 @@ export function loadPotionEquivalents(dir: string = DEFAULT_KNOWLEDGE_DIR): Poti
   try {
     const info = statSync(path);
     stamp = `${info.mtimeMs}:${info.size}`;
-  } catch (error) {
+  } catch (error) { rethrowStatsResourceError(error);
     throw new KnowledgeLoadError(`药水换算表读取失败 ${path}: ${(error as Error).message}（用 .cache/logdb-venv/bin/python tools/build-potion-equivalents.py 生成）`);
   }
   const hit = cache.get(path);
@@ -204,7 +204,7 @@ export function loadPotionEquivalents(dir: string = DEFAULT_KNOWLEDGE_DIR): Poti
   let text: string;
   try {
     text = readFileSync(path, "utf8");
-  } catch (error) {
+  } catch (error) { rethrowStatsResourceError(error);
     throw new KnowledgeLoadError(`药水换算表读取失败 ${path}: ${(error as Error).message}`);
   }
   const file = parsePotionEquivalents(text, path, knowledgeCharacter() !== DEFAULT_CHARACTER);
@@ -336,7 +336,7 @@ export function heldPotionWorth(potionIds: string[], act: number | null, ascensi
     const loaded = loadPotionEquivalentsOrNull(potionWorthSource.dir);
     if (!loaded) return {};
     file = loaded;
-  } catch (error) {
+  } catch (error) { rethrowStatsResourceError(error);
     return { potion_worth_error: (error instanceof Error ? error.message : String(error)).slice(0, 160) };
   }
   const lines = potionIds

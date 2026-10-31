@@ -108,7 +108,7 @@ export async function main(argv = process.argv.slice(2)): Promise<void> {
     result = { version: flags["version"], documents: Object.keys(files).length, bytes: Object.values(files).reduce((n, s) => n + Buffer.byteLength(s), 0), exact_readback: true }; break;
    }
    case "bind": case "launch": {
-    result = store.bind(required("run"), required("code"));
+    result = store.bind(required("run"), required("code"), flags['version'] ?? process.env['STS2_ASSETS_K1_VERSION']);
     if (command === "launch") {
      if (!child.length) throw new Error("launch requires -- <program> [args]");
      const binding = result as { version: string; snapshot: string };

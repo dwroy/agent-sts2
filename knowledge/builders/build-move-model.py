@@ -59,6 +59,6 @@ for eid in set(list(transitions) + list(damage)):
     }
     if buffs[eid]:
         model[eid]["buffs"] = sorted(buffs[eid])
-with open(OUT, "w", encoding="utf8") as handle:
-    json.dump(model, handle, ensure_ascii=False, indent=1, sort_keys=True)
+from refresh_publish import write_text
+write_text(OUT, json.dumps(model, ensure_ascii=False, indent=1, sort_keys=True))
 print(f"{len(model)} enemies, {sum(len(m['next']) for m in model.values())} moves with successors -> {OUT}")

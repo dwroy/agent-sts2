@@ -1,8 +1,10 @@
 import { test } from "node:test";
+import { execFileSync } from 'node:child_process';
 import assert from "node:assert/strict";
 import { mkdtempSync, readFileSync, rmSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
+import { fileURLToPath } from 'node:url';
 import { StreamCapture, claimCall, selectSamples } from "./issue29-deepseek-stream.js";
 
 test("SSE splits preserve UTF-8 decoded text, CRLF, heartbeats and first token timing", () => {
@@ -48,7 +50,9 @@ test("persistent claims count interrupted calls and refuse the next call at limi
 });
 
 test("frozen sample preserves all failures, disjoint unique controls and alternating order", () => {
-  const previous = readFileSync(new URL("../../paper/materials/issue29-brain-speed/results.jsonl", import.meta.url), "utf8").trim().split("\n").map(s => JSON.parse(s));
+  // Keep the original historical input available without a retained cold copy.
+  const previous = execFileSync('git', ['-C', fileURLToPath(new URL('../..', import.meta.url)), 'cat-file', 'blob',
+    'b84d95c5185941eec143cbcf2966d5770309cca5'], { encoding: 'utf8', maxBuffer: 1024 * 1024 }).trim().split("\n").map(s => JSON.parse(s));
   const s = selectSamples(previous);
   assert.equal(s.length, 25); assert.equal(new Set(s.map(r => r.id)).size, 18);
   assert.equal(s.filter(r => r.cohort === "previous-timeout").length, 15);

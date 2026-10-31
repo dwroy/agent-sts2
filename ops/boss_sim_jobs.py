@@ -156,6 +156,9 @@ def dispatch_candidates(state, evidence, root, scripts, alive, stamp, start, now
             batch.update(state="lost", retry_at=now + RETRY_SECONDS, finished_epoch=now)
             event(directory, f"B4/B5 {bid} 租约丢失；PID={batch.get('pid')}；证据={batch['key']}；保留lost，1小时后有界重试。")
     for e in evidence:
+        from learning_concurrency import allowed
+        if not allowed(state, root, alive, directory=directory):
+            return None
         scope = f"{e['character']}:{e['boss']}:{e['mode']}"
         cool = state.get("boss_sim_cooldown", {}).get(scope)
         if cool:

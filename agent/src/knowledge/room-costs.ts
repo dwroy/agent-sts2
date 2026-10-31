@@ -3,7 +3,7 @@
  * on the next floor's map, by ascension, act and room type, with n. The route facts project HP with it.
  */
 
-import { readFileSync } from "node:fs";
+import { readFileSync, rethrowStatsResourceError } from "./resource-fs.js";
 import { queryKnowledgeJson } from "./query-sources.js";
 import { bumpDataVersion } from "../core/util/data-version.js";
 import { KNOWLEDGE_DIR, knowledgeFile } from "./files.js";
@@ -34,7 +34,7 @@ function load(): RoomCosts {
   try {
     const path = knowledgeFile(KNOWLEDGE_DIR, "room-costs.json");
     cached = (JSON.parse(readFileSync(path, "utf8")) as { by_asc?: RoomCosts }).by_asc ?? {};
-  } catch {
+  } catch (statsReadError) { rethrowStatsResourceError(statsReadError);
     cached = {};
   }
   return cached;

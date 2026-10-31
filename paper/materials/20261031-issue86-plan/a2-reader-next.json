@@ -1,0 +1,41 @@
+{
+  "schema": "issue86-a2-reader-next-v1",
+  "input_sha256": "b4c9f0f78303bd3a7f080f18e65c94eec48d42ca5db8abf0b8c0243f2c53c7e9",
+  "candidate_reference_count": 261,
+  "status": "audit only; A1 does not retire source data or permit production activation",
+  "required_runtime_leaf": {
+    "path": "agent/src/v6/direction-runtime.ts",
+    "reason": "T6 potion table enumeration still directly realpaths/reads A and catches absence; A2 must use bound resource FS and rethrow selected-data errors; preserve custom research root checks"
+  },
+  "explicit_tool_candidates": [
+    "agent/tools/mech-move-replay.ts:46:const MONSTER_DB = arg(\"monster-db\", knowledgeFile(KNOWLEDGE_DIR, \"monster-db.json\"));",
+    "agent/tools/rollout-backtest.ts:186:  const mm = JSON.parse(readFileSync(knowledgeFile(KNOWLEDGE_DIR, \"move-model.json\"), \"utf8\")) as MoveModelData;",
+    "agent/tools/rollout-backtest.ts:187:  const db = (JSON.parse(readFileSync(knowledgeFile(KNOWLEDGE_DIR, \"monster-db.json\"), \"utf8\")) as { monsters: MonsterMoves }).monsters;",
+    "agent/tools/mech-rules-replay.ts:44:const MONSTER_DB = arg(\"monster-db\", knowledgeFile(KNOWLEDGE_DIR, \"monster-db.json\"));",
+    "agent/tools/death-move-replay.ts:45:const MONSTER_DB = arg(\"monster-db\", knowledgeFile(KNOWLEDGE_DIR, \"monster-db.json\"));",
+    "agent/tools/mechanics-residuals.ts:63:const MONSTER_DB = arg(\"monster-db\", knowledgeFile(KNOWLEDGE_DIR, \"monster-db.json\"));",
+    "agent/tools/passive-pieces-replay.ts:167:  const mm = JSON.parse(readFileSync(knowledgeFile(KNOWLEDGE_DIR, \"move-model.json\"), \"utf8\")) as MoveModelData;",
+    "agent/tools/passive-pieces-replay.ts:168:  const db = (JSON.parse(readFileSync(knowledgeFile(KNOWLEDGE_DIR, \"monster-db.json\"), \"utf8\")) as { monsters: MonsterMoves }).monsters;",
+    "agent/tools/boss-sim/trace.ts:25:const mm = JSON.parse(readFileSync(knowledgeFile(KNOWLEDGE_DIR, \"move-model.json\"), \"utf8\")) as MoveModelData;",
+    "agent/tools/boss-sim/trace.ts:26:const db = (JSON.parse(readFileSync(knowledgeFile(KNOWLEDGE_DIR, \"monster-db.json\"), \"utf8\")) as { monsters: MonsterMoves }).monsters;",
+    "agent/tools/boss-sim/turn-replay.ts:73:  const mm = JSON.parse(readFileSync(knowledgeFile(KNOWLEDGE_DIR, \"move-model.json\"), \"utf8\")) as MoveModelData;",
+    "agent/tools/boss-sim/turn-replay.ts:74:  const db = (JSON.parse(readFileSync(knowledgeFile(KNOWLEDGE_DIR, \"monster-db.json\"), \"utf8\")) as { monsters: MonsterMoves }).monsters;",
+    "agent/tools/boss-sim/pairs.ts:48:  const mm = JSON.parse(readFileSync(knowledgeFile(KNOWLEDGE_DIR, \"move-model.json\"), \"utf8\")) as MoveModelData;",
+    "agent/tools/boss-sim/pairs.ts:49:  const db = (JSON.parse(readFileSync(knowledgeFile(KNOWLEDGE_DIR, \"monster-db.json\"), \"utf8\")) as { monsters: MonsterMoves }).monsters;",
+    "agent/tools/boss-sim/backtest-runner.ts:157:  const mm = JSON.parse(readFileSync(knowledgeFile(KNOWLEDGE_DIR, \"move-model.json\"), \"utf8\")) as MoveModelData;",
+    "agent/tools/boss-sim/backtest-runner.ts:158:  const db = (character === \"silent\" ? readMonsterDbJson() as { monsters: MonsterMoves } : JSON.parse(readFileSync(knowledgeFile(KNOWLEDGE_DIR, \"monster-db.json\"), \"utf8\")) as { monsters: MonsterMoves }).monsters;",
+    "agent/tools/v6/profile.ts:63:      const mm = JSON.parse(readFileSync(knowledgeFile(KNOWLEDGE_DIR, \"move-model.json\"), \"utf8\")) as MoveModelData;",
+    "agent/tools/boss-sim/lines.ts:60:  const mm = JSON.parse(readFileSync(knowledgeFile(KNOWLEDGE_DIR, \"move-model.json\"), \"utf8\")) as MoveModelData;",
+    "agent/tools/boss-sim/lines.ts:61:  const db = (JSON.parse(readFileSync(knowledgeFile(KNOWLEDGE_DIR, \"monster-db.json\"), \"utf8\")) as { monsters: MonsterMoves }).monsters;",
+    "agent/tools/boss-sim/bench.ts:30:const mm = JSON.parse(readFileSync(knowledgeFile(KNOWLEDGE_DIR, \"move-model.json\"), \"utf8\")) as MoveModelData;",
+    "agent/tools/boss-sim/bench.ts:31:const db = (JSON.parse(readFileSync(knowledgeFile(KNOWLEDGE_DIR, \"monster-db.json\"), \"utf8\")) as { monsters: MonsterMoves }).monsters;",
+    "agent/src/v6/direction-runtime.ts:162:    const path = realpathSync(join(root, \"potion-equivalents.json\")), rel = relative(root, path);"
+  ],
+  "additional_search_required": [
+    "dynamic FS paths and namespace imports",
+    "offline report/recovery inherited K1 and D1 identities",
+    "catalog directory enumeration and observed fragments",
+    "source-required marker enforcement on legacy resume and disabled saved launches"
+  ],
+  "production_changed": false
+}

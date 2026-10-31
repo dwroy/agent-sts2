@@ -6,7 +6,7 @@ import { join } from "node:path";
 import { afterEach, describe, expect, it } from "vitest";
 import { codexCommand, codexPermissions, learnerInteractiveArgs, claudeCommand, type EngineRequest } from "../../learner/lib/engines.js";
 import { loadTask, parseTask } from "../../learner/lib/task.js";
-import { publicWebEvent, publicWebPermission } from "../../learner/lib/public-web.js";
+import { publicWebEvent, publicWebPermission, registeredPublicWebQuestion, publicWebQuestionInstructions } from "../../learner/lib/public-web.js";
 import { NativeBatch } from "../../learner/lib/herdr.js";
 import { SummaryTracker } from "../../learner/lib/summary.js";
 import { codexConfig } from "../src/brain/engines/codex.js";
@@ -57,6 +57,32 @@ describe("explicit hosted public research", () => {
       f.save(); expect(allow).toThrow(); delete batch[key]; f.save();
     }
     expect(() => allow()).not.toThrow();
+  });
+  it("binds an explicit question's original bytes/intent and refuses missing input or bad SHA without changing the old task", () => {
+    const f = fixture(), original = structuredClone(f.batch.public_web), batch = f.batch as Record<string, any>;
+    const document = { schema: "public-web-question-v1", id: "fixture-question", task: "strategy-proposal", character: "silent",
+      question: "固定公开研究问题", source_intent: "search-and-open-public-sts2", target_game_version: "fixture-v1", parent: "fixture-cache" };
+    const content = JSON.stringify(document), binding = { path: "learner/requests/public-web/fixed.json", content,
+      sha256: createHash("sha256").update(content).digest("hex") };
+    batch.public_web.question = binding; batch.key = `public-web-question:${document.id}:${binding.sha256}`; f.save();
+    const allow = () => publicWebPermission(f.spec, "codex", "silent", f.root, f.root, f.env);
+    expect(allow()).toBe("sts2"); expect(batch.public_web.template_sha256).toBe(original.template_sha256);
+    const question = registeredPublicWebQuestion(f.env)!;
+    expect(question.content).toBe(content); expect(question.document).toEqual(document);
+    expect(publicWebQuestionInstructions(question)).toContain(binding.sha256);
+    expect(publicWebQuestionInstructions(question)).toContain("不能仅总结缓存");
+    for (const changed of [undefined, null, { ...binding, sha256: "a".repeat(64) }, { ...binding, path: "../private.json" }]) {
+      if (changed === undefined) delete batch.public_web.question; else batch.public_web.question = changed;
+      f.save(); expect(allow).toThrow();
+    }
+    for (const changed of [{ task: "fix-batch" }, { character: "ironclad" }, { source_intent: "cached-only" }]) {
+      const raw = JSON.stringify({ ...document, ...changed });
+      batch.public_web.question = { ...binding, content: raw, sha256: createHash("sha256").update(raw).digest("hex") };
+      batch.key = `public-web-question:${document.id}:${batch.public_web.question.sha256}`; f.save(); expect(allow).toThrow();
+    }
+    batch.public_web = original; delete batch.key; f.save();
+    expect(allow()).toBe("sts2"); expect(registeredPublicWebQuestion(f.env)).toBeUndefined();
+    expect(publicWebQuestionInstructions(undefined)).toBe("");
   });
   it("uses the same explicit live setting for exec, TUI and resume without widening filesystem/network permissions", () => {
     const req = { ...request(), publicWeb: "sts2" as const };

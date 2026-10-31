@@ -213,6 +213,9 @@ def running_batch(state):
 
 
 def dispatch(state, runs, character, reason):
+    import learning_concurrency
+    if not learning_concurrency.allowed(state, ROOT, alive, directory=DIR):
+        return None
     batch_id = dt.datetime.now().strftime("%Y%m%d-%H%M%S")
     out_dir = os.path.join(DIR, "learner")
     os.makedirs(out_dir, exist_ok=True)
@@ -285,7 +288,8 @@ def check_ascension(state, character):
 
 
 def check_ascension_audits(state, character):
-    if character == "silent" and external_learning_policy.four_lane_mode(state, ROOT, alive) and external_learning_policy.own_busy(state, alive, DIR):
+    import learning_concurrency
+    if not learning_concurrency.allowed(state, ROOT, alive, directory=DIR):
         return None
     if not disk_admission.jobs_allowed(ROOT, DIR):
         return None
@@ -295,11 +299,12 @@ def check_ascension_audits(state, character):
 
 
 def check_postmortems(state, character):
+    import learning_concurrency
+    if not learning_concurrency.allowed(state, ROOT, alive, directory=DIR):
+        return None
     if not disk_admission.jobs_allowed(ROOT, DIR):
         return None
     if running_batch(state):
-        return None
-    if character == "silent" and external_learning_policy.four_lane_mode(state, ROOT, alive) and external_learning_policy.own_busy(state, alive, DIR):
         return None
     have = postmortem_ids()
     now = time.time()
@@ -372,11 +377,13 @@ def cmd_tick(args):
 
 
 def _cmd_tick(args):
+    import learning_concurrency
     state = load_state()
     character = args.character
     if publication_gate.candidates_only(ROOT, DIR):
         # Completion accounting remains independent; only frozen candidates may start.
         report = check_jobs(state, ROOT, SCRIPTS, character, alive, dt.datetime.now().strftime("%Y%m%d-%H%M%S"))
+        learning_concurrency.report(state, ROOT, DIR, alive)
         save_state(state)
         print(json.dumps({"candidate_only": True, "write_jobs": report}, ensure_ascii=False))
         return 0
@@ -404,6 +411,7 @@ def _cmd_tick(args):
     report["write_jobs"]["strategy_backfill"] = strategy_backfill_jobs.dispatch(
         state, ROOT, SCRIPTS, character, alive, dt.datetime.now().strftime("%Y%m%d-%H%M%S"),
         dispatch_write, normal)
+    report["learning_concurrency"] = learning_concurrency.report(state, ROOT, DIR, alive)
     save_state(state)
     report["retention"] = learner_retention.kick(ROOT, DIR, SCRIPTS)
     print(json.dumps(report, ensure_ascii=False))
@@ -422,7 +430,7 @@ def cmd_dispatch(args):
         return 1
     if args.character == "silent" and external_learning_policy.four_lane_mode(state, ROOT, alive):
         own = external_learning_policy.own_status(state, alive, DIR)
-        if own["busy"]:
+        if external_learning_policy.own_busy(state, alive, DIR):
             print(json.dumps({"dispatched": None, "own_learning": own}, ensure_ascii=False))
             return 1
     busy = running_batch(state)
@@ -435,7 +443,11 @@ def cmd_dispatch(args):
     if unknown:
         print(f"这些局不在 runs.jsonl 里（或不是这个角色的）：{','.join(unknown)}")
         return 1
-    batch_id, pid = dispatch(state, runs, args.character, "ops")
+    result = dispatch(state, runs, args.character, "ops")
+    if not result:
+        print(json.dumps({"dispatched": None, "reason": "learning_capacity_hold"}))
+        return 75
+    batch_id, pid = result
     save_state(state)
     print(f"复盘批次 {batch_id} 已在后台启动（PID {pid}）：{','.join(runs)}；跑完调度器会发 learner-done 事件")
     return 0
@@ -598,8 +610,18 @@ def cmd_write(args):
     if getattr(args, "public_web", False):
         if args.task != "strategy-proposal" or args.character != "silent" or args.runs or args.request:
             return 2
+        question = None
+        if getattr(args, "public_web_question", ""):
+            from public_web_jobs import load_question, question_key
+            try:
+                question = load_question(ROOT, args.public_web_question, args.public_web_question_sha256)
+            except (OSError, ValueError, TypeError, KeyError, UnicodeError):
+                print(json.dumps({"dispatched": None, "reason": "invalid_public_web_question_input"}))
+                return 2
+        kwargs = {"public_web_question": question} if question is not None else {}
         result = dispatch_write(state, ROOT, SCRIPTS, args.task, args.character, [],
-                                "public-web:issue69", "ops", alive, dt.datetime.now().strftime("%Y%m%d-%H%M%S"), public_web=True)
+                                question_key(question) if question is not None else "public-web:issue69", "ops", alive,
+                                dt.datetime.now().strftime("%Y%m%d-%H%M%S"), public_web=True, **kwargs)
         save_state(state)
         print(json.dumps({"dispatched": result, "own_learning": external_learning_policy.own_status(state, alive, DIR)}, ensure_ascii=False))
         return 0 if result else 1
@@ -781,6 +803,8 @@ def main():
     parser.add_argument("--runs", default="")
     parser.add_argument("--request", default="")
     parser.add_argument("--public-web", action="store_true", help="explicit Silent content research, original strategy slot/runtime")
+    parser.add_argument("--public-web-question", default="", help="fixed JSON under learner/requests/public-web/")
+    parser.add_argument("--public-web-question-sha256", default="", help="required SHA256 of the exact question input")
     parser.add_argument("--batch", default="")
     parser.add_argument("--verdict", default="", help="dwroy [Claude] #77 comment authorizing this batch's void closure")
     parser.add_argument("--rc", type=int, default=1)
@@ -791,6 +815,9 @@ def main():
         parser.error("--verdict requires close")
     if args.public_web and args.command != "write":
         parser.error("--public-web requires write")
+    if (bool(args.public_web_question) != bool(args.public_web_question_sha256)
+            or (args.public_web_question and (not args.public_web or args.task != "strategy-proposal" or args.character != "silent" or args.runs or args.request))):
+        parser.error("question input and SHA require explicit Silent public-web write without runs/request")
     args.character = character_key(args.character) or "silent"
     if args.command in ("tick", "dispatch", "write", "boss-check"):
         try:
@@ -814,6 +841,10 @@ def main():
             return 75
     with state_lock():
         if account_draining() and args.command in ("tick", "dispatch", "write", "boss-check"):
+            if args.command == "tick":
+                import learning_concurrency
+                state = load_state()
+                learning_concurrency.report(state, ROOT, DIR, alive)
             print(json.dumps({"dispatched": None, "reason": "account_drain", "command": args.command}))
             return 75
         if publication_gate.candidates_only(ROOT, DIR) and args.command in ("dispatch", "write", "boss-check"):

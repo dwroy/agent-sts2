@@ -21,7 +21,7 @@ import { currentDecisionBudget } from "../core/decision-budget.js";
  * show it.
  */
 
-import { readFileSync } from "node:fs";
+import { readFileSync, rethrowStatsResourceError } from "../knowledge/resource-fs.js";
 
 import type { Knowledge } from "../knowledge/index.js";
 import { identityToken, memoKey, type ComputeMemo } from "../sim/compute-memo.js";
@@ -160,7 +160,7 @@ let mmCache: MoveModelData | undefined;
 function readJson<T>(name: string, fallback: T): T {
   try {
     return JSON.parse(readFileSync(knowledgeFile(KNOWLEDGE_DIR, name), "utf8")) as T;
-  } catch {
+  } catch (statsReadError) { rethrowStatsResourceError(statsReadError);
     return fallback;
   }
 }
@@ -169,7 +169,7 @@ function monsterMoves(): MonsterMoves {
   if (dbCache) return dbCache;
   try {
     dbCache = (readMonsterDbJson() as { monsters?: MonsterMoves }).monsters ?? {};
-  } catch {
+  } catch (statsReadError) { rethrowStatsResourceError(statsReadError);
     dbCache = {};
   }
   return dbCache;
@@ -1031,7 +1031,7 @@ export function liveRollout(args: LiveRolloutArgs): LiveRollout {
       elapsedMs: elapsed(),
       ...(memoed ? { memo: { ms: memoed.elapsedMs } } : {}),
     };
-  } catch (error) {
+  } catch (error) { rethrowStatsResourceError(error);
     return { available: false, reason: `error: ${String(error).slice(0, 120)}`, elapsedMs: elapsed() };
   }
 }
@@ -1052,7 +1052,7 @@ function rolloutMemoKey(input: RolloutInput): string | null {
   try {
     const { now: _now, budgetMs: _budget, ...options } = input.options ?? {};
     return memoKey(currentDecisionBudget() ? "human-pace-rollout-v1" : "rollout", { ...input, model: identityToken(input.model), gates: identityToken(input.gates), mm: identityToken(input.mm), options });
-  } catch {
+  } catch (statsReadError) { rethrowStatsResourceError(statsReadError);
     return null;
   }
 }
@@ -1072,7 +1072,7 @@ function recallRollout(memo: ComputeMemo, key: string, input: RolloutInput, budg
     if (hit.value.lines.some((line) => refs[line.plan] === undefined)) return null;
     memo.took();
     return { ...hit.value, lines: hit.value.lines.map((line) => ({ ...line, plan: refs[line.plan]! })) } as RolloutResult;
-  } catch {
+  } catch (statsReadError) { rethrowStatsResourceError(statsReadError);
     return null;
   }
 }
@@ -1088,7 +1088,7 @@ function storeRollout(memo: ComputeMemo, key: string, input: RolloutInput, resul
     });
     if (result.lines.some((line) => !index.has(line.plan))) return;
     memo.set<StoredRollout>(key, { ...result, lines: result.lines.map((line) => ({ ...line, plan: index.get(line.plan)! })) }, { needMs: result.budgetNeedMs ?? 0, ms: result.elapsedMs });
-  } catch {
+  } catch (statsReadError) { rethrowStatsResourceError(statsReadError);
     // not kept
   }
 }

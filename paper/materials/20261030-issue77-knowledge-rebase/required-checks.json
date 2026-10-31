@@ -1,0 +1,43 @@
+{
+  "working_directory": "agent",
+  "production_types": [
+    "npx",
+    "tsc",
+    "-p",
+    "tsconfig.json",
+    "--noEmit"
+  ],
+  "developer_sandbox": [
+    "bash",
+    "tools/test-sandbox.sh"
+  ],
+  "targeted_test_files": [
+    "tests/learning-runtime.test.ts",
+    "tests/learner-learning-flow.test.ts",
+    "tests/learner-supervisor-close.test.ts",
+    "tests/account-drain.test.ts",
+    "tests/agent-board-poll.test.ts"
+  ],
+  "host_python_modules": [
+    "ops/tests/test_learning_runtime.py",
+    "ops/tests/test_fixed_producer_admission.py"
+  ],
+  "real_entry_consumers": {
+    "operational_completion": "Real validate/complete/Store transaction and original finish/recheck fixtures, candidate bytes unchanged, durable completion/source_revalidation, original failed submission history, two separate batch receipts",
+    "fixed_producer_admission": "All thirteen declared method closures and original host admission fixtures; no production method ticket generated",
+    "runtime_read_only": "204303 original dfd8f252 candidate validated against actual main without complete, SQLite writes or scheduler state mutation"
+  },
+  "production_leaves": [
+    "ops/learning_runtime.py",
+    "ops/learning_runtime_store.py",
+    "ops/fixed-producer-dependencies.json"
+  ],
+  "LIVE_install_paths": [],
+  "integration_order": "Before #56 learning concurrency or one combined original integration; before original #77 account scope delivery",
+  "integrator_requirement": "Normalize on actual adopted main, re-freeze actual combined ROOT leaves/consumers, regenerate exact method previews/admission through original publication transaction, never reuse prior full/once/tickets",
+  "production_reentry_owner": "original ops after integration; same 20261030-204303 candidate/id and original operational entry",
+  "fixture_only_changes": [
+    "ops/tests/test_agent_board_poll.py",
+    "ops/tests/test_llm_handoff.py"
+  ]
+}

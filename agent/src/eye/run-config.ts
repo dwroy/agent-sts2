@@ -29,6 +29,7 @@ import { humanPaceH2Policy } from "../core/human-pace-shadow-config.js";
  */
 
 import { execFileSync } from "node:child_process";
+import { assetsSelection, type AssetsSelection } from '../knowledge/assets-binding.js';
 import { createHash } from "node:crypto";
 import { closeSync, existsSync, mkdirSync, openSync, readSync, statSync } from "node:fs";
 import { basename, dirname, join } from "node:path";
@@ -156,6 +157,7 @@ export interface RunConfigRow {
   human_pace_h2?: { schema: string; mode: string; requested: string; delivered: false;
     direction_budget_ms: number; card_budget_ms: number; jev_budget_ms: number; actual_selector: string };
   knowledge: {
+    assets?: AssetsSelection;
     fixed_data?: { version: string; directory: string; run: string; managed_paths: string[] };
     runtime_version?: string;
     runtime_binding?: string;
@@ -412,6 +414,7 @@ function knowledgeSnapshot(config: AppConfig, brain: Brain | null, ascension: nu
     system_sha: null,
     system_chars: null,
     experience_version: experienceVersion(knowledgeDir),
+    ...(assetsSelection() ? { assets: assetsSelection()! } : {}),
     ...(runtimeDataIdentity() ? { fixed_data: runtimeDataIdentity()! } : {}),
     ...(runtimeKnowledgeIdentity() ? { runtime_version: runtimeKnowledgeIdentity()!.version } : {}),
     ...(runtimeKnowledgeIdentity() && process.env["STS2_KNOWLEDGE_RUN_KEY"] ? { runtime_binding: process.env["STS2_KNOWLEDGE_RUN_KEY"] } : {}),

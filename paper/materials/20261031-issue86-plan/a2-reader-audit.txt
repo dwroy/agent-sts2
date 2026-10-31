@@ -1,0 +1,261 @@
+knowledge/builders/refresh_driver.py:201:            run('monster-db', build('build-monster-db', '--quiet', '--move-model-out', ROOT / 'knowledge/common/move-model.json'))
+knowledge/builders/build-outcome-stats.py:2:"""Outcome statistics from our own logs -> knowledge/characters/<id>/outcome-stats.json (the knowledge base's stats layer).
+knowledge/builders/build-outcome-stats.py:596:    parser.add_argument("--out", default=None, help="default knowledge/characters/<character>/outcome-stats.json")
+knowledge/builders/build-outcome-stats.py:605:    args.out = args.out or os.path.join(character_dir(ROOT, character), "outcome-stats.json")
+knowledge/builders/build-construction-opportunities.py:168:    output = args.out or args.root / 'knowledge/characters' / args.character / 'construction-opportunities.json'
+knowledge/builders/refresh-v6-history.py:4:Only v6-history.json is published: it contains the validated metrics, so readers
+knowledge/builders/refresh-v6-history.py:240:    opportunities_path = root / 'knowledge/characters' / character / 'construction-opportunities.json'
+knowledge/builders/refresh-v6-history.py:308:            if own.resolve() != root / 'knowledge/characters' / character or any((own / name).is_symlink() for name in ('build-cores.json', 'v6-history.json', 'construction-opportunities.json')):
+knowledge/builders/refresh-v6-history.py:350:            output = directory / 'v6-history.json'
+knowledge/builders/refresh-v6-history.py:366:            target = root / 'knowledge/characters' / character / 'v6-history.json'
+knowledge/builders/refresh-v6-history.py:380:                        previous = directory / 'previous-v6-history.json'
+knowledge/builders/build-potion-equivalents.py:4:Writes knowledge/characters/<id>/potion-equivalents.json; docs/potion-equivalents.md explains every formula.
+knowledge/builders/build-potion-equivalents.py:1005:    parser.add_argument("--out", default=None, help="default knowledge/characters/<character>/potion-equivalents.json")
+knowledge/builders/build-potion-equivalents.py:1019:    args.out = args.out or os.path.join(character_dir(ROOT, character), "potion-equivalents.json")
+agent/tools/mech-move-replay.ts:46:const MONSTER_DB = arg("monster-db", knowledgeFile(KNOWLEDGE_DIR, "monster-db.json"));
+knowledge/builders/build-monster-db.py:2:"""Monster database from our own logs: logs/states.jsonl (+ runs.jsonl) -> knowledge/common/monster-db.json, and
+knowledge/builders/build-monster-db.py:3:each character's own records -> knowledge/characters/<id>/monster-records.json.
+knowledge/builders/build-monster-db.py:5:DATA ONLY. Nothing in agent/src/ reads monster-db.json yet; it is the observed reference the hand tables
+knowledge/builders/build-monster-db.py:6:(boss-clock.ts, enemy dossiers, move-model.json) are checked against.
+knowledge/builders/build-monster-db.py:11:the game's text and provenance: game facts, counted over every character's fights (common/monster-db.json).
+knowledge/builders/build-monster-db.py:14:Ironclad's deck): characters/<id>/monster-records.json holds `bosses` (one summary per act boss, all parts and
+knowledge/builders/build-monster-db.py:23:two fights. `--move-model-out PATH` writes the same data in move-model.json's format.
+knowledge/builders/build-monster-db.py:29:  knowledge/characters/{character}/monster-records.json); --character ID: that character's records alone (default:
+knowledge/builders/build-monster-db.py:1462:    """One character's records (characters/<id>/monster-records.json): its boss and encounter summaries and each
+knowledge/builders/build-monster-db.py:1560:                "knowledge/common/monster-db.json holds the monsters' own facts, over every character). bosses / encounters: per boss "
+knowledge/builders/build-monster-db.py:1582:    """The DB's moves in move-model.json's format ({id: {next, damage, buffs?}})."""
+knowledge/builders/build-monster-db.py:1679:    refresh after a run, at once, and with one shared "monster-db.json.tmp" the second rename failed
+knowledge/builders/build-monster-db.py:1697:    parser.add_argument("--out", default=os.path.join(ROOT, "knowledge/common/monster-db.json"))
+knowledge/builders/build-monster-db.py:1699:    parser.add_argument("--records-out", default=os.path.join(ROOT, "knowledge/characters/{character}/monster-records.json"))
+knowledge/builders/build-boss-damage.py:3:knowledge/characters/<id>/boss-damage.json (and, with --fights, one JSON line per boss fight for the backtest).
+knowledge/builders/build-boss-damage.py:187:    parser.add_argument("--out", default=None, help="default knowledge/characters/<character>/boss-damage.json")
+knowledge/builders/build-boss-damage.py:190:    args.out = args.out or os.path.join(character_dir(ROOT, character), "boss-damage.json")
+knowledge/builders/build-room-costs.py:2:"""Measured HP change per map room -> knowledge/characters/<id>/room-costs.json (the route facts' HP projection).
+knowledge/builders/build-room-costs.py:209:    parser.add_argument("--out", default=None, help="default knowledge/characters/<character>/room-costs.json")
+knowledge/builders/build-room-costs.py:212:    out_path = args.out or os.path.join(character_dir(ROOT, character), "room-costs.json")
+knowledge/builders/monster-db-check.py:2:"""Cross-check knowledge/common/monster-db.json against the hand-written tables -> a markdown report.
+knowledge/builders/monster-db-check.py:7:file is not in the tree; (c) knowledge/common/move-model.json (moves, average damage, successors).
+knowledge/builders/monster-db-check.py:54:    parser.add_argument("--db", default=os.path.join(ROOT, "knowledge/common/monster-db.json"))
+knowledge/builders/monster-db-check.py:55:    parser.add_argument("--out", default=os.path.join(os.environ.get("STS2_WORKSPACE") or ROOT, "notes", "monster-db-check.md"))
+knowledge/builders/monster-db-check.py:62:    parser.add_argument("--records", default=None, help="default knowledge/characters/<character>/monster-records.json")
+knowledge/builders/monster-db-check.py:65:    records_path = args.records or os.path.join(ROOT, "knowledge", "characters", args.character.lower(), "monster-records.json")
+knowledge/builders/monster-db-check.py:75:    move_model = json.load(open(os.path.join(ROOT, "knowledge/common/move-model.json"), encoding="utf8"))
+knowledge/builders/monster-db-check.py:80:    w(f"DB: `src/knowledge/monster-db.json` from {meta['fights']} logged fights ({meta['first_seen']} .. {meta['last_seen']}), fights by ascension {meta['fights_by_asc']}.")
+knowledge/builders/monster-db-check.py:230:    w("## (c) move-model.json\n")
+knowledge/builders/monster-db-check.py:231:    w("move-model.json comes from the same logs (tools/build-move-model.py) but keys moves per (run, enemy index, id): an enemy met twice in a run "
+knowledge/builders/build-move-model.py:2:"""Learn enemy move sequences from logs/states.jsonl -> knowledge/common/move-model.json.
+knowledge/builders/build-move-model.py:16:OUT = os.path.join(ROOT, "knowledge/common/move-model.json")
+knowledge/builders/build-card-upgrades.py:181:    parser.add_argument("--out", type=Path, default=ROOT / "knowledge/common/card-upgrades.json")
+knowledge/builders/build-catalog.py:92:        for name, container, output_name in (("monster-db.json", "monsters", "mechanics-observed.json"),
+knowledge/builders/build-catalog.py:93:                                               ("move-model.json", None, "model-observed.json")):
+knowledge/builders/build-catalog.py:148:            for name, raw in [*generated.items(), ("catalog.json", rendered(catalog))]:
+knowledge/builders/build-catalog.py:152:            with publication(target=root / 'catalog.json'):
+knowledge/builders/build-catalog.py:169:                "original_source_bytes_unchanged": True, "catalog_sha256": sha((root / "catalog.json").read_bytes()),
+knowledge/builders/refresh-potion-equivalents.sh:2:# Rebuild a character's potion table (knowledge/characters/<id>/potion-equivalents.json: what each potion held is worth in the act boss,
+knowledge/builders/refresh-potion-equivalents.sh:13:# Env: ENV_FILE (default <root>/agent/.env), POTION_TABLE (default <root>/knowledge/characters/<id>/potion-equivalents.json).
+knowledge/builders/refresh-potion-equivalents.sh:38:TABLE="${POTION_TABLE:-$ROOT/knowledge/characters/$character/potion-equivalents.json}"
+agent/tools/rollout-backtest.ts:186:  const mm = JSON.parse(readFileSync(knowledgeFile(KNOWLEDGE_DIR, "move-model.json"), "utf8")) as MoveModelData;
+agent/tools/rollout-backtest.ts:187:  const db = (JSON.parse(readFileSync(knowledgeFile(KNOWLEDGE_DIR, "monster-db.json"), "utf8")) as { monsters: MonsterMoves }).monsters;
+agent/tools/codex-knowledge-preflight.ts:49:  const catalogFile = join(dir, "catalog.json"); writeFileSync(catalogFile, JSON.stringify({ models: [brainCatalogEntry(catalog)] }));
+knowledge/builders/build-fight-value.py:14:           knowledge/characters/<id>/fight-value.json and notes/fight-value-backtest.md
+knowledge/builders/build-fight-value.py:36:`train` also writes knowledge/characters/<id>/fight-value-gates.json (Part A: per-segment blend weight of the model vs the
+knowledge/builders/build-fight-value.py:176:    # fight and stopped the fight-value refresh (fight-value.json unchanged since 2026-10-02 13:47 on v4-live).
+knowledge/builders/build-fight-value.py:236:    path = os.path.join(ROOT, "knowledge", "common", "move-model.json")
+knowledge/builders/build-fight-value.py:870:    """The blend weight of the model in one segment (fight-value-gates.json `w`; rollout.ts gateWeight).
+knowledge/builders/build-fight-value.py:1167:    """fight-value-gates.json: calibration (chosen per kind by nested Brier, fitted on all out-of-fold rows)
+knowledge/builders/build-fight-value.py:1213:             f"resamples of the similar-state groups, {int(GATE_CI * 100)}% CI. Written to src/knowledge/fight-value-gates.json.")
+knowledge/builders/build-fight-value.py:1417:         "`src/knowledge/fight-value-gates.json`: Live, only as FACTS on Jev's combat options (src/strategy/rollout-live.ts), never in the ranking.", "", ROLLOUT_FINDINGS]
+knowledge/builders/build-fight-value.py:1506:    L.append("## Gate table (src/knowledge/fight-value-gates.json)")
+knowledge/builders/build-fight-value.py:1523:    L.append("# 1. model + gates + calibration (src/knowledge/fight-value.json, fight-value-gates.json, notes/fight-value-backtest.md), ~5 min")
+knowledge/builders/build-fight-value.py:1834:    L.append("`src/knowledge/fight-value.json` and `src/strategy/fight-value.ts`: Live, only as FACTS on Jev's combat options (src/strategy/rollout-live.ts), never in the ranking.")
+knowledge/builders/build-fight-value.py:1917:    parser.add_argument("--out", default=None, help="default knowledge/characters/<character>/fight-value.json")
+knowledge/builders/build-fight-value.py:1919:    parser.add_argument("--gates", default=None, help="default knowledge/characters/<character>/fight-value-gates.json")
+knowledge/builders/build-fight-value.py:1930:    args.out = args.out or os.path.join(character_dir(ROOT, character), "fight-value.json")
+knowledge/builders/build-fight-value.py:1931:    args.gates = args.gates or os.path.join(character_dir(ROOT, character), "fight-value-gates.json")
+knowledge/builders/build-fight-value.py:1996:                      file_sha(os.path.join(ROOT, 'knowledge/common/move-model.json'))]
+agent/tools/restructure-check/rewrite-test-paths.py:9:COMMON = {"monster-db.json", "move-model.json", "event-pages.json", "card-upgrades.json"}
+agent/tools/knowledge-test-fixture.mjs:20: }).filter(row => row.path === 'knowledge/catalog.json'
+agent/tools/restructure-check/rewrite-py-paths.py:9:COMMON = {"monster-db.json", "move-model.json", "event-pages.json", "card-upgrades.json"}
+agent/tools/mech-rules-replay.ts:44:const MONSTER_DB = arg("monster-db", knowledgeFile(KNOWLEDGE_DIR, "monster-db.json"));
+agent/tools/restructure-check/builders.sh:11:# common file and each character's records go to OUT/split/ and OUT/monster-db.json is their Ironclad merge, so
+agent/tools/restructure-check/builders.sh:36:run python3 "$B/build-room-costs.py" "${IN_ROOMS[@]}" --out "$OUT/room-costs.json"
+agent/tools/restructure-check/builders.sh:37:run python3 "$B/build-boss-damage.py" "${IN_ROOMS[@]}" --out "$OUT/boss-damage.json"
+agent/tools/restructure-check/builders.sh:38:run python3 "$B/build-outcome-stats.py" "${IN_STATS[@]}" --out "$OUT/outcome-stats.json" --quiet
+agent/tools/restructure-check/builders.sh:40:  # The split monster DB (2026-10-04: knowledge/common/monster-db.json + knowledge/characters/<id>/monster-records.json):
+agent/tools/restructure-check/builders.sh:41:  # both into OUT/split/, and OUT/monster-db.json = the common file with the Ironclad's records merged back (the TS
+agent/tools/restructure-check/builders.sh:44:  run python3 "$B/build-monster-db.py" "${IN_DB[@]}" --out "$OUT/split/monster-db.json" --records-out "$OUT/split/monster-records-{character}.json" \
+agent/tools/restructure-check/builders.sh:45:    --move-model-out "$OUT/move-model.json" --quiet
+agent/tools/restructure-check/builders.sh:46:  python3 - "$B/build-monster-db.py" "$OUT/split" "$OUT/monster-db.json" <<'PY'
+agent/tools/restructure-check/builders.sh:51:common = json.load(open(f"{sys.argv[2]}/monster-db.json", encoding="utf8"))
+agent/tools/restructure-check/builders.sh:57:  echo "monster-db: split (common + per-character records; monster-db.json = the Ironclad's merge)" > "$OUT/shape.txt"
+agent/tools/restructure-check/builders.sh:59:  run python3 "$B/build-monster-db.py" "${IN_DB[@]}" --out "$OUT/monster-db.json" --move-model-out "$OUT/move-model.json" --quiet
+agent/tools/restructure-check/builders.sh:64:run "$PY" "$B/build-potion-equivalents.py" "${IN_PE[@]}" --no-sync --ascensions 9 --out "$OUT/potion-equivalents.json"
+agent/tools/death-move-replay.ts:45:const MONSTER_DB = arg("monster-db", knowledgeFile(KNOWLEDGE_DIR, "monster-db.json"));
+agent/tools/mechanics-residuals.ts:30: * --monster-db: the monster DB the planner and the report read (default knowledge/common/monster-db.json; a freshly built one
+agent/tools/mechanics-residuals.ts:63:const MONSTER_DB = arg("monster-db", knowledgeFile(KNOWLEDGE_DIR, "monster-db.json"));
+agent/tools/stats-runtime.ts:46:    const report = join(source, 'notes/monster-db-check.md');
+agent/tools/stats-runtime.ts:47:    try { if (lstatSync(report).isSymbolicLink()) throw Error('linked frozen report'); files['reports/monster-db-check.md'] = readFileSync(report); }
+agent/tools/passive-pieces-replay.ts:167:  const mm = JSON.parse(readFileSync(knowledgeFile(KNOWLEDGE_DIR, "move-model.json"), "utf8")) as MoveModelData;
+agent/tools/passive-pieces-replay.ts:168:  const db = (JSON.parse(readFileSync(knowledgeFile(KNOWLEDGE_DIR, "monster-db.json"), "utf8")) as { monsters: MonsterMoves }).monsters;
+agent/tools/boss-sim/trace.ts:25:const mm = JSON.parse(readFileSync(knowledgeFile(KNOWLEDGE_DIR, "move-model.json"), "utf8")) as MoveModelData;
+agent/tools/boss-sim/trace.ts:26:const db = (JSON.parse(readFileSync(knowledgeFile(KNOWLEDGE_DIR, "monster-db.json"), "utf8")) as { monsters: MonsterMoves }).monsters;
+agent/tools/boss-sim/turn-replay.ts:73:  const mm = JSON.parse(readFileSync(knowledgeFile(KNOWLEDGE_DIR, "move-model.json"), "utf8")) as MoveModelData;
+agent/tools/boss-sim/turn-replay.ts:74:  const db = (JSON.parse(readFileSync(knowledgeFile(KNOWLEDGE_DIR, "monster-db.json"), "utf8")) as { monsters: MonsterMoves }).monsters;
+agent/tools/boss-sim/pairs.ts:48:  const mm = JSON.parse(readFileSync(knowledgeFile(KNOWLEDGE_DIR, "move-model.json"), "utf8")) as MoveModelData;
+agent/tools/boss-sim/pairs.ts:49:  const db = (JSON.parse(readFileSync(knowledgeFile(KNOWLEDGE_DIR, "monster-db.json"), "utf8")) as { monsters: MonsterMoves }).monsters;
+agent/tools/boss-sim/backtest-runner.ts:157:  const mm = JSON.parse(readFileSync(knowledgeFile(KNOWLEDGE_DIR, "move-model.json"), "utf8")) as MoveModelData;
+agent/tools/boss-sim/backtest-runner.ts:158:  const db = (character === "silent" ? readMonsterDbJson() as { monsters: MonsterMoves } : JSON.parse(readFileSync(knowledgeFile(KNOWLEDGE_DIR, "monster-db.json"), "utf8")) as { monsters: MonsterMoves }).monsters;
+agent/tools/v6/profile.ts:63:      const mm = JSON.parse(readFileSync(knowledgeFile(KNOWLEDGE_DIR, "move-model.json"), "utf8")) as MoveModelData;
+agent/tools/v6/freeze-history.ts:14:if (args.length !== 4 || args[0] !== "--manifest" || args[2] !== "--out") throw new Error("freeze-history.ts --manifest INPUTS.json --out NEW_v6-history.json");
+agent/tools/boss-sim/lines.ts:60:  const mm = JSON.parse(readFileSync(knowledgeFile(KNOWLEDGE_DIR, "move-model.json"), "utf8")) as MoveModelData;
+agent/tools/boss-sim/lines.ts:61:  const db = (JSON.parse(readFileSync(knowledgeFile(KNOWLEDGE_DIR, "monster-db.json"), "utf8")) as { monsters: MonsterMoves }).monsters;
+agent/tools/stats-mcp-smoke.mjs:28:  const snapshot = join(root, 'data/formal/snapshots', version), key = 'characters/silent/room-costs.json';
+agent/tools/stats-mcp-smoke.mjs:67:   const stats = JSON.parse(readFileSync(knowledgeFile(KNOWLEDGE_DIR, 'room-costs.json'), 'utf8'));
+agent/tools/boss-sim/bench.ts:30:const mm = JSON.parse(readFileSync(knowledgeFile(KNOWLEDGE_DIR, "move-model.json"), "utf8")) as MoveModelData;
+agent/tools/boss-sim/bench.ts:31:const db = (JSON.parse(readFileSync(knowledgeFile(KNOWLEDGE_DIR, "monster-db.json"), "utf8")) as { monsters: MonsterMoves }).monsters;
+agent/src/core/config.ts:430:   * gold rate (potion-equivalents.json meta.gold_hp). off: questions, options and choices exactly as with THIEF_FACTS alone.
+agent/src/core/config.ts:435:   * (monster-db.json `observed`, refreshed with the DB) in use. A line stripping an enemy power whose strip to 0 stunned
+ops/external_stock_source.py:227:    return immutable(root, str(Path(destination) / 'catalog.json'), canonical(catalog))
+agent/src/brain/tools/types.ts:39:  /** Directory holding monster-db.json, experience.json, room-costs.json, outcome-stats.json, ... */
+agent/src/brain/tools/agent-knowledge.ts:58:    case "kb_potion": return ["potion-equivalents.json"];
+ops/learning_runtime_data.py:19:    "monster-db": ["common/monster-db.json", "common/move-model.json", "characters/{character}/monster-records.json"],
+ops/learning_runtime_data.py:20:    "card-upgrades": ["common/card-upgrades.json"],
+ops/learning_runtime_data.py:21:    "outcome": ["characters/{character}/outcome-stats.json"],
+ops/learning_runtime_data.py:22:    "construction-opportunities": ["characters/{character}/construction-opportunities.json"],
+ops/learning_runtime_data.py:23:    "room-costs": ["characters/{character}/room-costs.json"],
+ops/learning_runtime_data.py:24:    "boss-damage": ["characters/{character}/boss-damage.json"],
+ops/learning_runtime_data.py:25:    "potion-equivalents": ["characters/{character}/potion-equivalents.json"],
+ops/learning_runtime_data.py:26:    "v6-history": ["characters/{character}/v6-history.json"],
+ops/learning_runtime_data.py:27:    "fight-value": ["characters/{character}/fight-value.json", "characters/{character}/fight-value-gates.json"],
+ops/learning_runtime_data.py:29:    "move-model": ["common/move-model.json"],
+ops/learning_runtime_data.py:93:    names = ["knowledge/common/move-model.json"] if producer == "fight-value" else []
+agent/src/knowledge/render/monster-text.ts:2: * Monster and encounter knowledge text (docs/v4-architecture.md §3), rendered from monster-db.json at the run's
+agent/src/knowledge/render/monster-text.ts:325:/* ---- observed mechanics (monster-db.json `observed`; knowledge/mechanics.ts, docs/mechanics-learning.md) ------- */
+agent/src/knowledge/render/stats-text.ts:3: * (room-costs.json), our record against elites and act bosses by ascension (monster-db.json), and what healing
+agent/src/knowledge/render/stats-text.ts:4: * or upgrading at a rest site went with, by HP band (outcome-stats.json). Acts, ascensions, room types and HP
+agent/src/knowledge/render/stats-text.ts:83:  const p90Note = hasP90(data) ? "" : "p90 暂缺（room-costs.json 还没有 p90 字段，要用新版 tools/build-room-costs.py 重建），记为 —。";
+agent/src/knowledge/render/stats-text.ts:133: * Rest-site choices by HP band on arrival (outcome-stats.json rest), with the baseline they compare to. By the run's
+agent/src/knowledge/render/stats-text.ts:145:    `结果统计（outcome-stats.json，A${stats.ascension ?? "?"} 的局，生成于 ${stats.generated ?? "?"}；观察数据：一个选择的数字混有「在什么局面下选它」的影响；n=局数，n<5 标(少)）。` +
+agent/src/knowledge/render/data.ts:29: * the monster blocks carry the observed mechanics (monster-db.json `observed`; MECH_RULES, docs/mechanics-learning.md);
+agent/src/knowledge/render/data.ts:96:  monsterDb: "monster-db.json",
+agent/src/knowledge/render/data.ts:101:  roomCosts: "room-costs.json",
+agent/src/knowledge/render/data.ts:102:  outcomeStats: "outcome-stats.json",
+agent/src/knowledge/render/data.ts:233:        if (name === "monster-db.json") {
+agent/src/knowledge/render/data.ts:235:            const info = statSync(join(dir, "catalog.json"));
+agent/src/knowledge/render/potion-text.ts:5: * or the table). Numbers come from knowledge/characters/ironclad/potion-equivalents.json; a table that does not load throws.
+agent/src/v6/potion-entries.ts:94:      const dataDir = runtimeDataRoot(dir, `characters/${knowledge.character}/potion-equivalents.json`);
+agent/src/v6/potion-entries.ts:96:      const path = realpathSync(join(root, "potion-equivalents.json"));
+agent/src/knowledge/files.ts:85: * (encounters, bosses, each monster's threat_by_asc) are a character's: characters/<id>/monster-records.json, merged
+agent/src/knowledge/files.ts:88:export const COMMON_FILES: ReadonlySet<string> = new Set(["open-book.json", "monster-db.json", "move-model.json", "event-pages.json", "card-upgrades.json", "shared-experience.json"]);
+agent/src/knowledge/files.ts:91:export const MONSTER_RECORDS_FILE = "monster-records.json";
+agent/src/knowledge/files.ts:103:/** The path of the knowledge file `name` (a bare file name: "room-costs.json") inside `dir` (the project's by default). */
+agent/src/knowledge/room-costs.ts:2: * Measured HP change per map room (knowledge/builders/build-room-costs.py -> room-costs.json): entry HP minus the HP
+agent/src/knowledge/room-costs.ts:31:  const query = queryKnowledgeJson("room-costs.json");
+agent/src/knowledge/room-costs.ts:35:    const path = knowledgeFile(KNOWLEDGE_DIR, "room-costs.json");
+agent/src/v6/projection-input.ts:42:    const construction = ["construction-templates.json", "construction-opportunities.json"].every(f => existsSync(knowledgeFile(dir, f, character)))
+agent/src/hand/screens/card-value.ts:27:  // 2026-09-30 knowledge check (outcome-stats.json A8, 161 runs to 86C3; taken vs offered and not taken, the act's
+agent/src/hand/screens/card-value.ts:38:  // Twin Strike 58 -> 64 (2026-09-29 knowledge check, outcome-stats.json A8, 151 runs): taken, the act's boss was
+agent/src/hand/screens/card-value.ts:51:  // (outcome-stats.json 2026-09-29, 147 runs): taken in Act 1, boss pass 0.91 (n=11) vs 0.59 offered and
+agent/src/knowledge/runtime/stats-schema.ts:30:const names = new Set(['monster-db.json', 'move-model.json', 'card-upgrades.json', 'monster-records.json',
+agent/src/knowledge/runtime/stats-schema.ts:31: 'outcome-stats.json', 'room-costs.json', 'boss-damage.json', 'potion-equivalents.json', 'fight-value.json',
+agent/src/knowledge/runtime/stats-schema.ts:32: 'fight-value-gates.json', 'construction-opportunities.json', 'v6-history.json']);
+agent/src/knowledge/runtime/stats-schema.ts:36: if (key === 'catalog.json' || key === 'reports/monster-db-check.md' || key === 'common/enemies/_legacy-meta.json') return true;
+agent/src/knowledge/runtime/stats-schema.ts:40: const common = ['monster-db.json', 'move-model.json', 'card-upgrades.json'].includes(name);
+agent/src/hand/screens/rest.ts:326: * The rest actions' outcome statistics (outcome-stats.json "rest": runs that took that action at a rest site, by
+agent/src/knowledge/potion-equivalents.ts:4: * (formulas and inputs: docs/potion-equivalents.md) into knowledge/characters/ironclad/potion-equivalents.json; this module loads
+agent/src/knowledge/potion-equivalents.ts:18:export const POTION_EQUIVALENTS_FILE = "potion-equivalents.json";
+agent/src/hand/screens/event.ts:285:  // Our runs' outcome statistics per option (outcome-stats.json "events", keyed as the build script keys them: the
+agent/src/hand/screens/event.ts:354:/** An event option's key in outcome-stats.json (knowledge/builders/build-outcome-stats.py): its text_key's last segment, else its title. */
+agent/src/knowledge/card-upgrades.ts:2: * What upgrading a card changes (knowledge/builders/build-card-upgrades.py -> card-upgrades.json): for every card id
+agent/src/knowledge/card-upgrades.ts:38:    cached = JSON.parse(readFileSync(knowledgeFile(KNOWLEDGE_DIR, "card-upgrades.json"), "utf8")) as Record<string, CardUpgrade>;
+agent/src/knowledge/card-upgrades.ts:45:/** For tests: use this table instead of card-upgrades.json (null reloads the file). */
+agent/src/knowledge/mechanics.ts:3: * logs by knowledge/builders/build-monster-db.py into monster-db.json `observed`, refreshed with the DB after every run. Nothing here
+agent/src/knowledge/mechanics.ts:287: * One (survivor, ally) pair's logged ally deaths on our turn (build-monster-db.py death_obj; monster-db.json
+agent/src/knowledge/move-model.ts:2: * Enemy move model learned from past runs (knowledge/builders/build-move-model.py -> move-model.json): which move
+agent/src/knowledge/move-model.ts:32:    model = JSON.parse(readCompatibleKnowledgeText(KNOWLEDGE_DIR, "move-model.json")) as Record<string, EnemyModel>;
+agent/src/knowledge/catalog.ts:33:  const path = join(dir, "catalog.json");
+agent/src/knowledge/catalog.ts:35:  const value: unknown = JSON.parse(readFileSync(safePath(dir, "catalog.json"), "utf8"));
+agent/src/knowledge/catalog.ts:58:  if (name !== "monster-db.json" && name !== "move-model.json") return readFileSync(legacy, "utf8");
+agent/src/knowledge/catalog.ts:194:    else if (name === "common/monster-db.json" && object(value) && object(value["monsters"])) {
+agent/src/knowledge/catalog.ts:196:    } else if (name === "common/move-model.json" && object(value)) {
+agent/src/knowledge/runtime-data.ts:9:const names = new Set(["monster-db.json", "move-model.json", "card-upgrades.json", "monster-records.json", "outcome-stats.json",
+agent/src/knowledge/runtime-data.ts:10:  "construction-opportunities.json", "room-costs.json", "boss-damage.json", "potion-equivalents.json", "v6-history.json",
+agent/src/knowledge/runtime-data.ts:11:  "fight-value.json", "fight-value-gates.json", "boss-trust.json", "opening-value.json", "event-pages.json"]);
+agent/src/knowledge/query-sources.ts:47:      if ((error as NodeJS.ErrnoException).code !== "ENOENT" || name !== "monster-db.json" || fixed) throw error;
+agent/src/knowledge/query-sources.ts:52:      source["catalog_file"] = "catalog.json";
+agent/src/knowledge/query-sources.ts:53:      source["catalog_sha256"] = sha(readFileSync(join(query.dir, "catalog.json")));
+agent/src/knowledge/experience.ts:4: * (outcome-stats.json, knowledge/builders/build-outcome-stats.py). Every DeepSeek question gets the *relevant slice*:
+agent/src/knowledge/experience.ts:63: * outcome-stats.json (knowledge/builders/build-outcome-stats.py): from 2026-10-04 one table per ascension in `by_ascension` (A8, A9
+agent/src/knowledge/experience.ts:118:  const query = queryKnowledgeJson("outcome-stats.json");
+agent/src/knowledge/experience.ts:121:  const path = here("outcome-stats.json");
+agent/src/knowledge/monster-db.ts:4: * The monster database (knowledge/builders/build-monster-db.py -> monster-db.json): measured facts about every enemy,
+agent/src/knowledge/monster-db.ts:119: * The monster DB as one object, in the shape it had before the split (2026-10-04): the common facts (common/monster-db.json:
+agent/src/knowledge/monster-db.ts:120: * meta, monsters, observed) with the run's character's own fight records (characters/<id>/monster-records.json: bosses,
+agent/src/knowledge/monster-db.ts:159: * A character's monster records (characters/<id>/monster-records.json in `dir`), or null when there is no such file
+agent/src/knowledge/monster-db.ts:177:  const parsed = JSON.parse(readCompatibleKnowledgeText(dir, "monster-db.json")) as unknown;
+agent/src/knowledge/monster-db.ts:178:  if (!isObject(parsed)) throw new Error(`${knowledgeFile(dir, "monster-db.json")}: not an object`);
+agent/src/knowledge/monster-db.ts:185:  const query = queryKnowledgeJson("monster-db.json");
+agent/src/knowledge/monster-db.ts:1097:    recordKnowledgeQuerySource("monster-db.json"); recordKnowledgeQuerySource(MONSTER_RECORDS_FILE);
+agent/src/brain/engines/codex.ts:1213:      const catalogFile = join(work, "catalog.json");
+ops/stats_refresh.py:19:    if key in {'catalog.json', 'reports/monster-db-check.md', 'common/enemies/_legacy-meta.json'}:
+ops/stats_refresh.py:23:    names = {'monster-db.json', 'move-model.json', 'card-upgrades.json', 'monster-records.json', 'outcome-stats.json',
+ops/stats_refresh.py:24:             'room-costs.json', 'boss-damage.json', 'potion-equivalents.json', 'fight-value.json',
+ops/stats_refresh.py:25:             'fight-value-gates.json', 'construction-opportunities.json', 'v6-history.json'}
+ops/stats_refresh.py:26:    common = Path(key).name in {'monster-db.json', 'move-model.json', 'card-upgrades.json'}
+ops/stats_refresh.py:92:        relative = 'notes/monster-db-check.md' if key == 'reports/monster-db-check.md' else 'knowledge/' + key
+ops/stats_refresh.py:228:        report = stage / 'notes/monster-db-check.md'
+ops/stats_refresh.py:230:            files['reports/monster-db-check.md'] = 'notes/monster-db-check.md'
+ops/stats_refresh.py:304:                    keys = [key for key in new if key == 'catalog.json' or key.startswith('common/enemies/')]
+ops/stats_refresh.py:306:                    keys = ['reports/monster-db-check.md']
+ops/learning_runtime_store.py:260:                    if name.replace("build-cores.json", "v6-history.json") not in touched:
+agent/src/sim/boss-clock.ts:192:/** For tests: use these shares instead of boss-damage.json (null reloads the file). */
+agent/src/sim/boss-clock.ts:199:  const query = queryKnowledgeJson("boss-damage.json");
+agent/src/sim/boss-clock.ts:203:      unblockedCache = JSON.parse(readFileSync(knowledgeFile(KNOWLEDGE_DIR, "boss-damage.json"), "utf8")) as Record<string, UnblockedShare>;
+agent/src/sim/boss-clock.ts:324: * A8 and A9 kills (boss-damage.json WATERFALL_GIANT.kills, knowledge/builders/build-boss-damage.py). Was hard-coded ("33 kills:
+agent/src/sim/boss-clock.ts:457:  // outcome-stats.json of the older shape (A8 alone: before the first refresh by the 2026-10-04 build script) has no
+agent/src/sim/boss-clock.ts:485: * A card's outcome rows (outcome-stats.json, knowledge/builders/build-outcome-stats.py; observational): the act's boss pass rate
+agent/src/sim/boss-clock.ts:526:/** A boss's logged fights won by ascension (boss-damage.json by_asc): "A8 24 场赢 5、A9 5 场赢 0". */
+agent/src/sim/boss-clock.ts:535: * The Kaiser Crab's logged fights by the claw that died first (boss-damage.json first_death): at A8 and up each of
+agent/src/sim/boss-clock.ts:600: * The Matriarch's sleep in the logged fights (boss-damage.json sleep): the no-Strength decks by ascension, and waking
+agent/src/sim/boss-clock.ts:656:/** Act 1's bosses (boss-damage.json keys). */
+agent/src/sim/boss-clock.ts:660: * Entry HP of the act-1 boss fights by ascension, won / lost (mean % of max, boss-damage.json by_asc), and Soul
+agent/src/sim/boss-clock.ts:684: * (room-costs.json UnknownFight: in-fight HP lost, first to last combat decision, a death counted as all the
+agent/src/sim/boss-clock.ts:715: * The Queen's logged fights by when the Amalgam died (boss-damage.json QUEEN.amalgam): at A8 and up each of A8 and A9
+agent/src/sim/boss-clock.ts:793: * The Insatiable's logged losses by death line (boss-damage.json THE_INSATIABLE.deaths): at A8 and up each of A8 and
+agent/src/sim/boss-clock.ts:837: * The logged Waterfall Giant fights by kill turn at this ascension, from the fight data (boss-damage.json
+agent/src/sim/boss-clock.ts:1468:/** Phase 2's net loss a turn when the monster DB or boss-damage.json has nothing (D3X1, A8: ~15). */
+ops/report.py:532:                pack = read_selected(LIVE, json.loads(inherited['STS2_ASSETS_SELECTION']), 'characters/' + character.lower() + '/v6-history.json')
+ops/report.py:534:                with open(os.path.join(LIVE, "knowledge", "characters", character.lower(), "v6-history.json")) as source:
+agent/src/sim/v6-history-pack.ts:122:  const character = parsed.value, path = knowledgeFile(knowledgeDir, "v6-history.json", character);
+agent/src/sim/v6-history-pack.ts:124:    const selected = runtimeDataFile(knowledgeDir, join("characters", character, "v6-history.json"));
+agent/src/sim/v6-history-pack.ts:125:    const effectiveRoot = selected ? selected.slice(0, -join("characters", character, "v6-history.json").length - 1) : knowledgeDir;
+agent/src/reflex/combat-plan.ts:542:  // Each held potion's worth in this act's boss fight (potion-equivalents.json; Roy 2026-09-30): a fact, no rule.
+agent/src/reflex/combat-plan.ts:899: * rules by power id, from monster-db.json `observed`. Empty with the switch off, without the data (a DB built before it),
+agent/src/sim/boss-start.ts:160:/** The committed monster DB (knowledge/common/monster-db.json), read once. */
+agent/src/sim/boss-start.ts:172:/** The committed move model (knowledge/common/move-model.json), read once. */
+agent/src/sim/boss-start.ts:176:    mmCache = JSON.parse(readFileSync(knowledgeFile(KNOWLEDGE_DIR, "move-model.json"), "utf8")) as MoveModelData;
+agent/src/reflex/thief.ts:258: * potions at this ascension (potion-equivalents.json meta.gold_hp, knowledge/builders/build-potion-equivalents.py). A table without
+agent/src/reflex/rollout-live.ts:179:  return (mmCache ??= readJson<MoveModelData>("move-model.json", {}));
+agent/src/reflex/potion-cost.ts:3: * potion's held value in the potion table (knowledge/characters/ironclad/potion-equivalents.json, docs/potion-equivalents.md: its
+agent/src/reflex/rollout.ts:3: * gated by its measured effect (knowledge/builders/build-fight-value.py -> knowledge/characters/ironclad/fight-value-gates.json).
+agent/src/reflex/rollout.ts:102:/** move-model.json: successor counts and average shown damage per move. */
+agent/src/reflex/rollout.ts:344:    const path = knowledgeFile(KNOWLEDGE_DIR, "fight-value-gates.json");
+agent/src/sim/global-build-pool.ts:64:  const path = knowledgeFile(KNOWLEDGE_DIR, "monster-records.json", "silent");
+agent/src/reflex/jev-experience.ts:295:  /** For tests: the monster DB's monsters (default: monster-db.json). */
+agent/src/sim/build-sim-facts.ts:18: *   - an upgrade (smith, a selection, an event): that copy upgraded (card-upgrades.json's numbers);
+agent/src/sim/build-sim-facts.ts:186:/** A deck entry upgraded as card-upgrades.json logs it (card-model upgradeDelta's numbers), or null when not logged. */
+agent/src/sim/route-projection.ts:7: * of that room type in that act at this ascension (room-costs.json; the monster DB's won-fight losses when
+agent/src/sim/route-projection.ts:144: * A room type's cost: the logged HP change across such rooms (room-costs.json, deaths counted as all the
+agent/src/knowledge/outcome-facts.ts:3: * outcome-stats.json (knowledge/builders/build-outcome-stats.py, refreshed after every run) for what an option is, given as they
+agent/src/knowledge/outcome-facts.ts:18:/** What an option carries when outcome-stats.json has no row for it. */
+agent/src/knowledge/outcome-facts.ts:193:    `outcome_stats / card_outcome_stats / option_outcome_stats = ${asc} 数据${mismatch}：src/knowledge/outcome-stats.json（日志自动统计，tools/build-outcome-stats.py${generated}，${asc} 共 ${runs} 局${apart}）；没有记录的写「${NO_DATA}」。`,
+agent/tools/potion-cost-replay.ts:4: * cost off (the ranking before) and on (the potion table knowledge/characters/ironclad/potion-equivalents.json), and what the rollout
+agent/tools/potion-cost-replay.ts:417:    "- 重建：decisions.jsonl 里那道 Jev 选线题（同层同回合、理由里有这瓶药）→ states.jsonl 按 ts 二分、按 fingerprint 取状态 → 现在的代码 planCombatTurn 出题两次：代价关（接入前的排序）和代价开（src/knowledge/potion-equivalents.json）。推演和随机药水的蒙特卡洛不限时（结果由局面的种子决定，可复现）。没有恢复当时的 DeepSeek 战斗计划、路线计划和本场前几回合的记忆，所以选项和当时记录的不完全一样；这里只比较同一个重建局面在代价关/开下推演选谁。",
+agent/src/reflex/fight-value.ts:2: * Fight value (knowledge/builders/build-fight-value.py -> knowledge/characters/ironclad/fight-value.json): what the logs say happens
+agent/src/reflex/fight-value.ts:10: * The model is gradient-boosted trees over named features (the names in fight-value.json `features`,
+agent/src/reflex/fight-value.ts:75:    const path = knowledgeFile(KNOWLEDGE_DIR, "fight-value.json");
+agent/src/v6/direction-runtime.ts:160:    const dataDir = runtimeDataRoot(dir, `characters/${data.character}/potion-equivalents.json`);
+agent/src/v6/direction-runtime.ts:162:    const path = realpathSync(join(root, "potion-equivalents.json")), rel = relative(root, path);
+eval/boss-clock-recompute.ts:6: * agent/tools/boss-clock-calibrate.ts does. The code and the knowledge data (monster-db.json, boss-damage.json) are the
+agent/src/construction/data.ts:17:    const model = read(knowledgeFile(dir, "construction-opportunities.json", character)) as OpportunityModel;
+agent/src/sim/thief-card-value.ts:53:/** The stolen card as a deck card of the boss simulation: the game data's numbers, upgraded as card-upgrades.json logs it. */

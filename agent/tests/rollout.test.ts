@@ -1,3 +1,4 @@
+import { knowledgeFixtureFile } from "./knowledge-fixtures.js";
 /**
  * Offline rollout (src/reflex/rollout.ts): deterministic under a seed, degrades to fit its time budget,
  * the gating math agrees with the builder's gates file, the features mirror the Python builder, and decision
@@ -855,7 +856,7 @@ describe("debuffs enemy moves put on us carry into the rollout's later turns (XL
 
   it("the real DB: Terror puts 99 Vulnerable on us", async () => {
     const { enemyTable } = await import("../src/reflex/rollout-live.js");
-    const db = JSON.parse(readFileSync(join(ROOT, "..", "knowledge/common/monster-db.json"), "utf8")) as { monsters: Record<string, never> };
+    const db = JSON.parse(readFileSync(knowledgeFixtureFile("common/monster-db.json"), "utf8")) as { monsters: Record<string, never> };
     expect(enemyTable("TERROR_EEL", 9, db.monsters, {})!.moves["TERROR_MOVE"]!.playerPowers).toEqual({ VULNERABLE_POWER: 99 });
   });
 });

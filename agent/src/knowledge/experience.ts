@@ -11,7 +11,7 @@
  * code's computed numbers take precedence (the DeepSeek system prompt says so).
  */
 
-import { readFileSync, statSync } from "node:fs";
+import { readFileSync, statSync, rethrowStatsResourceError } from "./resource-fs.js";
 import { knowledgeQueryActive, queryKnowledgeJson, queryKnowledgeText } from "./query-sources.js";
 
 import type { GameState } from "../hand/mod/schema.js";
@@ -93,20 +93,20 @@ function here(file: string): string {
 export function loadExperience(dir: string = KNOWLEDGE_DIR): ExperienceEntry[] {
   if (knowledgeQueryActive()) {
     let entries: ExperienceEntry[] = [];
-    try { const parsed = JSON.parse(queryKnowledgeText(dir, "experience.json")!) as ExperienceFile; entries = parsed.entries ?? []; } catch { /* Missing private knowledge is empty. */ }
+    try { const parsed = JSON.parse(queryKnowledgeText(dir, "experience.json")!) as ExperienceFile; entries = parsed.entries ?? []; } catch (statsReadError) { rethrowStatsResourceError(statsReadError); /* Missing private knowledge is empty. */ }
     return [...entries, ...loadSharedExperience(dir).entries];
   }
   if (experienceOverride !== null) return experienceOverride;
   const stamp = ["experience.json", SHARED_EXPERIENCE_FILE].map(name => {
     const path = knowledgeFile(dir, name);
     try { const info = statSync(path); return `${path}:${info.mtimeMs}:${info.size}`; }
-    catch { return `${path}:missing`; }
+    catch (statsReadError) { rethrowStatsResourceError(statsReadError); return `${path}:missing`; }
   }).join("|") + `|${knowledgeCharacter()}`;
   if (experienceCache && experienceStamp === stamp) return experienceCache;
   try {
     const parsed = JSON.parse(readFileSync(knowledgeFile(dir, "experience.json"), "utf8")) as ExperienceFile;
     experienceCache = Array.isArray(parsed.entries) ? parsed.entries : [];
-  } catch {
+  } catch (statsReadError) { rethrowStatsResourceError(statsReadError);
     experienceCache = [];
   }
   experienceCache = [...experienceCache, ...loadSharedExperience(dir).entries];
@@ -123,13 +123,13 @@ export function loadOutcomeStats(): OutcomeStats {
   try {
     const info = statSync(path);
     stamp = `${path}:${info.mtimeMs}:${info.size}`;
-  } catch {
+  } catch (statsReadError) { rethrowStatsResourceError(statsReadError);
     // A new character may not have statistics yet; retry when its file appears.
   }
   if (statsCache && statsStamp === stamp) return statsCache;
   try {
     statsCache = JSON.parse(readFileSync(path, "utf8")) as OutcomeStats;
-  } catch {
+  } catch (statsReadError) { rethrowStatsResourceError(statsReadError);
     statsCache = {};
   }
   statsStamp = stamp;
