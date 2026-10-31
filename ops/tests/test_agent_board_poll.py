@@ -20,8 +20,9 @@ class MinuteEntry(unittest.TestCase):
         source=Path(adapter.__file__).parents[1]
         config=adapter.Board(source).data
         config['dispatcher'].update(poll_source='minute', interval_minutes=5, minute_interval_minutes=1)
-        # Queue-pin activation is exercised explicitly below, not inherited from production.
+        # Minute-entry fixtures are independent of the queue/lease installation.
         config['dispatcher']['merge_queue'] = dict(enabled=False)
+        config['dispatcher']['heavy'] = dict(enabled=False)
         (self.root/'.agents/board.yaml').write_text(json.dumps(config))
         self.board=adapter.Board(self.root)
         self.settings=config['dispatcher']

@@ -1,7 +1,4 @@
 """Account-bound admission from the existing subscription sampler; no model/read loop."""
-import hashlib
-import json
-import math
 import os
 from datetime import datetime
 from pathlib import Path
@@ -22,29 +19,13 @@ def epoch(value):
 
 
 def snapshot(root, directory, *, now=None):
-    now = time.time() if now is None else now
-    result = {"schema": "external-learning-policy-v1", "workers": 0, "service_tier": None,
-              "weekly_used_percent": None, "sample_observed_at": None, "reason": "weekly_unknown"}
-    try:
-        sample = json.loads(Path(directory, "subscription-usage.json").read_bytes())
-        digest = hashlib.sha256(selected_home(directory).encode()).hexdigest()
-        observed = epoch(sample["sample_observed_at"])
-        weekly = [w for w in sample["windows"] if w["kind"] == "weekly" and w["window_minutes"] == 10080]
-        if (sample.get("schema_version") != 1 or sample.get("provider") != "codex"
-                or sample.get("account_home_sha256") != digest or sample.get("freshness") != "fresh"
-                or not 0 <= now - observed <= 600 or not weekly
-                or any(type(w["used_percent"]) not in (int, float) or not math.isfinite(w["used_percent"])
-                       or not 0 <= w["used_percent"] <= 100 or w.get("stale") is not False
-                       or (w.get("resets_at") and epoch(w["resets_at"]) <= now) for w in weekly)):
-            return result
-        used = max(w["used_percent"] for w in weekly)
-        result.update(weekly_used_percent=used, sample_observed_at=sample["sample_observed_at"],
-                      account_home_sha256=digest, workers=0 if used >= 90 else 2 if used > 70 else 4,
-                      service_tier="default",
-                      reason="switch_codex1" if used >= 90 else "weekly_over_70" if used > 70 else "weekly_within_70")
-    except (OSError, ValueError, KeyError, TypeError, AttributeError, OverflowError):
-        return result
-    return result
+    from learning_concurrency import limits
+    selected = limits(root, directory, now=now)
+    return dict(schema="external-learning-policy-v1", workers=selected["external_limit"],
+                admission="learning-concurrency-v1",
+                service_tier="default", weekly_used_percent=selected["weekly_used_percent"],
+                sample_observed_at=selected["sample_observed_at"], reason=selected["reason"],
+                account_home_sha256=selected["account_home_sha256"])
 
 
 def external_disk_allowed(root):
@@ -61,8 +42,9 @@ def four_lane_mode(state, root, alive):
 
 
 def own_busy(state, alive, directory=None):
-    """Keep one own-game compute lane; pending review is independently retained."""
-    return own_status(state, alive, directory)["busy"]
+    from learning_concurrency import allowed
+    directory = directory or os.environ.get("CODEX_OPS_DIR") or str(Path(__file__).resolve().parent / "codex-ops")
+    return not allowed(state, Path(directory).parent.parent, alive, directory=directory)
 
 
 def own_status(state, alive, directory=None):
@@ -71,15 +53,5 @@ def own_status(state, alive, directory=None):
 
 
 def request_switch(state, directory, policy):
-    """Original ops owns preflight, drain and activation; never rewrite selectors here."""
-    if policy["reason"] != "switch_codex1":
-        return
-    identity = policy["account_home_sha256"]
-    if state.get("external_switch_requested") == identity:
-        return
-    folder = Path(directory, "queue")
-    folder.mkdir(parents=True, exist_ok=True)
-    path = folder / (str(time.time_ns()) + "-external-codex1-switch.md")
-    path.write_text("#56 周用量达到90%，已拒绝新外部学习。请原ops沿已授权llm_switch事务预检codex1、排空、切换及验证；"
-                    "保留原任务/租约/失败与其他角色会话，不跨账号resume。外部准入待新账号统一额度快照。\n")
-    state["external_switch_requested"] = identity
+    """Retained call interface; learning quota no longer requests account switches."""
+    return None

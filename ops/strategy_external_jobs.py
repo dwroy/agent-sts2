@@ -15,6 +15,7 @@ import strategy_backfill_jobs as shared
 import external_learning_policy as policy
 import publication_gate
 import learner_registration
+import learning_concurrency
 from strategy_research_jobs import atomic_json
 
 QUEUE = "notes/strategy-external-silent.json"
@@ -250,6 +251,33 @@ def occupied_lanes(state, configured, root, alive):
     return occupied
 
 
+def blocked_lanes(state, configured, root, alive):
+    if learning_concurrency.configuration(root)["external_slots"] <= 4:
+        return occupied_lanes(state, configured, root, alive)
+    # Enlarged pools retain every owner slot, while independent plans may share a topic.
+    directory = os.environ.get("CODEX_OPS_DIR") or str(Path(root, "ops/codex-ops"))
+    owners = lane_owners(state, alive, directory)
+    return set("ABCD") if any(b.get("external_lane") not in ("A", "B", "C", "D") for b in owners) else set()
+
+
+def slot_available(state, root, alive, directory):
+    owners = lane_owners(state, alive, directory)
+    slots = [b.get("external_slot") for b in owners if b.get("external_slot") is not None]
+    if (any(not isinstance(s, str) or not re.fullmatch(r"ext(?:[1-9]|10)", s) for s in slots)
+            or len(set(slots)) != len(slots)):
+        return None
+    occupied = set(slots)
+    # Legacy owners reserve deterministic seats without rewriting their registrations.
+    for owner in owners:
+        if owner.get("external_slot") is None:
+            free = next((f"ext{i}" for i in range(1, 11) if f"ext{i}" not in occupied), None)
+            if free is None:
+                return None
+            occupied.add(free)
+    count = learning_concurrency.configuration(root)["external_slots"]
+    return next((f"ext{i}" for i in range(1, count + 1) if f"ext{i}" not in occupied), None)
+
+
 def next_stamp(state, stamp):
     current = datetime.strptime(stamp, "%Y%m%d-%H%M%S")
     while current.strftime("%Y%m%d-%H%M%S") + "-strategy-proposal" in state["batches"]:
@@ -264,7 +292,7 @@ def dispatch_lanes(state, root, scripts, character, alive, stamp, writer):
 
 def _dispatch_lanes(state, root, scripts, character, alive, stamp, writer):
     results = []
-    for _ in range(4):
+    for _ in range(learning_concurrency.configuration(root)["external_slots"]):
         result = dispatch(state, root, scripts, character, alive, next_stamp(state, stamp), writer, {})
         if not result:
             break
@@ -292,8 +320,9 @@ def dispatch(state, root, scripts, character, alive, stamp, writer, normal):
         configured = queue(root)
         if not configured["enabled"]:
             return None
-        occupied = occupied_lanes(state, configured, root, alive)
-        if len(active_external(state, alive, directory)) >= selected["workers"]:
+        occupied = blocked_lanes(state, configured, root, alive)
+        slot = slot_available(state, root, alive, directory)
+        if not slot or not learning_concurrency.allowed(state, root, alive, external=True, directory=directory):
             return None
         last = {value: max((bid for bid, batch in state["batches"].items()
                            if batch.get("external_lane") == value), default="") for value in "ABCD"}
@@ -340,6 +369,7 @@ def dispatch(state, root, scripts, character, alive, stamp, writer, normal):
                 if result:
                     state["batches"][result[0]].update(external_binding={**binding, "retry_generation": generation, "dispatch_base": base},
                                                      external_registered_at=time.time(), external_lane=selected_lane,
+                                                     external_slot=slot,
                                                      external_policy=selected,
                                                      candidate_mode=publication_gate.candidate_binding(base, state["batches"][result[0]]["worktree"]))
                     learner_registration.checkpoint(state)
@@ -422,8 +452,8 @@ if __name__ == "__main__":
             batch = prepare(*args)[0]
             selected = batch["external_policy"]
             latest = policy.snapshot(args[0], args[1])
-            if any(selected.get(key) != latest.get(key) for key in ("account_home_sha256", "service_tier", "workers")) or not latest["workers"]:
-                raise ValueError("external quota tier changed; retain registration")
+            if any(selected.get(key) != latest.get(key) for key in ("account_home_sha256", "service_tier")):
+                raise ValueError("external account/tier changed; retain registration")
             print(selected["service_tier"])
         elif action == "prepare":
             print(task_file(*args))

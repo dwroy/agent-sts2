@@ -51,7 +51,7 @@ class External(unittest.TestCase):
         value = {"schema_version": 1, "provider": "codex", "freshness": "fresh",
                  "account_home_sha256": hashlib.sha256(self.home.encode()).hexdigest(),
                  "sample_observed_at": "2026-01-01T00:00:00Z", "windows": [
-                     {"kind": "weekly", "window_minutes": 10080, "used_percent": used,
+                     {"bucket": "codex/primary", "kind": "weekly", "window_minutes": 10080, "used_percent": used,
                       "resets_at": "2026-01-02T00:00:00Z", "stale": False}], **changes}
         (self.directory / "subscription-usage.json").write_text(json.dumps(value))
 
@@ -368,29 +368,27 @@ class External(unittest.TestCase):
 
     def test_quota_boundaries_disk_and_account_binding(self):
         self.four_plans()
-        for used, limit, tier in ((0,4,"default"), (70,4,"default"), (70.01,2,"default"), (89.99,2,"default")):
+        for used, limit, tier in ((0,4,"default"), (70,3,"default"), (70.01,3,"default"), (90,3,"default"), (100,3,"default")):
             self.state = {"batches": {}}; self.calls=[]; self.quota(used)
             self.assertEqual(len(self.lanes()), limit)
             self.assertTrue(all(b["external_policy"]["service_tier"] == tier for b in self.state["batches"].values()))
-        self.state = {"batches": {}}; self.quota(90)
-        self.assertEqual(self.lanes(), [])
-        self.assertEqual(self.lanes(), [])
-        self.assertEqual(len(list((self.directory / "queue").glob("*switch.md"))), 1)
+        self.assertEqual(len(list((self.directory / "queue").glob("*switch.md"))), 0)
         for changes in ({"account_home_sha256":"wrong"}, {"sample_observed_at":"2025-12-31T23:49:00Z"}, {"freshness":"failed"}):
-            self.quota(**changes); self.assertEqual(self.lanes(), [])
+            self.state = {"batches": {}}
+            self.quota(**changes); self.assertEqual(len(self.lanes()), 3)
         self.quota()
         for free, expected in ((80 * (1 << 30),0), (80 * (1 << 30) + 1,4)):
             self.disk_mock.return_value.free=free; self.state={"batches":{}}
             self.assertEqual(len(self.lanes()), expected)
 
-    def test_downgrade_preserves_inflight_and_waits_for_two_worker_capacity(self):
+    def test_downgrade_preserves_inflight_and_reserves_own_capacity(self):
         self.four_plans();self.lanes();self.quota(75)
         self.assertEqual(self.lanes("20260101-000010"),[])
         for bid,batch in list(self.state["batches"].items())[:3]:
             batch.update(state="done",pid=None)
             self.not_started(bid,batch)
-        self.assertEqual(len(self.lanes("20260101-000010")),1)
-        self.assertEqual(len(external.active_external(self.state,lambda pid:pid==10)),2)
+        self.assertEqual(len(self.lanes("20260101-000010")),2)
+        self.assertEqual(len(external.active_external(self.state,lambda pid:pid==10)),3)
 
     def test_corrupt_plan_cannot_block_healthy_sibling_lane(self):
         self.four_plans()

@@ -12,6 +12,7 @@ sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 import external_learning_policy
 import publication_gate
 import learner_registration
+import learning_concurrency
 
 RUN_ID = re.compile(r"^[0-9A-Z]{12}$")
 # Environment names passed into a herdr pane (its shell has the herdr server's environment, not ours); never key-like ones.
@@ -181,6 +182,8 @@ def feature_worktree(state, root, learner_task, request_id, alive):
 
 def requested_feature(state, root, scripts, character, reason, alive, stamp, request=None):
     """Dispatch Roy's explicit feature requests with isolated templates and worktrees."""
+    if not learning_concurrency.allowed(state, root, alive):
+        return True, None
     if character != "silent" or reason not in ("ops", "calibration-refresh", "core-builds"):
         return False, None
     learner_task = None
@@ -315,6 +318,8 @@ def dispatch_write(state, root, scripts, task, character, runs, key, reason, ali
     directory = publication_gate.directory(root)
     if publication_gate.learners_held(root, directory) or (publication_gate.candidates_only(root, directory) and not external_source):
         return None
+    if not learning_concurrency.allowed(state, root, alive, external=bool(external_source), directory=directory):
+        return None
     web_contract = None
     if public_web:
         if (public_web is not True or task != "strategy-proposal" or character != "silent" or reason != "ops" or runs
@@ -338,9 +343,9 @@ def dispatch_write(state, root, scripts, task, character, runs, key, reason, ali
         try:
             configured = external_jobs.queue(root)
             plan = next(p for p in configured["plans"] if p["plan_id"] == external_source)
-            occupied = external_jobs.occupied_lanes(state, configured, root, alive)
-            if (not configured["enabled"] or len(external_jobs.active_external(state, alive, directory)) >= selected["workers"]
-                    or external_jobs.lane(plan, external_jobs.source(root, plan)[0]) in occupied):
+            if (not configured["enabled"] or not external_jobs.slot_available(state, root, alive, directory)
+                    or external_jobs.lane(plan, external_jobs.source(root, plan)[0]) in
+                    external_jobs.blocked_lanes(state, configured, root, alive)):
                 return None
         except (OSError, ValueError, KeyError, TypeError, StopIteration):
             return None
@@ -366,8 +371,6 @@ def dispatch_write(state, root, scripts, task, character, runs, key, reason, ali
         if (research_request not in REQUEST_PATHS or task != "strategy-proposal" or character != "silent"
                 or reason != "ops" or key != research_key(research_request)):
             return None
-    if character == "silent" and not external_source and external_learning_policy.four_lane_mode(state, root, alive) and external_learning_policy.own_busy(state, alive, os.environ.get("CODEX_OPS_DIR") or os.path.join(root, "ops/codex-ops")):
-        return None
     if task == "fix-batch":
         handled, result = requested_feature(state, root, scripts, character, reason, alive, stamp)
         if handled:
@@ -450,21 +453,30 @@ def check_jobs(state, root, scripts, character, alive, stamp):
     if publication_gate.candidates_only(root, directory):
         return {"candidate_only": True, "strategy_external": external, "backfill_hold": True}
     own = external_learning_policy.own_status(state, alive, directory) if four_lane_mode else None
-    if own and own["busy"]:
+    if not learning_concurrency.allowed(state, root, alive, directory=directory):
         return {"experience": None, "fixes": None, "strategy": None, "calibration": None,
                 "core_builds": None, "backfill_hold": True, "strategy_external": external,
                 "code_proposal": None, "boss_sim": None, "strategy_research": None, "learning_requests": None,
                 "own_learning": own}
     attempted = []
-    ordinary_claimed = [False]
+    initial = learning_concurrency.projection(state, root, alive, directory)
+    remaining = initial["effective_total"] - initial["occupied"]["total"]
+    if four_lane_mode or initial["configured"]:
+        remaining = min(remaining, initial["own_slots"] - initial["occupied"]["own"])
+    claimed = set()
     def claim(result):
         if result:
-            ordinary_claimed[0] = True
+            claimed.add(result[0])
         return result
+    def settle(result):
+        # Caller-specific proposal/research metadata is complete only after it returns.
+        if result:
+            learner_registration.checkpoint(state)
+        return claim(result)
     def normal_allowed():
-        return not four_lane_mode or not ordinary_claimed[0]
+        return len(claimed) < remaining and learning_concurrency.allowed(state, root, alive, directory=directory)
     def priority_writer(*args, **kwargs):
-        # Keep the ordinary order, but spend at most one launch on its turn.
+        # Every writer observes registrations made earlier in this same tick.
         if not normal_allowed():
             return None
         if args[7] == "ops" or retryable(args[0], args[3], args[6]):
@@ -480,29 +492,33 @@ def check_jobs(state, root, scripts, character, alive, stamp):
             prior = [b for b in state["batches"].values() if b.get("feature_request") == request["request_id"]]
             core_ready = len(prior) < 3 and not any(b.get("state") in ("done", "awaiting_review") for b in prior)
             _, core = requested_feature(state, root, scripts, character, "core-builds", alive, stamp, request=request)
-            claim(core)
+            settle(core)
     runs = pending(root, scripts, character)
     experience = priority_writer(state, root, scripts, "experience-update", character, runs, ",".join(runs), "tick", alive, stamp) if runs else None
+    settle(experience)
     # Research helpers count strategy batches themselves, including external owners.
     helper_limit = STRATEGY_WORKERS + sum(bool(b.get("external_source")) and b.get("state") == "running"
                                         and alive(b.get("pid")) for b in state["batches"].values())
     from learning_requests import reconcile as reconcile_learning
-    learning = claim(reconcile_learning(state, root, scripts, character, alive, stamp, start_learner, helper_limit)) if normal_allowed() else None
+    learning = settle(reconcile_learning(state, root, scripts, character, alive, stamp, start_learner, helper_limit)) if normal_allowed() else None
     # This approved frozen study gets the next slot before automatic proposals.
     # Its host wrapper waits for the parent's save_state under the existing lock.
     from strategy_research_jobs import dispatch as dispatch_research
-    research = claim(dispatch_research(state, root, scripts, character, alive, stamp, priority_writer, helper_limit)) if normal_allowed() else None
+    research = settle(dispatch_research(state, root, scripts, character, alive, stamp, priority_writer, helper_limit)) if normal_allowed() else None
     # Normal turns retain the ordinary proposal/fix/strategy order.
     spec = importlib.util.spec_from_file_location("job_proposals", os.path.join(os.path.dirname(__file__),"proposal_dispatch.py"))
     proposals = importlib.util.module_from_spec(spec)
     spec.loader.exec_module(proposals)
     proposal = proposals.dispatch(state, root, scripts, character, alive, stamp, priority_writer) if normal_allowed() else None
+    if proposal:
+        learner_registration.checkpoint(state)
     key = fix_key(root, character)
     fixes = priority_writer(state, root, scripts, "fix-batch", character, [], key, "tick", alive, stamp) if key else None
-    strategy = claim(strategy_job(state, root, scripts, character, alive, stamp, writer=priority_writer)) if normal_allowed() and not proposal and not research else None
-    calibration = claim(calibration_job(state, root, scripts, character, alive, stamp)) if normal_allowed() else None
+    settle(fixes)
+    strategy = settle(strategy_job(state, root, scripts, character, alive, stamp, writer=priority_writer)) if normal_allowed() and not proposal and not research else None
+    calibration = settle(calibration_job(state, root, scripts, character, alive, stamp)) if normal_allowed() else None
     from boss_sim_jobs import check
-    boss_sim = claim(check(state, root, scripts, character, alive, stamp, start_learner)) if normal_allowed() else None
+    boss_sim = settle(check(state, root, scripts, character, alive, stamp, start_learner)) if normal_allowed() else None
     result = {"experience": experience, "fixes": fixes, "strategy": strategy, "calibration": calibration,
               "core_builds": core, "backfill_hold": bool(attempted or core_ready or external_ready), "strategy_external": external,
               "code_proposal": proposal, "boss_sim": boss_sim, "strategy_research": research, "learning_requests": learning}

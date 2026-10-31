@@ -15,7 +15,7 @@ import type { CodexUsage } from "../src/brain/engines/codex-usage.js";
 const now = new Date("2026-01-01T00:00:00Z");
 function usage(percent: number): CodexUsage {
   return { readAt: now.toISOString(), ms: 1, plan: null, credits: null, ordinaryUsageAllowed: true, reachedType: null, spendControlReached: false,
-    windows: [{ name: "codex/secondary", usedPct: percent, windowMins: 10080, resetsAt: "2026-01-02T00:00:00Z" }] };
+    windows: [{ name: "codex/primary", usedPct: percent, windowMins: 10080, resetsAt: "2026-01-02T00:00:00Z" }] };
 }
 const dirs: string[] = [];
 afterEach(() => { for (const dir of dirs.splice(0)) rmSync(dir, { recursive: true, force: true }); });
@@ -28,16 +28,18 @@ it.each([[0, "default"], [70, "default"], [70.01, "default"], [89.99, "default"]
   "applies strict weekly boundary %s -> %s", (percent, expected) => {
     const decision = externalTier(usage(Number(percent)), now);
     expect(decision.effective).toBe(expected);
+    expect(decision.reason).toBe(Number(percent) >= 70 ? "weekly_ge_70" : "weekly_within_70");
     expect(decision.observed_service_tier).toBeNull();
   });
 
-it("unknown, stale and ambiguous quota remain unknown; all weekly buckets count", () => {
+it("unknown, stale and ambiguous quota remain unknown; only the primary weekly bucket counts", () => {
   for (const sample of [null, { ...usage(5), windows: [] }, { ...usage(5), readAt: "2025-12-31T23:49:59Z" },
     { ...usage(5), readAt: "2026-01-01T00:00:01Z" }, usage(NaN), { ...usage(5), windows: [{ ...usage(5).windows[0]!, resetsAt: now.toISOString() }] }]) {
     expect(externalTier(sample, now)).toMatchObject({ effective: "default", weekly_used_percent: null, reason: "weekly_unknown" });
   }
   expect(externalTier({ ...usage(2), windows: [...usage(2).windows, ...usage(90).windows] }, now).effective).toBe("default");
   expect(externalTier(usage(2), now).requested).toBe("default");
+  expect(externalTier({ ...usage(2), windows: [{ ...usage(2).windows[0]!, name: "other/primary" }] }, now).weekly_used_percent).toBeNull();
 });
 
 function fixture() {
@@ -64,8 +66,8 @@ function fixture() {
     const selected = "default";
     const external_policy = { schema: "external-learning-policy-v1", account_home_sha256: digest,
       weekly_used_percent: percent, sample_observed_at: sample.sample_observed_at,
-      service_tier: selected, workers: percent === null || percent >= 90 ? 0 : percent > 70 ? 2 : 4,
-      reason: percent === null ? "weekly_unknown" : percent >= 90 ? "switch_codex1" : percent > 70 ? "weekly_over_70" : "weekly_within_70" };
+      service_tier: selected, workers: percent === null || percent >= 70 ? 3 : 4,
+      reason: percent === null ? "weekly_unknown" : percent >= 70 ? "weekly_ge_70" : "weekly_within_70" };
     writeFileSync(stateFile, JSON.stringify({ batches: { [batch]: { ...registration, external_policy } } }));
     return selected;
   };
@@ -99,11 +101,10 @@ it.each([[20, "default"], [70, "default"], [70.01, "default"], [89.99, "default"
 
   });
 
-it("unknown, exhausted, stale or replaced snapshots retain the lease without launching", async () => {
+it("quota changes retain registered seats, while changed lease identities still refuse", async () => {
   for (const percent of [null, 90, 100]) {
     const f = fixture(); f.quota(percent);
-    expect(await f.run()).toBe(3);
-    expect(readdirSync(join(f.root, "ops/state/learner"))).toEqual([]);
+    expect(await f.run()).toBe(0);
   }
   for (const mutate of [
     (sample: Record<string, unknown>) => { sample.account_home_sha256 = "other-account"; },
@@ -113,12 +114,17 @@ it("unknown, exhausted, stale or replaced snapshots retain the lease without lau
     const f = fixture(); f.quota(20);
     const path = join(f.root, "ops/state/subscription-usage.json");
     const sample = JSON.parse(readFileSync(path, "utf8")); mutate(sample); writeFileSync(path, JSON.stringify(sample));
-    expect(await f.run()).toBe(3);
+    expect(await f.run()).toBe(0);
   }
   const ordinary = fixture(); ordinary.save({ ...ordinary.registration, reason: "tick" });
   expect(await ordinary.run()).toBe(2);
   const replaced = fixture(); replaced.save({ ...replaced.registration, state: "done" });
   expect(await replaced.run()).toBe(2);
+  const foreign = fixture(); foreign.quota(20);
+  const foreignState = JSON.parse(readFileSync(foreign.env.LEARNER_STATE_FILE, "utf8"));
+  foreignState.batches[foreign.batch].external_policy.account_home_sha256 = "foreign-home";
+  writeFileSync(foreign.env.LEARNER_STATE_FILE, JSON.stringify(foreignState));
+  expect(await foreign.run()).toBe(3);
   for (const tier of ["priority", "fast", "ultrafast"]) {
     expect(() => parseArgs(["--engine", "codex", "--task", "x", "--cwd", "/x", "--service-tier", tier])).toThrow();
   }
@@ -149,7 +155,7 @@ it("a refreshed common snapshot within the same tier does not strand a registere
   expect(receipt.external_tier.weekly_used_percent).toBe(21);
 });
 
-it("defaults an omitted CLI tier and rejects legacy registrations or worker-band drift without rewriting them", async () => {
+it("defaults an omitted CLI tier, rejects legacy tiers and preserves seats across downgrade", async () => {
   const normal = fixture(); normal.quota(20);
   expect(await normal.run("")).toBe(0);
   const receipt = JSON.parse(readFileSync(join(normal.root, `ops/state/learner/${normal.batch}.external-launch.json`), "utf8"));
@@ -168,8 +174,9 @@ it("defaults an omitted CLI tier and rejects legacy registrations or worker-band
   const path = join(changed.root, "ops/state/subscription-usage.json");
   const sample = JSON.parse(readFileSync(path, "utf8")); sample.windows[0].used_percent = 70.01;
   writeFileSync(path, JSON.stringify(sample));
-  expect(await changed.run()).toBe(3);
-  expect(readdirSync(join(changed.root, "ops/state/learner"))).toEqual([]);
+  const before = readFileSync(changed.env.LEARNER_STATE_FILE, "utf8");
+  expect(await changed.run()).toBe(0);
+  expect(readFileSync(changed.env.LEARNER_STATE_FILE, "utf8")).toBe(before);
 });
 
 it("TUI preserves only constrained source opt-in and ordinary child env drops inherited scope", () => {
